@@ -1,0 +1,4 @@
+# Global requirements file.
+# Keep the listed packages up to date when new packages/versions are being used. 
+# The requirements file format is explained at https://pip.pypa.io/en/latest/reference/requirements-file-format/.
+
