@@ -1,5 +1,7 @@
-# interactive-topic-modeling
-
+<div align="center">
+  <img src="assets/logo.png" width=135px alt="Top Models logo">
+  <h1> Interactive Topic Modeling
+</div>
 
 
 ## Getting started
