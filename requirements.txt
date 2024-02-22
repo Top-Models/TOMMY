@@ -9,7 +9,4 @@ spacy==3.7.4
 gensim==4.3.2
 pyinstaller==6.4.0
 matplotlib==3.8.3
-
-# Since we already have an internal stopwords file and
-# we don't need nltk for anything else at the moment, we can ignore this import.
-# nltk==3.8.1
+nltk==3.8.1
