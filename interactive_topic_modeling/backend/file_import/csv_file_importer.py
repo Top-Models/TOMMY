@@ -1,4 +1,4 @@
-import file_importer_interface
+from interactive_topic_modeling.backend.file_import import file_importer_interface
 
 
 class CsvFileImporter(file_importer_interface.FileImporterInterface):

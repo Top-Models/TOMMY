@@ -6,3 +6,6 @@ from dataclasses import dataclass
 class ProjectSettings:
     selected_folder: str
     project_name: str = "your project"
+
+
+current_project_settings = ProjectSettings("")
