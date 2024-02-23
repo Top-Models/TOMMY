@@ -6,7 +6,7 @@ class Tokenizer:
         self.tokenizer = RegexpTokenizer(r'\w+')
 
     def process(self, docs):
-        return [self.tokenizer.tokenize(doc) for doc in docs]
+        return [self.tokenizer.tokenize(doc.lower()) for doc in docs]
 
 
 tokenizer = Tokenizer().process

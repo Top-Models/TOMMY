@@ -1,12 +1,40 @@
 from abc import ABC, abstractmethod
+from nltk.tokenize import RegexpTokenizer
+import spacy
+
+from stopper import StopWords
 
 
 class TempPipeline:  # Temporary class to contain the entire pipeline without design patterns
     def __init__(self):
         pass
 
-    def process(self, docs):
-        pass
+    # TODO: remove diaeresis signs from lemmatizations as they shouldn't occur anywhere.
+    #       (but they do with e.g. geëist -> ëisen)
+    @staticmethod
+    def process(docs):
+        tokenizer = RegexpTokenizer(r'\w+')
+        docs = [tokenizer.tokenize(doc.lower()) for doc in docs]
+
+        # Remove numbers & characters
+        docs = [[token for token in doc if (not token.isnumeric()) and (len(token) > 1)] for doc in docs]
+
+        # Load pre-trained natural language pipeline (python3 -m spacy download nl_core_news_sm)
+        # Used pipeline components: tok2vec (has to be included for other components?), lemmatizer, tagger, ner
+        nlp = spacy.load("nl_core_news_sm", exclude=["morphologizer", "parser", "senter", "attribute_ruler"])
+        docs = [nlp(" ".join(doc)) for doc in docs]
+
+        # Lemmatize the tokens, remove certain entities
+        excluded_entities = ["ORDINAL", "QUANTITY", "PERSON", "MONEY", "CARDINAL", "DATE", "TIME"]
+        docs = [[token.lemma_ for token in doc if token.ent_type_ not in ["ORDINAl"]] for doc in docs]
+
+        # Remove certain entities
+
+        with open('stopwords.txt', 'r') as file:
+            file_content = file.read()
+        stopword_list = file_content.split()
+        stopwords = StopWords(stopword_list)
+        # docs = [token for token in tokens if token not in stopwords]
 
 
 # Takes a required tokenizer, and a list of components, which are applied in-order.
