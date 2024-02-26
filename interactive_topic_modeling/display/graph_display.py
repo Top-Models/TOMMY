@@ -8,6 +8,14 @@ class GraphDisplay(QTabWidget):
 
         # Initialize widget properties
         self.setMinimumSize(450, 400)
+        self.setStyleSheet("""
+                QTabBar::tab { 
+                    background-color: #E40046; 
+                    border-radius: 2px;
+                    padding: 7px;
+                    font-weight: bold;
+                }
+            """)
 
         # Add first tab
         self.init_model = QWidget()

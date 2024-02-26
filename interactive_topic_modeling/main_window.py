@@ -2,7 +2,7 @@ from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,
-    QGridLayout
+    QGridLayout, QSizePolicy
 )
 
 from interactive_topic_modeling.display.fetched_topics_display import FetchedTopicsDisplay
@@ -24,12 +24,15 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(QSize(800, 600))
         self.setStyleSheet("background-color: white;"
                            f"font-family: {text_font};"
-                           "border-radius: 2px;")
+                           "border-radius: 2px;"
+                           "border: none;")
 
         # Initialize container
         container = QWidget()
         layout = QGridLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.setSpacing(0)  # Remove spacing between widgets
+        layout.setContentsMargins(0, 0, 0, 0)
         container.setLayout(layout)
         self.setCentralWidget(container)
 
@@ -48,4 +51,3 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.graph_display, 0, 1)
         layout.addWidget(self.file_stats_display, 1, 2)
         layout.addWidget(self.fetched_topics_display, 0, 2)
-
