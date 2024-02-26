@@ -15,7 +15,9 @@ class FileStatsDisplay(QWidget):
         self.layout = QGridLayout()
         self.setLayout(self.layout)
 
-        # Add widgets
+        # Initialize widgets
         self.label = QLabel("File Stats Display")
         self.label.setAlignment(Qt.AlignCenter)
+
+        # Add widgets
         self.layout.addWidget(self.label, 0, 0)

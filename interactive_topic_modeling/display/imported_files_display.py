@@ -15,7 +15,9 @@ class ImportedFilesDisplay(QWidget):
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
-        # Add widgets
+        # Initialize widgets
         self.label = QLabel("Files Display")
         self.label.setAlignment(Qt.AlignCenter)
+
+        # Add widgets
         self.layout.addWidget(self.label)
