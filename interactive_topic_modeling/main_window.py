@@ -28,5 +28,3 @@ class MainWindow(QMainWindow):
         # Add widgets
         graph_display = GraphDisplay()
         layout.addWidget(graph_display)
-
-
