@@ -8,8 +8,9 @@ class ModelParamsDisplay(QWidget):
         super().__init__()
 
         # Initialize widget properties
-        self.setMinimumSize(195, 400)
-        self.setStyleSheet("background-color: lightgrey;")
+        self.setStyleSheet("background-color: lightgrey;"
+                           "margin: 0px;"
+                           "padding: 0px;")
 
         # Initialize layout
         self.layout = QVBoxLayout()

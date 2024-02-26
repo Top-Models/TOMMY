@@ -8,7 +8,6 @@ class StopwordsDisplay(QWidget):
         super().__init__()
 
         # Initialize widget properties
-        self.setMinimumSize(195, 200)
         self.setStyleSheet("background-color: lightgrey;")
 
         # Initialize layout

@@ -21,22 +21,14 @@ class MainWindow(QMainWindow):
 
         # Initialize window
         self.setWindowTitle("EMMA | Topic Modelling Client")
-        self.setMinimumSize(QSize(800, 600))
+        self.setFixedSize(QSize(1200, 700))
         self.setStyleSheet("background-color: white;"
+                           "font-size: 15px;"
                            f"font-family: {text_font};"
                            "border-radius: 2px;"
                            "border: none;")
 
-        # Initialize container
-        container = QWidget()
-        layout = QGridLayout()
-        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.setSpacing(0)  # Remove spacing between widgets
-        layout.setContentsMargins(0, 0, 0, 0)
-        container.setLayout(layout)
-        self.setCentralWidget(container)
-
-        # Initialize widgets
+        # Create widgets
         self.model_params_display = ModelParamsDisplay()
         self.stopwords_display = StopwordsDisplay()
         self.imported_files_display = ImportedFilesDisplay()
@@ -44,10 +36,25 @@ class MainWindow(QMainWindow):
         self.file_stats_display = FileStatsDisplay()
         self.fetched_topics_display = FetchedTopicsDisplay()
 
-        # Add widgets
-        layout.addWidget(self.model_params_display, 0, 0)
-        layout.addWidget(self.stopwords_display, 1, 0)
-        layout.addWidget(self.imported_files_display, 1, 1)
-        layout.addWidget(self.graph_display, 0, 1)
-        layout.addWidget(self.file_stats_display, 1, 2)
-        layout.addWidget(self.fetched_topics_display, 0, 2)
+        # Initialize widgets
+        self.initialize_widget(self.model_params_display, 0, 0, 250, 350)
+        self.initialize_widget(self.stopwords_display, 0, 350, 250, 350)
+        self.initialize_widget(self.graph_display, 250, 8, 700, 430)
+        self.initialize_widget(self.imported_files_display, 250, 450, 700, 250)
+        self.initialize_widget(self.file_stats_display, 950, 450, 250, 250)
+        self.initialize_widget(self.fetched_topics_display, 950, 0, 250, 450)
+
+    def initialize_widget(self, widget: QWidget, x: int, y: int, w: int, h: int) -> None:
+        """
+        Initialize a widget on the main window.
+        :param widget: The widget to initialize
+        :param x: The x-coordinate of the widget
+        :param y: The y-coordinate of the widget
+        :param w: The width of the widget
+        :param h: The height of the widget
+        :return: None
+        """
+
+        widget.setParent(self)
+        widget.setGeometry(x, y, w, h)
+        widget.show()
