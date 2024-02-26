@@ -1,21 +1,21 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QGridLayout, QLabel
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
 
 
-class FileStatsDisplay(QWidget):
+class ModelParamsDisplay(QWidget):
 
     def __init__(self):
         super().__init__()
 
         # Initialize widget properties
-        self.setMinimumSize(195, 200)
+        self.setMinimumSize(195, 400)
         self.setStyleSheet("background-color: lightgrey;")
 
         # Initialize layout
-        self.layout = QGridLayout()
+        self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
         # Add widgets
-        self.label = QLabel("File Stats Display")
+        self.label = QLabel("Model Parameters Display")
         self.label.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(self.label, 0, 0)
+        self.layout.addWidget(self.label)

@@ -1,24 +1,15 @@
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PySide6.QtWidgets import QWidget, QTabWidget
 
 
-class GraphDisplay(QWidget):
+class GraphDisplay(QTabWidget):
 
     def __init__(self):
         super().__init__()
 
-        # NOTE: initialized widget properties and added widgets for dev team testing purposes
-
         # Initialize widget properties
-        self.setFixedSize(750, 562)
-        self.setStyleSheet("background-color: lightgrey;")
+        self.setMinimumSize(450, 400)
 
-        # Initialize layout
-        layout = QVBoxLayout()
-        self.setLayout(layout)
-
-        # Add widgets
-        label = QLabel("Graph display")
-        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(label)
-
+        # Add first tab
+        self.init_model = QWidget()
+        self.init_model.setStyleSheet("background-color: black;")
+        self.addTab(self.init_model, "init_model")
