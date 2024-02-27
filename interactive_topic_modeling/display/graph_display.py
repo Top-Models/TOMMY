@@ -7,7 +7,6 @@ class GraphDisplay(QTabWidget):
 
     def __init__(self):
         super().__init__()
-        self.fetched_topics_display = FetchedTopicsDisplay()
 
         # Initialize widget properties
         self.setStyleSheet("""
@@ -32,6 +31,9 @@ class GraphDisplay(QTabWidget):
                     color: #000000;
                 }
             """)
+
+        # Initialize widgets
+        self.fetched_topics_display = FetchedTopicsDisplay()
 
         # Add first tab
         self.init_model = QWidget()

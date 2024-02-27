@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QGridLayout, QLabel, QScrollArea
+from PySide6.QtWidgets import QGridLayout, QLabel, QScrollArea
 
 
 class StopwordsDisplay(QScrollArea):

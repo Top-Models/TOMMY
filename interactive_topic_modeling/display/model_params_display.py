@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QScrollArea
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QScrollArea
 
 
 class ModelParamsDisplay(QScrollArea):

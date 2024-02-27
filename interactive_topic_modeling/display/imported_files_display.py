@@ -1,5 +1,8 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QScrollArea
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QScrollArea
+
+from interactive_topic_modeling.display.file_stats_display import FileStatsDisplay
+from interactive_topic_modeling.display.stopwords_display import StopwordsDisplay
 
 
 class ImportedFilesDisplay(QScrollArea):
@@ -15,6 +18,8 @@ class ImportedFilesDisplay(QScrollArea):
         self.setLayout(self.layout)
 
         # Initialize widgets
+        self.stopwords_display = StopwordsDisplay()
+        self.file_stats_display = FileStatsDisplay()
         self.label = QLabel("Files Display")
         self.label.setAlignment(Qt.AlignCenter)
 

@@ -5,12 +5,9 @@ from PySide6.QtWidgets import (
     QPushButton
 )
 
-from interactive_topic_modeling.display.topic_display.fetched_topics_display import FetchedTopicsDisplay
-from interactive_topic_modeling.display.file_stats_display import FileStatsDisplay
 from interactive_topic_modeling.display.graph_display import GraphDisplay
 from interactive_topic_modeling.display.imported_files_display import ImportedFilesDisplay
 from interactive_topic_modeling.display.model_params_display import ModelParamsDisplay
-from interactive_topic_modeling.display.stopwords_display import StopwordsDisplay
 from interactive_topic_modeling.support.constant_variables import text_font, seco_col_blue, hover_seco_col_blue, \
     pressed_seco_col_blue
 
@@ -30,10 +27,8 @@ class MainWindow(QMainWindow):
 
         # Create widgets
         self.model_params_display = ModelParamsDisplay()
-        self.stopwords_display = StopwordsDisplay()
         self.imported_files_display = ImportedFilesDisplay()
         self.graph_display = GraphDisplay()
-        self.file_stats_display = FileStatsDisplay()
         self.apply_button = QPushButton("Toepassen")
         self.apply_button.setStyleSheet(f"""
             QPushButton {{
@@ -52,9 +47,9 @@ class MainWindow(QMainWindow):
 
         # Initialize widgets
         self.initialize_widget(self.model_params_display, 0, 0, 250, 350)
-        self.initialize_widget(self.stopwords_display, 0, 350, 250, 350)
+        self.initialize_widget(self.imported_files_display.stopwords_display, 0, 350, 250, 350)
         self.initialize_widget(self.imported_files_display, 250, 438, 700, 275)
-        self.initialize_widget(self.file_stats_display, 950, 450, 250, 250)
+        self.initialize_widget(self.imported_files_display.file_stats_display, 950, 450, 250, 250)
         self.initialize_widget(self.graph_display.fetched_topics_display, 950, 0, 250, 450)
         self.initialize_widget(self.graph_display, 250, 8, 700, 430)
         self.initialize_widget(self.apply_button, 842, 390, 100, 40)
