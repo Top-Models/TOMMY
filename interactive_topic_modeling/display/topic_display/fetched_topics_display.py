@@ -23,8 +23,8 @@ class FetchedTopicsDisplay(QScrollArea):
         self.layout.setAlignment(Qt.AlignCenter)
 
         # Initialize topics
-        for i in range(5):
-            self.topic_container.append(TopicEntity(f"Topic {i}", [f"Word {i}", f"Word {i+1}", f"Word {i+2}"]))
+        for i in range(10):
+            self.topic_container.append(TopicEntity(f"Topic {i}", [f"Word {i}", f"Word {i+1}", f"Word {i+2}", f"Word {i+3}"]))
             self.layout.addWidget(self.topic_container[-1])
 
         # Set scroll area as focal point
