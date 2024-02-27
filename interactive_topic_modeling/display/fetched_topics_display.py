@@ -12,39 +12,51 @@ class FetchedTopicsDisplay(QScrollArea):
         self.setMinimumSize(195, 400)
         self.setStyleSheet("background-color: white;")
 
-        # Initialize layout and scroll area
-        self.widget = QWidget()
-        self.layout = QVBoxLayout(self.widget)
+        # Initialize layout for scroll area
+        self.scroll_area = QWidget()
+        self.layout = QVBoxLayout(self.scroll_area)
+        self.layout.setAlignment(Qt.AlignCenter)
 
-        # Initialize Topics
-        self.first_topic = QWidget()
-        self.first_topic.setStyleSheet("background-color: black;")
+        # Initialize topics
+        self.first_topic = QLabel("First Topic")
+        self.first_topic.setStyleSheet("background-color: #E40046;"
+                                       "color: #FED800")
         self.first_topic.setFixedSize(200, 100)
+        self.first_topic.setAlignment(Qt.AlignCenter)
 
-        self.second_topic = QLabel()
-        self.second_topic.setStyleSheet("background-color: pink;")
+        self.second_topic = QLabel("Second Topic")
+        self.second_topic.setStyleSheet("background-color: #E40046;"
+                                        "color: #FFA300")
         self.second_topic.setFixedSize(200, 100)
+        self.second_topic.setAlignment(Qt.AlignCenter)
 
-        self.third_topic = QLabel()
-        self.third_topic.setStyleSheet("background-color: green;")
+        self.third_topic = QLabel("Third Topic")
+        self.third_topic.setStyleSheet("background-color: #E40046;"
+                                       "color: #FED800")
         self.third_topic.setFixedSize(200, 100)
+        self.third_topic.setAlignment(Qt.AlignCenter)
 
-        self.fourth_topic = QLabel()
-        self.fourth_topic.setStyleSheet("background-color: red;")
+        self.fourth_topic = QLabel("Fourth Topic")
+        self.fourth_topic.setStyleSheet("background-color: #E40046;"
+                                        "color: #FFA300")
         self.fourth_topic.setFixedSize(200, 100)
+        self.fourth_topic.setAlignment(Qt.AlignCenter)
 
-        self.fifth_topic = QLabel()
-        self.fifth_topic.setStyleSheet("background-color: green;")
+        self.fifth_topic = QLabel("Fifth Topic")
+        self.fifth_topic.setStyleSheet("background-color: #E40046;"
+                                       "color: #FED800")
         self.fifth_topic.setFixedSize(200, 100)
+        self.fifth_topic.setAlignment(Qt.AlignCenter)
 
-        # Add widgets
+        # Add topics to layout of scroll area
         self.layout.addWidget(self.first_topic)
         self.layout.addWidget(self.second_topic)
         self.layout.addWidget(self.third_topic)
         self.layout.addWidget(self.fourth_topic)
         self.layout.addWidget(self.fifth_topic)
 
-        self.setWidget(self.widget)
+        # Set scroll area as focal point
+        self.setWidget(self.scroll_area)
 
         # Add Scroll options
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
