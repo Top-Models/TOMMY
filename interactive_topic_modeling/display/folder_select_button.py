@@ -1,7 +1,4 @@
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QApplication
-from PySide6 import QtGui
-from pathlib import Path
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QFileDialog
 from interactive_topic_modeling.support import project_settings
 import os
 
@@ -22,8 +19,9 @@ class FolderSelectButton(QWidget):
 
     def select_folder(self) -> None:
         dialog = QFileDialog.getExistingDirectory(self, "Select folder")
-        project_settings.current_project_settings.selected_folder = (
-            os.path.relpath(dialog))
+        if dialog:
+            project_settings.current_project_settings.selected_folder = (
+                os.path.relpath(dialog))
 
 
 if __name__ == "__main__":
