@@ -1,11 +1,11 @@
-from PySide6.QtCore import QSize, Qt
+from PySide6.QtCore import QSize
 from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,
-    QGridLayout, QSizePolicy, QPushButton
+    QPushButton
 )
 
-from interactive_topic_modeling.display.fetched_topics_display import FetchedTopicsDisplay
+from interactive_topic_modeling.display.topic_display.fetched_topics_display import FetchedTopicsDisplay
 from interactive_topic_modeling.display.file_stats_display import FileStatsDisplay
 from interactive_topic_modeling.display.graph_display import GraphDisplay
 from interactive_topic_modeling.display.imported_files_display import ImportedFilesDisplay
