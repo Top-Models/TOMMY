@@ -1,10 +1,13 @@
 from PySide6.QtWidgets import QWidget, QTabWidget
 
+from interactive_topic_modeling.display.topic_display.fetched_topics_display import FetchedTopicsDisplay
+
 
 class GraphDisplay(QTabWidget):
 
     def __init__(self):
         super().__init__()
+        self.fetched_topics_display = FetchedTopicsDisplay()
 
         # Initialize widget properties
         self.setStyleSheet("""
@@ -39,3 +42,16 @@ class GraphDisplay(QTabWidget):
         self.demo_second_tab = QWidget()
         self.demo_second_tab.setStyleSheet("background-color: pink;")
         self.addTab(self.demo_second_tab, "demo_second_tab")
+
+        # Event handling
+        self.tabBarClicked.connect(self.on_tab_clicked)
+
+    def on_tab_clicked(self, index) -> None:
+        """
+        Event handler for when a tab is clicked
+        :param index: Index of the clicked tab
+        :return: None
+        """
+
+        clicked_tab_name = self.tabText(index)
+        self.fetched_topics_display.display_topics(clicked_tab_name)
