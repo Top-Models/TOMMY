@@ -1,15 +1,14 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QScrollArea
 
 
-class ImportedFilesDisplay(QWidget):
+class ImportedFilesDisplay(QScrollArea):
 
     def __init__(self):
         super().__init__()
 
         # Initialize widget properties
-        self.setMinimumSize(450, 200)
-        self.setStyleSheet("background-color: lightgrey;")
+        self.setStyleSheet("background-color: gray;")
 
         # Initialize layout
         self.layout = QVBoxLayout()

@@ -2,7 +2,7 @@ from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,
-    QGridLayout, QSizePolicy
+    QGridLayout, QSizePolicy, QPushButton
 )
 
 from interactive_topic_modeling.display.fetched_topics_display import FetchedTopicsDisplay
@@ -11,7 +11,8 @@ from interactive_topic_modeling.display.graph_display import GraphDisplay
 from interactive_topic_modeling.display.imported_files_display import ImportedFilesDisplay
 from interactive_topic_modeling.display.model_params_display import ModelParamsDisplay
 from interactive_topic_modeling.display.stopwords_display import StopwordsDisplay
-from interactive_topic_modeling.support.constant_variables import text_font
+from interactive_topic_modeling.support.constant_variables import text_font, seco_col_blue, hover_seco_col_blue, \
+    pressed_seco_col_blue
 
 
 class MainWindow(QMainWindow):
@@ -35,14 +36,30 @@ class MainWindow(QMainWindow):
         self.graph_display = GraphDisplay()
         self.file_stats_display = FileStatsDisplay()
         self.fetched_topics_display = FetchedTopicsDisplay()
+        self.apply_button = QPushButton("Toepassen")
+        self.apply_button.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {seco_col_blue};
+                color: white;
+            }}
+            
+            QPushButton:hover {{
+                background-color: {hover_seco_col_blue};
+            }}
+            
+            QPushButton:pressed {{
+                background-color: {pressed_seco_col_blue};
+            }}
+        """)
 
         # Initialize widgets
         self.initialize_widget(self.model_params_display, 0, 0, 250, 350)
         self.initialize_widget(self.stopwords_display, 0, 350, 250, 350)
         self.initialize_widget(self.graph_display, 250, 8, 700, 430)
-        self.initialize_widget(self.imported_files_display, 250, 450, 700, 250)
+        self.initialize_widget(self.imported_files_display, 250, 435, 700, 275)
         self.initialize_widget(self.file_stats_display, 950, 450, 250, 250)
         self.initialize_widget(self.fetched_topics_display, 950, 0, 250, 450)
+        self.initialize_widget(self.apply_button, 850, 398, 100, 40)
 
     def initialize_widget(self, widget: QWidget, x: int, y: int, w: int, h: int) -> None:
         """
