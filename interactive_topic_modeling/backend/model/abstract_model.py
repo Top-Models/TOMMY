@@ -5,13 +5,12 @@ from random import randrange
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import Tuple, List, NewType
+from typing import Tuple, List, TypeAlias
 from numpy import ndarray  # todo: add numpy to project requirements
 from os import path
 
-Term = NewType('Term', str)
-TermList = NewType('TermList', List[Term])
-TermLists = NewType('TermLists', Iterable[TermList])
+TermList: TypeAlias = List[str]
+TermLists: TypeAlias = Iterable[TermList]
 
 
 class Model(ABC):
@@ -48,70 +47,84 @@ class Model(ABC):
     def __init__(self, random_seed: int):
         self.random_seed = random_seed
 
-    # Trains the model from scratch on the input iterable of iterables of tokens with k topics
     @abstractmethod
     def train_model(self, term_lists: TermLists, num_topics: int = None):
+        """Trains the model from scratch on the input iterable of iterables of terms
+
+        Keyword arguments:
+        num_topics -- the number of topics that the topic modelling should result in (default: the last used num_topics)
+        """
         pass
 
-    # Updates the model to include the information from the input iterable of iterables of tokens
     @abstractmethod
     def update_model(self, term_lists: TermLists):
+        """Updates the model to include the information from the input iterable of iterables of tokens"""
         pass
 
-    # Returns the term that belongs to the given term_id
     @abstractmethod
-    def get_term(self, term_id):
+    def get_term(self, term_id: int) -> str:
+        """Returns the term that belongs to the given term_id"""
         pass
 
-    # Returns the number of unique terms that have been received by the model
     @abstractmethod
     def n_terms(self) -> int:
+        """Returns the number of unique terms that have been received by the model"""
         pass
 
-    # Returns the found topics in the format where each topic consists of a list of for all top n terms the
-    # tuples of the term and the score of that word, e.g., [(_topic_id, [('word', 0.52), ('etc', 0.412)])]
     @abstractmethod
-    def show_topics(self, n) -> List[Tuple[int, List[Tuple[Term, float]]]]:
+    def show_topics(self, n) -> List[Tuple[int, List[Tuple[str, float]]]]:
+        """returns for all topics the topic_id and the n best terms with their scores, e.g.:
+        [(topic_id, [(term1, term1_probability), (term2, term2_probability), etc.]), etc.]
+        """
         pass
 
-    # Returns the found topics in the format where each topic consists of a list of for all top n terms the
-    # tuples of the term_id and the score of that word, e.g., [(_topic_id, [(42, 0.52), (58, 0.412)])]
     @abstractmethod
     def get_topics(self, n) -> List[Tuple[int, List[Tuple[int, float]]]]:
+        """returns for all topics the topic_id and the term_id and the scores of the n best terms, e.g.:
+        [(topic_id, [(term_id1, term1_probability), (term_id2, term2_probability), etc.]), etc.]
+        """
         pass
 
-    # Returns for the topic associated with the topic_id, a list of for all top n words the
-    # tuples of the word and the score of that word, e.g., [(_topic_id, [('word', 0.52), ('etc', 0.412)])]
     @abstractmethod
-    def show_topic_terms(self, topic_id, n) -> List[Tuple[Term, float]]:
+    def show_topic_terms(self, topic_id, n) -> List[Tuple[str, float]]:
+        """returns for the topic identified by topic_id the n best terms with their scores, e.g.:
+        [(term1, term1_probability), (term2, term2_probability), etc.]
+        """
         pass
 
-    # Returns for the topic associated with the topic_id, a list of for all top n terms the
-    # tuples of the termID and the score of that word, e.g., [(_topic_id, [(42, 0.52), (58, 0.412)])]
     @abstractmethod
     def get_topic_terms(self, topic_id, n) -> List[Tuple[int, float]]:
+        """returns for the topic identified by topic_id the term_ids and scores of the n best terms, e.g.:
+        [(term_id1, term1_probability), (term_id2, term2_probability), etc.]
+        """
         pass
 
-    # Returns a list with for each topic that is at least with minimum_probability present in the document,
-    # (the topic ID, and) the float (0 to 1) representing how much that topic is present in this document
     @abstractmethod
     def get_doc_topics(self, term_list: TermList, minimum_probability=0) -> list[tuple[int, float]]:
+        """Analyzes the document represented by the term_list to return the topic_id and probability
+        of all topics in the document, e.g.: [(topic_id1, topic1_probability), (topic_id2, topic2_probability), etc.]
+
+        Keyword arguments:
+        minimum_probability -- the minimum probability score that a topic needs for it to be included in the results
+        """
         pass
 
-    # Returns a numpy array of size n_topics x n_terms, where the values represent the probability for each
-    # term in each topic.
     @abstractmethod
     def get_topic_term_numpy_matrix(self) -> ndarray:
+        """Returns the n_topics x n_terms numpy array of calculated probabilities of each combination of topics and terms
+        i.e.: "my_model.get_topic_term_numpy_matrix()[my_topic_id, my_term_id]"
+        """
         pass
 
-    # Saves the internal state of the model to the location on the hard disk specified by fpath
     @abstractmethod
     def save(self, fpath: path):
+        """Saves the internal state of the model to the location on the hard disk specified by fpath"""
         pass
 
-    # Loads a Model from an earlier saved internal state. This method returns an instance of the Model.
-    # So use for example: "my_lda_model = GensimLdaModel.load(os.curdir)"
     @classmethod
     @abstractmethod
     def load(cls, fpath: path):
+        """Loads a Model from an earlier saved internal state. This method returns an instance of the Model.
+        e.g.: "my_lda_model = GensimLdaModel.load(os.curdir)"
+        """
         pass
