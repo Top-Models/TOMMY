@@ -54,11 +54,12 @@ class MainWindow(QMainWindow):
         # Initialize widgets
         self.initialize_widget(self.model_params_display, 0, 0, 250, 350)
         self.initialize_widget(self.stopwords_display, 0, 350, 250, 350)
-        self.initialize_widget(self.graph_display, 250, 8, 700, 430)
         self.initialize_widget(self.imported_files_display, 250, 438, 700, 275)
         self.initialize_widget(self.file_stats_display, 950, 450, 250, 250)
         self.initialize_widget(self.fetched_topics_display, 950, 0, 250, 450)
+        self.initialize_widget(self.graph_display, 250, 8, 700, 430)
         self.initialize_widget(self.apply_button, 842, 390, 100, 40)
+
 
     def initialize_widget(self, widget: QWidget, x: int, y: int, w: int, h: int) -> None:
         """

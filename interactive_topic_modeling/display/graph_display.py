@@ -8,6 +8,10 @@ class GraphDisplay(QTabWidget):
 
         # Initialize widget properties
         self.setStyleSheet("""
+                QTabWidget::pane {
+                    border: none; 
+                }
+                
                 QTabBar::tab { 
                     background-color: #FFFFFF; 
                     color: gray;
