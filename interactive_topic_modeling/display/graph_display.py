@@ -1,8 +1,8 @@
-import matplotlib.pyplot as plt
-from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout
-from gensim import corpora, models
+from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout, QPushButton
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+from gensim import corpora, models
 
 # Assuming you have this import statement
 from interactive_topic_modeling.display.topic_display.fetched_topics_display import FetchedTopicsDisplay
@@ -39,7 +39,7 @@ class GraphDisplay(QTabWidget):
                 QTabWidget {
                     border: none;
                 }
-        
+
                 QTabWidget::pane {
                     border: none; 
                 }
@@ -67,6 +67,9 @@ class GraphDisplay(QTabWidget):
 
         # { tab_name, [canvas] }
         self.plots_container = {}
+
+        # { tab_name, plot_index }
+        self.plot_index = {}
 
         # Initialize widgets
         self.fetched_topics_display = FetchedTopicsDisplay()
@@ -108,6 +111,9 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         # Event handling
         self.tabBarClicked.connect(self.on_tab_clicked)
 
+        # Display plots of the first tab
+        self.display_plot(active_tab_name, 0)
+
     def add_lda_plot(self, tab_name: str, lda_model) -> None:
         """
         Add a word cloud plot for the given LDA model
@@ -115,8 +121,10 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         :param lda_model: The LDA model to add a plot for
         :return: None
         """
-        for topic_id, topic in enumerate(lda_model.print_topics(num_topics=5, num_words=20)):
+        self.plot_index[tab_name] = 0
+        self.plots_container[tab_name] = []
 
+        for topic_id, topic in enumerate(lda_model.print_topics(num_topics=5, num_words=20)):
             topic_words = " ".join([word.split("*")[1].strip() for word in topic[1].split(" + ")])
             wordcloud = WordCloud(width=800, height=800, random_state=15, max_font_size=110).generate(topic_words)
 
@@ -135,18 +143,22 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
             canvas = FigureCanvas(fig)
 
             # Add canvas to container
-            if tab_name not in self.plots_container:
-                self.plots_container[tab_name] = []
-
             self.plots_container[tab_name].append(canvas)
 
-    def display_plots(self, tab_name: str) -> None:
+    def display_plot(self, tab_name: str, plot_index: int) -> None:
         """
         Display the plots for the given tab
+        :param plot_index: Index of the plot to display
         :param tab_name: Name of the tab to display the plots for
         :return: None
         """
-        pass
+
+        # Clear the layout
+        for i in reversed(range(self.init_model_layout.count())):
+            self.init_model_layout.itemAt(i).widget().setParent(None)
+
+        # Add the plot to the layout
+        self.init_model_layout.addWidget(self.plots_container[tab_name][plot_index])
 
     def on_tab_clicked(self, index) -> None:
         """
@@ -157,4 +169,22 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         clicked_tab_name = self.tabText(index)
         self.fetched_topics_display.display_topics(clicked_tab_name)
-        # TODO: display the plots for the clicked tab
+        self.display_plot(clicked_tab_name, self.plot_index[clicked_tab_name])
+
+    def next_plot(self, tab_name: str) -> None:
+        """
+        Display the next plot for the given tab
+        :param tab_name: Name of the tab to display the next plot for
+        :return: None
+        """
+        self.plot_index[tab_name] = (self.plot_index[tab_name] + 1) % len(self.plots_container[tab_name])
+        self.display_plot(tab_name, self.plot_index[tab_name])
+
+    def previous_plot(self, tab_name: str) -> None:
+        """
+        Display the previous plot for the given tab
+        :param tab_name: Name of the tab to display the previous plot for
+        :return: None
+        """
+        self.plot_index[tab_name] = (self.plot_index[tab_name] - 1) % len(self.plots_container[tab_name])
+        self.display_plot(tab_name, self.plot_index[tab_name])
