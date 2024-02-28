@@ -93,7 +93,6 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         # Event handling
         self.tabBarClicked.connect(self.on_tab_clicked)
 
-
     def add_lda_plot(self, lda_model) -> None:
         for topic_id, topic in enumerate(lda_model.print_topics(num_topics=5, num_words=20)):
 
