@@ -1,5 +1,5 @@
-import file_importer_interface
-import csv_file_importer
+from interactive_topic_modeling.backend.file_import import file_importer_interface
+from interactive_topic_modeling.backend.file_import import csv_file_importer
 from typing import List
 
 

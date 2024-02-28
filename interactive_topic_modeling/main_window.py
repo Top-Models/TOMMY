@@ -6,6 +6,8 @@ from PySide6.QtWidgets import (
 )
 
 from interactive_topic_modeling.display.graph_display import GraphDisplay
+from interactive_topic_modeling.display.folder_select_button import FolderSelectButton
+from interactive_topic_modeling.display.read_in_files_button import ReadInFilesButton
 
 
 class MainWindow(QMainWindow):
@@ -28,5 +30,7 @@ class MainWindow(QMainWindow):
         # Add widgets
         graph_display = GraphDisplay()
         layout.addWidget(graph_display)
-
-
+        folder_select_button = FolderSelectButton()
+        layout.addWidget(folder_select_button)
+        read_in_files_button = ReadInFilesButton()
+        layout.addWidget(read_in_files_button)
