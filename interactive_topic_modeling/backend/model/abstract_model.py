@@ -6,7 +6,7 @@ from random import randrange
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from typing import Tuple, List, TypeAlias, Dict
-from numpy import ndarray  # todo: add numpy to project requirements
+from numpy import ndarray
 from os import path
 
 TermList: TypeAlias = List[str]
