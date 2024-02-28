@@ -5,7 +5,7 @@ from random import randrange
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import Tuple, List, TypeAlias
+from typing import Tuple, List, TypeAlias, Dict
 from numpy import ndarray  # todo: add numpy to project requirements
 from os import path
 
@@ -48,17 +48,23 @@ class Model(ABC):
         self.random_seed = random_seed
 
     @abstractmethod
-    def train_model(self, term_lists: TermLists, num_topics: int = None):
+    def train_model(self, term_lists: TermLists, num_topics: int = None, **parameters: Dict[str, any]):
         """Trains the model from scratch on the input iterable of iterables of terms
 
         Keyword arguments:
         num_topics -- the number of topics that the topic modelling should result in (default: the last used num_topics)
+        [See https://radimrehurek.com/gensim/models/ldamodel.html#gensim.models.ldamodel.LdaModel for documentation
+        on the rest of the keyword arguments]
         """
         pass
 
     @abstractmethod
-    def update_model(self, term_lists: TermLists):
-        """Updates the model to include the information from the input iterable of iterables of tokens"""
+    def update_model(self, term_lists: TermLists, **parameters: Dict[str, any]):
+        """Updates the model to include the information from the input iterable of iterables of tokens
+
+        Keywords arguments:
+        [See https://radimrehurek.com/gensim/models/ldamodel.html#gensim.models.ldamodel.LdaModel.update]
+        """
         pass
 
     @abstractmethod

@@ -13,13 +13,15 @@ class GensimLdaModel(Model):
     dictionary: Dictionary
     model: LdaModel
     bags_of_words: Iterable[Iterable[Tuple[int, int]]]
+    parameters: dict
 
-    def __init__(self, term_lists: TermLists, num_topics: int, random_seed=None):
+    def __init__(self, term_lists: TermLists, num_topics: int, random_seed=None, **parameters):
         super().__init__(random_seed)
         self.num_topics = num_topics
-        self.train_model(term_lists)
+        self.train_model(term_lists, **parameters)
 
-    def train_model(self, docs, num_topics=None):
+    def train_model(self, docs, num_topics=None, **parameters):
+        self.parameters.update(parameters)
         self.num_topics = num_topics
 
         self.dictionary = Dictionary(docs)
@@ -29,8 +31,9 @@ class GensimLdaModel(Model):
                               num_topics=num_topics,
                               random_state=self.random_seed)
 
-    def update_model(self, docs):
+    def update_model(self, docs, **parameters):
         added_corpus = [self.dictionary.doc2bow(tokens) for tokens in docs]
+        self.dictionary.add_documents(added_corpus)
         self.model.update(added_corpus)
         self.bags_of_words = chain(self.bags_of_words, added_corpus)
 
