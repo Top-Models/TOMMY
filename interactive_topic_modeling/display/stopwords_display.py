@@ -20,7 +20,8 @@ class StopwordsDisplay(QScrollArea):
         # Initialize and add header label
         self.input_field = QLineEdit()
         self.input_field.setPlaceholderText("Exclude word")
-        self.input_field.setStyleSheet("border: 2px solid #E40046;")
+        self.input_field.setStyleSheet("border: 2px solid #E40046;"
+                                       "background-color: white;")
         self.input_field.setAlignment(Qt.AlignCenter)
         self.container_layout.addWidget(self.input_field)
 
@@ -57,7 +58,8 @@ class StopwordsDisplay(QScrollArea):
         for i in range(word_num):
             # Make and format word
             test_label = QLabel("Word {}".format(i + 1))
-            test_label.setStyleSheet("background-color: pink;")
+            test_label.setStyleSheet("background-color: #E40046;"
+                                     "color: white;")
             test_label.setAlignment(Qt.AlignCenter)
             test_label.setFixedSize(100, 50)
 
