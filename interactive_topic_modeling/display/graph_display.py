@@ -35,7 +35,11 @@ class GraphDisplay(QTabWidget):
         super().__init__()
 
         # Initialize widget properties
-        self.setStyleSheet("""
+        self.setStyleSheet("""        
+                QTabWidget {
+                    border: none;
+                }
+        
                 QTabWidget::pane {
                     border: none; 
                 }
@@ -57,6 +61,12 @@ class GraphDisplay(QTabWidget):
                     color: #000000;
                 }
             """)
+
+        # { tab_name, lda_model }
+        self.lda_model_container = {}
+
+        # { tab_name, [canvas] }
+        self.plots_container = {}
 
         # Initialize widgets
         self.fetched_topics_display = FetchedTopicsDisplay()
@@ -88,23 +98,33 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         # Perform LDA
         lda_topics = perform_lda_on_text(self.sample_text)
-        self.add_lda_plot(lda_topics)
+
+        # Get active tab name
+        active_tab_name = self.tabText(self.currentIndex())
+
+        # Add LDA plot to active tab
+        self.add_lda_plot(active_tab_name, lda_topics)
 
         # Event handling
         self.tabBarClicked.connect(self.on_tab_clicked)
 
-    def add_lda_plot(self, lda_model) -> None:
+    def add_lda_plot(self, tab_name: str, lda_model) -> None:
+        """
+        Add a word cloud plot for the given LDA model
+        :param tab_name: Name of the tab to add the plot to
+        :param lda_model: The LDA model to add a plot for
+        :return: None
+        """
         for topic_id, topic in enumerate(lda_model.print_topics(num_topics=5, num_words=20)):
 
             topic_words = " ".join([word.split("*")[1].strip() for word in topic[1].split(" + ")])
             wordcloud = WordCloud(width=800, height=800, random_state=15, max_font_size=110).generate(topic_words)
 
             # Add topics to topic display
-            self.fetched_topics_display.add_topic("init_model", f"Topic {topic_id}", topic_words.split())
-
-            # TODO: Add only the first plot for now. Add all plots later
-            if topic_id != 0:
-                continue
+            self.fetched_topics_display.add_topic(
+                tab_name,
+                f"Topic {topic_id}",
+                topic_words.split())
 
             # Create a Matplotlib figure and canvas
             fig, ax = plt.subplots()
@@ -114,8 +134,19 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
             canvas = FigureCanvas(fig)
 
-            # Add canvas to layout
-            self.init_model_layout.addWidget(canvas)
+            # Add canvas to container
+            if tab_name not in self.plots_container:
+                self.plots_container[tab_name] = []
+
+            self.plots_container[tab_name].append(canvas)
+
+    def display_plots(self, tab_name: str) -> None:
+        """
+        Display the plots for the given tab
+        :param tab_name: Name of the tab to display the plots for
+        :return: None
+        """
+        pass
 
     def on_tab_clicked(self, index) -> None:
         """
@@ -126,3 +157,4 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         clicked_tab_name = self.tabText(index)
         self.fetched_topics_display.display_topics(clicked_tab_name)
+        # TODO: display the plots for the clicked tab
