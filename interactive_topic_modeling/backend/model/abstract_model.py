@@ -25,7 +25,7 @@ class Model(ABC):
         if new_num_topics is None:
             return
         elif isinstance(new_num_topics, int):
-            self._random_seed = new_num_topics
+            self._num_topics = new_num_topics
         else:
             raise ValueError('Number of topics passed to Model class is not an integer.', new_num_topics)
 
@@ -45,6 +45,7 @@ class Model(ABC):
             raise ValueError('Random seed passed to Model class is not an integer.', new_random_seed)
 
     def __init__(self, random_seed: int):
+        self._num_topics = 10
         self.random_seed = random_seed
 
     @abstractmethod
@@ -78,28 +79,28 @@ class Model(ABC):
         pass
 
     @abstractmethod
-    def show_topics(self, n) -> List[Tuple[int, List[Tuple[str, float]]]]:
+    def show_topics(self, n: int) -> List[Tuple[int, List[Tuple[str, float]]]]:
         """returns for all topics the topic_id and the n best terms with their scores, e.g.:
         [(topic_id, [(term1, term1_probability), (term2, term2_probability), etc.]), etc.]
         """
         pass
 
     @abstractmethod
-    def get_topics(self, n) -> List[Tuple[int, List[Tuple[int, float]]]]:
+    def get_topics(self, n: int) -> List[Tuple[int, List[Tuple[int, float]]]]:
         """returns for all topics the topic_id and the term_id and the scores of the n best terms, e.g.:
         [(topic_id, [(term_id1, term1_probability), (term_id2, term2_probability), etc.]), etc.]
         """
         pass
 
     @abstractmethod
-    def show_topic_terms(self, topic_id, n) -> List[Tuple[str, float]]:
+    def show_topic_terms(self, topic_id: int, n: int) -> List[Tuple[str, float]]:
         """returns for the topic identified by topic_id the n best terms with their scores, e.g.:
         [(term1, term1_probability), (term2, term2_probability), etc.]
         """
         pass
 
     @abstractmethod
-    def get_topic_terms(self, topic_id, n) -> List[Tuple[int, float]]:
+    def get_topic_terms(self, topic_id: int, n: int) -> List[Tuple[int, float]]:
         """returns for the topic identified by topic_id the term_ids and scores of the n best terms, e.g.:
         [(term_id1, term1_probability), (term_id2, term2_probability), etc.]
         """

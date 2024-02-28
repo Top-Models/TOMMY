@@ -17,6 +17,7 @@ class GensimLdaModel(Model):
 
     def __init__(self, term_lists: TermLists, num_topics: int, random_seed=None, **parameters):
         super().__init__(random_seed)
+        self.parameters = {}
         self.num_topics = num_topics
         self.train_model(term_lists, **parameters)
 
@@ -28,12 +29,12 @@ class GensimLdaModel(Model):
         self.bags_of_words = [self.dictionary.doc2bow(tokens) for tokens in docs]
         self.model = LdaModel(corpus=self.bags_of_words,
                               id2word=self.dictionary,
-                              num_topics=num_topics,
+                              num_topics=self.num_topics,
                               random_state=self.random_seed)
 
     def update_model(self, docs, **parameters):
         added_corpus = [self.dictionary.doc2bow(tokens) for tokens in docs]
-        self.dictionary.add_documents(added_corpus)
+        self.dictionary.add_documents(docs)
         self.model.update(added_corpus)
         self.bags_of_words = chain(self.bags_of_words, added_corpus)
 
@@ -47,7 +48,7 @@ class GensimLdaModel(Model):
         return self.model.show_topics(formatted=False, num_words=n)
 
     def get_topics(self, n):
-        return [(topic_id, ) for topic_id in range(self.num_topics)]
+        return [(topic_id, self.get_topic_terms(topic_id, n)) for topic_id in range(self.num_topics)]
 
     def show_topic_terms(self, topic_id, n):
         return self.model.show_topic(topic_id, topn=n)
