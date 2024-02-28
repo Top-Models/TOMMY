@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QGridLayout, QLabel, QScrollArea, QWidget
+from PySide6.QtWidgets import QGridLayout, QLabel, QScrollArea, QWidget, QVBoxLayout
 
 
 class StopwordsDisplay(QScrollArea):
@@ -10,24 +10,58 @@ class StopwordsDisplay(QScrollArea):
         # Initialize widget properties
         self.setStyleSheet("background-color: white;")
 
-        # Initialize layout for scroll area
+        # Initialize container for all elements
+        self.container = QWidget()
+
+        # Initialize layout for container
+        self.container_layout = QVBoxLayout(self.container)
+        self.container_layout.setAlignment(Qt.AlignTop)
+
+        # Initialize and add header label
+        self.header_label = QLabel("Exclude word")
+        self.header_label.setAlignment(Qt.AlignCenter)
+        self.container_layout.addWidget(self.header_label)
+
+        # Initialize scroll area and its layout
         self.scroll_area = QWidget()
-        self.layout = QGridLayout(self.scroll_area)
-        self.layout.setAlignment(Qt.AlignCenter)
+        self.scroll_layout = QGridLayout(self.scroll_area)
+        self.scroll_layout.setAlignment(Qt.AlignCenter)
 
         # Initialize excluded words
-        for i in range(1, 5):
-            test_label = QLabel("Word")
-            test_label.setStyleSheet("background-color: pink;")
-            test_label.setAlignment(Qt.AlignCenter)
-            test_label.setFixedSize(200, 100)
-            self.layout.addWidget(test_label)
+        self.show_excluded_words(25)
 
-        # Set scroll area as focal point
-        self.setWidget(self.scroll_area)
+        # Add scroll area to container
+        self.container_layout.addWidget(self.scroll_area)
+
+        # Set container as focal point
+
+        self.setWidget(self.container)
 
         # Add scroll options
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setWidgetResizable(True)
 
+    def show_excluded_words(self, words: int):
+        """
+        NOTE: This function right now takes and integer of words, could be changed to a list later
+
+        Initialize and add word labels to the scroll area
+        :param words: The number of words needed to be showed
+        :return: None
+        """
+        word_num = words
+
+        for i in range(word_num):
+            # Make and format word
+            test_label = QLabel("Word {}".format(i + 1))
+            test_label.setStyleSheet("background-color: pink;")
+            test_label.setAlignment(Qt.AlignCenter)
+            test_label.setFixedSize(100, 50)
+
+            # Calculate placement
+            row = i // 2
+            col = i % 2
+
+            # Add to layout at the right spot
+            self.scroll_layout.addWidget(test_label, row, col)
