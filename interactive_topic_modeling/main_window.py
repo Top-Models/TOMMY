@@ -29,8 +29,46 @@ class MainWindow(QMainWindow):
         self.model_params_display = ModelParamsDisplay()
         self.imported_files_display = ImportedFilesDisplay()
         self.graph_display = GraphDisplay()
+
+        # Create apply button
         self.apply_button = QPushButton("Toepassen")
         self.apply_button.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {seco_col_blue};
+                color: white;
+            }}
+            
+            QPushButton:hover {{
+                background-color: {hover_seco_col_blue};
+            }}
+            
+            QPushButton:pressed {{
+                background-color: {pressed_seco_col_blue};
+            }}
+        """)
+
+        # Create next plot button
+        self.next_plot_button = QPushButton("Volgende plot")
+        self.next_plot_button.clicked.connect(self.on_next_plot_clicked)
+        self.next_plot_button.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {seco_col_blue};
+                color: white;
+            }}
+            
+            QPushButton:hover {{
+                background-color: {hover_seco_col_blue};
+            }}
+            
+            QPushButton:pressed {{
+                background-color: {pressed_seco_col_blue};
+            }}
+        """)
+
+        # Create previous plot button
+        self.previous_plot_button = QPushButton("Vorige plot")
+        self.previous_plot_button.clicked.connect(self.on_previous_plot_clicked)
+        self.previous_plot_button.setStyleSheet(f"""
             QPushButton {{
                 background-color: {seco_col_blue};
                 color: white;
@@ -53,6 +91,8 @@ class MainWindow(QMainWindow):
         self.initialize_widget(self.graph_display.fetched_topics_display, 950, 0, 250, 438)
         self.initialize_widget(self.graph_display, 250, 8, 700, 430)
         self.initialize_widget(self.apply_button, 842, 390, 100, 40)
+        self.initialize_widget(self.next_plot_button, 365, 390, 100, 40)
+        self.initialize_widget(self.previous_plot_button, 258, 390, 100, 40)
 
     def initialize_widget(self, widget: QWidget, x: int, y: int, w: int, h: int) -> None:
         """
@@ -68,3 +108,17 @@ class MainWindow(QMainWindow):
         widget.setParent(self)
         widget.setGeometry(x, y, w, h)
         widget.show()
+
+    def on_next_plot_clicked(self) -> None:
+        """
+        Event handler for when the next plot button is clicked
+        :return: None
+        """
+        self.graph_display.next_plot(self.graph_display.tabText(self.graph_display.currentIndex()))
+
+    def on_previous_plot_clicked(self) -> None:
+        """
+        Event handler for when the previous plot button is clicked
+        :return: None
+        """
+        self.graph_display.previous_plot(self.graph_display.tabText(self.graph_display.currentIndex()))

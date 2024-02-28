@@ -1,13 +1,32 @@
-from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout, QPushButton
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
-import numpy as np
-from gensim import corpora, models
-import gensim.downloader as api
 from wordcloud import WordCloud
+from gensim import corpora, models
 
 # Assuming you have this import statement
 from interactive_topic_modeling.display.topic_display.fetched_topics_display import FetchedTopicsDisplay
+
+
+def preprocess_text(text) -> list:
+    tokens = text.lower().split()
+    return tokens
+
+
+def perform_lda_on_text(text):
+    # Preprocess the text
+    preprocessed_text = preprocess_text(text)
+
+    # Create a dictionary from the preprocessed text
+    dictionary = corpora.Dictionary([preprocessed_text])
+
+    # Create a bag-of-words representation of the corpus
+    corpus = [dictionary.doc2bow(preprocessed_text)]
+
+    # Train the LDA model
+    lda_model = models.LdaModel(corpus, num_topics=5, id2word=dictionary, passes=10)
+
+    return lda_model
 
 
 class GraphDisplay(QTabWidget):
@@ -17,7 +36,11 @@ class GraphDisplay(QTabWidget):
         super().__init__()
 
         # Initialize widget properties
-        self.setStyleSheet("""
+        self.setStyleSheet("""        
+                QTabWidget {
+                    border: none;
+                }
+
                 QTabWidget::pane {
                     border: none; 
                 }
@@ -39,6 +62,15 @@ class GraphDisplay(QTabWidget):
                     color: #000000;
                 }
             """)
+
+        # { tab_name, lda_model }
+        self.lda_model_container = {}
+
+        # { tab_name, [canvas] }
+        self.plots_container = {}
+
+        # { tab_name, plot_index }
+        self.plot_index = {}
 
         # Initialize widgets
         self.fetched_topics_display = FetchedTopicsDisplay()
@@ -69,6 +101,13 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         self.addTab(self.demo_second_tab, "demo_second_tab")
 
         # Perform LDA
+        lda_topics = perform_lda_on_text(self.sample_text)
+
+        # Get active tab name
+        active_tab_name = self.tabText(self.currentIndex())
+
+        # Add LDA plot to active tab
+        self.add_lda_plot(active_tab_name, lda_topics)
         lda_model = self.perform_lda_on_text(self.sample_text)
 
         # Event handling
@@ -79,6 +118,17 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         tokens = text.lower().split()
         return tokens
 
+    def add_lda_plot(self, tab_name: str, lda_model) -> None:
+        """
+        Add a word cloud plot for the given LDA model
+        :param tab_name: Name of the tab to add the plot to
+        :param lda_model: The LDA model to add a plot for
+        :return: None
+        """
+        self.plot_index[tab_name] = 0
+        self.plots_container[tab_name] = []
+
+        for topic_id, topic in enumerate(lda_model.print_topics(num_topics=5, num_words=20)):
     def get_wordcloud_canvasses(self, figures):
         canvas_list = []
         for figure in figures:
@@ -101,6 +151,23 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
             wordclouds.append(fig)
         return wordclouds
 
+            # Add canvas to container
+            self.plots_container[tab_name].append(canvas)
+
+    def display_plot(self, tab_name: str, plot_index: int) -> None:
+        """
+        Display the plots for the given tab
+        :param plot_index: Index of the plot to display
+        :param tab_name: Name of the tab to display the plots for
+        :return: None
+        """
+
+        # Clear the layout
+        for i in reversed(range(self.init_model_layout.count())):
+            self.init_model_layout.itemAt(i).widget().setParent(None)
+
+        # Add the plot to the layout
+        self.init_model_layout.addWidget(self.plots_container[tab_name][plot_index])
 
     def on_tab_clicked(self, index) -> None:
         """
