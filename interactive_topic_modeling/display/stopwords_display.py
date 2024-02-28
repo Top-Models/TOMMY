@@ -1,6 +1,8 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGridLayout, QLabel, QScrollArea, QWidget, QVBoxLayout, QLineEdit
 
+from interactive_topic_modeling.support.constant_variables import heading_font, text_font
+
 
 class StopwordsDisplay(QScrollArea):
 
@@ -25,8 +27,9 @@ class StopwordsDisplay(QScrollArea):
         # Initialize and add input field
         self.input_field = QLineEdit()
         self.input_field.setPlaceholderText("Exclude word")
-        self.input_field.setStyleSheet("border: 2px solid #E40046;"
-                                       "background-color: white;")
+        self.input_field.setStyleSheet(f"border: 2px solid #E40046;"
+                                       f"background-color: white;"
+                                       f"font-family: {text_font};")
         self.input_field.setFixedWidth(208)
         self.input_layout.addWidget(self.input_field)
         self.container_layout.addWidget(self.input_container)
@@ -63,9 +66,11 @@ class StopwordsDisplay(QScrollArea):
 
         for i in range(word_num):
             # Make and format word
-            test_label = QLabel("Word {}".format(i + 1))
-            test_label.setStyleSheet("background-color: #00968F;"
-                                     "color: white;")
+            test_label = QLabel("word {}".format(i + 1))
+            test_label.setStyleSheet(f"background-color: #00968F;"
+                                     f"color: white;"
+                                     f"font-family: {text_font};"
+                                     f"font-size: 12px;")
             test_label.setAlignment(Qt.AlignCenter)
             test_label.setFixedSize(100, 50)
 
