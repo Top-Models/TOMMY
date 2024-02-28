@@ -29,6 +29,8 @@ class ModelParamsDisplay(QScrollArea):
 
         self.topic_input = QLineEdit()
         self.topic_input.setPlaceholderText("1")
+        self.topic_input.setStyleSheet("border: 2px solid #E40046;")
+        self.topic_input.setFixedWidth(208)
         self.topic_input.setAlignment(Qt.AlignCenter)
         self.container_layout.addWidget(self.topic_input)
 
