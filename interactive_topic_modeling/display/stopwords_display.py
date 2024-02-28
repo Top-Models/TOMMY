@@ -8,7 +8,7 @@ class StopwordsDisplay(QScrollArea):
         super().__init__()
 
         # Initialize widget properties
-        self.setStyleSheet("background-color: pink;")
+        self.setStyleSheet("background-color: white;")
 
         # Initialize layout
         self.layout = QGridLayout()
