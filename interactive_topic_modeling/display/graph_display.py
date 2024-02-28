@@ -11,6 +11,7 @@ from interactive_topic_modeling.display.topic_display.fetched_topics_display imp
 
 
 class GraphDisplay(QTabWidget):
+    num_topics = 5
 
     def __init__(self):
         super().__init__()
@@ -68,8 +69,7 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         self.addTab(self.demo_second_tab, "demo_second_tab")
 
         # Perform LDA
-        lda_topics = self.perform_lda_on_text(self.sample_text)
-        self.add_lda_plot(lda_topics)
+        lda_model = self.perform_lda_on_text(self.sample_text)
 
         # Event handling
         self.tabBarClicked.connect(self.on_tab_clicked)
@@ -79,29 +79,28 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         tokens = text.lower().split()
         return tokens
 
-    def add_lda_plot(self, lda_model) -> None:
-        for topic_id, topic in enumerate(lda_model.print_topics(num_topics=5, num_words=20)):
+    def get_wordcloud_canvasses(self, figures):
+        canvas_list = []
+        for figure in figures:
+            canvas_list.append(FigureCanvas(figure))
+        return canvas_list
+
+    def construct_wordcloud(self, lda_model):
+        wordclouds = []
+        for topic_id, topic in enumerate(lda_model.print_topics(num_topics=self.num_topics, num_words=20)):
 
             topic_words = " ".join([word.split("*")[1].strip() for word in topic[1].split(" + ")])
             wordcloud = WordCloud(width=800, height=800, random_state=15, max_font_size=110).generate(topic_words)
-
-            # Add topics to topic display
-            self.fetched_topics_display.add_topic("init_model", f"Topic {topic_id}", topic_words.split())
-
-            # Stop after 1 plot
-            if topic_id == 1:
-                continue
 
             # Create a Matplotlib figure and canvas
             fig, ax = plt.subplots()
             ax.imshow(wordcloud, interpolation="bilinear")
             ax.axis("off")
-            ax.set_title("Topic: {}".format(topic_id))
+            ax.set_title("Topic {}".format(topic_id))
 
-            canvas = FigureCanvas(fig)
+            wordclouds.append(fig)
+        return wordclouds
 
-            # Add canvas to layout
-            self.init_model_layout.addWidget(canvas)
 
     def on_tab_clicked(self, index) -> None:
         """
@@ -124,6 +123,6 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         corpus = [dictionary.doc2bow(preprocessed_text)]
 
         # Train the LDA model
-        lda_model = models.LdaModel(corpus, num_topics=5, id2word=dictionary, passes=10)
+        lda_model = models.LdaModel(corpus, num_topics=self.num_topics, id2word=dictionary, passes=100)
 
         return lda_model
