@@ -1,13 +1,32 @@
-from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
-import numpy as np
+from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout
 from gensim import corpora, models
-import gensim.downloader as api
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from wordcloud import WordCloud
 
 # Assuming you have this import statement
 from interactive_topic_modeling.display.topic_display.fetched_topics_display import FetchedTopicsDisplay
+
+
+def preprocess_text(text) -> list:
+    tokens = text.lower().split()
+    return tokens
+
+
+def perform_lda_on_text(text):
+    # Preprocess the text
+    preprocessed_text = preprocess_text(text)
+
+    # Create a dictionary from the preprocessed text
+    dictionary = corpora.Dictionary([preprocessed_text])
+
+    # Create a bag-of-words representation of the corpus
+    corpus = [dictionary.doc2bow(preprocessed_text)]
+
+    # Train the LDA model
+    lda_model = models.LdaModel(corpus, num_topics=5, id2word=dictionary, passes=10)
+
+    return lda_model
 
 
 class GraphDisplay(QTabWidget):
@@ -68,16 +87,12 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         self.addTab(self.demo_second_tab, "demo_second_tab")
 
         # Perform LDA
-        lda_topics = self.perform_lda_on_text(self.sample_text)
+        lda_topics = perform_lda_on_text(self.sample_text)
         self.add_lda_plot(lda_topics)
 
         # Event handling
         self.tabBarClicked.connect(self.on_tab_clicked)
 
-    # Preprocess the text and tokenize it
-    def preprocess_text(self, text) -> list:
-        tokens = text.lower().split()
-        return tokens
 
     def add_lda_plot(self, lda_model) -> None:
         for topic_id, topic in enumerate(lda_model.print_topics(num_topics=5, num_words=20)):
@@ -88,8 +103,8 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
             # Add topics to topic display
             self.fetched_topics_display.add_topic("init_model", f"Topic {topic_id}", topic_words.split())
 
-            # Stop after 1 plot
-            if topic_id == 1:
+            # TODO: Add only the first plot for now. Add all plots later
+            if topic_id != 0:
                 continue
 
             # Create a Matplotlib figure and canvas
@@ -112,18 +127,3 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         clicked_tab_name = self.tabText(index)
         self.fetched_topics_display.display_topics(clicked_tab_name)
-
-    def perform_lda_on_text(self, text):
-        # Preprocess the text
-        preprocessed_text = self.preprocess_text(text)
-
-        # Create a dictionary from the preprocessed text
-        dictionary = corpora.Dictionary([preprocessed_text])
-
-        # Create a bag-of-words representation of the corpus
-        corpus = [dictionary.doc2bow(preprocessed_text)]
-
-        # Train the LDA model
-        lda_model = models.LdaModel(corpus, num_topics=5, id2word=dictionary, passes=10)
-
-        return lda_model

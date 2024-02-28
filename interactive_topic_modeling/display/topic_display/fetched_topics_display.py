@@ -22,8 +22,6 @@ class FetchedTopicsDisplay(QScrollArea):
         self.layout.setAlignment(Qt.AlignCenter | Qt.AlignTop)
 
         # NOTE: These topics are only for demonstration purposes
-        self.add_topic("init_model", "Topic 1", ["word1", "word2", "word3"])
-        self.add_topic("init_model", "Topic 2", ["word4", "word5", "word6"])
         self.add_topic("demo_second_tab", "Topic 3", ["word7", "word8", "word9"])
         self.add_topic("demo_second_tab", "Topic 4", ["word10", "word11", "word12"])
 
@@ -68,6 +66,10 @@ class FetchedTopicsDisplay(QScrollArea):
         # Clear current display
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().deleteLater()
+
+        # Check if tab exists
+        if tab_name not in self.topic_container:
+            return
 
         # Add topics to display
         for topic_name, topic_words in self.topic_container[tab_name]:
