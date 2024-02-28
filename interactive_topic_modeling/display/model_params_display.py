@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QScrollArea
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QScrollArea, QLineEdit, QWidget
 
 
 class ModelParamsDisplay(QScrollArea):
@@ -8,7 +8,7 @@ class ModelParamsDisplay(QScrollArea):
         super().__init__()
 
         # Initialize widget properties
-        self.setStyleSheet("background-color: lightgrey;"
+        self.setStyleSheet("background-color: white;"
                            "margin: 0px;"
                            "padding: 0px;")
 
@@ -16,9 +16,23 @@ class ModelParamsDisplay(QScrollArea):
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
+        # Initialize container that will hold settings
+        self.container = QWidget()
+        self.container.setStyleSheet("border: none;")
+        self.container_layout = QVBoxLayout(self.container)
+        self.container_layout.setAlignment(Qt.AlignTop)
+
         # Initialize widgets
-        self.label = QLabel("Model Parameters Display")
-        self.label.setAlignment(Qt.AlignCenter)
+        topic_label = QLabel("Number of topics:")
+        topic_label.setAlignment(Qt.AlignCenter)
+        self.container_layout.addWidget(topic_label)
+
+        self.topic_input = QLineEdit()
+        self.topic_input.setPlaceholderText("1")
+        self.topic_input.setAlignment(Qt.AlignCenter)
+        self.container_layout.addWidget(self.topic_input)
 
         # Add widgets
-        self.layout.addWidget(self.label)
+        self.layout.addWidget(self.container)
+        self.setStyleSheet("border-bottom: 2px solid #E40046;")
+
