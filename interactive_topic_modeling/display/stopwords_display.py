@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QGridLayout, QLabel, QScrollArea, QWidget, QVBoxLayout
+from PySide6.QtWidgets import QGridLayout, QLabel, QScrollArea, QWidget, QVBoxLayout, QLineEdit
 
 
 class StopwordsDisplay(QScrollArea):
@@ -18,9 +18,11 @@ class StopwordsDisplay(QScrollArea):
         self.container_layout.setAlignment(Qt.AlignTop)
 
         # Initialize and add header label
-        self.header_label = QLabel("Exclude word")
-        self.header_label.setAlignment(Qt.AlignCenter)
-        self.container_layout.addWidget(self.header_label)
+        self.input_field = QLineEdit()
+        self.input_field.setPlaceholderText("Exclude word")
+        self.input_field.setStyleSheet("border: 2px solid #E40046;")
+        self.input_field.setAlignment(Qt.AlignCenter)
+        self.container_layout.addWidget(self.input_field)
 
         # Initialize scroll area and its layout
         self.scroll_area = QWidget()
