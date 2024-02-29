@@ -1,5 +1,3 @@
-import os
-
 from PySide6.QtCore import QSize
 from PySide6.QtWidgets import (
     QMainWindow,
@@ -12,7 +10,6 @@ from interactive_topic_modeling.display.imported_files_display.imported_files_di
 from interactive_topic_modeling.display.model_params_display import ModelParamsDisplay
 from interactive_topic_modeling.support.constant_variables import text_font, seco_col_blue, hover_seco_col_blue, \
     pressed_seco_col_blue
-from interactive_topic_modeling.support.project_settings import current_project_settings
 
 
 class MainWindow(QMainWindow):
@@ -89,7 +86,7 @@ class MainWindow(QMainWindow):
         # Initialize widgets
         self.initialize_widget(self.model_params_display, 0, 0, 250, 438)
         self.initialize_widget(self.imported_files_display.stopwords_display, 0, 438, 250, 275)
-        self.initialize_widget(self.imported_files_display, 250, 438, 700, 275)
+        self.initialize_widget(self.imported_files_display, 250, 438, 700, 261)
         self.initialize_widget(self.imported_files_display.file_stats_display, 950, 438, 250, 275)
         self.initialize_widget(self.graph_display.fetched_topics_display, 950, 0, 250, 438)
         self.initialize_widget(self.graph_display, 250, 8, 700, 430)
