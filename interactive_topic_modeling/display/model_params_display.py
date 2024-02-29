@@ -28,7 +28,7 @@ class ModelParamsDisplay(QScrollArea):
                                    f"font-family: {heading_font};"
                                    f"background-color: #E40046;"
                                    f"color: white;")
-        header_label.setFixedSize(242, 35)
+        header_label.setFixedSize(242, 34)
         header_label.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.layout.addWidget(header_label)
         # Initialize topic widgets
@@ -39,7 +39,7 @@ class ModelParamsDisplay(QScrollArea):
         self.container_layout.addWidget(topic_label)
 
         self.topic_input = QLineEdit()
-        self.topic_input.setPlaceholderText("1")
+        self.topic_input.setPlaceholderText("e.g. 1")
         self.topic_input.setStyleSheet(f"border-radius: 5px;"
                                        f"font-size: 14px;"
                                        f"font-family: {text_font};"
