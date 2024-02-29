@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QScrollArea, QLineEdit, QWidget, QHBoxLayout
 from interactive_topic_modeling.support.constant_variables import text_font, heading_font
 
+
 class ModelParamsDisplay(QScrollArea):
 
     def __init__(self):
