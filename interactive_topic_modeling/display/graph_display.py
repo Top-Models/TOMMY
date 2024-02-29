@@ -191,6 +191,10 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         :param tab_name: Name of the tab to display the next plot for
         :return: None
         """
+
+        if tab_name not in self.plots_container:
+            return
+
         self.plot_index[tab_name] = (self.plot_index[tab_name] + 1) % len(self.plots_container[tab_name])
         self.display_plot(tab_name, self.plot_index[tab_name])
 
@@ -200,5 +204,9 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         :param tab_name: Name of the tab to display the previous plot for
         :return: None
         """
+
+        if tab_name not in self.plots_container:
+            return
+
         self.plot_index[tab_name] = (self.plot_index[tab_name] - 1) % len(self.plots_container[tab_name])
         self.display_plot(tab_name, self.plot_index[tab_name])
