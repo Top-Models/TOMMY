@@ -29,8 +29,10 @@ class ModelParamsDisplay(QScrollArea):
                                    f"background-color: #E40046;"
                                    f"color: white;")
         header_label.setFixedSize(242, 34)
-        header_label.setAlignment(Qt.AlignmentFlag.AlignTop)
+        header_label.setContentsMargins(-5, 0, 0, 0)
+        header_label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         self.layout.addWidget(header_label)
+
         # Initialize topic widgets
         topic_label = QLabel("Number of topics:")
         topic_label.setStyleSheet(f"font-size: 16px;"
