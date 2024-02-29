@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (
 )
 
 from interactive_topic_modeling.display.graph_display import GraphDisplay
-from interactive_topic_modeling.display.imported_files_display import ImportedFilesDisplay
+from interactive_topic_modeling.display.imported_files_display.imported_files_display import ImportedFilesDisplay
 from interactive_topic_modeling.display.model_params_display import ModelParamsDisplay
 from interactive_topic_modeling.support.constant_variables import text_font, seco_col_blue, hover_seco_col_blue, \
     pressed_seco_col_blue

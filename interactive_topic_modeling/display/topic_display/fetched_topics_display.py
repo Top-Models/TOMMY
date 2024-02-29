@@ -10,7 +10,6 @@ class FetchedTopicsDisplay(QScrollArea):
         super().__init__()
 
         # Initialize widget properties
-        self.setMinimumSize(195, 400)
         self.setStyleSheet("background-color: white;")
 
         # { tab_name, [(topic_name, [words])] }
