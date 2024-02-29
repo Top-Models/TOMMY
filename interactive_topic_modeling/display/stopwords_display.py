@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QGridLayout, QLabel, QScrollArea, QWidget, QVBoxLayout, QLineEdit
+from PySide6.QtWidgets import QGridLayout, QLabel, QScrollArea, QWidget, QVBoxLayout, QLineEdit, QHBoxLayout
 
 from interactive_topic_modeling.support.constant_variables import heading_font, text_font
 
@@ -26,21 +26,27 @@ class StopwordsDisplay(QScrollArea):
 
         # Initialize and add input field
         self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText("Exclude word")
+        self.input_field.setPlaceholderText("Woord uitsluiten:")
         self.input_field.setStyleSheet(f"border: 2px solid #E40046;"
                                        f"background-color: white;"
-                                       f"font-family: {text_font};")
+                                       f"font-family: {text_font};"
+                                       f"margin-right: 10px;"
+                                       f"color: black;")
         self.input_field.setFixedWidth(208)
         self.input_layout.addWidget(self.input_field)
         self.container_layout.addWidget(self.input_container)
 
         # Initialize scroll area and its layout
         self.scroll_area = QWidget()
-        self.scroll_layout = QGridLayout(self.scroll_area)
+        self.scroll_layout = QHBoxLayout(self.scroll_area)
         self.scroll_layout.setAlignment(Qt.AlignCenter)
 
         # Initialize excluded words
-        self.show_excluded_words(25)
+        self.word_layout = QVBoxLayout()
+        self.scroll_layout.addLayout(self.word_layout)
+        test_list = ["word 1", "woord 2", "woord", "ellendig woord 2", "word 1", "woord 2", "woord", "ellendig woord 2",
+                     "word 1", "woord 2", "woord", "ellendig woord 2"]
+        self.show_excluded_words(test_list, self.word_layout)
 
         # Add scroll area to container
         self.container_layout.addWidget(self.scroll_area)
@@ -54,29 +60,32 @@ class StopwordsDisplay(QScrollArea):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setWidgetResizable(True)
 
-    def show_excluded_words(self, words: int):
+    def show_excluded_words(self, word_list: list[str], layout):
         """
         NOTE: This function right now takes and integer of words, could be changed to a list later
 
         Initialize and add word labels to the scroll area
-        :param words: The number of words needed to be showed
+        :param word_list: The list of words needed to be showed
         :return: None
         """
-        word_num = words
+        horizontal_layout = QHBoxLayout()
 
-        for i in range(word_num):
+        for i, word in enumerate(word_list):
             # Make and format word
-            test_label = QLabel("word {}".format(i + 1))
-            test_label.setStyleSheet(f"background-color: #00968F;"
+            word_label = QLabel(word, self)
+            word_label.setStyleSheet(f"background-color: #00968F;"
                                      f"color: white;"
                                      f"font-family: {text_font};"
-                                     f"font-size: 12px;")
-            test_label.setAlignment(Qt.AlignCenter)
-            test_label.setFixedSize(100, 50)
+                                     f"font-size: 12px;"
+                                     f"padding: 15px;"
+                                     )
+            word_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            horizontal_layout.addWidget(word_label)
 
-            # Calculate placement
-            row = i // 2
-            col = i % 2
+            if (i + 1) % 2 == 0 or len(word) >= 8:
+                layout.addLayout(horizontal_layout)
+                horizontal_layout = QHBoxLayout()
 
-            # Add to layout at the right spot
-            self.scroll_layout.addWidget(test_label, row, col)
+                # Add remaining widgets if any
+            if horizontal_layout.count() > 0:
+                layout.addLayout(horizontal_layout)
