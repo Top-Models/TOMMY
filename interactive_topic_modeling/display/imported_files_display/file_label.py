@@ -72,13 +72,17 @@ class FileLabel(QLabel):
         Deselect the label
         :return: None
         """
-        self.selected = False
-        self.setStyleSheet(f"font-family: {heading_font};"
-                           f"font-size: 15px;"
-                           f"background-color: {sec_col_orange};"
-                           f"color: black;"
-                           f"margin: 0px;"
-                           f"padding: 10px;")
+
+        try:
+            self.selected = False
+            self.setStyleSheet(f"font-family: {heading_font};"
+                               f"font-size: 15px;"
+                               f"background-color: {sec_col_orange};"
+                               f"color: black;"
+                               f"margin: 0px;"
+                               f"padding: 10px;")
+        except RuntimeError:
+            pass
 
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:
         """

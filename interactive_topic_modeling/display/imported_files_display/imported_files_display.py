@@ -6,7 +6,6 @@ from interactive_topic_modeling.backend.file_import.file_reader import FileReade
 from interactive_topic_modeling.display.imported_files_display.file_label import FileLabel
 from interactive_topic_modeling.display.imported_files_display.file_stats_display import FileStatsDisplay
 from interactive_topic_modeling.display.stopwords_display import StopwordsDisplay
-from interactive_topic_modeling.support import project_settings
 from interactive_topic_modeling.support.project_settings import current_project_settings
 
 
