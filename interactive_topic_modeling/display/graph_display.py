@@ -145,6 +145,13 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
             # Add canvas to container
             self.plots_container[tab_name].append(canvas)
 
+    def get_active_tab_name(self) -> str:
+        """
+        Get the name of the active tab
+        :return: The name of the active tab
+        """
+        return self.tabText(self.currentIndex())
+
     def display_plot(self, tab_name: str, plot_index: int) -> None:
         """
         Display the plots for the given tab
@@ -157,6 +164,10 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         for i in reversed(range(self.init_model_layout.count())):
             self.init_model_layout.itemAt(i).widget().setParent(None)
 
+        # Check if plot index is valid
+        if plot_index < 0 or plot_index >= len(self.plots_container[tab_name]):
+            return
+
         # Add the plot to the layout
         self.init_model_layout.addWidget(self.plots_container[tab_name][plot_index])
 
@@ -166,8 +177,12 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         :param index: Index of the clicked tab
         :return: None
         """
-
         clicked_tab_name = self.tabText(index)
+
+        # Check if the tab name is in the file container
+        if clicked_tab_name not in self.plots_container:
+            return
+
         self.fetched_topics_display.display_topics(clicked_tab_name)
         self.display_plot(clicked_tab_name, self.plot_index[clicked_tab_name])
 

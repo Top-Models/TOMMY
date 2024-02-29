@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QScrollArea, QWidget
 
+from interactive_topic_modeling.backend.file_import.file import File
 from interactive_topic_modeling.backend.file_import.file_reader import FileReader
 from interactive_topic_modeling.display.imported_files_display.file_label import FileLabel
 from interactive_topic_modeling.display.imported_files_display.file_stats_display import FileStatsDisplay
@@ -29,9 +30,8 @@ class ImportedFilesDisplay(QScrollArea):
         self.stopwords_display = StopwordsDisplay()
         self.file_stats_display = FileStatsDisplay()
 
-        # Initialize file list
-        # TODO: Convert to list of File objects later (with needed properties)
-        self.files = ["file1.csv", "file2.csv", "file3.csv", "file4.csv", "file5.csv", "file6.csv"]
+        # { tab_name, files }
+        self.file_container = {}
         self.selected_label = None
 
         # Add scroll options
@@ -39,31 +39,31 @@ class ImportedFilesDisplay(QScrollArea):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setWidgetResizable(True)
 
-        # Add widgets
-        self.display_files()
-
-    def fetch_files(self) -> None:
+    def fetch_files(self, tab_name: str) -> None:
         """
         Fetch the files from the selected directory
         :return: The list of files
         """
         all_files = list(self.file_reader.read_files(current_project_settings.selected_folder))
-        self.files = [file.split("/")[-1] for file in all_files]
+        files_to_add = [File(file.split("/")[-1]) for file in all_files]
+        self.file_container[tab_name] = files_to_add
 
-    def display_files(self) -> None:
+    def display_files(self, tab_name: str) -> None:
         """
         Display the files in the layout
         :return: None
         """
 
-        self.fetch_files()
-
         # Clear the layout
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().deleteLater()
 
+        # Check if the tab name is in the file container
+        if tab_name not in self.file_container:
+            return
+
         # Add the file labels to the layout
-        for file in self.files:
+        for file in self.file_container[tab_name]:
             file_label = FileLabel(file, self.scroll_area)
             file_label.clicked.connect(self.label_clicked)
             self.layout.addWidget(file_label)
@@ -81,3 +81,12 @@ class ImportedFilesDisplay(QScrollArea):
 
         # Set the selected label
         self.selected_label = clicked_label
+
+    def initialize_files_for_label(self, tab_name: str, files: list) -> None:
+        """
+        Initialize the files for the given label
+        :param tab_name: The name of the tab
+        :param files: The list of files
+        :return: None
+        """
+        self.file_container[tab_name] = files

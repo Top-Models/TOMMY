@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import QLabel, QSizePolicy
 
+from interactive_topic_modeling.backend.file_import.file import File
 from interactive_topic_modeling.support.constant_variables import heading_font, sec_col_orange, hover_seco_col_orange, \
     pressed_seco_col_orange
 
@@ -9,8 +10,8 @@ from interactive_topic_modeling.support.constant_variables import heading_font, 
 class FileLabel(QLabel):
     clicked = Signal(object)
 
-    def __init__(self, text="", parent=None):
-        super().__init__(text, parent)
+    def __init__(self, file: File, parent=None):
+        super().__init__(file.name, parent)
         self.setStyleSheet(f"font-family: {heading_font};"
                            f"font-size: 15px;"
                            f"background-color: {sec_col_orange};"

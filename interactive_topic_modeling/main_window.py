@@ -94,6 +94,16 @@ class MainWindow(QMainWindow):
         self.initialize_widget(self.next_plot_button, 365, 390, 100, 40)
         self.initialize_widget(self.previous_plot_button, 258, 390, 100, 40)
 
+        # Display correct initial files
+        self.imported_files_display.fetch_files(self.graph_display.get_active_tab_name())
+        self.imported_files_display.display_files(self.graph_display.get_active_tab_name())
+
+        # Connecting the tabBarClicked signal to a method in ImportedFilesDisplay
+        self.graph_display.tabBarClicked.connect(
+            lambda tab_index: self.imported_files_display.display_files(
+                self.graph_display.tabText(tab_index))
+        )
+
     def initialize_widget(self, widget: QWidget, x: int, y: int, w: int, h: int) -> None:
         """
         Initialize a widget on the main window.
@@ -122,3 +132,5 @@ class MainWindow(QMainWindow):
         :return: None
         """
         self.graph_display.previous_plot(self.graph_display.tabText(self.graph_display.currentIndex()))
+
+
