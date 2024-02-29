@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
+
+from interactive_topic_modeling.backend.file_import.file_reader import FileReader
 from interactive_topic_modeling.support import project_settings
-from interactive_topic_modeling.backend.file_import.file import File
 
 
 class ReadInFilesButton(QWidget):
@@ -8,7 +9,7 @@ class ReadInFilesButton(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.file_reader = File()
+        self.file_reader = FileReader()
         # Initialize layout
         layout = QVBoxLayout()
         self.setLayout(layout)

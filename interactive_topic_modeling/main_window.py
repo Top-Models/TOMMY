@@ -1,3 +1,5 @@
+import os
+
 from PySide6.QtCore import QSize
 from PySide6.QtWidgets import (
     QMainWindow,
@@ -10,6 +12,7 @@ from interactive_topic_modeling.display.imported_files_display.imported_files_di
 from interactive_topic_modeling.display.model_params_display import ModelParamsDisplay
 from interactive_topic_modeling.support.constant_variables import text_font, seco_col_blue, hover_seco_col_blue, \
     pressed_seco_col_blue
+from interactive_topic_modeling.support.project_settings import current_project_settings
 
 
 class MainWindow(QMainWindow):
