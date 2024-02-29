@@ -178,12 +178,11 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         :return: None
         """
         clicked_tab_name = self.tabText(index)
+        self.fetched_topics_display.display_topics(clicked_tab_name)
 
-        # Check if the tab name is in the file container
         if clicked_tab_name not in self.plots_container:
             return
 
-        self.fetched_topics_display.display_topics(clicked_tab_name)
         self.display_plot(clicked_tab_name, self.plot_index[clicked_tab_name])
 
     def next_plot(self, tab_name: str) -> None:
