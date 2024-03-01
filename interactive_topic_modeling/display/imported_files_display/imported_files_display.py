@@ -1,11 +1,12 @@
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QVBoxLayout, QScrollArea, QWidget
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
 
 from interactive_topic_modeling.backend.file_import.file import File
 from interactive_topic_modeling.backend.file_import.file_reader import FileReader
 from interactive_topic_modeling.display.imported_files_display.file_label import FileLabel
 from interactive_topic_modeling.display.imported_files_display.file_stats_display import FileStatsDisplay
 from interactive_topic_modeling.display.stopwords_display import StopwordsDisplay
+from interactive_topic_modeling.support.constant_variables import heading_font, seco_col_blue, hover_seco_col_blue
 from interactive_topic_modeling.support.project_settings import current_project_settings
 
 
@@ -25,6 +26,15 @@ class ImportedFilesDisplay(QScrollArea):
         self.layout = QVBoxLayout(self.scroll_area)
         self.layout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         self.setWidget(self.scroll_area)
+
+        # Add title label
+        title_label = QLabel("Imported Files")
+        title_label.setStyleSheet(f"font-size: 16px;"
+                                  f"font-family: {heading_font};"
+                                  f"font-weight: bold;"
+                                  f"color: {seco_col_blue};")
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.layout.addWidget(title_label)
 
         # Initialize widgets
         self.stopwords_display = StopwordsDisplay()

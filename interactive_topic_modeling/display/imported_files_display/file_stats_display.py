@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
 
 from interactive_topic_modeling.backend.file_import.file import File
-from interactive_topic_modeling.support.constant_variables import seco_col_blue, heading_font
+from interactive_topic_modeling.support.constant_variables import seco_col_blue, heading_font, hover_seco_col_blue
 
 
 class FileStatsDisplay(QScrollArea):
@@ -11,14 +11,36 @@ class FileStatsDisplay(QScrollArea):
         super().__init__()
 
         # Initialize widget properties
-        self.setStyleSheet(f"background-color: {seco_col_blue};")
+        self.setStyleSheet(f"background-color: white;"
+                           f"color: black;")
+        self.setMaximumHeight(200)
 
         # Initialize layout
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
+        # Add title widget
+        self.add_title_widget()
+
         # Initialize widgets
         self.display_no_file_selected()
+
+    def add_title_widget(self):
+        """
+        Add the title label widget
+        """
+        title_label = QLabel("File info")
+        title_label.setStyleSheet(f"font-size: 13px;"
+                                  f"font-family: {heading_font};"
+                                  f"font-weight: bold;"
+                                  f"text-transform: uppercase;"
+                                  f"background-color: {seco_col_blue};"
+                                  f"color: white;"
+                                  f"border-bottom: 3px solid {hover_seco_col_blue};")
+        title_label.setContentsMargins(0, 0, 0, 0)
+        title_label.setMaximumHeight(50)
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
+        self.layout.addWidget(title_label)
 
     def display_no_file_selected(self) -> None:
         """
@@ -41,8 +63,8 @@ class FileStatsDisplay(QScrollArea):
         Clear the layout
         :return: None
         """
-        while self.layout.count() > 0:
-            item = self.layout.takeAt(0)
+        while self.layout.count() > 1:
+            item = self.layout.takeAt(1)
             if item:
                 layout = item.layout()
                 if layout:
@@ -94,11 +116,18 @@ class FileStatsDisplay(QScrollArea):
 
         # Add file format
         file_format_label = QLabel(f"Format: {file.format}")
-        file_format_label.setStyleSheet("font-size: 16px;"
-                                        "margin-top: 10px;")
+        file_format_label.setStyleSheet("font-size: 16px;")
         file_format_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(file_format_label)
 
+        # Add word amount
+        word_amount_label = QLabel(f"Word amount: 0")  # TODO: Add true word amount later
+        word_amount_label.setStyleSheet("font-size: 16px;")
+        word_amount_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        vertical_layout.addWidget(word_amount_label)
 
-
-
+        # Add file size
+        file_size_label = QLabel(f"Size: 0KB")  # TODO: Add true file size later
+        file_size_label.setStyleSheet("font-size: 16px;")
+        file_size_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        vertical_layout.addWidget(file_size_label)
