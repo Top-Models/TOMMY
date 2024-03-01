@@ -18,7 +18,9 @@ class TopicEntity(QFrame):
 
         # Initialize title widget
         topic_label = QLabel(topic_name, self)
-        topic_label.setStyleSheet(f"font-family: {heading_font}; font-size: 15px;")
+        topic_label.setStyleSheet(f"font-family: {heading_font}; font-size: 15px;"
+                                  f"font-weight: bold;"
+                                  f"text-transform: uppercase;")
         topic_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(topic_label)
 

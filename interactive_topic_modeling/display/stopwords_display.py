@@ -87,7 +87,7 @@ class StopwordsDisplay(QScrollArea):
                 self.word_layout.addLayout(horizontal_layout)
                 horizontal_layout = QHBoxLayout()
 
-                # Add remaining widgets if any
+            # Add remaining widgets if any
             if horizontal_layout.count() > 0:
                 self.word_layout.addLayout(horizontal_layout)
 
