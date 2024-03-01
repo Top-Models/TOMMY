@@ -50,9 +50,12 @@ class ModelParamsDisplay(QScrollArea):
                                        f"border: 2px solid #00968F")
         self.topic_input.setAlignment(Qt.AlignLeft)
         self.container_layout.addWidget(self.topic_input)
+        self.topic_input.returnPressed.connect(self.fetch_topic_num)
 
         # Add widgets
         self.layout.addWidget(self.container)
         self.setStyleSheet("border-bottom: 2px solid #E40046;")
 
-
+    def fetch_topic_num(self):
+        topic_num = self.topic_input.text()
+        print("Number of topics: ", topic_num)
