@@ -12,6 +12,7 @@ class FileLabel(QLabel):
 
     def __init__(self, file: File, parent=None):
         super().__init__(file.name, parent)
+        self.file = file
         self.setStyleSheet(f"font-family: {text_font};"
                            f"font-size: 15px;"
                            f"background-color: {sec_col_orange};"

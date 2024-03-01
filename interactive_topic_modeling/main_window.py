@@ -132,5 +132,3 @@ class MainWindow(QMainWindow):
         :return: None
         """
         self.graph_display.previous_plot(self.graph_display.tabText(self.graph_display.currentIndex()))
-
-

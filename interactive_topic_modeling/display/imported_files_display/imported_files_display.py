@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QVBoxLayout, QScrollArea, QWidget
 
 from interactive_topic_modeling.backend.file_import.file import File
@@ -10,6 +10,7 @@ from interactive_topic_modeling.support.project_settings import current_project_
 
 
 class ImportedFilesDisplay(QScrollArea):
+
     def __init__(self):
         super().__init__()
 
@@ -32,6 +33,7 @@ class ImportedFilesDisplay(QScrollArea):
         # { tab_name, files }
         self.file_container = {}
         self.selected_label = None
+        self.selected_file = None
 
         # Add scroll options
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
@@ -78,8 +80,14 @@ class ImportedFilesDisplay(QScrollArea):
         if self.selected_label is not None and self.selected_label is not clicked_label:
             self.selected_label.deselect()
 
+        # Set the selected file
+        self.selected_file = clicked_label.file
+
         # Set the selected label
         self.selected_label = clicked_label
+
+        # Display the file stats
+        self.file_stats_display.display_file_info(clicked_label.file)
 
     def initialize_files_for_label(self, tab_name: str, files: list) -> None:
         """
