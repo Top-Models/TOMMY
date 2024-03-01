@@ -101,58 +101,55 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         self.addTab(self.demo_second_tab, "demo_second_tab")
 
         # Perform LDA
-        lda_topics = perform_lda_on_text(self.sample_text)
+        lda_model = perform_lda_on_text(self.sample_text)
 
         # Get active tab name
         active_tab_name = self.tabText(self.currentIndex())
 
-        # Add LDA plot to active tab
-        self.add_lda_plot(active_tab_name, lda_topics)
-        lda_model = self.perform_lda_on_text(self.sample_text)
+        # Add LDA plots to active tab
+        self.add_lda_plots(active_tab_name, lda_model)
 
         # Event handling
         self.tabBarClicked.connect(self.on_tab_clicked)
 
-    # Preprocess the text and tokenize it
-    def preprocess_text(self, text) -> list:
-        tokens = text.lower().split()
-        return tokens
+        self.display_plot(active_tab_name, 0)
 
-    def add_lda_plot(self, tab_name: str, lda_model) -> None:
+    def add_lda_plots(self, tab_name: str, lda_model) -> None:
         """
         Add a word cloud plot for the given LDA model
         :param tab_name: Name of the tab to add the plot to
         :param lda_model: The LDA model to add a plot for
         :return: None
         """
+        plots = []
         self.plot_index[tab_name] = 0
         self.plots_container[tab_name] = []
 
+        plots.extend(self.construct_wordclouds(tab_name, lda_model))
+
+        for plot in plots:
+            self.plots_container[tab_name].append(plot)
+
+    def construct_wordclouds(self, tab_name: str, lda_model):
+        canvases = []
         for topic_id, topic in enumerate(lda_model.print_topics(num_topics=5, num_words=20)):
-    def get_wordcloud_canvasses(self, figures):
-        canvas_list = []
-        for figure in figures:
-            canvas_list.append(FigureCanvas(figure))
-        return canvas_list
-
-    def construct_wordcloud(self, lda_model):
-        wordclouds = []
-        for topic_id, topic in enumerate(lda_model.print_topics(num_topics=self.num_topics, num_words=20)):
-
             topic_words = " ".join([word.split("*")[1].strip() for word in topic[1].split(" + ")])
             wordcloud = WordCloud(width=800, height=800, random_state=15, max_font_size=110).generate(topic_words)
+
+            # Add topics to topic display
+            self.fetched_topics_display.add_topic(
+                tab_name,
+                f"Topic {topic_id}",
+                topic_words.split())
 
             # Create a Matplotlib figure and canvas
             fig, ax = plt.subplots()
             ax.imshow(wordcloud, interpolation="bilinear")
             ax.axis("off")
-            ax.set_title("Topic {}".format(topic_id))
+            ax.set_title("Topic: {}".format(topic_id))
 
-            wordclouds.append(fig)
-        return wordclouds
-
-            # Add canvas to container
-            self.plots_container[tab_name].append(canvas)
+            canvases.append(FigureCanvas(fig))
+        return canvases
 
     def display_plot(self, tab_name: str, plot_index: int) -> None:
         """
@@ -178,18 +175,24 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         clicked_tab_name = self.tabText(index)
         self.fetched_topics_display.display_topics(clicked_tab_name)
+        self.display_plot(clicked_tab_name, self.plot_index[clicked_tab_name])
 
-    def perform_lda_on_text(self, text):
-        # Preprocess the text
-        preprocessed_text = self.preprocess_text(text)
 
-        # Create a dictionary from the preprocessed text
-        dictionary = corpora.Dictionary([preprocessed_text])
+    def next_plot(self, tab_name: str) -> None:
+        """
+        Display the next plot for the given tab
+        :param tab_name: Name of the tab to display the next plot for
+        :return: None
+        """
+        self.plot_index[tab_name] = (self.plot_index[tab_name] + 1) % len(self.plots_container[tab_name])
+        self.display_plot(tab_name, self.plot_index[tab_name])
 
-        # Create a bag-of-words representation of the corpus
-        corpus = [dictionary.doc2bow(preprocessed_text)]
 
-        # Train the LDA model
-        lda_model = models.LdaModel(corpus, num_topics=self.num_topics, id2word=dictionary, passes=100)
-
-        return lda_model
+    def previous_plot(self, tab_name: str) -> None:
+        """
+        Display the previous plot for the given tab
+        :param tab_name: Name of the tab to display the previous plot for
+        :return: None
+        """
+        self.plot_index[tab_name] = (self.plot_index[tab_name] - 1) % len(self.plots_container[tab_name])
+        self.display_plot(tab_name, self.plot_index[tab_name])
