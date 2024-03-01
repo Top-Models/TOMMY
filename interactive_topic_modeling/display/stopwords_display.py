@@ -21,7 +21,7 @@ class StopwordsDisplay(QScrollArea):
         self.container_layout = QVBoxLayout(self.container)
         self.container_layout.setAlignment(Qt.AlignTop)
 
-        # Add container for the input field
+        # Initialize container for the input field
         self.input_container = QWidget()
         self.input_layout = QVBoxLayout(self.input_container)
         self.input_layout.setAlignment(Qt.AlignCenter)
@@ -52,7 +52,6 @@ class StopwordsDisplay(QScrollArea):
         self.container_layout.addWidget(self.scroll_area)
 
         # Set container as focal point
-
         self.setWidget(self.container)
 
         # Add scroll options
