@@ -1,7 +1,7 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QGridLayout, QLabel, QScrollArea, QWidget, QVBoxLayout, QLineEdit, QHBoxLayout
+from PySide6.QtWidgets import QLabel, QScrollArea, QWidget, QVBoxLayout, QLineEdit, QHBoxLayout
 
-from interactive_topic_modeling.support.constant_variables import heading_font, text_font
+from interactive_topic_modeling.support.constant_variables import text_font
 
 
 class StopwordsDisplay(QScrollArea):
@@ -65,7 +65,7 @@ class StopwordsDisplay(QScrollArea):
 
     def show_excluded_words(self, word_list: list[str]):
         """
-        Initialize and add word labels to the scroll area
+        Visualize words in the words list
         :param word_list: The list of words needed to be showed
         :return: None
         """
@@ -93,6 +93,10 @@ class StopwordsDisplay(QScrollArea):
                 self.word_layout.addLayout(horizontal_layout)
 
     def add_to_word_list(self):
+        """
+            Add words to the list of excluded words and update the UI
+            :return: None
+        """
         new_word = self.input_field.text()
         if new_word:
             self.test_list.append(new_word)
@@ -100,6 +104,10 @@ class StopwordsDisplay(QScrollArea):
             self.input_field.clear()
 
     def update_word_vis(self):
+        """
+            Remove current words from excluded word UI and show new ones
+            :return: None
+        """
         # Clear current display
         for i in reversed(range(self.word_layout.count())):
             layout_item = self.word_layout.itemAt(i)
