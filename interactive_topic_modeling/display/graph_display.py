@@ -1,8 +1,10 @@
+import numpy as np
 from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout, QPushButton
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from gensim import corpora, models
+import random
 
 # Assuming you have this import statement
 from interactive_topic_modeling.display.topic_display.fetched_topics_display import FetchedTopicsDisplay
@@ -13,7 +15,7 @@ def preprocess_text(text) -> list:
     return tokens
 
 
-def perform_lda_on_text(text):
+def perform_lda_on_text(text, num_topics):
     # Preprocess the text
     preprocessed_text = preprocess_text(text)
 
@@ -24,9 +26,22 @@ def perform_lda_on_text(text):
     corpus = [dictionary.doc2bow(preprocessed_text)]
 
     # Train the LDA model
-    lda_model = models.LdaModel(corpus, num_topics=5, id2word=dictionary, passes=10)
+    lda_model = models.LdaModel(corpus, num_topics=num_topics, id2word=dictionary, passes=10)
 
     return lda_model
+
+def generate_list():
+    # Define the range of numbers
+    low_range = 1
+    high_range = 1500
+
+    # Define the desired length of the list
+    list_length = 1000
+
+    # Generate a list of random numbers
+    random_list = [random.randint(low_range, high_range) for _ in range(list_length)]
+
+    return random_list
 
 
 class GraphDisplay(QTabWidget):
@@ -101,7 +116,7 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         self.addTab(self.demo_second_tab, "demo_second_tab")
 
         # Perform LDA
-        lda_model = perform_lda_on_text(self.sample_text)
+        lda_model = perform_lda_on_text(self.sample_text, self.num_topics)
 
         # Get active tab name
         active_tab_name = self.tabText(self.currentIndex())
@@ -126,13 +141,14 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         self.plots_container[tab_name] = []
 
         plots.extend(self.construct_wordclouds(tab_name, lda_model))
+        plots.append(self.construct_word_count(tab_name))
 
         for plot in plots:
             self.plots_container[tab_name].append(plot)
 
     def construct_wordclouds(self, tab_name: str, lda_model):
         canvases = []
-        for topic_id, topic in enumerate(lda_model.print_topics(num_topics=5, num_words=20)):
+        for topic_id, topic in enumerate(lda_model.print_topics(num_topics=self.num_topics, num_words=20)):
             topic_words = " ".join([word.split("*")[1].strip() for word in topic[1].split(" + ")])
             wordcloud = WordCloud(width=800, height=800, random_state=15, max_font_size=110).generate(topic_words)
 
@@ -150,6 +166,20 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
             canvases.append(FigureCanvas(fig))
         return canvases
+
+    def construct_word_count(self, tab_name: str):
+        document_counts = generate_list()
+        max_document_count = 1500
+
+        fig = plt.figure()
+        plt.hist(document_counts, bins=max_document_count//10, color="darkblue")
+
+        plt.gca().set(xlabel="aantal woorden per document", ylabel="aantal documenten")
+        plt.margins(x=0.01)
+        plt.title("Distributie aantal woorden per document")
+
+        return FigureCanvas(fig)
+
 
     def display_plot(self, tab_name: str, plot_index: int) -> None:
         """
