@@ -19,7 +19,7 @@ class FileLabel(QLabel):
                            f"color: black;"
                            f"margin: 0px;"
                            f"padding: 10px;")
-        self.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         self.selected = False
 

@@ -10,7 +10,7 @@ from interactive_topic_modeling.support.constant_variables import heading_font, 
 from interactive_topic_modeling.support.project_settings import current_project_settings
 
 
-class ImportedFilesDisplay(QScrollArea):
+class ImportedFilesDisplay(QWidget):
 
     def __init__(self):
         super().__init__()
@@ -21,20 +21,34 @@ class ImportedFilesDisplay(QScrollArea):
         # Initialize widget properties
         self.setStyleSheet("background-color: white;")
 
-        # Initialize layout for scroll area
-        self.scroll_area = QWidget()
-        self.layout = QVBoxLayout(self.scroll_area)
-        self.layout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
-        self.setWidget(self.scroll_area)
+        # Initialize layout for the entire widget
+        self.layout = QVBoxLayout(self)
+        self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-        # Add title label
-        title_label = QLabel("Imported Files")
-        title_label.setStyleSheet(f"font-size: 16px;"
-                                  f"font-family: {heading_font};"
-                                  f"font-weight: bold;"
-                                  f"color: {seco_col_blue};")
-        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.layout.addWidget(title_label)
+        # Initialize title label
+        self.title_label = QLabel("Imported Files")
+        self.title_label.setStyleSheet(f"font-size: 13px;"
+                                       f"font-family: {heading_font};"
+                                       f"font-weight: bold;"
+                                       f"text-transform: uppercase;"
+                                       f"background-color: {seco_col_blue};"
+                                       f"color: white;"
+                                       f"border-bottom: 3px solid {hover_seco_col_blue};")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
+        self.title_label.setContentsMargins(0, 0, 0, 0)
+        self.title_label.setMinimumHeight(50)
+        self.layout.addWidget(self.title_label)
+
+        # Initialize scroll area and its layout
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_widget = QWidget()
+        self.scroll_layout = QVBoxLayout(self.scroll_widget)
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroll_area.setWidget(self.scroll_widget)
+        self.layout.addWidget(self.scroll_area)
 
         # Initialize widgets
         self.stopwords_display = StopwordsDisplay()
@@ -46,9 +60,9 @@ class ImportedFilesDisplay(QScrollArea):
         self.selected_file = None
 
         # Add scroll options
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.setWidgetResizable(True)
+        self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroll_area.setWidgetResizable(True)
 
     def fetch_files(self, tab_name: str) -> None:
         """
@@ -65,9 +79,9 @@ class ImportedFilesDisplay(QScrollArea):
         :return: None
         """
 
-        # Clear the layout
-        for i in reversed(range(self.layout.count())):
-            self.layout.itemAt(i).widget().deleteLater()
+        # Clear the layout except for the title label
+        for i in reversed(range(0, self.scroll_layout.count())):  # Start from 1 to keep the title label
+            self.scroll_layout.itemAt(i).widget().deleteLater()
 
         # Check if the tab name is in the file container
         if tab_name not in self.file_container:
@@ -77,7 +91,7 @@ class ImportedFilesDisplay(QScrollArea):
         for file in self.file_container[tab_name]:
             file_label = FileLabel(file, self.scroll_area)
             file_label.clicked.connect(self.label_clicked)
-            self.layout.addWidget(file_label)
+            self.scroll_layout.addWidget(file_label)
 
     def label_clicked(self, clicked_label) -> None:
         """
