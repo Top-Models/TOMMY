@@ -5,6 +5,8 @@ from interactive_topic_modeling.support.constant_variables import heading_font, 
 
 
 class StopwordsDisplay(QScrollArea):
+    test_list = ["word", "woordje", "woord", "langer woord", "word", "woordje", "woord", "langer woord",
+                 "word", "woordje", "woord", "langer woord 2"]
 
     def __init__(self):
         super().__init__()
@@ -44,9 +46,7 @@ class StopwordsDisplay(QScrollArea):
         # Initialize excluded words
         self.word_layout = QVBoxLayout()
         self.scroll_layout.addLayout(self.word_layout)
-        test_list = ["word 1", "woord 2", "woord", "ellendig woord 2", "word 1", "woord 2", "woord", "ellendig woord 2",
-                     "word 1", "woord 2", "woord", "ellendig woord 2"]
-        self.show_excluded_words(test_list, self.word_layout)
+        self.show_excluded_words(self.test_list)
 
         # Add scroll area to container
         self.container_layout.addWidget(self.scroll_area)
@@ -60,14 +60,16 @@ class StopwordsDisplay(QScrollArea):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setWidgetResizable(True)
 
-    def show_excluded_words(self, word_list: list[str], layout):
-        """
-        NOTE: This function right now takes and integer of words, could be changed to a list later
+        # Input field workings
+        self.input_field.returnPressed.connect(self.add_to_word_list)
 
+    def show_excluded_words(self, word_list: list[str]):
+        """
         Initialize and add word labels to the scroll area
         :param word_list: The list of words needed to be showed
         :return: None
         """
+
         horizontal_layout = QHBoxLayout()
 
         for i, word in enumerate(word_list):
@@ -83,9 +85,30 @@ class StopwordsDisplay(QScrollArea):
             horizontal_layout.addWidget(word_label)
 
             if (i + 1) % 2 == 0 or len(word) >= 8:
-                layout.addLayout(horizontal_layout)
+                self.word_layout.addLayout(horizontal_layout)
                 horizontal_layout = QHBoxLayout()
 
                 # Add remaining widgets if any
             if horizontal_layout.count() > 0:
-                layout.addLayout(horizontal_layout)
+                self.word_layout.addLayout(horizontal_layout)
+
+    def add_to_word_list(self):
+        new_word = self.input_field.text()
+        if new_word:
+            self.test_list.append(new_word)
+            self.update_word_vis()
+            self.input_field.clear()
+
+    def update_word_vis(self):
+        # Clear current display
+        for i in reversed(range(self.word_layout.count())):
+            layout_item = self.word_layout.itemAt(i)
+            if layout_item is not None:
+                while layout_item.count():
+                    item = layout_item.takeAt(0)
+                    current_item = item.widget()
+                    if current_item:
+                        current_item.setParent(None)
+
+        # Display updated words in UI
+        self.show_excluded_words(self.test_list)
