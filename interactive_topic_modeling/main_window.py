@@ -104,6 +104,11 @@ class MainWindow(QMainWindow):
                 self.graph_display.tabText(tab_index))
         )
 
+        # Connecting the tabBarClicked signal to a method in ImportedFilesDisplay
+        self.graph_display.tabBarClicked.connect(
+            lambda tab_index: self.imported_files_display.file_stats_display.display_no_file_selected()
+        )
+
     def initialize_widget(self, widget: QWidget, x: int, y: int, w: int, h: int) -> None:
         """
         Initialize a widget on the main window.
