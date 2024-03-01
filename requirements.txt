@@ -9,9 +9,16 @@ spacy==3.7.4
 gensim==4.3.2
 pyinstaller==6.4.0
 matplotlib==3.8.3
-
+#missed this import
+wordcloud==1.9.3
 # rtffolder to csv py file
 striprtf==0.0.26
+
+#pytest
+pytest==8.0.2
+pytest-qt==4.4.0
+pluggy==1.4.0
+iniconfig==2.0.0
 
 # Since we already have an internal stopwords file and
 # we don't need nltk for anything else at the moment, we can ignore this import.
