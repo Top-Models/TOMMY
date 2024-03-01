@@ -19,7 +19,7 @@ class ImportedFilesDisplay(QWidget):
         self.file_reader = FileReader()
 
         # Initialize widget properties
-        self.setStyleSheet("background-color: white;")
+        self.setStyleSheet("background-color: rgba(230, 230, 230, 230);")
 
         # Initialize layout for the entire widget
         self.layout = QVBoxLayout(self)
