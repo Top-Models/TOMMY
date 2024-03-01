@@ -127,6 +127,7 @@ grotendeels
 hare
 hebben
 heel
+heen
 hem
 hen
 het
@@ -319,6 +320,7 @@ vroeg
 waar
 waarom
 waarschijnlijk
+waarvoor
 wanneer
 want
 wat

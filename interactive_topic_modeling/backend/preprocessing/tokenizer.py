@@ -1,12 +1,17 @@
 from nltk.tokenize import RegexpTokenizer
+from spacy.tokens import Doc
+from spacy import Language
 
 
-class Tokenizer:
-    def __init__(self):
-        self.tokenizer = RegexpTokenizer(r'\w+')
+class NLTKTokenizer:
+    def __init__(self, nlp: Language):
+        self._vocab = nlp.vocab
+        self._tokenizer = RegexpTokenizer(r'\w+')
 
-    def process(self, docs):
-        return [self.tokenizer.tokenize(doc.lower()) for doc in docs]
+    def __call__(self, doc: str) -> Doc:
+        doc = doc.lower()
+        words = self._tokenizer.tokenize(doc)
+        words = [word for word in words if (not word.isnumeric()) and (len(word) > 1)]
+        spaces = [True] * len(words)
 
-
-tokenizer = Tokenizer().process
+        return Doc(self._vocab, words=words, spaces=spaces)

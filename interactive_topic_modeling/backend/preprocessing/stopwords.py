@@ -1,42 +1,24 @@
-from pipeline import Component
-
-
-class Stopper(Component):
-
-    def __init__(self, name):
-        super().__init__(name)
-        # Open the file
-        with open('stopwords.txt', 'r') as file:
-            # Read the content of the file into a string
-            file_content = file.read()
-
-        # Parse the stopwords
-        stopword_list = file_content.split()
-        self.stopwords = StopWords(stopword_list)
-
-    def process(self, tokens):
-        # Remove the stopwords from the tokens
-        return [token for token in tokens if token not in self.stopwords]
+from collections.abc import Iterable
 
 
 class StopWords:
 
-    def __init__(self, words):
+    def __init__(self, words: Iterable[str]):
         self.words = set(words)
 
-    def __str__(self):
-        return f"{list(self)}"
+    def __str__(self) -> str:
+        return f"{list(self.words)}"
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.words)
 
-    def __contains__(self, word):
+    def __contains__(self, word: str) -> bool:
         return word in self.words
 
-    def __iter__(self):
+    def __iter__(self) -> Iterable[str]:
         return iter(self.words)
 
-    def add(self, *args):
+    def add(self, *args: str):
         # Only 1 argument and it's a list or tuple
         if len(args) == 1 and isinstance(args[0], (list, tuple)):
             words = args[0]
@@ -47,7 +29,7 @@ class StopWords:
         for word in words:
             self.words.add(word)
 
-    def remove(self, *args):
+    def remove(self, *args: str):
         # Only 1 argument and it's a list or tuple
         if len(args) == 1 and isinstance(args[0], (list, tuple)):
             words = args[0]
