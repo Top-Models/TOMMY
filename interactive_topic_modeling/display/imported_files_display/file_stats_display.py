@@ -99,8 +99,6 @@ class FileStatsDisplay(QScrollArea):
         file_format_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(file_format_label)
 
-        print(self.layout.count())
-
 
 
 
