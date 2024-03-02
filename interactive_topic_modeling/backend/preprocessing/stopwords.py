@@ -3,7 +3,7 @@ from collections.abc import Iterable
 
 class StopWords:
 
-    def __init__(self, words: Iterable[str]):
+    def __init__(self, words: Iterable[str]) -> None:
         self.words = set(words)
 
     def __str__(self) -> str:
@@ -18,7 +18,7 @@ class StopWords:
     def __iter__(self) -> Iterable[str]:
         return iter(self.words)
 
-    def add(self, *args: str):
+    def add(self, *args: str) -> None:
         # Only 1 argument and it's a list or tuple
         if len(args) == 1 and isinstance(args[0], (list, tuple)):
             words = args[0]
@@ -29,7 +29,7 @@ class StopWords:
         for word in words:
             self.words.add(word)
 
-    def remove(self, *args: str):
+    def remove(self, *args: str) -> None:
         # Only 1 argument and it's a list or tuple
         if len(args) == 1 and isinstance(args[0], (list, tuple)):
             words = args[0]

@@ -4,7 +4,7 @@ from spacy import Language
 
 
 class NLTKTokenizer:
-    def __init__(self, nlp: Language):
+    def __init__(self, nlp: Language) -> None:
         self._vocab = nlp.vocab
         self._tokenizer = RegexpTokenizer(r'\w+')
 
