@@ -1,5 +1,5 @@
 import os
-import generic_file_importer
+from interactive_topic_modeling.backend.file_import import generic_file_importer
 from typing import Generator
 from interactive_topic_modeling.support import project_settings
 from interactive_topic_modeling.backend.file_import.file import File
