@@ -1,16 +1,16 @@
-# This file defines an absract base class that all topic modelling algorithms will implement
+# This file defines an abstract base class that all topic modelling algorithms will implement
 # The class will define a function to take a preprocessed input corpus, i.e., an iterable of lists of strings
 
 from random import randrange
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import Tuple, List, TypeAlias, Dict
+from typing import Tuple, List, Dict
 from numpy import ndarray
 from os import path
 
-TermList: TypeAlias = List[str]
-TermLists: TypeAlias = Iterable[TermList]
+TermList = List[str]
+TermLists = Iterable[TermList]
 
 
 class Model(ABC):
