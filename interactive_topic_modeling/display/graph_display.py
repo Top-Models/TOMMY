@@ -24,11 +24,12 @@ class GraphDisplay(QTabWidget):
         # Initialize widget properties
         self.setStyleSheet("""        
                 QTabWidget {
+                    color: black;
                     border: none;
                 }
 
                 QTabWidget::pane {
-                    border: none; 
+                    border: none;
                 }
 
                 QTabBar::tab { 
@@ -67,27 +68,18 @@ class GraphDisplay(QTabWidget):
         self.init_model.setLayout(self.init_model_layout)
         self.addTab(self.init_model, "lda_model")
 
-        self.sample_text = """
-        In de weelderige bamboebossen van China, waar de lucht dik is van de mist en fluisteringen van oude verhalen, zwerft de geliefde reuzenpanda, een wezen zowel charmant als raadselachtig.
-
-Met zijn iconische zwart-witte vacht die lijkt op een formeel pak, is de panda de VIP van de natuur, klaar om elke rode loper te betreden met zijn schattige aanwezigheid. Maar laat je niet misleiden door zijn chique kledij; achter die betoverende ogen schuilt een speelse geest en een hart zo groot als zijn knuffelige gestalte.
-
-Panda's zijn het toonbeeld van zenmeesters, die hun dagen lui doorbrengen met het knabbelen op bamboescheuten, hun favoriete lekkernij. Terwijl ze lui tegen de stam van een boom leunen, hun pluizige buikjes vol, lijken ze een aura van rust uit te stralen die zelfs de meest rusteloze zielen kalmeert.
-
-Maar laat je niet misleiden door hun relaxte houding; panda's zijn bedreven klimmers en kunnen snel de hoogste bomen beklimmen met de gratie van een ninja. Met een ondeugende glinstering in hun ogen voeren ze acrobatische toeren uit die elke circusartiest te schande zouden maken, allemaal in de jacht op de sappigste bamboescheuten.
-
-En laten we de pandawelpen niet vergeten, de kleine balletjes van bont die de show stelen met hun klunzige capriolen en hartverwarmende piepjes. Terwijl ze tuimelen en rollen in een speelse razernij, is het onmogelijk om niet te glimlachen om hun schattige onhandigheid.
-
-In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertragen, te genieten van de eenvoudige geneugten en onze speelse kant te omarmen. Dus de volgende keer dat je je gestrest of overweldigd voelt, neem dan een voorbeeld aan de panda's en geniet van een moment van ontspanning, panda-stijl. Immers, het leven is te kort om te serieus te nemen als er bamboescheuten te knabbelen en bomen te beklimmen zijn!
+    def apply_topic_modelling(self, corpus: list) -> None:
+        """
+        Apply topic modelling to the given corpus
+        :param corpus: The corpus to apply topic modelling to
+        :return: None
         """
 
         # Get active tab name
         active_tab_name = self.tabText(self.currentIndex())
 
-        # TODO: Create list of lists of tokens with with multiple documents
-
         # Perform LDA
-        lda_model = self.perform_lda_on_docs(active_tab_name, [self.sample_text])
+        lda_model = self.perform_lda_on_docs(active_tab_name, corpus)
 
         # Add LDA plots to active tab
         self.add_lda_plots(active_tab_name, lda_model)
@@ -104,10 +96,11 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         :param documents: The documents to perform LDA on
         :return: The trained LDA model
         """
-        # Preprocess documents
-        tokens = [preprocess_text(document) for document in documents]
+        # Get text from documents
+        text_from_docs = [document.content for document in documents]
 
-        # TODO: Create list of lists of tokens with with multiple documents
+        # Preprocess documents
+        tokens = [preprocess_text(doc_text) for doc_text in text_from_docs]
 
         # Train LDA model
         lda_model = self.train_lda_model(tokens)

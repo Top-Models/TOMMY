@@ -109,6 +109,13 @@ class MainWindow(QMainWindow):
             lambda tab_index: self.imported_files_display.file_stats_display.display_no_file_selected()
         )
 
+        # Connecting the apply button to the graph display
+        self.apply_button.clicked.connect(
+            lambda: self.graph_display.apply_topic_modelling(
+                self.imported_files_display.file_container[self.graph_display.get_active_tab_name()]
+            )
+        )
+
     def initialize_widget(self, widget: QWidget, x: int, y: int, w: int, h: int) -> None:
         """
         Initialize a widget on the main window.
