@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from gensim import corpora, models
 
+from interactive_topic_modeling.backend.model.abstract_model import TermLists
+from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
 # Assuming you have this import statement
 from interactive_topic_modeling.display.topic_display.fetched_topics_display import FetchedTopicsDisplay
 
@@ -11,22 +13,6 @@ from interactive_topic_modeling.display.topic_display.fetched_topics_display imp
 def preprocess_text(text) -> list:
     tokens = text.lower().split()
     return tokens
-
-
-def perform_lda_on_text(text):
-    # Preprocess the text
-    preprocessed_text = preprocess_text(text)
-
-    # Create a dictionary from the preprocessed text
-    dictionary = corpora.Dictionary([preprocessed_text])
-
-    # Create a bag-of-words representation of the corpus
-    corpus = [dictionary.doc2bow(preprocessed_text)]
-
-    # Train the LDA model
-    lda_model = models.LdaModel(corpus, num_topics=5, id2word=dictionary, passes=10)
-
-    return lda_model
 
 
 class GraphDisplay(QTabWidget):
@@ -79,7 +65,7 @@ class GraphDisplay(QTabWidget):
         self.init_model = QWidget()
         self.init_model_layout = QVBoxLayout()
         self.init_model.setLayout(self.init_model_layout)
-        self.addTab(self.init_model, "init_model")
+        self.addTab(self.init_model, "lda_model")
 
         self.sample_text = """
         In de weelderige bamboebossen van China, waar de lucht dik is van de mist en fluisteringen van oude verhalen, zwerft de geliefde reuzenpanda, een wezen zowel charmant als raadselachtig.
@@ -95,16 +81,11 @@ En laten we de pandawelpen niet vergeten, de kleine balletjes van bont die de sh
 In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertragen, te genieten van de eenvoudige geneugten en onze speelse kant te omarmen. Dus de volgende keer dat je je gestrest of overweldigd voelt, neem dan een voorbeeld aan de panda's en geniet van een moment van ontspanning, panda-stijl. Immers, het leven is te kort om te serieus te nemen als er bamboescheuten te knabbelen en bomen te beklimmen zijn!
         """
 
-        # Add second tab (for demonstration)
-        self.demo_second_tab = QWidget()
-        self.demo_second_tab.setStyleSheet("background-color: pink;")
-        self.addTab(self.demo_second_tab, "demo_second_tab")
-
-        # Perform LDA
-        lda_model = perform_lda_on_text(self.sample_text)
-
         # Get active tab name
         active_tab_name = self.tabText(self.currentIndex())
+
+        # Perform LDA
+        lda_model = self.perform_lda_on_text(active_tab_name, self.sample_text)
 
         # Add LDA plots to active tab
         self.add_lda_plots(active_tab_name, lda_model)
@@ -114,41 +95,66 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         self.display_plot(active_tab_name, 0)
 
-    def add_lda_plots(self, tab_name: str, lda_model) -> None:
+    def perform_lda_on_text(self, tab_name: str, text: str) -> GensimLdaModel:
+        """
+        Perform LDA on the given text
+        :param tab_name: Name of the tab to perform LDA on
+        :param text: The text to perform LDA on
+        :return: The trained LDA model
+        """
+        # Preprocess text
+        tokens = preprocess_text(text)
+
+        # TODO: Create list of lists of tokens with with multiple documents
+
+        # Train LDA model
+        lda_model = self.train_lda_model([tokens])
+
+        # Save LDA model
+        self.lda_model_container[tab_name] = lda_model
+
+        return lda_model
+
+    def train_lda_model(self, corpus: TermLists) -> GensimLdaModel:
+        """
+        Train an LDA model
+        :param dictionary: The dictionary to train the model on
+        :return: The trained LDA model
+        """
+        lda_model = GensimLdaModel(corpus, self.num_topics)
+        return lda_model
+
+    def add_lda_plots(self, tab_name: str, lda_model: GensimLdaModel) -> None:
         """
         Add a word cloud plot for the given LDA model
         :param tab_name: Name of the tab to add the plot to
         :param lda_model: The LDA model to add a plot for
         :return: None
         """
-        plots = []
+        canvases = self.construct_wordclouds(tab_name, lda_model)
+        self.plots_container[tab_name] = canvases
         self.plot_index[tab_name] = 0
-        self.plots_container[tab_name] = []
 
-        plots.extend(self.construct_wordclouds(tab_name, lda_model))
-
-        for plot in plots:
-            self.plots_container[tab_name].append(plot)
-
-    def construct_wordclouds(self, tab_name: str, lda_model):
+    def construct_wordclouds(self, tab_name: str, lda_model: GensimLdaModel):
+        """
+        Construct word cloud plots for the given LDA model
+        :param tab_name: Name of the tab to construct the plots for
+        :param lda_model: The LDA model to construct the plots for
+        :return: A list of word cloud plots
+        """
         canvases = []
-        for topic_id, topic in enumerate(lda_model.print_topics(num_topics=5, num_words=20)):
-            topic_words = " ".join([word.split("*")[1].strip() for word in topic[1].split(" + ")])
-            wordcloud = WordCloud(width=800, height=800, random_state=15, max_font_size=110).generate(topic_words)
 
-            # Add topics to topic display
-            self.fetched_topics_display.add_topic(
-                tab_name,
-                f"Topic {topic_id}",
-                topic_words.split())
+        for i in range(self.num_topics):
+            wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(
+                dict(lda_model.model.show_topic(i, topn=30))
+            )
 
-            # Create a Matplotlib figure and canvas
-            fig, ax = plt.subplots()
-            ax.imshow(wordcloud, interpolation="bilinear")
-            ax.axis("off")
-            ax.set_title("Topic: {}".format(topic_id))
+            canvas = FigureCanvas(plt.figure())
+            plt.imshow(wordcloud, interpolation='bilinear')
+            plt.axis('off')
+            plt.tight_layout(pad=0)
+            canvases.append(canvas)
 
-            canvases.append(FigureCanvas(fig))
         return canvases
 
     def get_active_tab_name(self) -> str:
@@ -191,7 +197,6 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         self.display_plot(clicked_tab_name, self.plot_index[clicked_tab_name])
 
-
     def next_plot(self, tab_name: str) -> None:
         """
         Display the next plot for the given tab
@@ -204,7 +209,6 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         self.plot_index[tab_name] = (self.plot_index[tab_name] + 1) % len(self.plots_container[tab_name])
         self.display_plot(tab_name, self.plot_index[tab_name])
-
 
     def previous_plot(self, tab_name: str) -> None:
         """
