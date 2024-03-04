@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDi
 from PySide6 import QtGui
 from pathlib import Path
 from interactive_topic_modeling.support import project_settings
-from interactive_topic_modeling.backend.file_import.file import File
+from interactive_topic_modeling.backend.file_import.file_importer import FileImporter
 import os
 
 
@@ -12,7 +12,7 @@ class ReadInFilesButton(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.file_reader = File()
+        self.file_reader = FileImporter()
         # Initialize layout
         layout = QVBoxLayout()
         self.setLayout(layout)
@@ -24,8 +24,7 @@ class ReadInFilesButton(QWidget):
         btn.clicked.connect(self.read_files)
 
     def read_files(self) -> None:
-        files = self.file_reader.read_files(
-            project_settings.current_project_settings.selected_folder)
+        files = self.file_reader.read_files()
         # Apply all other functions like preprocessing here
 
         print(list(files))
