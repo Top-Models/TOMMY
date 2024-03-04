@@ -13,7 +13,7 @@ class FileStatsDisplay(QScrollArea):
         # Initialize widget properties
         self.setStyleSheet(f"background-color: white;"
                            f"color: black;")
-        self.setMaximumHeight(200)
+        self.setMinimumHeight(200)
 
         # Initialize layout
         self.layout = QVBoxLayout()
@@ -114,6 +114,12 @@ class FileStatsDisplay(QScrollArea):
         file_name_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(file_name_label)
 
+        # Add file path
+        file_path_label = QLabel(f"Pad: {file.path}")
+        file_path_label.setStyleSheet("font-size: 16px;")
+        file_path_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        vertical_layout.addWidget(file_path_label)
+
         # Add file format
         file_format_label = QLabel(f"Formaat: {file.format}")
         file_format_label.setStyleSheet("font-size: 16px;")
@@ -121,13 +127,13 @@ class FileStatsDisplay(QScrollArea):
         vertical_layout.addWidget(file_format_label)
 
         # Add word amount
-        word_amount_label = QLabel(f"Aantal woorden: 0")  # TODO: Add true word amount later
+        word_amount_label = QLabel(f"Aantal woorden: {file.length}")
         word_amount_label.setStyleSheet("font-size: 16px;")
         word_amount_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(word_amount_label)
 
         # Add file size
-        file_size_label = QLabel(f"Grootte: 0KB")  # TODO: Add true file size later
+        file_size_label = QLabel(f"Grootte: {file.size}B")
         file_size_label.setStyleSheet("font-size: 16px;")
         file_size_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(file_size_label)
