@@ -84,9 +84,9 @@ class MainWindow(QMainWindow):
         """)
 
         # Initialize widgets
-        self.initialize_widget(self.model_params_display, 0, 0, 250, 438)
-        self.initialize_widget(self.imported_files_display.stopwords_display, 0, 438, 250, 260)
-        self.initialize_widget(self.imported_files_display, 250, 426, 700, 275)
+        self.initialize_widget(self.model_params_display, 0, 0, 250, 300)
+        self.initialize_widget(self.imported_files_display.stopwords_display, 0, 300, 250, 397)
+        self.initialize_widget(self.imported_files_display, 250, 438, 700, 260)
         self.initialize_widget(self.imported_files_display.file_stats_display, 950, 438, 250, 260)
         self.initialize_widget(self.graph_display.fetched_topics_display, 950, 0, 250, 438)
         self.initialize_widget(self.graph_display, 250, 8, 700, 430)

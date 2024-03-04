@@ -47,7 +47,7 @@ class GraphDisplay(QTabWidget):
 
                 QTabBar::tab:hover {
                     color: #000000;
-                }
+                }                
             """)
 
         # { tab_name, lda_model }
