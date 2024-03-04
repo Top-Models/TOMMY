@@ -37,6 +37,7 @@ class ModelParamsDisplay(QScrollArea):
         # Initialize topic widgets
         topic_label = QLabel("Number of topics:")
         topic_label.setStyleSheet(f"font-size: 16px;"
+                                  f"color: black;"
                                   f"font-family: {text_font}")
         topic_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.container_layout.addWidget(topic_label)
@@ -56,6 +57,5 @@ class ModelParamsDisplay(QScrollArea):
         self.layout.addWidget(self.container)
         self.setStyleSheet("border-bottom: 2px solid #E40046;")
 
-    def fetch_topic_num(self):
-        topic_num = self.topic_input.text()
-        print("Number of topics: ", topic_num)
+    def fetch_topic_num(self) -> int:
+        return int(self.topic_input.text())

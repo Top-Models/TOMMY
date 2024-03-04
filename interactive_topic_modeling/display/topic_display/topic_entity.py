@@ -18,7 +18,9 @@ class TopicEntity(QFrame):
 
         # Initialize title widget
         topic_label = QLabel(topic_name, self)
-        topic_label.setStyleSheet(f"font-family: {heading_font}; font-size: 15px;")
+        topic_label.setStyleSheet(f"font-family: {heading_font}; font-size: 15px;"
+                                  f"font-weight: bold;"
+                                  f"text-transform: uppercase;")
         topic_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(topic_label)
 
@@ -29,7 +31,8 @@ class TopicEntity(QFrame):
         # Adding words horizontally
         horizontal_layout = QHBoxLayout()
         for i, word in enumerate(topic_words):
-            word_label = QLabel(word, self)
+            cleaned_word = word.replace('"', ' ')
+            word_label = QLabel(cleaned_word, self)
             word_label.setStyleSheet(
                 f"font-family: {text_font}; "
                 f"font-size: 12px; "
