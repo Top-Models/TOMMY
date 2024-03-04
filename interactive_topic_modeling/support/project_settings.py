@@ -10,4 +10,4 @@ class ProjectSettings:
     project_name: str = "your project"
 
 
-current_project_settings = ProjectSettings(os.path.join(os.path.dirname(os.path.dirname(__file__)), "data"))
+current_project_settings = ProjectSettings(os.path.join(os.path.dirname(os.path.dirname(__file__)), "Import/csv_files"))

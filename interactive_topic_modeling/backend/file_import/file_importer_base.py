@@ -1,12 +1,14 @@
 from abc import ABC, abstractmethod
 from datetime import date, datetime
 from dateutil import parser
+from interactive_topic_modeling.backend.file_import.file import File
+from typing import Generator
 
 
 class FileImporterBase(ABC):
 
     @abstractmethod
-    def load_file(self, path: str) -> str:
+    def load_file(self, path: str) -> Generator[File, None, None]:
         pass
 
     @abstractmethod
@@ -15,12 +17,11 @@ class FileImporterBase(ABC):
 
     def parse_date(self, file_date: str) -> date:
         parse_info = DutchParseInfo()
-        return parser.parse(file_date, parserinfo=parse_info).date()
+        return parser.parse(file_date, parserinfo=parse_info, fuzzy=True, dayfirst=True).date()
 
 
 class DutchParseInfo(parser.parserinfo):
     def __init__(self):
-        super().__init__(dayfirst=True)
         self.MONTHS = [('January', 'Januari', 'Jan', 'Jan.'),
                        ('February', 'Februari', 'Feb', 'Feb.', 'Febr', 'Febr.'),
                        ('March', 'Maart', 'Mrt', 'Mrt.', 'Mar', 'Mar.'),
@@ -41,3 +42,5 @@ class DutchParseInfo(parser.parserinfo):
                          ('Fri', 'Friday', 'Vrijdag', 'Vr', 'Vr.', 'Vrij', 'Vrij.'),
                          ('Sat', 'Saturday', 'Zaterdag', 'Za', 'Za.', 'Zat', 'Zat.'),
                          ('Sun', 'Sunday', 'Zondag', 'Zo', 'Zo.')]
+
+        super().__init__(dayfirst=True)

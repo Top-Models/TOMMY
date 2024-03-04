@@ -5,8 +5,8 @@ from interactive_topic_modeling.support import project_settings
 from interactive_topic_modeling.backend.file_import.file import File
 
 
-class FileImporter:
-    """FileImporter is the mother class responsible for getting a path to a
+class FileReader:
+    """FileReader is the mother class responsible for getting a path to a
      folder, and creating a generator that returns all files in the directory"""
 
     def __init__(self):
@@ -28,5 +28,5 @@ class FileImporter:
 
 
 if __name__ == "__main__":
-    test_file = FileImporter()
+    test_file = FileReader()
     test_file.test_read_file()

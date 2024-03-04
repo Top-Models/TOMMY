@@ -1,6 +1,7 @@
 import os
 from interactive_topic_modeling.backend.file_import import generic_file_importer
 from typing import Generator
+from interactive_topic_modeling.backend.file_import.file import File
 
 
 class FileReader:
@@ -15,7 +16,7 @@ class FileReader:
         print(list(self.read_files(os.path.pardir)))
 
     # yields the contents of all compatible files in a given directory and all its subdirectories
-    def read_files(self, path: str) -> Generator[str, None, None]:
+    def read_files(self, path: str) -> Generator[File, None, None]:
         for root, dirs, files in os.walk(path):
             for file in files:
-                yield self.fileParsers.import_file(os.path.join(root, file))
+                yield from self.fileParsers.import_file(os.path.join(root, file))
