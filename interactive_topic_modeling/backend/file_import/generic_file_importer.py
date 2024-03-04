@@ -11,4 +11,4 @@ class GenericFileImporter:
         for importer in self.importers:
             if importer.compatible_file(path):
                 return importer.load_file(path)
-        raise NotImplementedError
+        raise NotImplementedError("File does not have a compatible file importer implementation. Path:", path)
