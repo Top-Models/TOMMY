@@ -10,7 +10,6 @@ class FetchedTopicsDisplay(QScrollArea):
         super().__init__()
 
         # Initialize widget properties
-        self.setMinimumSize(195, 400)
         self.setStyleSheet("background-color: white;")
 
         # { tab_name, [(topic_name, [words])] }
@@ -20,10 +19,6 @@ class FetchedTopicsDisplay(QScrollArea):
         self.scroll_area = QWidget()
         self.layout = QVBoxLayout(self.scroll_area)
         self.layout.setAlignment(Qt.AlignCenter | Qt.AlignTop)
-
-        # NOTE: These topics are only for demonstration purposes
-        self.add_topic("demo_second_tab", "Topic 3", ["word7", "word8", "word9"])
-        self.add_topic("demo_second_tab", "Topic 4", ["word10", "word11", "word12"])
 
         # Set scroll area as focal point
         self.setWidget(self.scroll_area)
@@ -83,3 +78,12 @@ class FetchedTopicsDisplay(QScrollArea):
         :return: None
         """
         self.topic_container.pop(tab_name)
+
+    def clear_topics(self) -> None:
+        """
+        Clear the topics from the display
+        :return: None
+        """
+        for i in reversed(range(self.layout.count())):
+            self.layout.itemAt(i).widget().deleteLater()
+        self.topic_container = {}
