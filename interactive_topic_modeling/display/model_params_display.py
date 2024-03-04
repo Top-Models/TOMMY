@@ -37,6 +37,7 @@ class ModelParamsDisplay(QScrollArea):
         # Initialize topic widgets
         topic_label = QLabel("Number of topics:")
         topic_label.setStyleSheet(f"font-size: 16px;"
+                                  f"color: black;"
                                   f"font-family: {text_font}")
         topic_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.container_layout.addWidget(topic_label)
