@@ -35,7 +35,7 @@ def extract_data_from_rtf_file(file_path):
             return None  # or return {}
 
         # Extracting date from the second line after the title
-        date = lines[title1_end_index+2]
+        date = lines[title1_end_index + 2]
         date = date.lstrip(',')  # Remove leading `",`
         date = date.strip('"')  # Remove trailing '"'
 
@@ -92,12 +92,12 @@ if __name__ == "__main__":
 
     # Define the folder containing the RTF files
     rtf_folder_name = "Rtf_files"
-    #rtf_folder_name = "test"
+    # rtf_folder_name = "test"
     rtf_folder_path = os.path.join(script_directory, rtf_folder_name)
 
     # Define the output CSV file
-    csv_output_file = 'Bodegravencsvdata.csv'
-    #csv_output_file = 'test.csv'
+    csv_output_file = 'csv_files/Bodegravencsvdata.csv'
+    # csv_output_file = 'test.csv'
 
     all_data = process_rtf_folder(rtf_folder_path)
 
