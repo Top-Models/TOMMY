@@ -6,10 +6,9 @@ from datetime import date
 class File:
     name: str
     size: int
-    content: str
     body: str
-    length = len(content.split())
-    format: str = name.split(".")[-1]
+    length: int
+    format: str
     author: str = None
     title: str = None
     date: date = None
