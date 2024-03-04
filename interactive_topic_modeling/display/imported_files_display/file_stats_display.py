@@ -29,7 +29,7 @@ class FileStatsDisplay(QScrollArea):
         """
         Add the title label widget
         """
-        title_label = QLabel("File info")
+        title_label = QLabel("Bestandsinformatie")
         title_label.setStyleSheet(f"font-size: 13px;"
                                   f"font-family: {heading_font};"
                                   f"font-weight: bold;"
@@ -53,7 +53,7 @@ class FileStatsDisplay(QScrollArea):
         self.layout.setContentsMargins(0, 0, 0, 0)
 
         # Add label
-        no_file_selected_label = QLabel("No file selected")
+        no_file_selected_label = QLabel("Geen bestand geselecteerd")
         no_file_selected_label.setStyleSheet("font-size: 20px;")
         no_file_selected_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(no_file_selected_label)
@@ -115,19 +115,19 @@ class FileStatsDisplay(QScrollArea):
         vertical_layout.addWidget(file_name_label)
 
         # Add file format
-        file_format_label = QLabel(f"Format: {file.format}")
+        file_format_label = QLabel(f"Formaat: {file.format}")
         file_format_label.setStyleSheet("font-size: 16px;")
         file_format_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(file_format_label)
 
         # Add word amount
-        word_amount_label = QLabel(f"Word amount: 0")  # TODO: Add true word amount later
+        word_amount_label = QLabel(f"Aantal woorden: 0")  # TODO: Add true word amount later
         word_amount_label.setStyleSheet("font-size: 16px;")
         word_amount_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(word_amount_label)
 
         # Add file size
-        file_size_label = QLabel(f"Size: 0KB")  # TODO: Add true file size later
+        file_size_label = QLabel(f"Grootte: 0KB")  # TODO: Add true file size later
         file_size_label.setStyleSheet("font-size: 16px;")
         file_size_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(file_size_label)

@@ -26,7 +26,7 @@ class ImportedFilesDisplay(QWidget):
         self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         # Initialize title label
-        self.title_label = QLabel("Imported Files")
+        self.title_label = QLabel("Geïmporteerde bestanden")
         self.title_label.setStyleSheet(f"font-size: 13px;"
                                        f"font-family: {heading_font};"
                                        f"font-weight: bold;"

@@ -31,7 +31,8 @@ class TopicEntity(QFrame):
         # Adding words horizontally
         horizontal_layout = QHBoxLayout()
         for i, word in enumerate(topic_words):
-            word_label = QLabel(word, self)
+            cleaned_word = word.replace('"', ' ')
+            word_label = QLabel(cleaned_word, self)
             word_label.setStyleSheet(
                 f"font-family: {text_font}; "
                 f"font-size: 12px; "
