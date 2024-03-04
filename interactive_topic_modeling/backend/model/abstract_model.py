@@ -124,6 +124,11 @@ class Model(ABC):
         pass
 
     @abstractmethod
+    def get_difference_matrix(self) -> ndarray:
+        """Returns the n_topics x n_topics array of similarities between different topics of the same LDA model"""
+        pass
+
+    @abstractmethod
     def save(self, fpath: path):
         """Saves the internal state of the model to the location on the hard disk specified by fpath"""
         pass

@@ -171,11 +171,16 @@ class GraphDisplay(QTabWidget):
         :param lda_model: The LDA model to add the plots for
         :return: None
         """
-        canvases = self.construct_wordclouds(tab_name, lda_model)
+        canvases = []
+        canvases.extend(self.construct_wordclouds(lda_model))
+        canvases.extend(self.construct_common_words(lda_model))
+        canvases.append(self.construct_correlation_matrix(lda_model))
+        #canvases.append(self.construct_word_count())
+
         self.plots_container[tab_name] = canvases
         self.plot_index[tab_name] = 0
 
-    def construct_wordclouds(self, tab_name: str, lda_model: GensimLdaModel):
+    def construct_wordclouds(self, lda_model: GensimLdaModel):
         """
         Construct word cloud plots for the given LDA model
         :param tab_name: Name of the tab to construct the plots for
@@ -197,19 +202,13 @@ class GraphDisplay(QTabWidget):
 
         return canvases
 
-    def get_active_tab_name(self) -> str:
-        """
-        Get the name of the active tab
-        :return: The name of the active tab
-        """
-        return self.tabText(self.currentIndex())
 
-
-    def construct_common_words(self, lda_model) -> list[FigureCanvas]:
+    def construct_common_words(self, lda_model: GensimLdaModel) -> list[FigureCanvas]:
         canvases = []
-        for topic_id, topic in enumerate(lda_model.print_topics(num_topics=self.num_topics, num_words=10)):
-            topic_words = [word.split("*")[1].strip() for word in topic[1].split(" + ")]
-            topic_weights = [float(word.split("*")[0].strip()) for word in topic[1].split(" + ")]
+        for topic_id, topic in enumerate(lda_model.show_topics(10)):
+            print(topic)
+            topic_words = [pair[0] for pair in topic[1]]
+            topic_weights = [pair[1] for pair in topic[1]]
 
             fig = plt.figure()
             plt.bar(topic_words, topic_weights, color="darkblue")
@@ -235,14 +234,22 @@ class GraphDisplay(QTabWidget):
 
         return FigureCanvas(fig)
 
-    def construct_correlation_matrix(self, lda_model) -> FigureCanvas:
-        difference_matrix, annotation = lda_model.diff(lda_model, distance='jaccard', num_words=20, annotation=False)
+    def construct_correlation_matrix(self, lda_model: GensimLdaModel) -> FigureCanvas:
+        difference_matrix = lda_model.get_difference_matrix(num_words=30)
 
         fig, ax = plt.subplots()
         data = ax.imshow(difference_matrix, cmap='RdBu_r', origin='lower')
         plt.colorbar(data)
         plt.title("Correlatiematrix topics")
         return FigureCanvas(fig)
+
+
+    def get_active_tab_name(self) -> str:
+        """
+        Get the name of the active tab
+        :return: The name of the active tab
+        """
+        return self.tabText(self.currentIndex())
 
     def display_plot(self, tab_name: str, plot_index: int) -> None:
         """
