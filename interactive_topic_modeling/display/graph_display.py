@@ -30,6 +30,7 @@ def perform_lda_on_text(text):
 
 
 class GraphDisplay(QTabWidget):
+    num_topics = 5
 
     def __init__(self):
         super().__init__()
@@ -100,30 +101,37 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         self.addTab(self.demo_second_tab, "demo_second_tab")
 
         # Perform LDA
-        lda_topics = perform_lda_on_text(self.sample_text)
+        lda_model = perform_lda_on_text(self.sample_text)
 
         # Get active tab name
         active_tab_name = self.tabText(self.currentIndex())
 
-        # Add LDA plot to active tab
-        self.add_lda_plot(active_tab_name, lda_topics)
+        # Add LDA plots to active tab
+        self.add_lda_plots(active_tab_name, lda_model)
 
         # Event handling
         self.tabBarClicked.connect(self.on_tab_clicked)
 
-        # Display plots of the first tab
         self.display_plot(active_tab_name, 0)
 
-    def add_lda_plot(self, tab_name: str, lda_model) -> None:
+    def add_lda_plots(self, tab_name: str, lda_model) -> None:
         """
         Add a word cloud plot for the given LDA model
         :param tab_name: Name of the tab to add the plot to
         :param lda_model: The LDA model to add a plot for
         :return: None
         """
+        plots = []
         self.plot_index[tab_name] = 0
         self.plots_container[tab_name] = []
 
+        plots.extend(self.construct_wordclouds(tab_name, lda_model))
+
+        for plot in plots:
+            self.plots_container[tab_name].append(plot)
+
+    def construct_wordclouds(self, tab_name: str, lda_model):
+        canvases = []
         for topic_id, topic in enumerate(lda_model.print_topics(num_topics=5, num_words=20)):
             topic_words = " ".join([word.split("*")[1].strip() for word in topic[1].split(" + ")])
             wordcloud = WordCloud(width=800, height=800, random_state=15, max_font_size=110).generate(topic_words)
@@ -140,10 +148,8 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
             ax.axis("off")
             ax.set_title("Topic: {}".format(topic_id))
 
-            canvas = FigureCanvas(fig)
-
-            # Add canvas to container
-            self.plots_container[tab_name].append(canvas)
+            canvases.append(FigureCanvas(fig))
+        return canvases
 
     def get_active_tab_name(self) -> str:
         """
@@ -185,6 +191,7 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         self.display_plot(clicked_tab_name, self.plot_index[clicked_tab_name])
 
+
     def next_plot(self, tab_name: str) -> None:
         """
         Display the next plot for the given tab
@@ -197,6 +204,7 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         self.plot_index[tab_name] = (self.plot_index[tab_name] + 1) % len(self.plots_container[tab_name])
         self.display_plot(tab_name, self.plot_index[tab_name])
+
 
     def previous_plot(self, tab_name: str) -> None:
         """
