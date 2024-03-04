@@ -140,25 +140,20 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         self.plot_index[tab_name] = 0
         self.plots_container[tab_name] = []
 
-        plots.extend(self.construct_wordclouds(tab_name, lda_model))
-        plots.append(self.construct_word_count(tab_name))
-        plots.extend(self.construct_common_words(tab_name, lda_model))
+        plots.extend(self.construct_wordclouds(lda_model))
+        plots.append(self.construct_word_count())
+        plots.extend(self.construct_common_words(lda_model))
+        plots.append(self.construct_correlation_matrix(lda_model))
 
         for plot in plots:
             self.plots_container[tab_name].append(plot)
 
-    def construct_wordclouds(self, tab_name: str, lda_model) -> list[FigureCanvas]:
+    def construct_wordclouds(self, lda_model) -> list[FigureCanvas]:
         canvases = []
         for topic_id, topic in enumerate(lda_model.print_topics(num_topics=self.num_topics, num_words=20)):
             topic_words = " ".join([word.split("*")[1].strip() for word in topic[1].split(" + ")])
 
             wordcloud = WordCloud(width=800, height=800, random_state=15, max_font_size=110).generate(topic_words)
-
-            # Add topics to topic display
-            self.fetched_topics_display.add_topic(
-                tab_name,
-                f"Topic {topic_id}",
-                topic_words.split())
 
             # Create a Matplotlib figure and canvas
             fig, ax = plt.subplots()
@@ -170,12 +165,11 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         return canvases
 
 
-    def construct_common_words(self, tab_name: str, lda_model) -> list[FigureCanvas]:
+    def construct_common_words(self, lda_model) -> list[FigureCanvas]:
         canvases = []
         for topic_id, topic in enumerate(lda_model.print_topics(num_topics=self.num_topics, num_words=10)):
             topic_words = [word.split("*")[1].strip() for word in topic[1].split(" + ")]
             topic_weights = [float(word.split("*")[0].strip()) for word in topic[1].split(" + ")]
-            print(topic_weights)
 
             fig = plt.figure()
             plt.bar(topic_words, topic_weights, color="darkblue")
@@ -188,7 +182,7 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         return canvases
 
-    def construct_word_count(self, tab_name: str) -> FigureCanvas:
+    def construct_word_count(self) -> FigureCanvas:
         document_counts = generate_list()
 
         fig = plt.figure()
@@ -201,7 +195,14 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         return FigureCanvas(fig)
 
+    def construct_correlation_matrix(self, lda_model) -> FigureCanvas:
+        difference_matrix, annotation = lda_model.diff(lda_model, distance='jaccard', num_words=20, annotation=False)
 
+        fig, ax = plt.subplots()
+        data = ax.imshow(difference_matrix, cmap='RdBu_r', origin='lower')
+        plt.colorbar(data)
+        plt.title("Correlatiematrix topics")
+        return FigureCanvas(fig)
 
     def display_plot(self, tab_name: str, plot_index: int) -> None:
         """
