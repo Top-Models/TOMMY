@@ -84,8 +84,10 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
         # Get active tab name
         active_tab_name = self.tabText(self.currentIndex())
 
+        # TODO: Create list of lists of tokens with with multiple documents
+
         # Perform LDA
-        lda_model = self.perform_lda_on_text(active_tab_name, self.sample_text)
+        lda_model = self.perform_lda_on_docs(active_tab_name, [self.sample_text])
 
         # Add LDA plots to active tab
         self.add_lda_plots(active_tab_name, lda_model)
@@ -95,30 +97,37 @@ In een wereld vol chaos en onzekerheid herinneren panda's ons eraan om te vertra
 
         self.display_plot(active_tab_name, 0)
 
-    def perform_lda_on_text(self, tab_name: str, text: str) -> GensimLdaModel:
+    def perform_lda_on_docs(self, tab_name: str, documents: list) -> GensimLdaModel:
         """
         Perform LDA on the given text
         :param tab_name: Name of the tab to perform LDA on
-        :param text: The text to perform LDA on
+        :param documents: The documents to perform LDA on
         :return: The trained LDA model
         """
-        # Preprocess text
-        tokens = preprocess_text(text)
+        # Preprocess documents
+        tokens = [preprocess_text(document) for document in documents]
 
         # TODO: Create list of lists of tokens with with multiple documents
 
         # Train LDA model
-        lda_model = self.train_lda_model([tokens])
+        lda_model = self.train_lda_model(tokens)
 
         # Save LDA model
         self.lda_model_container[tab_name] = lda_model
+
+        # Add topics to fetched topics display
+        for i in range(self.num_topics):
+            topic_name = f"Topic {i + 1}"
+            topic_words = lda_model.show_topic_terms(i, 10)
+            cleaned_topic_words = [word for word, _ in topic_words]
+            self.fetched_topics_display.add_topic(tab_name, topic_name, cleaned_topic_words)
 
         return lda_model
 
     def train_lda_model(self, corpus: TermLists) -> GensimLdaModel:
         """
         Train an LDA model
-        :param dictionary: The dictionary to train the model on
+        :param corpus: The corpus to train the LDA model on
         :return: The trained LDA model
         """
         lda_model = GensimLdaModel(corpus, self.num_topics)
