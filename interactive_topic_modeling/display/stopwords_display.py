@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QLabel, QScrollArea, QWidget, QVBoxLayout, QLineEdit, QHBoxLayout
+from PySide6.QtWidgets import QLabel, QScrollArea, QWidget, QVBoxLayout, QLineEdit, QHBoxLayout, QPushButton
 from nltk.corpus import stopwords
 from interactive_topic_modeling.support.constant_variables import text_font
 
@@ -17,9 +17,9 @@ class StopwordsDisplay(QScrollArea):
         self.container_layout = QVBoxLayout(self.container)
         self.container_layout.setAlignment(Qt.AlignTop)
 
-        # Initialize container for the input field
+        # Initialize container for the input field and button
         self.input_container = QWidget()
-        self.input_layout = QVBoxLayout(self.input_container)
+        self.input_layout = QHBoxLayout(self.input_container)
         self.input_layout.setAlignment(Qt.AlignCenter)
 
         # Initialize and add input field
@@ -30,8 +30,22 @@ class StopwordsDisplay(QScrollArea):
                                        f"font-family: {text_font};"
                                        f"margin-right: 10px;"
                                        f"color: black;")
-        self.input_field.setFixedWidth(208)
+        self.input_field.setFixedWidth(150)
         self.input_layout.addWidget(self.input_field)
+
+        # Initialize and add button for adding a new word
+        self.add_button = QPushButton("Add")
+        self.add_button.setStyleSheet(f"background-color: #00968F;"
+                                      f"color: white;"
+                                      f"font-family: {text_font};"
+                                      f"padding: 10px;"
+                                      f"border: none;"
+                                      f"cursor: pointer;")
+        self.input_layout.addWidget(self.add_button)
+
+        # Connect button click event to add_to_word_list method
+        self.add_button.clicked.connect(self.add_to_word_list)
+
         self.container_layout.addWidget(self.input_container)
 
         # Initialize scroll area and its layout
@@ -136,5 +150,4 @@ class StopwordsDisplay(QScrollArea):
 
         # Display updated words in UI
         self.show_excluded_words(list(self.dutch_stopwords))
-
 
