@@ -78,3 +78,12 @@ class FetchedTopicsDisplay(QScrollArea):
         :return: None
         """
         self.topic_container.pop(tab_name)
+
+    def clear_topics(self) -> None:
+        """
+        Clear the topics from the display
+        :return: None
+        """
+        for i in reversed(range(self.layout.count())):
+            self.layout.itemAt(i).widget().deleteLater()
+        self.topic_container = {}

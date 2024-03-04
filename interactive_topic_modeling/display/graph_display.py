@@ -68,12 +68,16 @@ class GraphDisplay(QTabWidget):
         self.init_model.setLayout(self.init_model_layout)
         self.addTab(self.init_model, "lda_model")
 
-    def apply_topic_modelling(self, corpus: list) -> None:
+    def apply_topic_modelling(self, corpus: list, topic_amount: int) -> None:
         """
         Apply topic modelling to the given corpus
         :param corpus: The corpus to apply topic modelling to
+        :param topic_amount: The amount of topics to generate
         :return: None
         """
+
+        # Set number of topics
+        self.num_topics = topic_amount
 
         # Get active tab name
         active_tab_name = self.tabText(self.currentIndex())
@@ -107,6 +111,9 @@ class GraphDisplay(QTabWidget):
 
         # Save LDA model
         self.lda_model_container[tab_name] = lda_model
+
+        # Clear fetched topics display
+        self.fetched_topics_display.clear_topics()
 
         # Add topics to fetched topics display
         for i in range(self.num_topics):

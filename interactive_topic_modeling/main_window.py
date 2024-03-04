@@ -112,7 +112,8 @@ class MainWindow(QMainWindow):
         # Connecting the apply button to the graph display
         self.apply_button.clicked.connect(
             lambda: self.graph_display.apply_topic_modelling(
-                self.imported_files_display.file_container[self.graph_display.get_active_tab_name()]
+                self.imported_files_display.file_container[self.graph_display.get_active_tab_name()],
+                self.model_params_display.fetch_topic_num()
             )
         )
 
