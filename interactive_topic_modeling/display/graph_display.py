@@ -100,22 +100,22 @@ class GraphDisplay(QTabWidget):
         self.init_model.setLayout(self.init_model_layout)
         self.addTab(self.init_model, "lda_model")
 
-    def apply_topic_modelling(self, corpus: list, topic_amount: int) -> None:
+    def apply_topic_modelling(self, corpus: list, topic_amount: int, stopwords: set) -> None:
         """
         Apply topic modelling to the given corpus
         :param corpus: The corpus to apply topic modelling to
         :param topic_amount: The amount of topics to generate
+        :param stopwords: The set of stopwords to exclude during topic modeling
         :return: None
         """
 
         # Set number of topics
         self.num_topics = topic_amount
-
         # Get active tab name
         active_tab_name = self.tabText(self.currentIndex())
 
-        # Perform LDA
-        lda_model = self.perform_lda_on_docs(active_tab_name, corpus)
+        # Perform LDA with stopwords exclusion
+        lda_model = self.perform_lda_on_docs(active_tab_name, corpus, stopwords)
 
         # Add LDA plots to active tab
         self.add_lda_plots(active_tab_name, lda_model)
@@ -125,18 +125,25 @@ class GraphDisplay(QTabWidget):
 
         self.display_plot(active_tab_name, 0)
 
-    def perform_lda_on_docs(self, tab_name: str, documents: list) -> GensimLdaModel:
+    def preprocess_text(self, text, stopwords: set) -> list:
+        tokens = text.lower().split()
+        # Exclude stopwords
+        tokens = [token for token in tokens if token not in stopwords]
+        return tokens
+
+    def perform_lda_on_docs(self, tab_name: str, documents: list, stopwords: set) -> GensimLdaModel:
         """
         Perform LDA on the given text
         :param tab_name: Name of the tab to perform LDA on
         :param documents: The documents to perform LDA on
+        :param stopwords: The set of stopwords to exclude during LDA
         :return: The trained LDA model
         """
         # Get text from documents
         text_from_docs = [document.content for document in documents]
 
-        # Preprocess documents
-        tokens = [preprocess_text(doc_text) for doc_text in text_from_docs]
+        # Preprocess documents with stopwords exclusion
+        tokens = [self.preprocess_text(doc_text, stopwords) for doc_text in text_from_docs]
 
         # Train LDA model
         lda_model = self.train_lda_model(tokens)

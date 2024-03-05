@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
 )
 
 from interactive_topic_modeling.display.graph_display import GraphDisplay
+from interactive_topic_modeling.display.stopwords_display import StopwordsDisplay
 from interactive_topic_modeling.display.imported_files_display.imported_files_display import ImportedFilesDisplay
 from interactive_topic_modeling.display.model_params_display import ModelParamsDisplay
 from interactive_topic_modeling.support.constant_variables import text_font, seco_col_blue, hover_seco_col_blue, \
@@ -113,7 +114,7 @@ class MainWindow(QMainWindow):
         self.apply_button.clicked.connect(
             lambda: self.graph_display.apply_topic_modelling(
                 self.imported_files_display.file_container[self.graph_display.get_active_tab_name()],
-                self.model_params_display.fetch_topic_num()
+                self.model_params_display.fetch_topic_num(),self.imported_files_display.stopwords_display.dutch_stopwords
             )
         )
 
