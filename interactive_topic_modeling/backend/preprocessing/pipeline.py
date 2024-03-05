@@ -2,7 +2,6 @@ import spacy
 from spacy.tokens import Doc
 
 from stopwords import StopWords
-from tokenizer import NLTKTokenizer
 
 
 #    Entire pipeline:

@@ -33,6 +33,7 @@ def perform_lda_on_text(text, num_topics):
 
     return lda_model
 
+
 def generate_list():
     # Define the range of numbers
     low_range = 1
@@ -140,7 +141,7 @@ class GraphDisplay(QTabWidget):
         :return: The trained LDA model
         """
         # Get text from documents
-        text_from_docs = [document.content for document in documents]
+        text_from_docs = [document.body for document in documents]
 
         # Preprocess documents with stopwords exclusion
         tokens = [self.preprocess_text(doc_text, stopwords) for doc_text in text_from_docs]
@@ -183,7 +184,7 @@ class GraphDisplay(QTabWidget):
         canvases.extend(self.construct_word_clouds(lda_model))
         canvases.extend(self.construct_probable_words(lda_model))
         canvases.append(self.construct_correlation_matrix(lda_model))
-        #canvases.append(self.construct_word_count())
+        # canvases.append(self.construct_word_count())
 
         self.plots_container[tab_name] = canvases
         self.plot_index[tab_name] = 0
@@ -234,7 +235,6 @@ class GraphDisplay(QTabWidget):
             canvases.append(FigureCanvas(fig))
 
         return canvases
-
 
     def construct_word_count(self) -> FigureCanvas:
         """
