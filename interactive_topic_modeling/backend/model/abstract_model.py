@@ -134,7 +134,7 @@ class Model(ABC):
         pass
 
     @abstractmethod
-    def get_difference_matrix(self, num_words: int) -> ndarray:
+    def get_correlation_matrix(self, num_words: int) -> ndarray:
         """Returns the n_topics x n_topics array of similarities between different topics of the same LDA model"""
         pass
 

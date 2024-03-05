@@ -71,7 +71,7 @@ class GensimLdaModel(Model):
     def get_topic_term_numpy_matrix(self):
         return self.model.get_topics()
 
-    def get_difference_matrix(self, num_words):
+    def get_correlation_matrix(self, num_words):
         return self.model.diff(self.model, distance='jaccard', num_words=num_words)[0]
 
     def save(self, fpath):
