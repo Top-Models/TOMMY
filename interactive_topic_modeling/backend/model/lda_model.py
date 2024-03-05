@@ -62,10 +62,16 @@ class GensimLdaModel(Model):
         bag_of_words = self.dictionary.doc2bow(doc)
         return self.model.get_document_topics(bag_of_words, minimum_probability=minimum_probability)
 
+    def show_topic(self, topic_id, n):
+        return self.model.show_topic(topic_id, topn=n)
+
+    def show_topic_and_probs(self, topic_id, n):
+        return map(list, zip(*self.model.show_topic(topic_id, topn=n)))
+
     def get_topic_term_numpy_matrix(self):
         return self.model.get_topics()
 
-    def get_difference_matrix(self, num_words: int):
+    def get_difference_matrix(self, num_words):
         return self.model.diff(self.model, distance='jaccard', num_words=num_words)[0]
 
     def save(self, fpath):

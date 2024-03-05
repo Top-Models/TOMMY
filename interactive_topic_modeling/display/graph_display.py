@@ -2,6 +2,7 @@ import numpy as np
 from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout, QPushButton
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 from wordcloud import WordCloud
 from gensim import corpora, models
 import random
@@ -191,8 +192,10 @@ class GraphDisplay(QTabWidget):
 
         for i in range(self.num_topics):
             wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(
-                dict(lda_model.model.show_topic(i, topn=30))
+                dict(lda_model.show_topic(i, 30))
             )
+
+            print(lda_model.show_topic(i, 30))
 
             canvas = FigureCanvas(plt.figure())
             plt.imshow(wordcloud, interpolation='bilinear')
@@ -205,21 +208,21 @@ class GraphDisplay(QTabWidget):
 
     def construct_common_words(self, lda_model: GensimLdaModel) -> list[FigureCanvas]:
         canvases = []
-        for topic_id, topic in enumerate(lda_model.show_topics(10)):
-            print(topic)
-            topic_words = [pair[0] for pair in topic[1]]
-            topic_weights = [pair[1] for pair in topic[1]]
+
+        for i in range(self.num_topics):
+            topic_words, topic_weights = lda_model.show_topic_and_probs(i, 10)
 
             fig = plt.figure()
             plt.bar(topic_words, topic_weights, color="darkblue")
 
             plt.margins(0.02)
             plt.ylabel("gewicht")
-            plt.title("Meest voorkomende woorden topic {}".format(topic_id))
+            plt.title("Woorden met het hoogste gewicht topic {}".format(i))
 
             canvases.append(FigureCanvas(fig))
 
         return canvases
+
 
     def construct_word_count(self) -> FigureCanvas:
         document_counts = generate_list()
@@ -239,6 +242,8 @@ class GraphDisplay(QTabWidget):
 
         fig, ax = plt.subplots()
         data = ax.imshow(difference_matrix, cmap='RdBu_r', origin='lower')
+        fig.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+        fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
         plt.colorbar(data)
         plt.title("Correlatiematrix topics")
         return FigureCanvas(fig)

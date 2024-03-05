@@ -117,6 +117,16 @@ class Model(ABC):
         pass
 
     @abstractmethod
+    def show_topic(self, topic_id: int, n: int) -> list[tuple[str, float]]:
+        """"Returns the top n probability pairs where words are actual strings for the current topic_id"""
+        pass
+
+    @abstractmethod
+    def show_topic_and_probs(self, topic_id: int, n: int) -> tuple[list[str], list[float]]:
+        """"Return the top n words represented as strings and their associated probabilities in two separate lists"""
+        pass
+
+    @abstractmethod
     def get_topic_term_numpy_matrix(self) -> ndarray:
         """Returns the n_topics x n_terms numpy array of calculated probabilities of each combination of topics and terms
         i.e.: "my_model.get_topic_term_numpy_matrix()[my_topic_id, my_term_id]"
@@ -124,7 +134,7 @@ class Model(ABC):
         pass
 
     @abstractmethod
-    def get_difference_matrix(self) -> ndarray:
+    def get_difference_matrix(self, num_words: int) -> ndarray:
         """Returns the n_topics x n_topics array of similarities between different topics of the same LDA model"""
         pass
 
