@@ -93,6 +93,7 @@ class MainWindow(QMainWindow):
         self.initialize_widget(self.graph_display, 250, 8, 700, 430)
         self.initialize_widget(self.apply_button, 842, 390, 100, 40)
         self.initialize_widget(self.next_plot_button, 365, 390, 100, 40)
+        self.initialize_widget(self.next_plot_button, 365, 390, 100, 40)
         self.initialize_widget(self.previous_plot_button, 258, 390, 100, 40)
 
         # Display correct initial files
@@ -114,7 +115,7 @@ class MainWindow(QMainWindow):
         self.apply_button.clicked.connect(
             lambda: self.graph_display.apply_topic_modelling(
                 self.imported_files_display.file_container[self.graph_display.get_active_tab_name()],
-                self.model_params_display.fetch_topic_num(),self.imported_files_display.stopwords_display.dutch_stopwords
+                self.model_params_display.fetch_topic_num(), set()
             )
         )
 

@@ -33,6 +33,7 @@ def perform_lda_on_text(text, num_topics):
 
     return lda_model
 
+
 def generate_list():
     # Define the range of numbers
     low_range = 1
@@ -183,7 +184,7 @@ class GraphDisplay(QTabWidget):
         canvases.extend(self.construct_word_clouds(lda_model))
         canvases.extend(self.construct_probable_words(lda_model))
         canvases.append(self.construct_correlation_matrix(lda_model))
-        #canvases.append(self.construct_word_count())
+        # canvases.append(self.construct_word_count())
 
         self.plots_container[tab_name] = canvases
         self.plot_index[tab_name] = 0
@@ -234,7 +235,6 @@ class GraphDisplay(QTabWidget):
             canvases.append(FigureCanvas(fig))
 
         return canvases
-
 
     def construct_word_count(self) -> FigureCanvas:
         """

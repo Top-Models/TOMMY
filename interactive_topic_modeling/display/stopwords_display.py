@@ -1,6 +1,5 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QScrollArea, QWidget, QVBoxLayout, QLineEdit, QHBoxLayout, QPushButton
-from nltk.corpus import stopwords
 from interactive_topic_modeling.support.constant_variables import text_font
 
 
@@ -42,8 +41,7 @@ class StopwordsDisplay(QScrollArea):
                                       f"color: white;"
                                       f"font-family: {text_font};"
                                       f"padding: 10px;"
-                                      f"border: none;"
-                                      f"cursor: pointer;")
+                                      f"border: none;")
         self.input_layout.addWidget(self.add_button)
 
         # Connect button click event to add_to_word_list method
@@ -57,12 +55,13 @@ class StopwordsDisplay(QScrollArea):
         self.scroll_layout.setAlignment(Qt.AlignCenter)
 
         # Import stopwords
-        self.dutch_stopwords = set(stopwords.words("dutch"))
+        # TODO: Fix showing of excluded stopwords
+        # self.dutch_stopwords = set(stopwords.words("dutch"))
 
         # Initialize excluded words
         self.word_layout = QVBoxLayout()
         self.scroll_layout.addLayout(self.word_layout)
-        self.show_excluded_words(self.dutch_stopwords)
+        # self.show_excluded_words(self.dutch_stopwords)
 
         # Add scroll area to container
         self.container_layout.addWidget(self.scroll_area)
@@ -122,7 +121,7 @@ class StopwordsDisplay(QScrollArea):
         """
         new_word = self.input_field.text()
         if new_word:
-            self.dutch_stopwords.add(new_word)
+            # self.dutch_stopwords.add(new_word)
             self.update_word_vis()
             self.input_field.clear()
 
@@ -132,9 +131,9 @@ class StopwordsDisplay(QScrollArea):
         :param word: The word to be removed
         :return: None
         """
-        if word in self.dutch_stopwords:
-            self.dutch_stopwords.remove(word)
-            self.update_word_vis()
+        # if word in self.dutch_stopwords:
+        # self.dutch_stopwords.remove(word)
+        # self.update_word_vis()
 
     def update_word_vis(self):
         """
@@ -152,4 +151,4 @@ class StopwordsDisplay(QScrollArea):
                         current_item.setParent(None)
 
         # Display updated words in UI
-        self.show_excluded_words(self.test_list)
+        # self.show_excluded_words(list(self.dutch_stopwords))
