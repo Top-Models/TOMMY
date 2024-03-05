@@ -5,7 +5,8 @@ from interactive_topic_modeling.backend.file_import.file import File
 
 
 class FileReader:
-
+    """FileReader is the mother class responsible for getting a path to a
+         folder, and creating a generator that returns all files in the directory"""
     def __init__(self):
         # The selected directory is part of the project settings,
         # so this is a dummy implementation and the selected directory
