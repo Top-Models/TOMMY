@@ -4,6 +4,7 @@
 
 PySide6==6.6.2
 plotly==5.19.0
+python-dateutil==2.8.2
 textract==1.6.5
 spacy==3.7.4
 gensim==4.3.2
@@ -14,7 +15,6 @@ numpy==1.26.4
 # rtffolder to csv py file
 striprtf==0.0.26
 
-python-dateutil==2.8.2
 # Since we already have an internal stopwords file and
 # we don't need nltk for anything else at the moment, we can ignore this import.
 # nltk==3.8.1
