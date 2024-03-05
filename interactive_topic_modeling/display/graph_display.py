@@ -195,8 +195,6 @@ class GraphDisplay(QTabWidget):
                 dict(lda_model.show_topic(i, 30))
             )
 
-            print(lda_model.show_topic(i, 30))
-
             canvas = FigureCanvas(plt.figure())
             plt.imshow(wordcloud, interpolation='bilinear')
             plt.axis('off')
