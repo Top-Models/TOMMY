@@ -140,7 +140,7 @@ class GraphDisplay(QTabWidget):
         :return: The trained LDA model
         """
         # Get text from documents
-        text_from_docs = [document.content for document in documents]
+        text_from_docs = [document.body for document in documents]
 
         # Preprocess documents with stopwords exclusion
         tokens = [self.preprocess_text(doc_text, stopwords) for doc_text in text_from_docs]
