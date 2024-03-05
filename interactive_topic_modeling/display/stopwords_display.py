@@ -119,7 +119,7 @@ class StopwordsDisplay(QScrollArea):
         """
         new_word = self.input_field.text()
         if new_word:
-            self.dutch_stopwords.add(new_word)
+            # self.dutch_stopwords.add(new_word)
             self.update_word_vis()
             self.input_field.clear()
 
@@ -129,9 +129,9 @@ class StopwordsDisplay(QScrollArea):
         :param word: The word to be removed
         :return: None
         """
-        if word in self.dutch_stopwords:
-            self.dutch_stopwords.remove(word)
-            self.update_word_vis()
+        # if word in self.dutch_stopwords:
+        # self.dutch_stopwords.remove(word)
+        # self.update_word_vis()
 
     def update_word_vis(self):
         """
