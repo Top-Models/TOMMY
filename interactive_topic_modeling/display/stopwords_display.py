@@ -29,12 +29,13 @@ class StopwordsDisplay(QScrollArea):
         # Initialize and add input field
         self.input_field = QLineEdit()
         self.input_field.setPlaceholderText("Woord uitsluiten:")
-        self.input_field.setStyleSheet(f"border: 2px solid #E40046;"
-                                       f"background-color: white;"
+        self.input_field.setStyleSheet(f"border-radius: 5px;"
+                                       f"font-size: 14px;"
                                        f"font-family: {text_font};"
-                                       f"margin-right: 10px;"
-                                       f"color: black;")
-        self.input_field.setFixedWidth(208)
+                                       f"color: black;"
+                                       f"border: 2px solid #00968F;"
+                                       f"padding: 5px;")
+        self.input_field.setFixedWidth(200)
         self.input_layout.addWidget(self.input_field)
         self.container_layout.addWidget(self.input_container)
 
