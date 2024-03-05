@@ -1,16 +1,16 @@
-# This file defines an absract base class that all topic modelling algorithms will implement
+# This file defines an abstract base class that all topic modelling algorithms will implement
 # The class will define a function to take a preprocessed input corpus, i.e., an iterable of lists of strings
 
 from random import randrange
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import Tuple, List, TypeAlias, Dict
+from typing import Tuple, List, Dict
 from numpy import ndarray
 from os import path
 
-TermList: TypeAlias = List[str]
-TermLists: TypeAlias = Iterable[TermList]
+TermList = List[str]
+TermLists = Iterable[TermList]
 
 
 class Model(ABC):
@@ -117,10 +117,25 @@ class Model(ABC):
         pass
 
     @abstractmethod
+    def show_topic(self, topic_id: int, n: int) -> list[tuple[str, float]]:
+        """"Returns the top n probability pairs where words are actual strings for the current topic_id"""
+        pass
+
+    @abstractmethod
+    def show_topic_and_probs(self, topic_id: int, n: int) -> tuple[list[str], list[float]]:
+        """"Return the top n words represented as strings and their associated probabilities in two separate lists"""
+        pass
+
+    @abstractmethod
     def get_topic_term_numpy_matrix(self) -> ndarray:
         """Returns the n_topics x n_terms numpy array of calculated probabilities of each combination of topics and terms
         i.e.: "my_model.get_topic_term_numpy_matrix()[my_topic_id, my_term_id]"
         """
+        pass
+
+    @abstractmethod
+    def get_correlation_matrix(self, num_words: int) -> ndarray:
+        """Returns the n_topics x n_topics array of similarities between different topics of the same LDA model"""
         pass
 
     @abstractmethod

@@ -72,23 +72,7 @@ class ImportedFilesDisplay(QWidget):
         :return: The list of files
         """
         all_files = list(self.file_reader.read_files(current_project_settings.selected_folder))
-        files_to_add: list = []
-
-        for file in all_files:
-            file_reader = open(file)
-
-            # Read the file
-            file_name = os.path.basename(file)
-            file_contents = file_reader.read()
-            file_path = file
-            file_size = os.stat(file).st_size  # in bytes
-            file_reader.close()
-
-            # Create and append file object
-            file_obj = File(file_name, file_path, file_contents, file_size)
-            files_to_add.append(file_obj)
-
-        self.file_container[tab_name] = files_to_add
+        self.file_container[tab_name] = all_files
 
     def display_files(self, tab_name: str) -> None:
         """

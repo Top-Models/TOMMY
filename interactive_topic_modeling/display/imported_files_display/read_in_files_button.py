@@ -1,7 +1,8 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
 
-from interactive_topic_modeling.backend.file_import.file_reader import FileReader
 from interactive_topic_modeling.support import project_settings
+from interactive_topic_modeling.backend.file_import.file_reader import FileReader
+import os
 
 
 class ReadInFilesButton(QWidget):
@@ -21,8 +22,7 @@ class ReadInFilesButton(QWidget):
         btn.clicked.connect(self.read_files)
 
     def read_files(self) -> None:
-        files = self.file_reader.read_files(
-            project_settings.current_project_settings.selected_folder)
+        files = self.file_reader.read_files()
         # Apply all other functions like preprocessing here
 
         print(list(files))
