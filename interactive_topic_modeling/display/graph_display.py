@@ -1,8 +1,11 @@
+import numpy as np
 from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout, QPushButton
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 from wordcloud import WordCloud
 from gensim import corpora, models
+import random
 
 from interactive_topic_modeling.backend.model.abstract_model import TermLists
 from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
@@ -15,8 +18,37 @@ def preprocess_text(text) -> list:
     return tokens
 
 
+def perform_lda_on_text(text, num_topics):
+    # Preprocess the text
+    preprocessed_text = preprocess_text(text)
+
+    # Create a dictionary from the preprocessed text
+    dictionary = corpora.Dictionary([preprocessed_text])
+
+    # Create a bag-of-words representation of the corpus
+    corpus = [dictionary.doc2bow(preprocessed_text)]
+
+    # Train the LDA model
+    lda_model = models.LdaModel(corpus, num_topics=num_topics, id2word=dictionary, passes=10)
+
+    return lda_model
+
+def generate_list():
+    # Define the range of numbers
+    low_range = 1
+    high_range = 10050
+
+    # Define the desired length of the list
+    list_length = 1000
+
+    # Generate a list of random numbers
+    random_list = [random.randint(low_range, high_range) for _ in range(list_length)]
+
+    return random_list
+
+
 class GraphDisplay(QTabWidget):
-    num_topics = 5
+    num_topics = 0
 
     def __init__(self):
         super().__init__()
@@ -135,19 +167,23 @@ class GraphDisplay(QTabWidget):
 
     def add_lda_plots(self, tab_name: str, lda_model: GensimLdaModel) -> None:
         """
-        Add a word cloud plot for the given LDA model
-        :param tab_name: Name of the tab to add the plot to
-        :param lda_model: The LDA model to add a plot for
+        Add LDA plots for the given LDA model
+        :param tab_name: Name of the tab to add the plots to
+        :param lda_model: The LDA model to add the plots for
         :return: None
         """
-        canvases = self.construct_wordclouds(tab_name, lda_model)
+        canvases = []
+        canvases.extend(self.construct_word_clouds(lda_model))
+        canvases.extend(self.construct_probable_words(lda_model))
+        canvases.append(self.construct_correlation_matrix(lda_model))
+        #canvases.append(self.construct_word_count())
+
         self.plots_container[tab_name] = canvases
         self.plot_index[tab_name] = 0
 
-    def construct_wordclouds(self, tab_name: str, lda_model: GensimLdaModel):
+    def construct_word_clouds(self, lda_model: GensimLdaModel):
         """
         Construct word cloud plots for the given LDA model
-        :param tab_name: Name of the tab to construct the plots for
         :param lda_model: The LDA model to construct the plots for
         :return: A list of word cloud plots
         """
@@ -155,16 +191,82 @@ class GraphDisplay(QTabWidget):
 
         for i in range(self.num_topics):
             wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(
-                dict(lda_model.model.show_topic(i, topn=30))
+                dict(lda_model.show_topic(i, 30))
             )
 
-            canvas = FigureCanvas(plt.figure())
+            # Construct a word cloud
+            fig = plt.figure()
             plt.imshow(wordcloud, interpolation='bilinear')
             plt.axis('off')
             plt.tight_layout(pad=0)
-            canvases.append(canvas)
+
+            canvases.append(FigureCanvas(fig))
 
         return canvases
+
+    def construct_probable_words(self, lda_model: GensimLdaModel) -> list[FigureCanvas]:
+        """
+        Construct bar plots for the words with the highest probability for the given LDA model
+        :param lda_model: The LDA model to construct the plots for
+        :return: A list of probable words plots
+        """
+        canvases = []
+
+        for i in range(self.num_topics):
+            topic_words, topic_weights = lda_model.show_topic_and_probs(i, 10)
+
+            # Construct a bar plot
+            fig = plt.figure()
+            plt.bar(topic_words, topic_weights, color="darkblue")
+
+            # Add margins and labels to the plot
+            plt.margins(0.02)
+            plt.ylabel("gewicht")
+            plt.title("Woorden met het hoogste gewicht topic {}".format(i))
+
+            canvases.append(FigureCanvas(fig))
+
+        return canvases
+
+
+    def construct_word_count(self) -> FigureCanvas:
+        """
+        Construct a histogram containing word counts of each input document for the given LDA model
+        :return: A word count plot
+        """
+        document_counts = generate_list()
+
+        # Construct a histogram
+        fig = plt.figure()
+        plt.hist(document_counts, bins=150, color="darkblue")
+
+        # Add margins and labels to the plot
+        plt.margins(x=0.02)
+        plt.xlabel("aantal woorden per document")
+        plt.ylabel("aantal documenten")
+        plt.title("Distributie aantal woorden per document")
+
+        return FigureCanvas(fig)
+
+    def construct_correlation_matrix(self, lda_model: GensimLdaModel) -> FigureCanvas:
+        # Construct the correlation matrix
+        correlation_matrix = lda_model.get_correlation_matrix(num_words=30)
+
+        # Construct a plot and axes
+        fig, ax = plt.subplots()
+
+        # Construct the correlations matrix adding colors
+        data = ax.imshow(correlation_matrix, cmap='RdBu_r', origin='lower')
+
+        # Add a color bar to the plot
+        plt.colorbar(data)
+
+        # Add a title and correct integer ticks on both axes
+        plt.title("Correlatiematrix topics")
+        fig.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+        fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+
+        return FigureCanvas(fig)
 
     def get_active_tab_name(self) -> str:
         """
