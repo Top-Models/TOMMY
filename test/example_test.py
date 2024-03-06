@@ -2,7 +2,6 @@ import pytest
 from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import Qt
 from interactive_topic_modeling.display.graph_display import GraphDisplay
-from interactive_topic_modeling.main_window import MainWindow
 
 
 @pytest.fixture
@@ -30,7 +29,8 @@ class TestGraphDisplay:
 
         # Get the current tab name
         tab_name = graph_display.tabText(graph_display.currentIndex())
-
+        print(f"current tab name: {tab_name}")
+        print(graph_display.plot_index)
         # Get the current plot index
         current_plot_index = graph_display.plot_index[tab_name]
 
@@ -40,3 +40,7 @@ class TestGraphDisplay:
         # Check if the plot index has been updated correctly
         assert graph_display.plot_index[tab_name] == (current_plot_index + 1) % len(
             graph_display.plots_container[tab_name])
+
+
+if __name__ == "__main__":
+    pytest.main()
