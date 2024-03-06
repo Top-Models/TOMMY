@@ -10,6 +10,8 @@ seco_col_blue = "#00968F"
 hover_seco_col_blue = "#007D74"
 pressed_seco_col_blue = "#00665C"
 sec_col_orange = "#FFA300"
+hover_seco_col_orange = "#D88C00"
+pressed_seco_col_orange = "#B97A00"
 sec_col_purple = "#3F2A56"
 sec_col_brown = "#94795D"
 
