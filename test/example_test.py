@@ -29,9 +29,9 @@ class TestGraphDisplay:
 
         # Get the current tab name
         tab_name = graph_display.tabText(graph_display.currentIndex())
-        print(f"current tab name: {tab_name}")
-        print(graph_display.plot_index)
+
         # Get the current plot index
+        assert len(graph_display.plot_index.items()) > 0
         current_plot_index = graph_display.plot_index[tab_name]
 
         # Trigger the next_plot method
