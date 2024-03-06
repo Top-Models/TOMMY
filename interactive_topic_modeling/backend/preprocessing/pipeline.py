@@ -1,7 +1,10 @@
+from collections.abc import Iterable
+import os
+
 import spacy
 from spacy.tokens import Doc
 
-from stopwords import StopWords
+from interactive_topic_modeling.backend.preprocessing.stopwords import StopWords
 
 
 #    Entire pipeline:
@@ -19,6 +22,8 @@ class Pipeline:
     def __init__(self) -> None:
         # Load pre-trained natural language pipeline (python3 -m spacy download nl_core_news_sm)
         # Used pipeline components: tok2vec, lemmatizer, tagger, attribute-ruler, ner
+        # TODO: optimize by downloading the model at another place (maybe use spacy_download)
+        spacy.cli.download("nl_core_news_sm")
         nlp = spacy.load("nl_core_news_sm", exclude=["tagger", "attribute_ruler", "parser", "senter"])
         self._nlp = nlp
 
@@ -27,7 +32,10 @@ class Pipeline:
         # TODO: refine the entity set (i.e. "proper-noun filtering")
         self._pos_categories = {"NOUN", "PROPN", "ADJ", "ADV", "VERB"}
 
-        with open('stopwords.txt', 'r') as file:
+        # Load stopwords
+        # print(os.getcwd())
+
+        with open(os.path.join("backend", "preprocessing", "stopwords.txt"), 'r') as file:
             file_content = file.read()
         stopword_list = file_content.split()
         self._stopwords = StopWords(stopword_list)
@@ -46,7 +54,8 @@ class Pipeline:
         # TODO: look at pos tags (i.e. fine-grained pos i/p coarse-grained pos)
 
         # 5 - transforming the tokens (lemmas) themselves
-        lemmas = [lemma.lower() for lemma in lemmas if len(lemma) > 1]
+        lemmas = [lemma.lower() for lemma in lemmas if len(lemma) > 3]
+        # TODO: fine-grain abbreviation filtering (i.e. don't exclude every token under 4 characters)
         # TODO: fix "-"words and remove diacritical marks (i.e. character 'normalization')
 
         # TODO: 6,7
@@ -56,8 +65,9 @@ class Pipeline:
 
         return lemmas
 
-    def add_stopwords(self, words: str) -> None:
+    # TODO: make *args i/o words
+    def add_stopwords(self, words: str | Iterable[str]) -> None:
         self._stopwords.add(words)
 
-    def remove_stopwords(self, words: str) -> None:
+    def remove_stopwords(self, words: str | Iterable[str]) -> None:
         self._stopwords.remove(words)

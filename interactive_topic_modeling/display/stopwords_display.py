@@ -54,14 +54,13 @@ class StopwordsDisplay(QScrollArea):
         self.scroll_layout = QHBoxLayout(self.scroll_area)
         self.scroll_layout.setAlignment(Qt.AlignCenter)
 
-        # Import stopwords
-        # TODO: Fix showing of excluded stopwords
-        # self.dutch_stopwords = set(stopwords.words("dutch"))
+        # Initialize the set of additional stopwords
+        self.additional_stopwords = set()
 
         # Initialize excluded words
         self.word_layout = QVBoxLayout()
         self.scroll_layout.addLayout(self.word_layout)
-        # self.show_excluded_words(self.dutch_stopwords)
+        self.show_excluded_words(list(self.additional_stopwords))
 
         # Add scroll area to container
         self.container_layout.addWidget(self.scroll_area)
@@ -121,7 +120,7 @@ class StopwordsDisplay(QScrollArea):
         """
         new_word = self.input_field.text()
         if new_word:
-            # self.dutch_stopwords.add(new_word)
+            self.additional_stopwords.add(new_word)
             self.update_word_vis()
             self.input_field.clear()
 
@@ -131,9 +130,8 @@ class StopwordsDisplay(QScrollArea):
         :param word: The word to be removed
         :return: None
         """
-        # if word in self.dutch_stopwords:
-        # self.dutch_stopwords.remove(word)
-        # self.update_word_vis()
+        self.additional_stopwords.discard(word)
+        self.update_word_vis()
 
     def update_word_vis(self):
         """
@@ -151,4 +149,4 @@ class StopwordsDisplay(QScrollArea):
                         current_item.setParent(None)
 
         # Display updated words in UI
-        # self.show_excluded_words(list(self.dutch_stopwords))
+        self.show_excluded_words(list(self.additional_stopwords))
