@@ -13,6 +13,12 @@ class FileLabel(QLabel):
     def __init__(self, file: File, parent=None):
         super().__init__(file.name, parent)
         self.file = file
+
+        if file.title is not None:
+            self.setText(file.title)
+        else:
+            self.setText(file.name)
+
         self.setStyleSheet(f"font-family: {text_font};"
                            f"font-size: 15px;"
                            f"background-color: {sec_col_orange};"
