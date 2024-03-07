@@ -150,11 +150,11 @@ class MainWindow(QMainWindow):
         input = self.model_params_display.fetch_topic_num()
         if 1 <= input <= 1000:
             print("correct_input")
-            # self.graph_display.apply_topic_modelling(
-            #     self.imported_files_display.file_container[self.graph_display.get_active_tab_name()],
-            #     input,
-            #     self.imported_files_display.stopwords_display.additional_stopwords
-            # )
+            self.graph_display.apply_topic_modelling(
+                self.imported_files_display.file_container[self.graph_display.get_active_tab_name()],
+                input,
+                self.imported_files_display.stopwords_display.additional_stopwords
+            )
         else:
             self.model_params_display.incorrect_input()
             print("incorrect_input")
