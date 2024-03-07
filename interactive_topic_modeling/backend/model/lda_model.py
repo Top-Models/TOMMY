@@ -17,7 +17,8 @@ class GensimLdaModel(Model):
     bags_of_words: Iterable[Iterable[Tuple[int, int]]]
     parameters: dict
 
-    def __init__(self, term_lists: TermLists, num_topics: int, random_seed=None, **parameters):
+    # TODO: fix random seed somewhere else
+    def __init__(self, term_lists: TermLists, num_topics: int, random_seed=42, **parameters):
         super().__init__(random_seed)
         self.parameters = {}
         self.num_topics = num_topics
@@ -80,6 +81,7 @@ class GensimLdaModel(Model):
     @classmethod
     def load(cls, fpath):
         raise NotImplementedError("Loading the model has not been implemented in GensimLdaModel")
+
 
 if __name__ == "__main__":
     # test lda model
