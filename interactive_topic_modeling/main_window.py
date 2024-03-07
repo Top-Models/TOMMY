@@ -86,6 +86,7 @@ class MainWindow(QMainWindow):
 
         # Initialize widgets
         self.initialize_widget(self.model_params_display, 0, 0, 250, 300)
+        # TODO: Why is stopwords_display accessed via the imported files display?
         self.initialize_widget(self.imported_files_display.stopwords_display, 0, 300, 250, 397)
         self.initialize_widget(self.imported_files_display, 250, 438, 700, 260)
         self.initialize_widget(self.imported_files_display.file_stats_display, 950, 438, 250, 260)
@@ -115,7 +116,8 @@ class MainWindow(QMainWindow):
         self.apply_button.clicked.connect(
             lambda: self.graph_display.apply_topic_modelling(
                 self.imported_files_display.file_container[self.graph_display.get_active_tab_name()],
-                self.model_params_display.fetch_topic_num(), set()
+                self.model_params_display.fetch_topic_num(),
+                self.imported_files_display.stopwords_display.additional_stopwords
             )
         )
 

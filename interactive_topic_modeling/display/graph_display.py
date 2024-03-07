@@ -9,6 +9,7 @@ import random
 
 from interactive_topic_modeling.backend.model.abstract_model import TermLists
 from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
+from interactive_topic_modeling.backend.preprocessing.pipeline import Pipeline
 # Assuming you have this import statement
 from interactive_topic_modeling.display.topic_display.fetched_topics_display import FetchedTopicsDisplay
 
@@ -101,12 +102,12 @@ class GraphDisplay(QTabWidget):
         self.lda_model.setLayout(self.init_model_layout)
         self.addTab(self.lda_model, "lda_model")
 
-    def apply_topic_modelling(self, corpus: list, topic_amount: int, stopwords: set) -> None:
+    def apply_topic_modelling(self, corpus: list, topic_amount: int, additional_stopwords: set) -> None:
         """
         Apply topic modelling to the given corpus
         :param corpus: The corpus to apply topic modelling to
         :param topic_amount: The amount of topics to generate
-        :param stopwords: The set of stopwords to exclude during topic modeling
+        :param additional_stopwords: The set of addtional stopwords to exclude during topic modeling
         :return: None
         """
 
@@ -115,8 +116,8 @@ class GraphDisplay(QTabWidget):
         # Get active tab name
         active_tab_name = self.tabText(self.currentIndex())
 
-        # Perform LDA with stopwords exclusion
-        lda_model = self.perform_lda_on_docs(active_tab_name, corpus, stopwords)
+        # Perform LDA with additional stopwords exclusion
+        lda_model = self.perform_lda_on_docs(active_tab_name, corpus, additional_stopwords)
 
         # Add LDA plots to active tab
         self.add_lda_plots(active_tab_name, lda_model)
@@ -126,25 +127,29 @@ class GraphDisplay(QTabWidget):
 
         self.display_plot(active_tab_name, 0)
 
-    def preprocess_text(self, text, stopwords: set) -> list:
+    def preprocess_text(self, text, additional_stopwords: set) -> list:
         tokens = text.lower().split()
         # Exclude stopwords
-        tokens = [token for token in tokens if token not in stopwords]
+        tokens = [token for token in tokens if token not in additional_stopwords]
         return tokens
 
-    def perform_lda_on_docs(self, tab_name: str, documents: list, stopwords: set) -> GensimLdaModel:
+    def perform_lda_on_docs(self, tab_name: str, documents: list, additional_stopwords: set[str]) -> GensimLdaModel:
         """
         Perform LDA on the given text
         :param tab_name: Name of the tab to perform LDA on
         :param documents: The documents to perform LDA on
-        :param stopwords: The set of stopwords to exclude during LDA
+        :param additional_stopwords: The set of additional stopwords to exclude during LDA
         :return: The trained LDA model
         """
         # Get text from documents
         text_from_docs = [document.body for document in documents]
 
-        # Preprocess documents with stopwords exclusion
-        tokens = [self.preprocess_text(doc_text, stopwords) for doc_text in text_from_docs]
+        # Preprocess documents with additional stopwords exclusion
+        # TODO: real preprocessing
+        pipe = Pipeline()
+        print(additional_stopwords)
+        pipe.add_stopwords(additional_stopwords)
+        tokens = [pipe(doc_text) for doc_text in text_from_docs]
 
         # Train LDA model
         lda_model = self.train_lda_model(tokens)
