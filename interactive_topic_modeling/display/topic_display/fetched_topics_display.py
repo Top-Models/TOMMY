@@ -29,7 +29,7 @@ class FetchedTopicsDisplay(QScrollArea):
         self.setWidgetResizable(True)
 
         # Set default tab
-        self.display_topics("init_model")
+        self.display_topics("lda_model")
 
     def add_topic(self, tab_name: str, topic_name: str, topic_words: list[str]) -> None:
         """

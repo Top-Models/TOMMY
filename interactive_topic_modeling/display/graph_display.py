@@ -96,10 +96,10 @@ class GraphDisplay(QTabWidget):
         self.fetched_topics_display = FetchedTopicsDisplay()
 
         # Add first tab
-        self.init_model = QWidget()
+        self.lda_model = QWidget()
         self.init_model_layout = QVBoxLayout()
-        self.init_model.setLayout(self.init_model_layout)
-        self.addTab(self.init_model, "lda_model")
+        self.lda_model.setLayout(self.init_model_layout)
+        self.addTab(self.lda_model, "lda_model")
 
     def apply_topic_modelling(self, corpus: list, topic_amount: int, stopwords: set) -> None:
         """

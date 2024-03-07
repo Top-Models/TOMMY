@@ -16,3 +16,9 @@ nltk==3.8.1
 numpy==1.26.4
 # rtffolder to csv py file
 striprtf==0.0.26
+
+#pytest
+pytest==8.0.2
+pytest-qt==4.4.0
+pluggy==1.4.0
+iniconfig==2.0.0
