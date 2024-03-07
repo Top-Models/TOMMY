@@ -65,5 +65,34 @@ class ModelParamsDisplay(QScrollArea):
         # Add widgets
         self.layout.addWidget(self.container)
 
-    def fetch_topic_num(self) -> int:
-        return int(self.topic_input.text())
+
+    def fetch_topic_num(self):
+        topic_num_output = self.topic_input.text()
+
+        try:
+            topic_num = int(topic_num_output)
+            print("Number of topics: ", topic_num)
+            # reset style
+            self.topic_input.setStyleSheet(f"border-radius: 5px;"
+                                           f"font-size: 14px;"
+                                           f"font-family: {text_font};"
+                                           f"color: black;"
+                                           f"border: 2px solid #00968F;"
+                                           f"padding: 5px;"
+                                           f"background-color: white;")
+            return topic_num
+        except ValueError:
+            print("Invalid input. Please enter a valid integer.")
+            # 0 is handled in mainwindow
+            return 0
+
+    def incorrect_input(self) -> None:
+        self.topic_input.setText("")
+        self.topic_input.setPlaceholderText("Incorrect Input")
+        self.topic_input.setStyleSheet(f"border-radius: 5px;"
+                                       f"font-size: 14px;"
+                                       f"font-family: {text_font};"
+                                       f"color: black;"
+                                       f"border: 4px solid red;"
+                                       f"padding: 5px;"
+                                       f"background-color: white;")
