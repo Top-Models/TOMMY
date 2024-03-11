@@ -298,18 +298,20 @@ class GraphDisplay(QTabWidget):
                              width=weights,
                              edge_color=edge_colors,
                              node_color=node_colors,
-                             font_size=7)
+                             font_size=8)
         return FigureCanvas(fig)
 
     def construct_network(self, lda_model: GensimLdaModel) -> nx.Graph:
         graph = nx.Graph()
-        colors = ["#ff595e", "#ffca3a", "#8ac926", "#1982c4", "#6a4c93"]
+        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#000075', '#46f0f0', '#f032e6', '#bcf60c',
+                  '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1',
+                  '#808080', '#911eb4']
         node_amount = 20
         for topic_id in range(self.num_topics):
             topic_tuples = lda_model.show_topic(topic_id, node_amount)
             for topic_tuple in topic_tuples:
-                graph.add_node(topic_id, color=colors[topic_id])
-                graph.add_edge(topic_id, topic_tuple[0], color=colors[topic_id], weight=topic_tuple[1])
+                graph.add_node(topic_id, color=colors[topic_id%20])
+                graph.add_edge(topic_id, topic_tuple[0], color=colors[topic_id%20], weight=topic_tuple[1])
         return graph
 
 
