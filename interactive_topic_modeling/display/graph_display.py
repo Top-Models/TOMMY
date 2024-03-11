@@ -291,7 +291,7 @@ class GraphDisplay(QTabWidget):
         node_sizes = [150 if node[1] is not None else 0 for node in nodes]
         edge_colors = [graph[u][v]["color"] for (u, v) in edges]
         node_colors = [node[1] if node[1] is not None else "black" for node in nodes]
-        weights = [(graph[u][v]["weight"] * 55) for u, v in edges]
+        weights = [(graph[u][v]["weight"] * 75) for u, v in edges]
         nx.draw_kamada_kawai(graph,
                              node_size=node_sizes,
                              with_labels=True,
@@ -303,10 +303,15 @@ class GraphDisplay(QTabWidget):
 
     def construct_network(self, lda_model: GensimLdaModel) -> nx.Graph:
         graph = nx.Graph()
-        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#000075', '#46f0f0', '#f032e6', '#bcf60c',
-                  '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1',
+
+        # List of simple, distinct colors from https://sashamaps.net/docs/resources/20-colors/
+        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#9a6324', '#46f0f0', '#f032e6', '#bcf60c',
+                  '#fabebe', '#008080', '#e6beff', '#000075', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1',
                   '#808080', '#911eb4']
-        node_amount = 20
+
+        # Amount of words displayed for each topic
+        node_amount = 15
+
         for topic_id in range(self.num_topics):
             topic_tuples = lda_model.show_topic(topic_id, node_amount)
             for topic_tuple in topic_tuples:
