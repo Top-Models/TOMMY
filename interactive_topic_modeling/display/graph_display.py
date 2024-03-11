@@ -291,8 +291,14 @@ class GraphDisplay(QTabWidget):
         node_sizes = [150 if node[1] is not None else 0 for node in nodes]
         edge_colors = [graph[u][v]["color"] for (u, v) in edges]
         node_colors = [node[1] if node[1] is not None else "black" for node in nodes]
-        weights = [(graph[u][v]["weight"] * 35) for u, v in edges]
-        nx.draw_kamada_kawai(graph, node_size=node_sizes, with_labels=True, width=weights, edge_color=edge_colors, node_color=node_colors)
+        weights = [(graph[u][v]["weight"] * 55) for u, v in edges]
+        nx.draw_kamada_kawai(graph,
+                             node_size=node_sizes,
+                             with_labels=True,
+                             width=weights,
+                             edge_color=edge_colors,
+                             node_color=node_colors,
+                             font_size=7)
         return FigureCanvas(fig)
 
     def construct_network(self, lda_model: GensimLdaModel) -> nx.Graph:
