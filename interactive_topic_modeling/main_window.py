@@ -147,12 +147,12 @@ class MainWindow(QMainWindow):
         self.graph_display.previous_plot(self.graph_display.tabText(self.graph_display.currentIndex()))
 
     def validate_input(self) -> None:
-        input = self.model_params_display.fetch_topic_num()
-        if 1 <= input <= 1000:
+        topic_input = self.model_params_display.fetch_topic_num()
+        if 1 <= topic_input <= 1000:
             print("correct_input")
             self.graph_display.apply_topic_modelling(
                 self.imported_files_display.file_container[self.graph_display.get_active_tab_name()],
-                input,
+                topic_input,
                 self.imported_files_display.stopwords_display.additional_stopwords
             )
         else:
