@@ -280,17 +280,23 @@ class GraphDisplay(QTabWidget):
     def construct_network_vis(self, lda_model: GensimLdaModel) -> FigureCanvas:
         fig = plt.figure()
         graph = self.construct_network(lda_model)
+        edges = graph.edges()
         node_size = [val * 100 for (node, val) in graph.degree()]
-        nx.draw_kamada_kawai(graph, node_size=node_size, with_labels=True)
+        edge_colors = [graph[u][v]["color"] for (u, v) in edges]
+        #node_colors =
+        weights = [(graph[u][v]["weight"] * 25) for u, v in edges]
+        nx.draw_kamada_kawai(graph, node_size=node_size, with_labels=True, width=weights, edge_color=edge_colors)
         return FigureCanvas(fig)
 
     def construct_network(self, lda_model: GensimLdaModel) -> nx.Graph:
         graph = nx.Graph()
+        colors = ["#ff595e", "#ffca3a", "#8ac926", "#1982c4", "#6a4c93"]
         node_amount = 10
         for topic_id in range(self.num_topics):
             topic_tuples = lda_model.show_topic(topic_id, node_amount)
             for topic_tuple in topic_tuples:
-                graph.add_edge(topic_id, topic_tuple[0], weight=topic_tuple[1])
+                graph.add_node(topic_id, color=colors[topic_id])
+                graph.add_edge(topic_id, topic_tuple[0], color=colors[topic_id], weight=topic_tuple[1])
             print(topic_tuples)
         return graph
 
