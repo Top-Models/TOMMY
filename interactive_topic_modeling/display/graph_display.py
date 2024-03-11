@@ -182,10 +182,10 @@ class GraphDisplay(QTabWidget):
         :return: None
         """
         canvases = []
+        canvases.append(self.construct_network_vis(lda_model))
         canvases.extend(self.construct_word_clouds(lda_model))
         canvases.extend(self.construct_probable_words(lda_model))
         canvases.append(self.construct_correlation_matrix(lda_model))
-        canvases.append(self.construct_network_vis(lda_model))
         # canvases.append(self.construct_word_count())
 
         self.plots_container[tab_name] = canvases
@@ -280,30 +280,19 @@ class GraphDisplay(QTabWidget):
     def construct_network_vis(self, lda_model: GensimLdaModel) -> FigureCanvas:
         fig = plt.figure()
         graph = self.construct_network(lda_model)
-        nx.draw_kamada_kawai(graph)
+        node_size = [val * 100 for (node, val) in graph.degree()]
+        nx.draw_kamada_kawai(graph, node_size=node_size, with_labels=True)
         return FigureCanvas(fig)
 
     def construct_network(self, lda_model: GensimLdaModel) -> nx.Graph:
-        g = nx.Graph()
-        g.add_edge(1, 2, weight=0.6)
-        g.add_edge(2, 3, weight=0.4)
-        g.add_edge(3, 4, weight=0.1)
-        g.add_edge(1, 4, weight=0.2)
-        g.add_edge(1, 5, weight=0.6)
-        g.add_edge(5, 6, weight=0.9)
-        g.add_edge(5, 7, weight=0.7)
-        g.add_edge(4, 8, weight=0.5)
-        g.add_edge(3, 8, weight=0.2)
-        g.add_edge(6, 5, weight=0.2)
-        g.add_edge(6, 7, weight=0.4)
-        g.add_edge(7, 8, weight=0.6)
-        g.add_edge(8, 6, weight=0.9)
-        g.add_edge(8, 10, weight=0.7)
-        g.add_edge(10, 11, weight=0.2)
-        g.add_edge(11, 8, weight=0.4)
-        g.add_edge(8, 12, weight=0.5)
-
-        return g
+        graph = nx.Graph()
+        node_amount = 10
+        for topic_id in range(self.num_topics):
+            topic_tuples = lda_model.show_topic(topic_id, node_amount)
+            for topic_tuple in topic_tuples:
+                graph.add_edge(topic_id, topic_tuple[0], weight=topic_tuple[1])
+            print(topic_tuples)
+        return graph
 
 
     def get_active_tab_name(self) -> str:
