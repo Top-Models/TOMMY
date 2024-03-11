@@ -182,7 +182,7 @@ class GraphDisplay(QTabWidget):
         :return: None
         """
         canvases = []
-        canvases.append(self.construct_network_vis(lda_model))
+        canvases.append(self.construct_word_topic_network_vis(lda_model))
         canvases.extend(self.construct_word_clouds(lda_model))
         canvases.extend(self.construct_probable_words(lda_model))
         canvases.append(self.construct_correlation_matrix(lda_model))
@@ -277,10 +277,10 @@ class GraphDisplay(QTabWidget):
 
         return FigureCanvas(fig)
 
-    def construct_network_vis(self, lda_model: GensimLdaModel) -> FigureCanvas:
+    def construct_word_topic_network_vis(self, lda_model: GensimLdaModel) -> FigureCanvas:
         # Construct a plot and graph
         fig = plt.figure()
-        graph = self.construct_network(lda_model)
+        graph = self.construct_word_topic_network(lda_model)
 
         # Get graph elements
         edges = graph.edges()
@@ -301,7 +301,7 @@ class GraphDisplay(QTabWidget):
                              font_size=8)
         return FigureCanvas(fig)
 
-    def construct_network(self, lda_model: GensimLdaModel) -> nx.Graph:
+    def construct_word_topic_network(self, lda_model: GensimLdaModel) -> nx.Graph:
         graph = nx.Graph()
 
         # List of simple, distinct colors from https://sashamaps.net/docs/resources/20-colors/
