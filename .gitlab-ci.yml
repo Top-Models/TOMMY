@@ -6,6 +6,7 @@ py-test:
     image: python:3.12
     script:
         -pip install -r requirements.txt
+        - echo "Running the tests."
         -python -m pytest --cov-report=html --cov=interactive_topic_modeling
     artifacts:
         paths:
