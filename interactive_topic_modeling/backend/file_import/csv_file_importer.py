@@ -1,41 +1,60 @@
+import csv
 import os.path
+from os import stat
+from typing import List, Generator
+from datetime import date
+
 
 from interactive_topic_modeling.backend.file_import import file_importer_base
-import csv
-from typing import List, Generator
 from interactive_topic_modeling.backend.file_import.file import File
-from datetime import date
-from os import stat
 
 
 class CsvFileImporter(file_importer_base.FileImporterBase):
     mandatory_fields: List[str] = ['body']
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+        Initializes a new instance of the class.
+        """
         pass
 
     def compatible_file(self, path: str) -> bool:
-        """A CSV file is compatible with this parser if and only if
-         the first row of the CSV file contains all mandatory headers"""
+        """
+        A CSV file is compatible with this parser if and only if
+        the first row of the CSV file contains all mandatory headers
+
+        :param path: The string path to the CSV file to be checked for compatibility.
+        :return bool: True if the file is compatible, False otherwise.
+        """
         with open(path, 'r', newline="", encoding='utf-8') as csvfile:
             csv_reader = csv.DictReader(csvfile, delimiter=',')
+
             # To check whether each mandatory header exists and is unique,
             # we keep an array of occurrences of all mandatory headers
             mandatory_fields_counts = [0] * len(self.mandatory_fields)
+
             for header in csv_reader.fieldnames:
-                if self.mandatory_fields.__contains__(header.lower()):
+                if header.lower() in self.mandatory_fields:
                     mandatory_fields_counts[self.mandatory_fields.index(header.lower())] += 1
+
             if mandatory_fields_counts == [1] * len(self.mandatory_fields):
                 return True
+
         print("Incorrect number of headers", mandatory_fields_counts)
         return False
 
     def load_file(self, path: str) -> Generator[File, None, None]:
+        """
+        Loads a CSV file and yields File objects.
+
+        :param path: The string path to the CSV file.
+        :return File: A File object generated from each row of the CSV.
+        """
         with open(path, 'r', newline="", encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
-            reader.fieldnames = list(map(
-                lambda header: str(header).lower(), reader.fieldnames))
+            reader.fieldnames = [str(header).lower() for header in reader.fieldnames]
             row: dict
+
             row_index = 1  # Only used for debugging
             for row in reader:
                 for key, value in row.items():
@@ -49,6 +68,13 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                 row_index += 1
 
     def generate_file(self, file: dict, path) -> File:
+        """
+        Generates a File object from a CSV row.
+
+        :param file: A dictionary representing a row of CSV data.
+        :param path: The string path to the CSV file.
+        :return File: A File object generated from the CSV row.
+        """
         for key in self.mandatory_fields:
             if key not in file or file[key] is None:
                 raise KeyError(key)
