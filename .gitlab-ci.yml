@@ -19,8 +19,8 @@ before_script:
 
 
 py-test:
-    extends:
-    - .windows_job
+    tags:
+    - test
     stage: test
     script:
         - pip install -r requirements.txt
