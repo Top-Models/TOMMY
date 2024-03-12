@@ -17,6 +17,7 @@ py-test:
     stage: test
     script:
         - pip install -r requirements.txt
+        - pip install six==1.16
         - echo "Running the tests."
         - python -m pytest --cov-report=html --cov=interactive_topic_modeling
     artifacts:
