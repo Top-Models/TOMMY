@@ -1,9 +1,18 @@
 stages:
     - test
 
+image: python:latest
+
+
+before_script:
+  - python --version ; pip --version  # For debugging
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+
+
 py-test:
     stage: test
-    image: python:3.12
     script:
         - pip install -r requirements.txt
         - echo "Running the tests."
