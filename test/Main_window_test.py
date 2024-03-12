@@ -22,6 +22,14 @@ def test_validate_input_incorrect(mainwindow, qtbot):
     # Assert that the expected action was performed
     assert "Incorrect Input" in mainwindow.model_params_display.topic_input.placeholderText()
 
+def test_validate_input_incorrect_char(mainwindow, qtbot):
+    # Simulate correct input (e.g., topic_input between 1 and 1000)
+    mainwindow.model_params_display.topic_input.setText("&&&")
+    qtbot.mouseClick(mainwindow.apply_button, QtCore.Qt.LeftButton)
+
+    # Assert that the expected action was performed
+    assert "Incorrect Input" in mainwindow.model_params_display.topic_input.placeholderText()
+
 def test_validate_input_correct(mainwindow, qtbot):
     # Simulate correct input (e.g., topic_input between 1 and 1000)
     mainwindow.model_params_display.topic_input.setText("10")
@@ -34,7 +42,7 @@ def test_validate_input_reset_style(mainwindow, qtbot):
     # Simulate correct input (e.g., topic_input between 1 and 1000)
     mainwindow.model_params_display.topic_input.setText("0")
     qtbot.mouseClick(mainwindow.apply_button, QtCore.Qt.LeftButton)
-
+    
     # Assert that the expected action was performed
     assert f"border-radius: 5px;font-size: 14px;font-family: {text_font};color: black;border: 4px solid red;padding: 5px;background-color: white;" in mainwindow.model_params_display.topic_input.styleSheet()
 
