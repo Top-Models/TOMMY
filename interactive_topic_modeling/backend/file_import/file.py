@@ -1,5 +1,16 @@
+from dataclasses import dataclass
+from datetime import date
 
+
+@dataclass
 class File:
-
-    def __init__(self):
-        pass
+    name: str
+    size: int
+    body: str
+    length: int
+    format: str
+    author: str = None
+    title: str = None
+    date: date = None
+    url: str = None
+    path: str = None
