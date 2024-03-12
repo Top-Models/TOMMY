@@ -4,6 +4,9 @@ from datetime import date
 
 @dataclass
 class File:
+    """
+    Represents a file object with various attributes.
+    """
     name: str
     size: int
     body: str
