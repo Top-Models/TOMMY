@@ -1,5 +1,7 @@
 stages:
+    - build
     - test
+    - run
 
 image: python:latest
 
@@ -12,11 +14,21 @@ before_script:
 
 
 py-test:
-    tags:
-    - test
     stage: test
     script:
-        - pip install -r requirements.txt
-        - pip install six==1.16
+
         - echo "Running the tests."
         - python -m pytest test
+
+build:
+    stage: build
+    script:
+        - pip install -r requirements.txt
+        - echo "building"
+
+run:
+    stage: run
+    script:
+        - pip install -r requirements.txt
+        - echo "run"
+        - python main.py interactive_topic_modeling
