@@ -3,19 +3,12 @@ stages:
 
 image: python:latest
 
-.windows_job:
-  tags:
-    - saas-windows-medium-amd64
-  before_script:
-    - Set-Variable -Name "time" -Value (date -Format "%H:%m")
-    - echo ${time}
-    - echo "started by ${GITLAB_USER_NAME}"
 
 before_script:
   - python --version ; pip --version  # For debugging
   - pip install virtualenv
   - virtualenv venv
-  - source venv/bin/activate
+  - .\venv\Scripts\activate  # Activating virtual environment in Windows
 
 
 py-test:
