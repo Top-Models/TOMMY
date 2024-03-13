@@ -1,8 +1,8 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
-from interactive_topic_modeling.display.topic_display.topic_entity import \
-    TopicEntity
+from interactive_topic_modeling.display.topic_display.topic_entity import (
+    TopicEntity)
 
 
 class FetchedTopicsDisplay(QScrollArea):

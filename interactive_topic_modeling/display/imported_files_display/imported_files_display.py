@@ -5,11 +5,16 @@ from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
 from interactive_topic_modeling.backend.file_import.file import File
 from interactive_topic_modeling.backend.file_import.file_reader import (
     FileReader)
-from interactive_topic_modeling.display.imported_files_display.file_label import FileLabel
-from interactive_topic_modeling.display.imported_files_display.file_stats_display import FileStatsDisplay
-from interactive_topic_modeling.display.stopwords_display import StopwordsDisplay
-from interactive_topic_modeling.support.constant_variables import heading_font, seco_col_blue, hover_seco_col_blue
-from interactive_topic_modeling.support.project_settings import current_project_settings
+from interactive_topic_modeling.display.imported_files_display.file_label \
+    import FileLabel
+from interactive_topic_modeling.display.imported_files_display. \
+    file_stats_display import FileStatsDisplay
+from interactive_topic_modeling.display.stopwords_display import (
+    StopwordsDisplay)
+from interactive_topic_modeling.support.constant_variables import (
+    heading_font, seco_col_blue, hover_seco_col_blue)
+from interactive_topic_modeling.support.project_settings import (
+    current_project_settings)
 
 
 class ImportedFilesDisplay(QWidget):

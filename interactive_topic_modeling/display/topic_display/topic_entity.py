@@ -1,8 +1,8 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
 
-from interactive_topic_modeling.support.constant_variables import \
-    prim_col_red, heading_font, text_font
+from interactive_topic_modeling.support.constant_variables import (
+    prim_col_red, heading_font, text_font)
 
 
 class TopicEntity(QFrame):
