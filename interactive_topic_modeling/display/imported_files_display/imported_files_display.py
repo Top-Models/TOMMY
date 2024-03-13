@@ -1,10 +1,10 @@
 import os
-
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
 
 from interactive_topic_modeling.backend.file_import.file import File
-from interactive_topic_modeling.backend.file_import.file_reader import FileReader
+from interactive_topic_modeling.backend.file_import.file_reader import (
+    FileReader)
 from interactive_topic_modeling.display.imported_files_display.file_label import FileLabel
 from interactive_topic_modeling.display.imported_files_display.file_stats_display import FileStatsDisplay
 from interactive_topic_modeling.display.stopwords_display import StopwordsDisplay
@@ -13,8 +13,10 @@ from interactive_topic_modeling.support.project_settings import current_project_
 
 
 class ImportedFilesDisplay(QWidget):
+    """The ImportedFileDisplay class that shows the imported files."""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize the ImportedFileDisplay"""
         super().__init__()
 
         # Initialize file reader
@@ -36,9 +38,12 @@ class ImportedFilesDisplay(QWidget):
                                        f"text-transform: uppercase;"
                                        f"background-color: {seco_col_blue};"
                                        f"color: white;"
-                                       f"border-bottom: 3px solid {hover_seco_col_blue};"
-                                       f"border-right: 3px solid {hover_seco_col_blue};")
-        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
+                                       f"border-bottom: "
+                                       f"3px solid {hover_seco_col_blue};"
+                                       f"border-right: "
+                                       f"3px solid {hover_seco_col_blue};")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
+                                      Qt.AlignmentFlag.AlignTop)
         self.title_label.setContentsMargins(0, 0, 0, 0)
         self.title_label.setFixedHeight(50)
         self.layout.addWidget(self.title_label)
@@ -49,8 +54,10 @@ class ImportedFilesDisplay(QWidget):
         self.scroll_widget = QWidget()
         self.scroll_layout = QVBoxLayout(self.scroll_widget)
         self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroll_area.setVerticalScrollBarPolicy(
+                Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scroll_area.setHorizontalScrollBarPolicy(
+                Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidget(self.scroll_widget)
         self.layout.addWidget(self.scroll_area)
 
@@ -64,8 +71,10 @@ class ImportedFilesDisplay(QWidget):
         self.selected_file = None
 
         # Add scroll options
-        self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroll_area.setVerticalScrollBarPolicy(
+                Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scroll_area.setHorizontalScrollBarPolicy(
+                Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidgetResizable(True)
 
     def fetch_files(self, tab_name: str) -> None:
@@ -73,7 +82,8 @@ class ImportedFilesDisplay(QWidget):
         Fetch the files from the selected directory
         :return: The list of files
         """
-        all_files = list(self.file_reader.read_files(current_project_settings.selected_folder))
+        all_files = list(self.file_reader.read_files(
+                current_project_settings.selected_folder))
         self.file_container[tab_name] = all_files
 
     def display_files(self, tab_name: str) -> None:
@@ -83,7 +93,8 @@ class ImportedFilesDisplay(QWidget):
         """
 
         # Clear the layout except for the title label
-        for i in reversed(range(0, self.scroll_layout.count())):  # Start from 1 to keep the title label
+        # Start from 1 to keep the title label
+        for i in reversed(range(0, self.scroll_layout.count())):
             self.scroll_layout.itemAt(i).widget().deleteLater()
 
         # Check if the tab name is in the file container
@@ -104,7 +115,8 @@ class ImportedFilesDisplay(QWidget):
         """
 
         # Deselect the previously selected label
-        if self.selected_label is not None and self.selected_label is not clicked_label:
+        if (self.selected_label is not None
+                and self.selected_label is not clicked_label):
             self.selected_label.deselect()
 
         # Set the selected file

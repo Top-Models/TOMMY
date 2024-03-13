@@ -1,19 +1,26 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
+import os
 
 from interactive_topic_modeling.support import project_settings
-from interactive_topic_modeling.backend.file_import.file_reader import FileReader
-import os
+from interactive_topic_modeling.backend.file_import.file_reader import (
+    FileReader)
 
 
 class ReadInFilesButton(QWidget):
-
-    def __init__(self):
+    """
+    The ReadInFilesButton class that defines the button to
+    read in files.
+    """
+    def __init__(self) -> None:
+        """Initialize the button."""
         super().__init__()
 
         self.file_reader = FileReader()
+
         # Initialize layout
         layout = QVBoxLayout()
         self.setLayout(layout)
+
         # Initialize button
         btn = QPushButton("Read in files", self)
         btn.setToolTip("Start reading in files from the selected folder")
@@ -22,6 +29,7 @@ class ReadInFilesButton(QWidget):
         btn.clicked.connect(self.read_files)
 
     def read_files(self) -> None:
+        """Read the files with the file reader."""
         files = self.file_reader.read_files()
         # Apply all other functions like preprocessing here
 
