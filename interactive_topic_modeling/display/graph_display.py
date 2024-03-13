@@ -258,6 +258,11 @@ class GraphDisplay(QTabWidget):
         return FigureCanvas(fig)
 
     def construct_correlation_matrix(self, lda_model: GensimLdaModel) -> FigureCanvas:
+        """
+        Construct a correlation matrix plot comparing the different topics with each other for the given LDA model
+        :param lda_model: The LDA model to construct the plot for
+        :return: A correlation matrix plot
+        """
         # Construct the correlation matrix
         correlation_matrix = lda_model.get_correlation_matrix(num_words=30)
 
@@ -278,30 +283,67 @@ class GraphDisplay(QTabWidget):
         return FigureCanvas(fig)
 
     def construct_word_topic_network_vis(self, lda_model: GensimLdaModel) -> FigureCanvas:
+        """
+        Construct a word-topic network plot showing the relations between topics and probable words
+        :param lda_model: The LDA model to construct the plot for
+        :return: A word-topic network plot
+        """
         # Construct a plot and graph
         fig = plt.figure()
         graph = self.construct_word_topic_network(lda_model)
 
+        # Get the scale factor used for the displayed edge weight (width)
+        edge_scale_factor = self.get_edge_scale_factor(lda_model)
+
         # Get graph elements
         edges = graph.edges()
         nodes = graph.nodes(data="color")
-        print(edges)
-        print(nodes)
 
+        # Get drawing function arguments
         node_sizes = [150 if node[1] is not None else 0 for node in nodes]
-        edge_colors = [graph[u][v]["color"] for (u, v) in edges]
         node_colors = [node[1] if node[1] is not None else "black" for node in nodes]
-        weights = [(graph[u][v]["weight"] * 75) for u, v in edges]
+
+        edge_colors = [graph[u][v]["color"] for (u, v) in edges]
+        edge_width = [(graph[u][v]["weight"] * edge_scale_factor) for u, v in edges]
+
+        # Draw the network using the kamada-kawai algorithm to position the nodes in an aesthetically pleasing way
         nx.draw_kamada_kawai(graph,
                              node_size=node_sizes,
                              with_labels=True,
-                             width=weights,
+                             width=edge_width,
                              edge_color=edge_colors,
                              node_color=node_colors,
                              font_size=8)
+
         return FigureCanvas(fig)
 
+    def get_edge_scale_factor(self, lda_model: GensimLdaModel) -> float:
+        """
+        Calculates the scale factor to make sure the biggest edge in a network is always the same size, regardless of
+        the maximum topic weight
+        :param lda_model: The LDA model to calculate the scale factor for
+        :return: The edge scale factor
+        """
+
+        # Find the maximum topic weight
+        max_topic_weight = 0
+        for topic_id in range(self.num_topics):
+            _, topic_weights = lda_model.show_topic_and_probs(topic_id, 1)
+            max_topic_weight = max(max_topic_weight, topic_weights[0])
+
+        # A constant which is multiplied by the scale factor according to an edge width that is visually pleasing
+        chosen_weight = 1.5
+
+        scale_factor = (1/max_topic_weight)
+
+        return scale_factor*chosen_weight
+
     def construct_word_topic_network(self, lda_model: GensimLdaModel) -> nx.Graph:
+        """"
+        Construct a word-topic network which is used to plot the relations between topics and probable words
+        :param lda_model: The LDA model to construct the network for
+        :return: A networkx graph
+        """
         graph = nx.Graph()
 
         # List of simple, distinct colors from https://sashamaps.net/docs/resources/20-colors/

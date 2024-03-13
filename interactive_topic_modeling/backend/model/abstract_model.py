@@ -118,12 +118,12 @@ class Model(ABC):
 
     @abstractmethod
     def show_topic(self, topic_id: int, n: int) -> list[tuple[str, float]]:
-        """"Returns the top n probability pairs where words are actual strings for the current topic_id"""
+        """Returns the top n probability pairs where words are actual strings for the current topic_id"""
         pass
 
     @abstractmethod
     def show_topic_and_probs(self, topic_id: int, n: int) -> tuple[list[str], list[float]]:
-        """"Return the top n words represented as strings and their associated probabilities in two separate lists"""
+        """Return the top n words represented as strings and their associated probabilities in two separate lists"""
         pass
 
     @abstractmethod
