@@ -1,8 +1,10 @@
 import random
+from typing import List
 
 import matplotlib.pyplot as plt
 from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout
 from gensim import corpora, models
+from gensim.models import LdaModel
 from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as
                                                 FigureCanvas)
 from matplotlib.ticker import MaxNLocator
@@ -17,11 +19,19 @@ from interactive_topic_modeling.display.topic_display.fetched_topics_display \
 
 
 def preprocess_text(text) -> list:
+    """Preprocess the text. """
     tokens = text.lower().split()
     return tokens
 
 
-def perform_lda_on_text(text, num_topics):
+def perform_lda_on_text(text, num_topics) -> "LdaModel":
+    """
+    Perform LDA on the given text.
+
+    :param text: The text to perform LDA on.
+    :param num_topics: The number of topics.
+    :return:
+    """
     # Preprocess the text
     preprocessed_text = preprocess_text(text)
 
@@ -38,7 +48,8 @@ def perform_lda_on_text(text, num_topics):
     return lda_model
 
 
-def generate_list():
+def generate_list() -> List[int]:
+    """Generate a list of random numbers."""
     # Define the range of numbers
     low_range = 1
     high_range = 10050
@@ -54,9 +65,11 @@ def generate_list():
 
 
 class GraphDisplay(QTabWidget):
+    """A class for displaying the graphs made by topic modelling"""
     num_topics = 0
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize the GraphDisplay."""
         super().__init__()
 
         # Initialize widget properties
@@ -136,6 +149,13 @@ class GraphDisplay(QTabWidget):
         self.display_plot(active_tab_name, 0)
 
     def preprocess_text(self, text, additional_stopwords: set) -> list:
+        """
+        Preprocess the text.
+
+        :param text: The text to preprocess.
+        :param additional_stopwords: Set of user defined .
+        :return: The preprocessed text as a list of tokens.
+        """
         tokens = text.lower().split()
         # Exclude stopwords
         tokens = [token for token in tokens if
@@ -184,7 +204,8 @@ class GraphDisplay(QTabWidget):
 
     def train_lda_model(self, corpus: TermLists) -> GensimLdaModel:
         """
-        Train an LDA model
+        Train an LDA model.
+
         :param corpus: The corpus to train the LDA model on
         :return: The trained LDA model
         """
@@ -193,7 +214,8 @@ class GraphDisplay(QTabWidget):
 
     def add_lda_plots(self, tab_name: str, lda_model: GensimLdaModel) -> None:
         """
-        Add LDA plots for the given LDA model
+        Add LDA plots for the given LDA model.
+
         :param tab_name: Name of the tab to add the plots to
         :param lda_model: The LDA model to add the plots for
         :return: None
@@ -209,7 +231,8 @@ class GraphDisplay(QTabWidget):
 
     def construct_word_clouds(self, lda_model: GensimLdaModel):
         """
-        Construct word cloud plots for the given LDA model
+        Construct word cloud plots for the given LDA model.
+
         :param lda_model: The LDA model to construct the plots for
         :return: A list of word cloud plots
         """
@@ -286,10 +309,16 @@ class GraphDisplay(QTabWidget):
     def construct_correlation_matrix(self,
                                      lda_model:
                                      GensimLdaModel) -> FigureCanvas:
+        """
+        Construct the correlation matrix. 
+        
+        :param lda_model: The trained LDA model.
+        :return FigureCanvas: The graph showing the correlation matrix
+        """
         # Construct the correlation matrix
         correlation_matrix = lda_model.get_correlation_matrix(num_words=30)
 
-        # Construct a plot and axes
+        # Construct a plot and axeschat
         fig, ax = plt.subplots()
 
         # Construct the correlations matrix adding colors
@@ -307,19 +336,20 @@ class GraphDisplay(QTabWidget):
 
     def get_active_tab_name(self) -> str:
         """
-        Get the name of the active tab
+        Get the name of the active tab.
+
         :return: The name of the active tab
         """
         return self.tabText(self.currentIndex())
 
     def display_plot(self, tab_name: str, plot_index: int) -> None:
         """
-        Display the plots for the given tab
+        Display the plots for the given tab.
+
         :param plot_index: Index of the plot to display
         :param tab_name: Name of the tab to display the plots for
         :return: None
         """
-
         # Clear the layout
         for i in reversed(range(self.init_model_layout.count())):
             self.init_model_layout.itemAt(i).widget().setParent(None)
@@ -334,7 +364,8 @@ class GraphDisplay(QTabWidget):
 
     def on_tab_clicked(self, index) -> None:
         """
-        Event handler for when a tab is clicked
+        Event handler for when a tab is clicked.
+
         :param index: Index of the clicked tab
         :return: None
         """
@@ -348,7 +379,8 @@ class GraphDisplay(QTabWidget):
 
     def next_plot(self, tab_name: str) -> None:
         """
-        Display the next plot for the given tab
+        Display the next plot for the given tab.
+
         :param tab_name: Name of the tab to display the next plot for
         :return: None
         """
@@ -362,7 +394,8 @@ class GraphDisplay(QTabWidget):
 
     def previous_plot(self, tab_name: str) -> None:
         """
-        Display the previous plot for the given tab
+        Display the previous plot for the given tab.
+
         :param tab_name: Name of the tab to display the previous plot for
         :return: None
         """
