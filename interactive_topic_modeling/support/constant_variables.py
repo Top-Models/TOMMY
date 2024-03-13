@@ -1,4 +1,6 @@
-# SUMMARY: This file contains all constant variables, such as colour codes and fonts
+"""
+This file contains all constant variable, such as colour codes and fonts.
+"""
 
 # Primary colour properties
 prim_col_red = "#E40046"
