@@ -41,3 +41,11 @@ class FileReader:
             for file in files:
                 yield from self.fileParsers.import_file(os.path.join(root,
                                                                      file))
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

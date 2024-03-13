@@ -92,3 +92,11 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                     length=len(file.get("body").split(" ")),
                     name=os.path.relpath(path).split(".")[0],
                     size=stat(path).st_size)
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

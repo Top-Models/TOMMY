@@ -36,3 +36,11 @@ class NLTKTokenizer:
         spaces = [True] * len(words)
 
         return Doc(self._vocab, words=words, spaces=spaces)
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""
