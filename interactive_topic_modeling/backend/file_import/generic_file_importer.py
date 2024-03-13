@@ -7,13 +7,16 @@ from interactive_topic_modeling.backend.file_import import csv_file_importer
 
 class GenericFileImporter:
     """
-    The class GenericFileImporter is responsible for importing files using FileImporterBase objects
+    The class GenericFileImporter is responsible for importing files using
+     FileImporterBase objects
     """
     def __init__(self):
         """
         Initialization of a new GenericFileImporter object.
         """
-        self.importers: List[file_importer_base.FileImporterBase] = [csv_file_importer.CsvFileImporter()]
+        self.importers: (
+            List)[file_importer_base.FileImporterBase] = [
+            csv_file_importer.CsvFileImporter()]
 
     def import_file(self, path: str) -> Generator[File, None, None]:
         """
@@ -25,4 +28,5 @@ class GenericFileImporter:
         for importer in self.importers:
             if importer.compatible_file(path):
                 return importer.load_file(path)
-        raise NotImplementedError("File does not have a compatible file importer implementation. Path:", path)
+        raise NotImplementedError("File does not have a compatible file "
+                                  "importer implementation. Path:", path)

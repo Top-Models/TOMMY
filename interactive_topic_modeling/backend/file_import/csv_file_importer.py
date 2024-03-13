@@ -4,7 +4,6 @@ from os import stat
 from typing import List, Generator
 from datetime import date
 
-
 from interactive_topic_modeling.backend.file_import import file_importer_base
 from interactive_topic_modeling.backend.file_import.file import File
 
@@ -23,7 +22,8 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
         A CSV file is compatible with this parser if and only if
         the first row of the CSV file contains all mandatory headers
 
-        :param path: The string path to the CSV file to be checked for compatibility.
+        :param path: The string path to the CSV file to be checked for
+                     compatibility.
         :return bool: True if the file is compatible, False otherwise.
         """
         with open(path, 'r', newline="", encoding='utf-8') as csvfile:
@@ -35,7 +35,8 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
 
             for header in csv_reader.fieldnames:
                 if header.lower() in self.mandatory_fields:
-                    mandatory_fields_counts[self.mandatory_fields.index(header.lower())] += 1
+                    mandatory_fields_counts[self.mandatory_fields.index(
+                            header.lower())] += 1
 
             if mandatory_fields_counts == [1] * len(self.mandatory_fields):
                 return True
@@ -52,7 +53,8 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
         """
         with open(path, 'r', newline="", encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
-            reader.fieldnames = [str(header).lower() for header in reader.fieldnames]
+            reader.fieldnames = [str(header).lower() for header in
+                                 reader.fieldnames]
             row: dict
 
             row_index = 1  # Only used for debugging
@@ -64,7 +66,8 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                 try:
                     yield self.generate_file(row, path)
                 except KeyError as e:
-                    print("Failed to load row {} in file {}, reason: {}".format(row_index, path, e))
+                    print("Failed to load row {} in file {},"
+                          " reason: {}".format(row_index, path, e))
                 row_index += 1
 
     def generate_file(self, file: dict, path) -> File:
@@ -84,6 +87,8 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
             file_date: date = self.parse_date(file_date)
         return File(body=file.get("body"), author=file.get("author"),
                     title=file.get("title"), date=file_date,
-                    url=file.get("url"), path=os.path.relpath(path), format="csv",
+                    url=file.get("url"), path=os.path.relpath(path),
+                    format="csv",
                     length=len(file.get("body").split(" ")),
-                    name=os.path.relpath(path).split(".")[0], size=stat(path).st_size)
+                    name=os.path.relpath(path).split(".")[0],
+                    size=stat(path).st_size)

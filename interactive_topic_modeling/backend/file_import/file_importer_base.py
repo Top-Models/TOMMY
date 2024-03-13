@@ -38,7 +38,8 @@ class FileImporterBase(ABC):
         :return date: The date object .
         """
         parse_info = DutchParseInfo()
-        return parser.parse(file_date, parserinfo=parse_info, fuzzy=True, dayfirst=True).date()
+        return parser.parse(file_date, parserinfo=parse_info, fuzzy=True,
+                            dayfirst=True).date()
 
 
 class DutchParseInfo(parser.parserinfo):
@@ -50,7 +51,8 @@ class DutchParseInfo(parser.parserinfo):
         The initialization of the DutchParseInfo object.
         """
         self.MONTHS = [('January', 'Januari', 'Jan', 'Jan.'),
-                       ('February', 'Februari', 'Feb', 'Feb.', 'Febr', 'Febr.'),
+                       ('February', 'Februari', 'Feb', 'Feb.', 'Febr',
+                        'Febr.'),
                        ('March', 'Maart', 'Mrt', 'Mrt.', 'Mar', 'Mar.'),
                        ('April', 'Apr', 'Apr.'),
                        ('May', 'Mei'),
@@ -64,10 +66,13 @@ class DutchParseInfo(parser.parserinfo):
 
         self.WEEKDAYS = [('Mon', 'Monday', 'Maandag', 'Ma', 'Ma.'),
                          ('Tue', 'Tuesday', 'Dinsdag', 'Di', 'Di.'),
-                         ('Wed', 'Wednesday', 'Woensdag', 'Wo', 'Wo.', 'Woe', 'Woe.'),
+                         ('Wed', 'Wednesday', 'Woensdag', 'Wo', 'Wo.',
+                          'Woe', 'Woe.'),
                          ('Thu', 'Thursday', 'Donderdag', 'Do', 'Do.'),
-                         ('Fri', 'Friday', 'Vrijdag', 'Vr', 'Vr.', 'Vrij', 'Vrij.'),
-                         ('Sat', 'Saturday', 'Zaterdag', 'Za', 'Za.', 'Zat', 'Zat.'),
+                         ('Fri', 'Friday', 'Vrijdag', 'Vr', 'Vr.', 'Vrij',
+                          'Vrij.'),
+                         ('Sat', 'Saturday', 'Zaterdag', 'Za', 'Za.', 'Zat',
+                          'Zat.'),
                          ('Sun', 'Sunday', 'Zondag', 'Zo', 'Zo.')]
 
         super().__init__(dayfirst=True)
