@@ -1,12 +1,15 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QScrollArea, QLineEdit, QWidget, QHBoxLayout
-from interactive_topic_modeling.support.constant_variables import text_font, heading_font, seco_col_blue, \
-    hover_seco_col_blue
+from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
+                               QWidget)
+from interactive_topic_modeling.support.constant_variables import (
+    text_font, heading_font, seco_col_blue, hover_seco_col_blue)
 
 
 class ModelParamsDisplay(QScrollArea):
+    """The ModelParamsDisplay that displays the model settings"""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """The initialization ot the ModelParamDisplay."""
         super().__init__()
 
         # Initialize widget properties
@@ -34,8 +37,10 @@ class ModelParamsDisplay(QScrollArea):
                                        f"text-transform: uppercase;"
                                        f"background-color: {seco_col_blue};"
                                        f"color: white;"
-                                       f"border-bottom: 3px solid {hover_seco_col_blue};")
-        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
+                                       f"border-bottom: "
+                                       f"3px solid {hover_seco_col_blue};")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
+                                      Qt.AlignmentFlag.AlignTop)
         self.title_label.setContentsMargins(0, 0, 0, 0)
         self.title_label.setFixedHeight(50)
         self.layout.addWidget(self.title_label)
@@ -66,4 +71,5 @@ class ModelParamsDisplay(QScrollArea):
         self.layout.addWidget(self.container)
 
     def fetch_topic_num(self) -> int:
+        """Get the number of topics from the input field."""
         return int(self.topic_input.text())
