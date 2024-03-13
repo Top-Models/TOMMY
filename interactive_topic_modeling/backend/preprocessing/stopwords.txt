@@ -110,6 +110,7 @@ evenwel
 
 figuur
 
+gaan
 gauw
 ge
 gedurende
@@ -158,6 +159,7 @@ inmiddels
 inzake
 
 ja
+jaar
 je
 jezelf
 jij
@@ -169,6 +171,7 @@ juist
 jullie
 
 klaar
+komen
 krachtens
 kunnen
 
@@ -177,6 +180,7 @@ later
 liever
 
 maar
+maken
 me
 mede
 meer

@@ -18,9 +18,9 @@ class StopWords:
     def __iter__(self) -> Iterable[str]:
         return iter(self.words)
 
-    def add(self, *args: str) -> None:
+    def add(self, *args: str | Iterable[str]) -> None:
         # Only 1 argument and it's a list or tuple
-        if len(args) == 1 and isinstance(args[0], (list, tuple)):
+        if len(args) == 1 and isinstance(args[0], Iterable):
             words = args[0]
         # Otherwise the arguments should be the words themselves
         else:
@@ -29,9 +29,9 @@ class StopWords:
         for word in words:
             self.words.add(word)
 
-    def remove(self, *args: str) -> None:
+    def remove(self, *args: str | Iterable[str]) -> None:
         # Only 1 argument and it's a list or tuple
-        if len(args) == 1 and isinstance(args[0], (list, tuple)):
+        if len(args) == 1 and isinstance(args[0], Iterable):
             words = args[0]
         # Otherwise the arguments should be the words themselves
         else:
