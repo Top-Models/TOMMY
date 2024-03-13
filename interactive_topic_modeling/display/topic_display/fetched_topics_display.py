@@ -1,12 +1,14 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
-from interactive_topic_modeling.display.topic_display.topic_entity import TopicEntity
+from interactive_topic_modeling.display.topic_display.topic_entity import \
+    TopicEntity
 
 
 class FetchedTopicsDisplay(QScrollArea):
-
-    def __init__(self):
+    """A widget for displaying the found topics."""
+    def __init__(self) -> None:
+        """Initialize the FetchedTopicDisplay widget."""
         super().__init__()
 
         # Initialize widget properties
@@ -31,9 +33,11 @@ class FetchedTopicsDisplay(QScrollArea):
         # Set default tab
         self.display_topics("lda_model")
 
-    def add_topic(self, tab_name: str, topic_name: str, topic_words: list[str]) -> None:
+    def add_topic(self, tab_name: str, topic_name: str,
+                  topic_words: list[str]) -> None:
         """
-        Add a new topic to the display
+        Add a new topic to the display.
+
         :param tab_name: Name of the tab to add the topic to
         :param topic_name: Name of the topic
         :param topic_words: List of words in the topic
@@ -54,10 +58,10 @@ class FetchedTopicsDisplay(QScrollArea):
     def display_topics(self, tab_name: str) -> None:
         """
         Display topics in the given tab
+
         :param tab_name: Name of the tab to display
         :return: None
         """
-
         # Clear current display
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().deleteLater()
@@ -73,7 +77,7 @@ class FetchedTopicsDisplay(QScrollArea):
 
     def remove_tab_from_container(self, tab_name: str) -> None:
         """
-        Remove tab from topic container
+        Remove tab from topic container.
         :param tab_name: Name of the tab to remove
         :return: None
         """
@@ -81,7 +85,8 @@ class FetchedTopicsDisplay(QScrollArea):
 
     def clear_topics(self) -> None:
         """
-        Clear the topics from the display
+        Clear the topics from the display.
+
         :return: None
         """
         for i in reversed(range(self.layout.count())):
