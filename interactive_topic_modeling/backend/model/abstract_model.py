@@ -1,3 +1,4 @@
+from random import randrange
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from typing import Tuple, List, Dict
@@ -25,11 +26,13 @@ class Model(ABC):
         return self._num_topics
 
     @num_topics.setter
-    def num_topics(self, new_num_topics: int) -> None:
+    def num_topics(self, new_num_topics: int):
         """
         Set the number of topics.
         """
-        if isinstance(new_num_topics, int):
+        if new_num_topics is None:
+            return
+        elif isinstance(new_num_topics, int):
             self._num_topics = new_num_topics
         else:
             raise ValueError("Number of topics passed to "
@@ -44,7 +47,9 @@ class Model(ABC):
     @random_seed.setter
     def random_seed(self, new_random_seed: int) -> None:
         """Set a new 'random' seed."""
-        if isinstance(new_random_seed, int):
+        if new_random_seed is None:
+            self._random_seed = randrange(1 << 16)
+        elif isinstance(new_random_seed, int):
             self._random_seed = new_random_seed
         else:
             raise ValueError("Random seed passed to Model class is "
