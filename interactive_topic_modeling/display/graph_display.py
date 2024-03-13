@@ -15,41 +15,6 @@ from interactive_topic_modeling.backend.preprocessing.pipeline import Pipeline
 from interactive_topic_modeling.display.topic_display.fetched_topics_display import FetchedTopicsDisplay
 
 
-def preprocess_text(text) -> list:
-    tokens = text.lower().split()
-    return tokens
-
-
-def perform_lda_on_text(text, num_topics):
-    # Preprocess the text
-    preprocessed_text = preprocess_text(text)
-
-    # Create a dictionary from the preprocessed text
-    dictionary = corpora.Dictionary([preprocessed_text])
-
-    # Create a bag-of-words representation of the corpus
-    corpus = [dictionary.doc2bow(preprocessed_text)]
-
-    # Train the LDA model
-    lda_model = models.LdaModel(corpus, num_topics=num_topics, id2word=dictionary, passes=10)
-
-    return lda_model
-
-
-def generate_list():
-    # Define the range of numbers
-    low_range = 1
-    high_range = 10050
-
-    # Define the desired length of the list
-    list_length = 1000
-
-    # Generate a list of random numbers
-    random_list = [random.randint(low_range, high_range) for _ in range(list_length)]
-
-    return random_list
-
-
 class GraphDisplay(QTabWidget):
     num_topics = 0
 
@@ -127,12 +92,6 @@ class GraphDisplay(QTabWidget):
         self.tabBarClicked.connect(self.on_tab_clicked)
 
         self.display_plot(active_tab_name, 0)
-
-    def preprocess_text(self, text, additional_stopwords: set) -> list:
-        tokens = text.lower().split()
-        # Exclude stopwords
-        tokens = [token for token in tokens if token not in additional_stopwords]
-        return tokens
 
     def perform_lda_on_docs(self, tab_name: str, documents: list, additional_stopwords: set[str]) -> GensimLdaModel:
         """
@@ -248,7 +207,7 @@ class GraphDisplay(QTabWidget):
         Construct a histogram containing word counts of each input document for the given LDA model
         :return: A word count plot
         """
-        document_counts = generate_list()
+        document_counts = [1, 2, 3, 4, 6, 7, 4, 6, 2, 9, 8, 3, 3, 6, 7, 4, 6, 2, 9, 8, 3, 3, 6]
 
         # Construct a histogram
         fig = plt.figure()

@@ -56,7 +56,6 @@ class Pipeline:
         for token in tokens.copy():
             if len(token) <= 4 or token in remove_these:
                 tokens.remove(token)
-                print(token)
         return list(tokens)
 
     def process_tokens(self, doc: Doc) -> list[str]:
