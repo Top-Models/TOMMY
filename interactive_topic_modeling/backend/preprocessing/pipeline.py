@@ -42,11 +42,22 @@ class Pipeline:
         self._stopwords = StopWords(stopword_list)
         # TODO: keep track of added stopwords
 
+    # def __call__(self, text: str) -> list[str]:
+    #     # 1 - token creation
+    #     tokens = self._nlp(text)
+    #     tokens = self.process_tokens(tokens)
+    #     return tokens
+
+    # REPLACE THIS __call__ FUNCTION FOR THE ONE ABOVE WHEN MERGING WITH MAIN
     def __call__(self, text: str) -> list[str]:
-        # 1 - token creation
-        tokens = self._nlp(text)
-        tokens = self.process_tokens(tokens)
-        return tokens
+        tokens = set(text.lower().split())
+        remove_these = ["hebben", "heeft", "volgens", "wordt", "kunnen", "bekijk", "moeten", "worden", "omdat", "tegen",
+                        "onder", "zouden", "waarin", "andere", "waren", "komen", "alleen", "steeds", "tijdens"]
+        for token in tokens.copy():
+            if len(token) <= 4 or token in remove_these:
+                tokens.remove(token)
+                print(token)
+        return list(tokens)
 
     def process_tokens(self, doc: Doc) -> list[str]:
         # 2, 3, 4 - all steps that require token-level information
