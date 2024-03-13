@@ -5,8 +5,6 @@
 PySide6==6.6.2
 plotly==5.19.0
 python-dateutil==2.8.2
-textract==1.6.5
-six==1.16.0 # required: Any by multiple packages, 1.12 did not work for one developer
 spacy==3.7.4
 gensim==4.3.2
 wordcloud==1.9.3
@@ -14,8 +12,7 @@ pyinstaller==6.4.0
 matplotlib==3.8.3
 nltk==3.8.1
 numpy==1.26.4
-# rtffolder to csv py file
-striprtf==0.0.26
+striprtf==0.0.26 # rtf_files to csv file
 
 #pytest
 pytest==8.0.2
