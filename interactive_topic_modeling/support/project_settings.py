@@ -13,3 +13,11 @@ class ProjectSettings:
 
 current_project_settings = ProjectSettings(os.path.join(
         os.path.dirname(os.path.dirname(__file__)), "Import/csv_files"))
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

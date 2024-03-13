@@ -406,3 +406,11 @@ class GraphDisplay(QTabWidget):
         self.plot_index[tab_name] = (self.plot_index[tab_name] - 1) % len(
                 self.plots_container[tab_name])
         self.display_plot(tab_name, self.plot_index[tab_name])
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

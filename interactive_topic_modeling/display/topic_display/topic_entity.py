@@ -60,3 +60,11 @@ class TopicEntity(QFrame):
         # Add remaining widgets if any
         if horizontal_layout.count() > 0:
             word_layout.addLayout(horizontal_layout)
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""
