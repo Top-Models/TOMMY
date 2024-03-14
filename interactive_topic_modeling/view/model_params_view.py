@@ -84,7 +84,8 @@ class ModelParamsView(QScrollArea):
                                        f"background-color: white;")
         self.topic_input.setAlignment(Qt.AlignLeft)
         self.container_layout.addWidget(self.topic_input)
-        self.topic_input.returnPressed.connect(self.topic_input_return_pressed_event)
+        self.topic_input.returnPressed.connect(
+            self.topic_input_return_pressed_event)
 
     def initialize_title_label(self) -> None:
         """
@@ -114,21 +115,23 @@ class ModelParamsView(QScrollArea):
         self.apply_button = QPushButton("Toepassen")
         self.apply_button.setFixedWidth(100)
         self.apply_button.setFixedHeight(40)
-        self.apply_button.setStyleSheet(f"""
-                                    QPushButton {{
-                                        background-color: {seco_col_blue};
-                                        color: white;
-                                    }}
-
-                                    QPushButton:hover {{
-                                        background-color: {hover_seco_col_blue};
-                                    }}
-
-                                    QPushButton:pressed {{
-                                        background-color: {pressed_seco_col_blue};
-                                    }}
-                                """)
-        self.button_layout.addWidget(self.apply_button, alignment=Qt.AlignBottom)
+        self.apply_button.setStyleSheet(
+            f"""
+                QPushButton {{
+                    background-color: {seco_col_blue};
+                    color: white;
+                }}
+    
+                QPushButton:hover {{
+                    background-color: {hover_seco_col_blue};
+                }}
+    
+                QPushButton:pressed {{
+                    background-color: {pressed_seco_col_blue};
+                }}
+            """)
+        self.button_layout.addWidget(self.apply_button,
+                                     alignment=Qt.AlignBottom)
 
     def fetch_topic_num(self) -> int:
         """

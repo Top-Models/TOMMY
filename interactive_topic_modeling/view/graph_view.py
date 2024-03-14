@@ -1,10 +1,5 @@
-import random
-from typing import List
-
 import matplotlib.pyplot as plt
 from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout
-from gensim import corpora, models
-from gensim.models import LdaModel
 from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as
                                                 FigureCanvas)
 from matplotlib.ticker import MaxNLocator
@@ -13,55 +8,8 @@ from wordcloud import WordCloud
 from interactive_topic_modeling.backend.model.abstract_model import TermLists
 from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
 from interactive_topic_modeling.backend.preprocessing.pipeline import Pipeline
-# Assuming you have this import statement
 from interactive_topic_modeling.view.topic_view.fetched_topics_display \
     import FetchedTopicsDisplay
-
-
-def preprocess_text(text) -> list:
-    """Preprocess the text. """
-    tokens = text.lower().split()
-    return tokens
-
-
-def perform_lda_on_text(text, num_topics) -> "LdaModel":
-    """
-    Perform LDA on the given text.
-
-    :param text: The text to perform LDA on.
-    :param num_topics: The number of topics.
-    :return:
-    """
-    # Preprocess the text
-    preprocessed_text = preprocess_text(text)
-
-    # Create a dictionary from the preprocessed text
-    dictionary = corpora.Dictionary([preprocessed_text])
-
-    # Create a bag-of-words representation of the corpus
-    corpus = [dictionary.doc2bow(preprocessed_text)]
-
-    # Train the LDA model
-    lda_model = models.LdaModel(corpus, num_topics=num_topics,
-                                id2word=dictionary, passes=10)
-
-    return lda_model
-
-
-def generate_list() -> List[int]:
-    """Generate a list of random numbers."""
-    # Define the range of numbers
-    low_range = 1
-    high_range = 10050
-
-    # Define the desired length of the list
-    list_length = 1000
-
-    # Generate a list of random numbers
-    random_list = [random.randint(low_range, high_range) for _ in
-                   range(list_length)]
-
-    return random_list
 
 
 class GraphView(QTabWidget):
@@ -148,20 +96,6 @@ class GraphView(QTabWidget):
 
         self.display_plot(active_tab_name, 0)
 
-    def preprocess_text(self, text, additional_stopwords: set) -> list:
-        """
-        Preprocess the text.
-
-        :param text: The text to preprocess.
-        :param additional_stopwords: Set of user defined .
-        :return: The preprocessed text as a list of tokens.
-        """
-        tokens = text.lower().split()
-        # Exclude stopwords
-        tokens = [token for token in tokens if
-                  token not in additional_stopwords]
-        return tokens
-
     def perform_lda_on_docs(self, tab_name: str, documents: list,
                             additional_stopwords: set[str]) -> GensimLdaModel:
         """
@@ -179,7 +113,6 @@ class GraphView(QTabWidget):
         # Preprocess documents with additional stopwords exclusion
         # TODO: real preprocessing
         pipe = Pipeline()
-        #print(additional_stopwords)
         pipe.add_stopwords(additional_stopwords)
         tokens = [pipe(doc_text) for doc_text in text_from_docs]
 
@@ -284,27 +217,6 @@ class GraphView(QTabWidget):
             canvases.append(FigureCanvas(fig))
 
         return canvases
-
-    def construct_word_count(self) -> FigureCanvas:
-        """
-        Construct a histogram containing word counts of each input
-        document for the given LDA model.
-
-        :return: A word count plot
-        """
-        document_counts = generate_list()
-
-        # Construct a histogram
-        fig = plt.figure()
-        plt.hist(document_counts, bins=150, color="darkblue")
-
-        # Add margins and labels to the plot
-        plt.margins(x=0.02)
-        plt.xlabel("aantal woorden per document")
-        plt.ylabel("aantal documenten")
-        plt.title("Distributie aantal woorden per document")
-
-        return FigureCanvas(fig)
 
     def construct_correlation_matrix(self,
                                      lda_model:

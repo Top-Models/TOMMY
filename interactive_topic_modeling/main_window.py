@@ -8,7 +8,8 @@ from PySide6.QtWidgets import (
 from interactive_topic_modeling.view.graph_view import GraphView
 from interactive_topic_modeling.view.model_selection_view import (
     ModelSelectionView)
-from interactive_topic_modeling.view.plot_navigation_view import PlotNavigationView
+from interactive_topic_modeling.view.plot_navigation_view import (
+    PlotNavigationView)
 from interactive_topic_modeling.view.stopwords_view import (
     StopwordsView)
 from interactive_topic_modeling.view.imported_files_view. \
@@ -59,7 +60,6 @@ class MainWindow(QMainWindow):
         # TODO: Use fetched_topics_display from main_window
         self.initialize_widget(self.graph_view.fetched_topics_display,
                                950, 0, 250, 438)
-
         self.initialize_widget(self.graph_view,
                                250, 8, 700, 430)
         # TODO: Initialize the plot navigation view
