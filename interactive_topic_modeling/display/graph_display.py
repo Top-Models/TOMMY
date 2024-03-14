@@ -1,25 +1,37 @@
-import numpy as np
-from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout, QPushButton
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import random
+from typing import List
+
 import matplotlib.pyplot as plt
+from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout
+from gensim import corpora, models
+from gensim.models import LdaModel
+from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as
+                                                FigureCanvas)
 from matplotlib.ticker import MaxNLocator
 from wordcloud import WordCloud
-from gensim import corpora, models
-import random
 
 from interactive_topic_modeling.backend.model.abstract_model import TermLists
 from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
 from interactive_topic_modeling.backend.preprocessing.pipeline import Pipeline
 # Assuming you have this import statement
-from interactive_topic_modeling.display.topic_display.fetched_topics_display import FetchedTopicsDisplay
+from interactive_topic_modeling.display.topic_display.fetched_topics_display \
+    import FetchedTopicsDisplay
 
 
 def preprocess_text(text) -> list:
+    """Preprocess the text. """
     tokens = text.lower().split()
     return tokens
 
 
-def perform_lda_on_text(text, num_topics):
+def perform_lda_on_text(text, num_topics) -> "LdaModel":
+    """
+    Perform LDA on the given text.
+
+    :param text: The text to perform LDA on.
+    :param num_topics: The number of topics.
+    :return:
+    """
     # Preprocess the text
     preprocessed_text = preprocess_text(text)
 
@@ -30,12 +42,14 @@ def perform_lda_on_text(text, num_topics):
     corpus = [dictionary.doc2bow(preprocessed_text)]
 
     # Train the LDA model
-    lda_model = models.LdaModel(corpus, num_topics=num_topics, id2word=dictionary, passes=10)
+    lda_model = models.LdaModel(corpus, num_topics=num_topics,
+                                id2word=dictionary, passes=10)
 
     return lda_model
 
 
-def generate_list():
+def generate_list() -> List[int]:
+    """Generate a list of random numbers."""
     # Define the range of numbers
     low_range = 1
     high_range = 10050
@@ -44,15 +58,18 @@ def generate_list():
     list_length = 1000
 
     # Generate a list of random numbers
-    random_list = [random.randint(low_range, high_range) for _ in range(list_length)]
+    random_list = [random.randint(low_range, high_range) for _ in
+                   range(list_length)]
 
     return random_list
 
 
 class GraphDisplay(QTabWidget):
+    """A class for displaying the graphs made by topic modelling"""
     num_topics = 0
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize the GraphDisplay."""
         super().__init__()
 
         # Initialize widget properties
@@ -102,12 +119,15 @@ class GraphDisplay(QTabWidget):
         self.lda_model.setLayout(self.init_model_layout)
         self.addTab(self.lda_model, "lda_model")
 
-    def apply_topic_modelling(self, corpus: list, topic_amount: int, additional_stopwords: set) -> None:
+    def apply_topic_modelling(self, corpus: list, topic_amount: int,
+                              additional_stopwords: set) -> None:
         """
-        Apply topic modelling to the given corpus
+        Apply topic modelling to the given corpus.
+
         :param corpus: The corpus to apply topic modelling to
         :param topic_amount: The amount of topics to generate
-        :param additional_stopwords: The set of addtional stopwords to exclude during topic modeling
+        :param additional_stopwords: The set of additional stopwords to
+                                     exclude during topic modeling
         :return: None
         """
 
@@ -117,7 +137,8 @@ class GraphDisplay(QTabWidget):
         active_tab_name = self.tabText(self.currentIndex())
 
         # Perform LDA with additional stopwords exclusion
-        lda_model = self.perform_lda_on_docs(active_tab_name, corpus, additional_stopwords)
+        lda_model = self.perform_lda_on_docs(active_tab_name, corpus,
+                                             additional_stopwords)
 
         # Add LDA plots to active tab
         self.add_lda_plots(active_tab_name, lda_model)
@@ -128,17 +149,28 @@ class GraphDisplay(QTabWidget):
         self.display_plot(active_tab_name, 0)
 
     def preprocess_text(self, text, additional_stopwords: set) -> list:
+        """
+        Preprocess the text.
+
+        :param text: The text to preprocess.
+        :param additional_stopwords: Set of user defined .
+        :return: The preprocessed text as a list of tokens.
+        """
         tokens = text.lower().split()
         # Exclude stopwords
-        tokens = [token for token in tokens if token not in additional_stopwords]
+        tokens = [token for token in tokens if
+                  token not in additional_stopwords]
         return tokens
 
-    def perform_lda_on_docs(self, tab_name: str, documents: list, additional_stopwords: set[str]) -> GensimLdaModel:
+    def perform_lda_on_docs(self, tab_name: str, documents: list,
+                            additional_stopwords: set[str]) -> GensimLdaModel:
         """
-        Perform LDA on the given text
+        Perform LDA on the given text.
+
         :param tab_name: Name of the tab to perform LDA on
         :param documents: The documents to perform LDA on
-        :param additional_stopwords: The set of additional stopwords to exclude during LDA
+        :param additional_stopwords: The set of additional stopwords
+                                     to exclude during LDA
         :return: The trained LDA model
         """
         # Get text from documents
@@ -165,13 +197,15 @@ class GraphDisplay(QTabWidget):
             topic_name = f"Topic {i + 1}"
             topic_words = lda_model.show_topic_terms(i, 10)
             cleaned_topic_words = [word for word, _ in topic_words]
-            self.fetched_topics_display.add_topic(tab_name, topic_name, cleaned_topic_words)
+            self.fetched_topics_display.add_topic(tab_name, topic_name,
+                                                  cleaned_topic_words)
 
         return lda_model
 
     def train_lda_model(self, corpus: TermLists) -> GensimLdaModel:
         """
-        Train an LDA model
+        Train an LDA model.
+
         :param corpus: The corpus to train the LDA model on
         :return: The trained LDA model
         """
@@ -180,7 +214,8 @@ class GraphDisplay(QTabWidget):
 
     def add_lda_plots(self, tab_name: str, lda_model: GensimLdaModel) -> None:
         """
-        Add LDA plots for the given LDA model
+        Add LDA plots for the given LDA model.
+
         :param tab_name: Name of the tab to add the plots to
         :param lda_model: The LDA model to add the plots for
         :return: None
@@ -196,15 +231,20 @@ class GraphDisplay(QTabWidget):
 
     def construct_word_clouds(self, lda_model: GensimLdaModel):
         """
-        Construct word cloud plots for the given LDA model
+        Construct word cloud plots for the given LDA model.
+
         :param lda_model: The LDA model to construct the plots for
         :return: A list of word cloud plots
         """
         canvases = []
 
         for i in range(self.num_topics):
-            wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(
-                dict(lda_model.show_topic(i, 30))
+            wordcloud = (WordCloud(width=800,
+                                   height=400,
+                                   background_color='white'))
+
+            wordcloud.generate_from_frequencies(
+                    dict(lda_model.show_topic(i, 30))
             )
 
             # Construct a word cloud
@@ -217,16 +257,20 @@ class GraphDisplay(QTabWidget):
 
         return canvases
 
-    def construct_probable_words(self, lda_model: GensimLdaModel) -> list[FigureCanvas]:
+    def construct_probable_words(self, lda_model: GensimLdaModel) -> (
+            list)[FigureCanvas]:
         """
-        Construct bar plots for the words with the highest probability for the given LDA model
+        Construct bar plots for the words with the highest probability for
+        the given LDA model.
+
         :param lda_model: The LDA model to construct the plots for
         :return: A list of probable words plots
         """
         canvases = []
 
         for i in range(self.num_topics):
-            topic_words, topic_weights = lda_model.show_topic_and_probs(i, 10)
+            topic_words, topic_weights = lda_model.show_topic_and_probs(i,
+                                                                        10)
 
             # Construct a bar plot
             fig = plt.figure()
@@ -243,7 +287,9 @@ class GraphDisplay(QTabWidget):
 
     def construct_word_count(self) -> FigureCanvas:
         """
-        Construct a histogram containing word counts of each input document for the given LDA model
+        Construct a histogram containing word counts of each input
+        document for the given LDA model.
+
         :return: A word count plot
         """
         document_counts = generate_list()
@@ -260,11 +306,19 @@ class GraphDisplay(QTabWidget):
 
         return FigureCanvas(fig)
 
-    def construct_correlation_matrix(self, lda_model: GensimLdaModel) -> FigureCanvas:
+    def construct_correlation_matrix(self,
+                                     lda_model:
+                                     GensimLdaModel) -> FigureCanvas:
+        """
+        Construct the correlation matrix. 
+        
+        :param lda_model: The trained LDA model.
+        :return FigureCanvas: The graph showing the correlation matrix
+        """
         # Construct the correlation matrix
         correlation_matrix = lda_model.get_correlation_matrix(num_words=30)
 
-        # Construct a plot and axes
+        # Construct a plot and axeschat
         fig, ax = plt.subplots()
 
         # Construct the correlations matrix adding colors
@@ -282,19 +336,20 @@ class GraphDisplay(QTabWidget):
 
     def get_active_tab_name(self) -> str:
         """
-        Get the name of the active tab
+        Get the name of the active tab.
+
         :return: The name of the active tab
         """
         return self.tabText(self.currentIndex())
 
     def display_plot(self, tab_name: str, plot_index: int) -> None:
         """
-        Display the plots for the given tab
+        Display the plots for the given tab.
+
         :param plot_index: Index of the plot to display
         :param tab_name: Name of the tab to display the plots for
         :return: None
         """
-
         # Clear the layout
         for i in reversed(range(self.init_model_layout.count())):
             self.init_model_layout.itemAt(i).widget().setParent(None)
@@ -304,11 +359,13 @@ class GraphDisplay(QTabWidget):
             return
 
         # Add the plot to the layout
-        self.init_model_layout.addWidget(self.plots_container[tab_name][plot_index])
+        self.init_model_layout.addWidget(
+                self.plots_container[tab_name][plot_index])
 
     def on_tab_clicked(self, index) -> None:
         """
-        Event handler for when a tab is clicked
+        Event handler for when a tab is clicked.
+
         :param index: Index of the clicked tab
         :return: None
         """
@@ -322,7 +379,8 @@ class GraphDisplay(QTabWidget):
 
     def next_plot(self, tab_name: str) -> None:
         """
-        Display the next plot for the given tab
+        Display the next plot for the given tab.
+
         :param tab_name: Name of the tab to display the next plot for
         :return: None
         """
@@ -330,12 +388,14 @@ class GraphDisplay(QTabWidget):
         if tab_name not in self.plots_container:
             return
 
-        self.plot_index[tab_name] = (self.plot_index[tab_name] + 1) % len(self.plots_container[tab_name])
+        self.plot_index[tab_name] = (self.plot_index[tab_name] + 1) % len(
+                self.plots_container[tab_name])
         self.display_plot(tab_name, self.plot_index[tab_name])
 
     def previous_plot(self, tab_name: str) -> None:
         """
-        Display the previous plot for the given tab
+        Display the previous plot for the given tab.
+
         :param tab_name: Name of the tab to display the previous plot for
         :return: None
         """
@@ -343,5 +403,14 @@ class GraphDisplay(QTabWidget):
         if tab_name not in self.plots_container:
             return
 
-        self.plot_index[tab_name] = (self.plot_index[tab_name] - 1) % len(self.plots_container[tab_name])
+        self.plot_index[tab_name] = (self.plot_index[tab_name] - 1) % len(
+                self.plots_container[tab_name])
         self.display_plot(tab_name, self.plot_index[tab_name])
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

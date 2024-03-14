@@ -1,17 +1,20 @@
 import pytest
 from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import Qt
+
 from interactive_topic_modeling.display.graph_display import GraphDisplay
 
 
 @pytest.fixture
-def graph_display():
+def graph_display() -> GraphDisplay:
+    """Fixture to create and return an instance of GraphDisplay
+    for testing."""
     # Create a PySide6 application instance
     app = QApplication([])
 
     # Create an instance of GraphDisplay with the correct parent (QWidget)
     display = GraphDisplay()
-    display.setParent(None)  # Set parent to None or an appropriate QWidget if needed
+    # Set parent to None or an appropriate QWidget if needed
+    display.setParent(None)
 
     app.setParent(None)
 
@@ -22,8 +25,11 @@ def graph_display():
 
 
 class TestGraphDisplay:
-    def test_next_plot(self, graph_display):
-        # Perform any necessary setup or trigger events to reach the desired state
+    """Class to test the GraphDisplay."""
+    def test_next_plot(self, graph_display) -> None:
+        """Test method to verify the behaviour of the next_plot method."""
+        # Perform any necessary setup or trigger events
+        # to reach the desired state
         # For example, clicking on a tab
         graph_display.setCurrentIndex(0)
 
@@ -38,9 +44,17 @@ class TestGraphDisplay:
         graph_display.next_plot(tab_name)
 
         # Check if the plot index has been updated correctly
-        assert graph_display.plot_index[tab_name] == (current_plot_index + 1) % len(
-            graph_display.plots_container[tab_name])
+        assert (graph_display.plot_index[tab_name] == (current_plot_index + 1)
+                % len(graph_display.plots_container[tab_name]))
 
 
 if __name__ == "__main__":
     pytest.main()
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

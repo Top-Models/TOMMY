@@ -1,12 +1,15 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QScrollArea, QLineEdit, QWidget, QHBoxLayout
-from interactive_topic_modeling.support.constant_variables import text_font, heading_font, seco_col_blue, \
-    hover_seco_col_blue
+from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
+                               QWidget)
+from interactive_topic_modeling.support.constant_variables import (
+    text_font, heading_font, seco_col_blue, hover_seco_col_blue)
 
 
 class ModelParamsDisplay(QScrollArea):
+    """The ModelParamsDisplay that displays the model settings"""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """The initialization ot the ModelParamDisplay."""
         super().__init__()
 
         # Initialize widget properties
@@ -34,8 +37,10 @@ class ModelParamsDisplay(QScrollArea):
                                        f"text-transform: uppercase;"
                                        f"background-color: {seco_col_blue};"
                                        f"color: white;"
-                                       f"border-bottom: 3px solid {hover_seco_col_blue};")
-        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
+                                       f"border-bottom: "
+                                       f"3px solid {hover_seco_col_blue};")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
+                                      Qt.AlignmentFlag.AlignTop)
         self.title_label.setContentsMargins(0, 0, 0, 0)
         self.title_label.setFixedHeight(50)
         self.layout.addWidget(self.title_label)
@@ -65,34 +70,14 @@ class ModelParamsDisplay(QScrollArea):
         # Add widgets
         self.layout.addWidget(self.container)
 
+    def fetch_topic_num(self) -> int:
+        """Get the number of topics from the input field."""
+        return int(self.topic_input.text())
 
-    def fetch_topic_num(self):
-        topic_num_output = self.topic_input.text()
 
-        try:
-            topic_num = int(topic_num_output)
-            print("Number of topics: ", topic_num)
-            # reset style
-            self.topic_input.setStyleSheet(f"border-radius: 5px;"
-                                           f"font-size: 14px;"
-                                           f"font-family: {text_font};"
-                                           f"color: black;"
-                                           f"border: 2px solid #00968F;"
-                                           f"padding: 5px;"
-                                           f"background-color: white;")
-            return topic_num
-        except ValueError:
-            print("Invalid input. Please enter a valid integer.")
-            # 0 is handled in mainwindow
-            return 0
-
-    def incorrect_input(self) -> None:
-        self.topic_input.setText("")
-        self.topic_input.setPlaceholderText("Incorrect Input")
-        self.topic_input.setStyleSheet(f"border-radius: 5px;"
-                                       f"font-size: 14px;"
-                                       f"font-family: {text_font};"
-                                       f"color: black;"
-                                       f"border: 4px solid red;"
-                                       f"padding: 5px;"
-                                       f"background-color: white;")
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

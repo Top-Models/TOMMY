@@ -1,4 +1,6 @@
-# SUMMARY: This file contains all constant variables, such as colour codes and fonts
+"""
+This file contains all constant variable, such as colour codes and fonts.
+"""
 
 # Primary colour properties
 prim_col_red = "#E40046"
@@ -18,3 +20,11 @@ sec_col_brown = "#94795D"
 # Font properties
 text_font = "Corbel"
 heading_font = "Century Gothic"
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

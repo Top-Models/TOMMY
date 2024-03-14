@@ -1,10 +1,14 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QLabel, QScrollArea, QWidget, QVBoxLayout, QLineEdit, QHBoxLayout, QPushButton
+from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
+                               QLineEdit, QHBoxLayout, QPushButton)
+
 from interactive_topic_modeling.support.constant_variables import text_font
 
 
 class StopwordsDisplay(QScrollArea):
-    def __init__(self):
+    """The StopWordsDisplay area to display all stopwords."""
+    def __init__(self) -> None:
+        """The initialization of the StopwordsDisplay."""
         super().__init__()
 
         # Initialize widget properties
@@ -76,33 +80,34 @@ class StopwordsDisplay(QScrollArea):
         # Input field workings
         self.input_field.returnPressed.connect(self.add_to_word_list)
 
-    def show_excluded_words(self, word_list: list[str]):
-        """
-        Visualize words in the words list
-        :param word_list: The list of words needed to be shown
-        :return: None
-        """
-
-        def create_word_label(word):
-            word_label = QLabel(word, self)
-            word_label.setStyleSheet(f"background-color: #00968F;"
+    def create_word_label(self, stopword: str) -> QLabel:
+        """Create a label for every word"""
+        stopword_label = QLabel(stopword, self)
+        stopword_label.setStyleSheet(f"background-color: #00968F;"
                                      f"color: white;"
                                      f"font-family: {text_font};"
                                      f"font-size: 12px;"
-                                     f"padding: 15px;"
-                                     )
-            word_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            word_label.setScaledContents(True)
-            word_label.setWordWrap(True)
-            word_label.setCursor(Qt.PointingHandCursor)
-            word_label.mousePressEvent = lambda event: self.remove_word(word)
-            return word_label
+                                     f"padding: 15px;")
+        stopword_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        stopword_label.setScaledContents(True)
+        stopword_label.setWordWrap(True)
+        stopword_label.setCursor(Qt.PointingHandCursor)
+        stopword_label.mousePressEvent = lambda event: (
+            self.remove_word(stopword))
+        return stopword_label
 
+    def show_excluded_words(self, word_list: list[str]) -> None:
+        """
+        Visualize words in the words list.
+
+        :param word_list: The list of words needed to be shown
+        :return: None
+        """
         horizontal_layout = QHBoxLayout()
 
         for i, word in enumerate(word_list):
             # Make and format word
-            word_label = create_word_label(word)
+            word_label = self.create_word_label(word)
             horizontal_layout.addWidget(word_label)
 
             if (i + 1) % 2 == 0 or len(word) >= 8:
@@ -113,9 +118,10 @@ class StopwordsDisplay(QScrollArea):
         if horizontal_layout.count() > 0:
             self.word_layout.addLayout(horizontal_layout)
 
-    def add_to_word_list(self):
+    def add_to_word_list(self) -> None:
         """
-        Add words to the list of excluded words and update the UI
+        Add words to the list of excluded words and update the UI.
+
         :return: None
         """
         new_word = self.input_field.text()
@@ -124,9 +130,10 @@ class StopwordsDisplay(QScrollArea):
             self.update_word_vis()
             self.input_field.clear()
 
-    def remove_word(self, word):
+    def remove_word(self, word) -> None:
         """
-        Remove a word from the list of excluded words and update the UI
+        Remove a word from the list of excluded words and update the UI.
+
         :param word: The word to be removed
         :return: None
         """
@@ -135,7 +142,8 @@ class StopwordsDisplay(QScrollArea):
 
     def update_word_vis(self):
         """
-        Remove current words from excluded word UI and show new ones
+        Remove current words from excluded word UI and show new ones.
+
         :return: None
         """
         # Clear current display
@@ -150,3 +158,11 @@ class StopwordsDisplay(QScrollArea):
 
         # Display updated words in UI
         self.show_excluded_words(list(self.additional_stopwords))
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""
