@@ -8,7 +8,7 @@ from interactive_topic_modeling.support.constant_variables import (
     hover_seco_col_blue)
 
 
-class FileStatsDisplay(QScrollArea):
+class FileStatsView(QScrollArea):
     """Class to define the FileStatsDisplay UI component"""
 
     def __init__(self) -> None:
@@ -98,7 +98,7 @@ class FileStatsDisplay(QScrollArea):
     def display_file_info(self, file: File) -> None:
         """
         Display the file info
-        :param file: The file to display
+        :param file: The file to view
         :return: None
         """
 

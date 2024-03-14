@@ -5,7 +5,7 @@ from interactive_topic_modeling.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue)
 
 
-class ModelParamsDisplay(QScrollArea):
+class ModelParamsView(QScrollArea):
     """The ModelParamsDisplay that displays the model settings"""
 
     def __init__(self) -> None:

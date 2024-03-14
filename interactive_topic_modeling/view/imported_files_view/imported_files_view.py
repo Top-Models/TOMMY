@@ -5,19 +5,19 @@ from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
 from interactive_topic_modeling.backend.file_import.file import File
 from interactive_topic_modeling.backend.file_import.file_reader import (
     FileReader)
-from interactive_topic_modeling.display.imported_files_display.file_label \
+from interactive_topic_modeling.view.imported_files_view.file_label \
     import FileLabel
-from interactive_topic_modeling.display.imported_files_display. \
-    file_stats_display import FileStatsDisplay
-from interactive_topic_modeling.display.stopwords_display import (
-    StopwordsDisplay)
+from interactive_topic_modeling.view.imported_files_view. \
+    file_stats_view import FileStatsView
+from interactive_topic_modeling.view.stopwords_view import (
+    StopwordsView)
 from interactive_topic_modeling.support.constant_variables import (
     heading_font, seco_col_blue, hover_seco_col_blue)
 from interactive_topic_modeling.support.project_settings import (
     current_project_settings)
 
 
-class ImportedFilesDisplay(QWidget):
+class ImportedFilesView(QWidget):
     """The ImportedFileDisplay class that shows the imported files."""
 
     def __init__(self) -> None:
@@ -67,8 +67,8 @@ class ImportedFilesDisplay(QWidget):
         self.layout.addWidget(self.scroll_area)
 
         # Initialize widgets
-        self.stopwords_display = StopwordsDisplay()
-        self.file_stats_display = FileStatsDisplay()
+        self.stopwords_display = StopwordsView()
+        self.file_stats_display = FileStatsView()
 
         # { tab_name, files }
         self.file_container = {}

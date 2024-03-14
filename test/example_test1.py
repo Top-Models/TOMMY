@@ -1,18 +1,18 @@
 import pytest
 from PySide6.QtWidgets import QApplication
 
-from interactive_topic_modeling.display.graph_display import GraphDisplay
+from interactive_topic_modeling.view.graph_view import GraphView
 
 
 @pytest.fixture
-def graph_display() -> GraphDisplay:
+def graph_display() -> GraphView:
     """Fixture to create and return an instance of GraphDisplay
     for testing."""
     # Create a PySide6 application instance
     app = QApplication([])
 
     # Create an instance of GraphDisplay with the correct parent (QWidget)
-    display = GraphDisplay()
+    display = GraphView()
     # Set parent to None or an appropriate QWidget if needed
     display.setParent(None)
 

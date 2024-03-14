@@ -1,12 +1,12 @@
 import pytest
 from PySide6.QtCore import Qt
-from interactive_topic_modeling.display.model_params_display import ModelParamsDisplay
+from interactive_topic_modeling.view.model_params_view import ModelParamsView
 
 
 @pytest.fixture
 def parameter_display(qtbot):
     # Create and return your parameter_display object here
-    parameter_display = ModelParamsDisplay()
+    parameter_display = ModelParamsView()
     # Attach the widget to the bot that will simulate the user
     qtbot.addWidget(parameter_display)
     return parameter_display

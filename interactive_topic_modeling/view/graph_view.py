@@ -14,7 +14,7 @@ from interactive_topic_modeling.backend.model.abstract_model import TermLists
 from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
 from interactive_topic_modeling.backend.preprocessing.pipeline import Pipeline
 # Assuming you have this import statement
-from interactive_topic_modeling.display.topic_display.fetched_topics_display \
+from interactive_topic_modeling.view.topic_view.fetched_topics_display \
     import FetchedTopicsDisplay
 
 
@@ -64,7 +64,7 @@ def generate_list() -> List[int]:
     return random_list
 
 
-class GraphDisplay(QTabWidget):
+class GraphView(QTabWidget):
     """A class for displaying the graphs made by topic modelling"""
     num_topics = 0
 
@@ -189,10 +189,10 @@ class GraphDisplay(QTabWidget):
         # Save LDA model
         self.lda_model_container[tab_name] = lda_model
 
-        # Clear fetched topics display
+        # Clear fetched topics view
         self.fetched_topics_display.clear_topics()
 
-        # Add topics to fetched topics display
+        # Add topics to fetched topics view
         for i in range(self.num_topics):
             topic_name = f"Topic {i + 1}"
             topic_words = lda_model.show_topic_terms(i, 10)
@@ -346,8 +346,8 @@ class GraphDisplay(QTabWidget):
         """
         Display the plots for the given tab.
 
-        :param plot_index: Index of the plot to display
-        :param tab_name: Name of the tab to display the plots for
+        :param plot_index: Index of the plot to view
+        :param tab_name: Name of the tab to view the plots for
         :return: None
         """
         # Clear the layout
@@ -381,7 +381,7 @@ class GraphDisplay(QTabWidget):
         """
         Display the next plot for the given tab.
 
-        :param tab_name: Name of the tab to display the next plot for
+        :param tab_name: Name of the tab to view the next plot for
         :return: None
         """
 
@@ -396,7 +396,7 @@ class GraphDisplay(QTabWidget):
         """
         Display the previous plot for the given tab.
 
-        :param tab_name: Name of the tab to display the previous plot for
+        :param tab_name: Name of the tab to view the previous plot for
         :return: None
         """
 

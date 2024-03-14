@@ -1,7 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
-from interactive_topic_modeling.display.topic_display.topic_entity import (
+from interactive_topic_modeling.view.topic_view.topic_entity import (
     TopicEntity)
 
 
@@ -36,7 +36,7 @@ class FetchedTopicsDisplay(QScrollArea):
     def add_topic(self, tab_name: str, topic_name: str,
                   topic_words: list[str]) -> None:
         """
-        Add a new topic to the display.
+        Add a new topic to the view.
 
         :param tab_name: Name of the tab to add the topic to
         :param topic_name: Name of the topic
@@ -51,7 +51,7 @@ class FetchedTopicsDisplay(QScrollArea):
         # Add topic to tab
         self.topic_container[tab_name].append((topic_name, topic_words))
 
-        # Add topic to display
+        # Add topic to view
         topic_entity = TopicEntity(topic_name, topic_words)
         self.layout.addWidget(topic_entity)
 
@@ -59,10 +59,10 @@ class FetchedTopicsDisplay(QScrollArea):
         """
         Display topics in the given tab
 
-        :param tab_name: Name of the tab to display
+        :param tab_name: Name of the tab to view
         :return: None
         """
-        # Clear current display
+        # Clear current view
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().deleteLater()
 
@@ -70,7 +70,7 @@ class FetchedTopicsDisplay(QScrollArea):
         if tab_name not in self.topic_container:
             return
 
-        # Add topics to display
+        # Add topics to view
         for topic_name, topic_words in self.topic_container[tab_name]:
             topic_entity = TopicEntity(topic_name, topic_words)
             self.layout.addWidget(topic_entity)
@@ -85,7 +85,7 @@ class FetchedTopicsDisplay(QScrollArea):
 
     def clear_topics(self) -> None:
         """
-        Clear the topics from the display.
+        Clear the topics from the view.
 
         :return: None
         """

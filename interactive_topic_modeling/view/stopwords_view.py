@@ -5,8 +5,8 @@ from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
 from interactive_topic_modeling.support.constant_variables import text_font
 
 
-class StopwordsDisplay(QScrollArea):
-    """The StopWordsDisplay area to display all stopwords."""
+class StopwordsView(QScrollArea):
+    """The StopWordsDisplay area to view all stopwords."""
     def __init__(self) -> None:
         """The initialization of the StopwordsDisplay."""
         super().__init__()
@@ -146,7 +146,7 @@ class StopwordsDisplay(QScrollArea):
 
         :return: None
         """
-        # Clear current display
+        # Clear current view
         for i in reversed(range(self.word_layout.count())):
             layout_item = self.word_layout.itemAt(i)
             if layout_item is not None:
