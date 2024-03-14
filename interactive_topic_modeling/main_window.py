@@ -45,7 +45,6 @@ class MainWindow(QMainWindow):
         # Initialize buttons
         self.previous_plot_button = None
         self.next_plot_button = None
-        self.apply_button = None
 
         # Initialize widgets
         self.initialize_widget(self.model_params_view,
@@ -123,31 +122,6 @@ class MainWindow(QMainWindow):
         """
         self.initialize_previous_plot_button()
         self.initialize_next_plot_button()
-        self.initialize_apply_button()
-
-    def initialize_apply_button(self) -> None:
-        """
-        Initialize the apply button in the main window.
-        :return: None
-        """
-        self.apply_button = QPushButton("Toepassen")
-        self.apply_button.setStyleSheet(f"""
-                    QPushButton {{
-                        background-color: {seco_col_blue};
-                        color: white;
-                    }}
-
-                    QPushButton:hover {{
-                        background-color: {hover_seco_col_blue};
-                    }}
-
-                    QPushButton:pressed {{
-                        background-color: {pressed_seco_col_blue};
-                    }}
-                """)
-
-        self.initialize_widget(self.apply_button,
-                               842, 390, 100, 40)
 
     def initialize_next_plot_button(self) -> None:
         """
@@ -220,8 +194,9 @@ class MainWindow(QMainWindow):
             display_no_file_selected()
         )
 
+        # TODO: Remove when init in ModelParamsView is implemented
         # Connecting the apply button to the graph view
-        self.apply_button.clicked.connect(
+        self.model_params_view.apply_button.clicked.connect(
             lambda: self.graph_view.apply_topic_modelling(
                 self.imported_files_view.file_container[
                     self.graph_view.get_active_tab_name()],
