@@ -17,6 +17,7 @@ from interactive_topic_modeling.display.topic_display.fetched_topics_display imp
 
 class GraphDisplay(QTabWidget):
     num_topics = 0
+    corpus = []
 
     def __init__(self):
         super().__init__()
@@ -76,6 +77,7 @@ class GraphDisplay(QTabWidget):
         :param additional_stopwords: The set of addtional stopwords to exclude during topic modeling
         :return: None
         """
+        self.corpus = corpus
 
         # Set number of topics
         self.num_topics = topic_amount
@@ -146,6 +148,7 @@ class GraphDisplay(QTabWidget):
         :return: None
         """
         canvases = []
+        canvases.append(self.construct_doc_topic_network_vis(lda_model))
         canvases.append(self.construct_word_topic_network_vis(lda_model))
         canvases.extend(self.construct_word_clouds(lda_model))
         canvases.extend(self.construct_probable_words(lda_model))
@@ -281,27 +284,6 @@ class GraphDisplay(QTabWidget):
 
         return FigureCanvas(fig)
 
-    def get_edge_scale_factor(self, lda_model: GensimLdaModel) -> float:
-        """
-        Calculates the scale factor to make sure the biggest edge in a network is always the same size, regardless of
-        the maximum topic weight
-        :param lda_model: The LDA model to calculate the scale factor for
-        :return: The edge scale factor
-        """
-
-        # Find the maximum topic weight
-        max_topic_weight = 0
-        for topic_id in range(self.num_topics):
-            _, topic_weights = lda_model.show_topic_and_probs(topic_id, 1)
-            max_topic_weight = max(max_topic_weight, topic_weights[0])
-
-        # A constant which is multiplied by the scale factor according to an edge width that is visually pleasing
-        chosen_weight = 1.5
-
-        scale_factor = (1/max_topic_weight)
-
-        return scale_factor*chosen_weight
-
     def construct_word_topic_network(self, lda_model: GensimLdaModel) -> nx.Graph:
         """"
         Construct a word-topic network which is used to plot the relations between topics and probable words
@@ -325,6 +307,55 @@ class GraphDisplay(QTabWidget):
                 graph.add_edge(topic_id, topic_tuple[0], color=colors[topic_id%20], weight=topic_tuple[1])
         return graph
 
+    def get_edge_scale_factor(self, lda_model: GensimLdaModel) -> float:
+        """
+        Calculates the scale factor to make sure the biggest edge in a network is always the same size, regardless of
+        the maximum topic weight
+        :param lda_model: The LDA model to calculate the scale factor for
+        :return: The edge scale factor
+        """
+
+        # Find the maximum topic weight
+        max_topic_weight = 0
+        for topic_id in range(self.num_topics):
+            _, topic_weights = lda_model.show_topic_and_probs(topic_id, 1)
+            max_topic_weight = max(max_topic_weight, topic_weights[0])
+
+        # A constant which is multiplied by the scale factor according to an edge width that is visually pleasing
+        chosen_weight = 1.5
+
+        scale_factor = (1/max_topic_weight)
+
+        return scale_factor*chosen_weight
+
+    def construct_doc_topic_network_vis(self, lda_model: GensimLdaModel) -> FigureCanvas:
+        fig = plt.figure()
+        graph = self.construct_doc_topic_network(lda_model)
+        edges = graph.edges()
+
+        edge_width = [(graph[u][v]["weight"]) for u, v in edges]
+        edge_colors = [graph[u][v]["color"] for (u, v) in edges]
+
+        nx.draw_kamada_kawai(graph, width=edge_width, node_size=0, edge_color=edge_colors)
+        return FigureCanvas(fig)
+
+    def construct_doc_topic_network(self, lda_model: GensimLdaModel) -> nx.Graph:
+        graph = nx.Graph()
+
+        # List of simple, distinct colors from https://sashamaps.net/docs/resources/20-colors/
+        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#9a6324', '#46f0f0', '#f032e6', '#bcf60c',
+                  '#fabebe', '#008080', '#e6beff', '#000075', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1',
+                  '#808080', '#911eb4']
+
+        document_topics = [lda_model.get_document_topics(lda_model.bags_of_words[n], 0.0)
+                           for n in range(len(lda_model.bags_of_words))]
+
+        for n in range(len(lda_model.bags_of_words)):
+            for x in document_topics[n]:
+                if x[1] > 0.10:
+                    graph.add_edge(x[0], n, weight=x[1], color=colors[x[0]%20])
+
+        return graph
 
     def get_active_tab_name(self) -> str:
         """

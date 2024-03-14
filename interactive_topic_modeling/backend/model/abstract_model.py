@@ -139,6 +139,11 @@ class Model(ABC):
         pass
 
     @abstractmethod
+    def get_document_topics(self, doc, minimum_probability: float) -> ndarray:
+        """Returns the topic distribution for the give bow doc, as a list of (topic_id, topic_probability) tuples"""
+        pass
+
+    @abstractmethod
     def save(self, fpath: path):
         """Saves the internal state of the model to the location on the hard disk specified by fpath"""
         pass
