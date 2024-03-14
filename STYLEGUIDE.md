@@ -334,10 +334,10 @@ Docstrings are always surrounded by `"""triple double quotes"""`.
   Different Python constructs have different conventions for writing multi-line
   docstrings:
 
-  | Construct | Docstring Convention                                                                                                                                                            |
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | ------------------ |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-  | Package | Summarizes the functionality it contains and lists all modules and subpackages exported by the package                                                                          |
-  | Module  | Summarizes the functionality it contains and lists all classes, exceptions and functions (and any other objects) that are exported by the module in a one-line summary each     |
+  | Construct       | Docstring Convention                                                                                                                                                            |
+    |-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+  | Package         | Summarizes the functionality it contains and lists all modules and subpackages exported by the package                                                                          |
+  | Module          | Summarizes the functionality it contains and lists all classes, exceptions and functions (and any other objects) that are exported by the module in a one-line summary each     |
   | Class/Exception | Summarizes its behaviour and lists its public methods and instance variables. Subclasses, constructors and methods should each have their own docstrings                        |
   | Function/Method | Summarizes its behaviour and lists its arguments, return value(s) side effects, exceptions that may be raised, etc... Optional arguments should be explicitly indicated as such |
 
