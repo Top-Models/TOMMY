@@ -1,7 +1,9 @@
 from PySide6.QtWidgets import QWidget, QTabWidget
 
+from interactive_topic_modeling.view.observer.observer import Observer
 
-class ModelSelectionView(QTabWidget):
+
+class ModelSelectionView(QTabWidget, Observer):
     """A class to display options for selecting a model."""
 
     def __init__(self) -> None:
@@ -47,6 +49,15 @@ class ModelSelectionView(QTabWidget):
         :return: The name of the active tab
         """
         return self.tabText(self.currentIndex())
+
+    def update_observer(self, publisher) -> None:
+        """
+        Update the observer.
+
+        :param publisher: The publisher that is being observed
+        :return: None
+        """
+        pass
 
 
 """

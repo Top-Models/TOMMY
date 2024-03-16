@@ -3,9 +3,10 @@ from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
 
 from interactive_topic_modeling.support.constant_variables import (
     prim_col_red, heading_font, text_font)
+from interactive_topic_modeling.view.observer.observer import Observer
 
 
-class TopicEntity(QFrame):
+class TopicEntity(QFrame, Observer):
     """The TopicEntity frame that shows the topics and related words"""
     def __init__(self, topic_name: str, topic_words: list[str]) -> None:
         """
@@ -60,6 +61,15 @@ class TopicEntity(QFrame):
         # Add remaining widgets if any
         if horizontal_layout.count() > 0:
             word_layout.addLayout(horizontal_layout)
+
+    def update_observer(self, publisher) -> None:
+        """
+        Update the observer.
+
+        :param publisher: The publisher that is being observed
+        :return: None
+        """
+        pass
 
 
 """

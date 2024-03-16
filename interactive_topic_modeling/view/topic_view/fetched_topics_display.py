@@ -1,11 +1,12 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
+from interactive_topic_modeling.view.observer.observer import Observer
 from interactive_topic_modeling.view.topic_view.topic_entity import (
     TopicEntity)
 
 
-class FetchedTopicsDisplay(QScrollArea):
+class FetchedTopicsDisplay(QScrollArea, Observer):
     """A widget for displaying the found topics."""
     def __init__(self) -> None:
         """Initialize the FetchedTopicDisplay widget."""
@@ -92,6 +93,14 @@ class FetchedTopicsDisplay(QScrollArea):
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().deleteLater()
         self.topic_container = {}
+
+    def update_observer(self, publisher) -> None:
+        """
+        Update the observer.
+        :param publisher: The publisher that is being observed
+        :return: None
+        """
+        pass
 
 
 """

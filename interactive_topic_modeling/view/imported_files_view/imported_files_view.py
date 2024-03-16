@@ -9,6 +9,7 @@ from interactive_topic_modeling.view.imported_files_view.file_label \
     import FileLabel
 from interactive_topic_modeling.view.imported_files_view. \
     file_stats_view import FileStatsView
+from interactive_topic_modeling.view.observer.observer import Observer
 from interactive_topic_modeling.view.stopwords_view import (
     StopwordsView)
 from interactive_topic_modeling.support.constant_variables import (
@@ -17,7 +18,7 @@ from interactive_topic_modeling.support.project_settings import (
     current_project_settings)
 
 
-class ImportedFilesView(QWidget):
+class ImportedFilesView(QWidget, Observer):
     """The ImportedFileDisplay class that shows the imported files."""
 
     def __init__(self) -> None:
@@ -141,6 +142,14 @@ class ImportedFilesView(QWidget):
         :return: None
         """
         self.file_container[tab_name] = files
+
+    def update_observer(self, publisher) -> None:
+        """
+        Update the observer.
+        :param publisher: The publisher that is being observed
+        :return: None
+        """
+        pass
 
 
 """

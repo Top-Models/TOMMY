@@ -7,12 +7,14 @@ from wordcloud import WordCloud
 
 from interactive_topic_modeling.backend.model.abstract_model import TermLists
 from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
+from interactive_topic_modeling.backend.observer.publisher import Publisher
 from interactive_topic_modeling.backend.preprocessing.pipeline import Pipeline
+from interactive_topic_modeling.view.observer.observer import Observer
 from interactive_topic_modeling.view.topic_view.fetched_topics_display \
     import FetchedTopicsDisplay
 
 
-class GraphView(QTabWidget):
+class GraphView(QTabWidget, Observer):
     """A class for displaying the graphs made by topic modelling"""
     num_topics = 0
 
@@ -318,6 +320,15 @@ class GraphView(QTabWidget):
         self.plot_index[tab_name] = (self.plot_index[tab_name] - 1) % len(
                 self.plots_container[tab_name])
         self.display_plot(tab_name, self.plot_index[tab_name])
+
+    def update_observer(self, publisher: Publisher) -> None:
+        """
+        Update the view.
+
+        :param publisher: The publisher to update the view from
+        :return: None
+        """
+        pass
 
 
 """

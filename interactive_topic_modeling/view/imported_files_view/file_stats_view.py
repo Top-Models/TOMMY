@@ -6,9 +6,10 @@ from interactive_topic_modeling.support.constant_variables import (
     seco_col_blue,
     heading_font,
     hover_seco_col_blue)
+from interactive_topic_modeling.view.observer.observer import Observer
 
 
-class FileStatsView(QScrollArea):
+class FileStatsView(QScrollArea, Observer):
     """Class to define the FileStatsDisplay UI component"""
 
     def __init__(self) -> None:
@@ -152,6 +153,14 @@ class FileStatsView(QScrollArea):
         file_size_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(file_size_label)
+
+    def update_observer(self, publisher) -> None:
+        """
+        Update the observer.
+        :param publisher: The publisher that is being observed
+        :return: None
+        """
+        pass
 
 
 """

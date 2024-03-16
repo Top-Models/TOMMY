@@ -2,8 +2,10 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QFileDialog
 from interactive_topic_modeling.support import project_settings
 import os
 
+from interactive_topic_modeling.view.observer.observer import Observer
 
-class FolderSelectButton(QWidget):
+
+class FolderSelectButton(QWidget, Observer):
     """A button for selecting a folder containing input documents"""
     def __init__(self) -> None:
         super().__init__()
@@ -25,6 +27,15 @@ class FolderSelectButton(QWidget):
         if dialog:
             project_settings.current_project_settings.selected_folder = (
                 os.path.relpath(dialog))
+
+    def update_observer(self, publisher) -> None:
+        """
+        Update the observer.
+
+        :param publisher: The publisher that is being observed
+        :return: None
+        """
+        pass
 
 
 if __name__ == "__main__":

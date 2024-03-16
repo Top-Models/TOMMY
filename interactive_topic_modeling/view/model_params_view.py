@@ -3,11 +3,15 @@ from typing import Type
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
                                QWidget, QPushButton)
+
+from interactive_topic_modeling.backend.observer.publisher import Publisher
 from interactive_topic_modeling.support.constant_variables import (
-    text_font, heading_font, seco_col_blue, hover_seco_col_blue, pressed_seco_col_blue)
+    text_font, heading_font, seco_col_blue, hover_seco_col_blue,
+    pressed_seco_col_blue)
+from interactive_topic_modeling.view.observer.observer import Observer
 
 
-class ModelParamsView(QScrollArea):
+class ModelParamsView(QScrollArea, Observer):
     """The ModelParamsDisplay that displays the model settings"""
 
     def __init__(self) -> None:
@@ -153,6 +157,14 @@ class ModelParamsView(QScrollArea):
         :return: None
         """
         return NotImplementedError()
+
+    def update_observer(self, publisher: Publisher) -> None:
+        """
+        Update the observer.
+        :param publisher: The publisher that is being observed
+        :return: None
+        """
+        pass
 
 
 """

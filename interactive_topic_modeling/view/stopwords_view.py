@@ -3,9 +3,10 @@ from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
                                QLineEdit, QHBoxLayout, QPushButton)
 
 from interactive_topic_modeling.support.constant_variables import text_font
+from interactive_topic_modeling.view.observer.observer import Observer
 
 
-class StopwordsView(QScrollArea):
+class StopwordsView(QScrollArea, Observer):
     """The StopWordsDisplay area to view all stopwords."""
     def __init__(self) -> None:
         """The initialization of the StopwordsDisplay."""
@@ -158,6 +159,14 @@ class StopwordsView(QScrollArea):
 
         # Display updated words in UI
         self.show_excluded_words(list(self.additional_stopwords))
+
+    def update_observer(self, publisher) -> None:
+        """
+        Update the observer.
+        :param publisher: The publisher that is being observed
+        :return: None
+        """
+        pass
 
 
 """
