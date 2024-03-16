@@ -24,35 +24,14 @@ class StopwordsView(QScrollArea, Observer):
 
         # Initialize container for the input field and button
         self.input_container = QWidget()
-        self.input_layout = QHBoxLayout(self.input_container)
+        self.input_layout = QVBoxLayout(self.input_container)
         self.input_layout.setAlignment(Qt.AlignCenter)
-
-        # Initialize and add input field
-        self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText("Woord uitsluiten:")
-        self.input_field.setStyleSheet(f"border-radius: 5px;"
-                                       f"font-size: 14px;"
-                                       f"font-family: {text_font};"
-                                       f"color: black;"
-                                       f"border: 2px solid #00968F;"
-                                       f"padding: 5px;")
-        self.input_field.setFixedWidth(200)
-        self.input_layout.addWidget(self.input_field)
         self.container_layout.addWidget(self.input_container)
 
-        # Initialize and add button for adding a new word
-        self.add_button = QPushButton("Add")
-        self.add_button.setStyleSheet(f"background-color: #00968F;"
-                                      f"color: white;"
-                                      f"font-family: {text_font};"
-                                      f"padding: 10px;"
-                                      f"border: none;")
-        self.input_layout.addWidget(self.add_button)
-
-        # Connect button click event to add_to_word_list method
-        self.add_button.clicked.connect(self.add_to_word_list)
-
-        self.container_layout.addWidget(self.input_container)
+        # Initialize input field
+        self.add_button = None
+        self.input_field = None
+        self.initialize_widgets()
 
         # Initialize scroll area and its layout
         self.scroll_area = QWidget()
@@ -78,8 +57,47 @@ class StopwordsView(QScrollArea, Observer):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setWidgetResizable(True)
 
-        # Input field workings
+    def initialize_widgets(self) -> None:
+        """Initialize the widgets."""
+        self.initialize_input_field()
+        self.initialize_add_button()
+
+    def initialize_input_field(self) -> None:
+        """
+        Initialize the input field.
+
+        :return: None
+        """
+        self.input_field = QLineEdit()
+        self.input_field.setPlaceholderText("Voer een woord in")
+        self.input_field.setStyleSheet(f"border-radius: 5px;"
+                                       f"font-size: 14px;"
+                                       f"font-family: {text_font};"
+                                       f"color: black;"
+                                       f"border: 2px solid #00968F;"
+                                       f"padding: 5px;"
+                                       f"background-color: white;")
+        self.input_layout.addWidget(self.input_field)
+
+        # Add event for pressing enter
         self.input_field.returnPressed.connect(self.add_to_word_list)
+
+    def initialize_add_button(self) -> None:
+        """
+        Initialize the add button.
+
+        :return: None
+        """
+        self.add_button = QPushButton("Uitsluiten")
+        self.add_button.setStyleSheet(f"background-color: #00968F;"
+                                      f"color: white;"
+                                      f"font-family: {text_font};"
+                                      f"padding: 10px;"
+                                      f"border: none;")
+        self.input_layout.addWidget(self.add_button)
+
+        # Connect button click event to add_to_word_list method
+        self.add_button.clicked.connect(self.add_to_word_list)
 
     def create_word_label(self, stopword: str) -> QLabel:
         """Create a label for every word"""
@@ -93,8 +111,11 @@ class StopwordsView(QScrollArea, Observer):
         stopword_label.setScaledContents(True)
         stopword_label.setWordWrap(True)
         stopword_label.setCursor(Qt.PointingHandCursor)
+
+        # Connect click event to remove_word method
         stopword_label.mousePressEvent = lambda event: (
             self.remove_word(stopword))
+
         return stopword_label
 
     def show_excluded_words(self, word_list: list[str]) -> None:
@@ -163,6 +184,7 @@ class StopwordsView(QScrollArea, Observer):
     def update_observer(self, publisher) -> None:
         """
         Update the observer.
+
         :param publisher: The publisher that is being observed
         :return: None
         """

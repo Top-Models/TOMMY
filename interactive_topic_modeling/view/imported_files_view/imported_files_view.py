@@ -37,22 +37,8 @@ class ImportedFilesView(QWidget, Observer):
         self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         # Initialize title label
-        self.title_label = QLabel("Geïmporteerde bestanden")
-        self.title_label.setStyleSheet(f"font-size: 13px;"
-                                       f"font-family: {heading_font};"
-                                       f"font-weight: bold;"
-                                       f"text-transform: uppercase;"
-                                       f"background-color: {seco_col_blue};"
-                                       f"color: white;"
-                                       f"border-bottom: "
-                                       f"3px solid {hover_seco_col_blue};"
-                                       f"border-right: "
-                                       f"3px solid {hover_seco_col_blue};")
-        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
-                                      Qt.AlignmentFlag.AlignTop)
-        self.title_label.setContentsMargins(0, 0, 0, 0)
-        self.title_label.setFixedHeight(50)
-        self.layout.addWidget(self.title_label)
+        self.title_label = None
+        self.initialize_title_label()
 
         # Initialize scroll area and its layout
         self.scroll_area = QScrollArea()
@@ -82,6 +68,27 @@ class ImportedFilesView(QWidget, Observer):
         self.scroll_area.setHorizontalScrollBarPolicy(
                 Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidgetResizable(True)
+
+    def initialize_title_label(self) -> None:
+        """
+        Initialize the title label.
+
+        :return: None
+        """
+        self.title_label = QLabel("Geïmporteerde bestanden")
+        self.title_label.setStyleSheet(f"font-size: 13px;"
+                                       f"font-family: {heading_font};"
+                                       f"font-weight: bold;"
+                                       f"text-transform: uppercase;"
+                                       f"background-color: {seco_col_blue};"
+                                       f"color: white;"
+                                       f"border-bottom: "
+                                       f"3px solid {hover_seco_col_blue};")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
+                                      Qt.AlignmentFlag.AlignTop)
+        self.title_label.setContentsMargins(0, 0, 0, 0)
+        self.title_label.setFixedHeight(50)
+        self.layout.addWidget(self.title_label)
 
     def fetch_files(self, tab_name: str) -> None:
         """

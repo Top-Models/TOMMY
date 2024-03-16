@@ -118,6 +118,7 @@ class FileLabel(QLabel, Observer):
     def update_observer(self, publisher) -> None:
         """
         Update the observer.
+
         :param publisher: The publisher that is being observed
         :return: None
         """

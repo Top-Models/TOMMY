@@ -28,7 +28,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Initialize window
-        self.setWindowTitle("EMMA | Topic Modelling Client")
+        self.setWindowTitle("TOMMY")
         self.setFixedSize(QSize(1200, 700))
         self.setStyleSheet("background-color: white;"
                            "font-size: 15px;"

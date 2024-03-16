@@ -8,6 +8,7 @@ class Publisher:
     def add(self, observer) -> None:
         """
         Add an observer to the list of observers.
+
         :param observer: The observer to add
         :return: None
         """
@@ -16,6 +17,7 @@ class Publisher:
     def remove(self, observer) -> None:
         """
         Remove an observer from the list of observers.
+
         :param observer: The observer to remove
         :return: None
         """
@@ -24,6 +26,7 @@ class Publisher:
     def notify(self) -> None:
         """
         Notify all observers.
+
         :return: None
         """
         [o.update_observer(self) for o in self.observers]

@@ -10,6 +10,7 @@ class Observer:
     def update_observer(self, publisher: Publisher) -> None:
         """
         Update the observer.
+
         :param publisher: The publisher that is being observed
         :return: None
         """

@@ -38,10 +38,6 @@ class FolderSelectButton(QWidget, Observer):
         pass
 
 
-if __name__ == "__main__":
-    print(globals())
-
-
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
