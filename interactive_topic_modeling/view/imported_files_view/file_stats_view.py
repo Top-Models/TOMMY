@@ -5,7 +5,7 @@ from interactive_topic_modeling.backend.file_import.file import File
 from interactive_topic_modeling.support.constant_variables import (
     seco_col_blue,
     heading_font,
-    hover_seco_col_blue)
+    hover_seco_col_blue, prim_col_red, hover_prim_col_red)
 from interactive_topic_modeling.view.observer.observer import Observer
 
 
@@ -40,10 +40,12 @@ class FileStatsView(QScrollArea, Observer):
                                   f"font-family: {heading_font};"
                                   f"font-weight: bold;"
                                   f"text-transform: uppercase;"
-                                  f"background-color: {seco_col_blue};"
+                                  f"background-color: {prim_col_red};"
                                   f"color: white;"
                                   f"border-bottom: "
-                                  f"3px solid {hover_seco_col_blue};")
+                                  f"3px solid {hover_prim_col_red};"
+                                  f"border-left: 2px solid "
+                                  f"{hover_prim_col_red};")
 
         title_label.setContentsMargins(0, 0, 0, 0)
         title_label.setMaximumHeight(50)
@@ -117,8 +119,9 @@ class FileStatsView(QScrollArea, Observer):
         self.layout.addLayout(vertical_layout)
 
         # Add file name
-        file_name_label = QLabel(f"{file.name}")
-        file_name_label.setStyleSheet("font-size: 20px;"
+        file_name = file.name.split("/")[-1]
+        file_name_label = QLabel(f"{file_name}")
+        file_name_label.setStyleSheet(f"font-size: 18px;"
                                       f"font-family: {heading_font};"
                                       f"font-weight: bold;"
                                       f"text-transform: uppercase;")

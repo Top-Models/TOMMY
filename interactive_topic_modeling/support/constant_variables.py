@@ -4,6 +4,7 @@ This file contains all constant variable, such as colour codes and fonts.
 
 # Primary colour properties
 prim_col_red = "#E40046"
+hover_prim_col_red = "#C3003C"
 prim_col_black = "#000000"
 
 # Secondary colour properties

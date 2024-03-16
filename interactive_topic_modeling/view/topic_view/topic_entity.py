@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
 
 from interactive_topic_modeling.support.constant_variables import (
-    prim_col_red, heading_font, text_font)
+    heading_font, text_font, sec_col_purple)
 from interactive_topic_modeling.view.observer.observer import Observer
 
 
@@ -23,7 +23,7 @@ class TopicEntity(QFrame, Observer):
         self.main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         # Initialize widget properties
-        self.setStyleSheet(f"background-color: {prim_col_red}; "
+        self.setStyleSheet(f"background-color: {sec_col_purple}; "
                            f"color: white;")
         self.setFixedWidth(200)
 

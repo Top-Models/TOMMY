@@ -1,5 +1,3 @@
-from typing import Type
-
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
                                QWidget, QPushButton)
@@ -7,7 +5,7 @@ from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
 from interactive_topic_modeling.backend.observer.publisher import Publisher
 from interactive_topic_modeling.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
-    pressed_seco_col_blue)
+    pressed_seco_col_blue, prim_col_red, hover_prim_col_red)
 from interactive_topic_modeling.view.observer.observer import Observer
 
 
@@ -101,10 +99,10 @@ class ModelParamsView(QScrollArea, Observer):
                                        f"font-family: {heading_font};"
                                        f"font-weight: bold;"
                                        f"text-transform: uppercase;"
-                                       f"background-color: {seco_col_blue};"
+                                       f"background-color: {prim_col_red};"
                                        f"color: white;"
                                        f"border-bottom: "
-                                       f"3px solid {hover_seco_col_blue};")
+                                       f"3px solid {hover_prim_col_red};")
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
                                       Qt.AlignmentFlag.AlignTop)
         self.title_label.setContentsMargins(0, 0, 0, 0)

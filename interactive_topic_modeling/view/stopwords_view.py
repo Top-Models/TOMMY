@@ -2,7 +2,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
                                QLineEdit, QHBoxLayout, QPushButton)
 
-from interactive_topic_modeling.support.constant_variables import text_font
+from interactive_topic_modeling.support.constant_variables import text_font, \
+    hover_seco_col_blue, pressed_seco_col_blue
 from interactive_topic_modeling.view.observer.observer import Observer
 
 
@@ -94,6 +95,26 @@ class StopwordsView(QScrollArea, Observer):
                                       f"font-family: {text_font};"
                                       f"padding: 10px;"
                                       f"border: none;")
+
+        self.add_button.setStyleSheet(
+            f"""
+                QPushButton {{
+                    background-color: #00968F;
+                    color: white;
+                    font-family: {text_font};
+                    padding: 10px;
+                    border: none;
+                }}
+                
+                QPushButton:hover {{
+                    background-color: {hover_seco_col_blue};
+                }}
+                
+                QPushButton:pressed {{
+                    background-color: {pressed_seco_col_blue};
+                }}
+            """)
+
         self.input_layout.addWidget(self.add_button)
 
         # Connect button click event to add_to_word_list method

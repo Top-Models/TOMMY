@@ -6,20 +6,29 @@ from interactive_topic_modeling.view.topic_view.topic_entity import (
     TopicEntity)
 
 
-class FetchedTopicsDisplay(QScrollArea, Observer):
+class FetchedTopicsView(QScrollArea, Observer):
     """A widget for displaying the found topics."""
     def __init__(self) -> None:
         """Initialize the FetchedTopicDisplay widget."""
         super().__init__()
 
         # Initialize widget properties
-        self.setStyleSheet("background-color: white;")
+        self.setObjectName("fetched_topics_display")
+        self.setStyleSheet(
+            """
+            QWidget#scroll_area {
+                background-color: rgba(230, 230, 230, 230);
+                border-bottom: 3px solid lightgrey;
+            }
+            """
+        )
 
         # { tab_name, [(topic_name, [words])] }
         self.topic_container = {}
 
         # Initialize layout for scroll area
         self.scroll_area = QWidget()
+        self.scroll_area.setObjectName("scroll_area")
         self.layout = QVBoxLayout(self.scroll_area)
         self.layout.setAlignment(Qt.AlignCenter | Qt.AlignTop)
 

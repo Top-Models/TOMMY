@@ -10,8 +10,8 @@ from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
 from interactive_topic_modeling.backend.observer.publisher import Publisher
 from interactive_topic_modeling.backend.preprocessing.pipeline import Pipeline
 from interactive_topic_modeling.view.observer.observer import Observer
-from interactive_topic_modeling.view.topic_view.fetched_topics_display \
-    import FetchedTopicsDisplay
+from interactive_topic_modeling.view.topic_view.fetched_topics_view \
+    import FetchedTopicsView
 
 
 class GraphView(QTabWidget, Observer):
@@ -26,10 +26,6 @@ class GraphView(QTabWidget, Observer):
         self.setStyleSheet("""        
                 QTabWidget {
                     color: black;
-                    border: none;
-                }
-
-                QTabWidget::pane {
                     border: none;
                 }
 
@@ -61,11 +57,13 @@ class GraphView(QTabWidget, Observer):
         self.plot_index = {}
 
         # Initialize widgets
-        self.fetched_topics_display = FetchedTopicsDisplay()
+        self.fetched_topics_display = FetchedTopicsView()
 
         # Add first tab
         self.lda_model = QWidget()
+        self.lda_model.setContentsMargins(0, 0, 0, 0)
         self.init_model_layout = QVBoxLayout()
+        self.lda_model.setStyleSheet("background-color: white;")
         self.lda_model.setLayout(self.init_model_layout)
         self.addTab(self.lda_model, "lda_model")
 
