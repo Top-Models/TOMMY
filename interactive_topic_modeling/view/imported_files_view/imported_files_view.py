@@ -83,7 +83,9 @@ class ImportedFilesView(QWidget, Observer):
                                        f"background-color: {seco_col_blue};"
                                        f"color: white;"
                                        f"border-bottom: "
-                                       f"3px solid {hover_seco_col_blue};")
+                                       f"3px solid {hover_seco_col_blue};"
+                                       f"border-right: 3px solid"
+                                       f"{hover_seco_col_blue};")
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
                                       Qt.AlignmentFlag.AlignTop)
         self.title_label.setContentsMargins(0, 0, 0, 0)
