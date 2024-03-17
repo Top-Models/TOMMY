@@ -47,6 +47,8 @@ class ModelSelectionView(QTabWidget, Observer):
 
         # Add first tab
         self.addTab(QWidget(), "lda_model")
+
+        # TODO: For demo purposes, remove this tab later
         self.addTab(QWidget(), "nmf_model")
 
         # Events
