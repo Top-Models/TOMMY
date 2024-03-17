@@ -46,7 +46,7 @@ class TopicModellingHandler:
         self.lda_model_container = {}
 
         # { tab_name, [canvas] }
-        # Added NMF model for demo purposes, remove later
+        # TODO: Added NMF model for demo purposes, remove later
         self.plots_container = {"nmf_model": [FigureCanvas()]}
 
         # { tab_name, plot_index }
