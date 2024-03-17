@@ -18,7 +18,7 @@ class GraphView(QWidget, Observer):
         # Set color of the widget to black
         self.setAutoFillBackground(True)
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
-        self.setStyleSheet("background-color: black;")
+        self.setStyleSheet("background-color: white;")
 
         # Setup layout
         self.layout = QVBoxLayout(self)
@@ -33,9 +33,6 @@ class GraphView(QWidget, Observer):
         :param canvas: The canvas to display
         :return: None
         """
-
-        # Give the graph view a white background
-        self.setStyleSheet("background-color: white;")
 
         # Clear the layout
         for i in reversed(range(self.layout.count())):
