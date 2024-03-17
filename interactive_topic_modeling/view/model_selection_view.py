@@ -1,5 +1,7 @@
 from PySide6.QtWidgets import QWidget, QTabWidget
 
+from interactive_topic_modeling.support.constant_variables import \
+    hover_prim_col_red
 from interactive_topic_modeling.view.observer.observer import Observer
 
 
@@ -11,36 +13,44 @@ class ModelSelectionView(QTabWidget, Observer):
         super().__init__()
 
         # Initialize widget properties
-        self.setStyleSheet("""        
-                QTabWidget {
+        self.setStyleSheet(f"""        
+                QTabWidget {{
                     color: black;
                     border: none;
-                }
+                }}
 
-                QTabWidget::pane {
-                    border: none;
-                }
-
-                QTabBar::tab { 
+                QTabBar::tab {{ 
                     background-color: #FFFFFF; 
                     color: gray;
                     font-size: 15px;
-                    padding: 7px;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    padding-top: 16px;
+                    padding-bottom: 16px;
                     font-weight: bold;
-                }
+                }}
 
-                QTabBar::tab:selected {
-                    border-bottom: 2px solid #E40046;
+                QTabBar::tab:selected {{
+                    border-bottom: 3px solid {hover_prim_col_red};
                     color: #000000;
-                }
+                    background-color: rgba(240, 240, 240, 1);
+                }}
 
-                QTabBar::tab:hover {
+                QTabBar::tab:hover {{
                     color: #000000;
-                }                
+                }}
+                
+                QTabWidget::tab-bar {{
+                    alignment: left;
+                }}
             """)
 
         # Add first tab
         self.addTab(QWidget(), "lda_model")
+        self.addTab(QWidget(), "nmf_model")
+
+        # Events
+        self.currentChanged.connect(self.tab_clicked_event)
 
     def get_active_tab_name(self) -> str:
         """
@@ -49,6 +59,13 @@ class ModelSelectionView(QTabWidget, Observer):
         :return: The name of the active tab
         """
         return self.tabText(self.currentIndex())
+
+    def tab_clicked_event(self) -> None:
+        """
+        Handle a tab clicked event.
+        """
+        # TODO: Implement when Connector is implemented
+        pass
 
     def update_observer(self, publisher) -> None:
         """

@@ -78,6 +78,16 @@ class PlotNavigationView(QLabel, Observer):
         self.previous_plot_button.setFixedHeight(40)
         self.layout.addWidget(self.previous_plot_button)
 
+    # TODO: Implement when Connector is implemented
+    def next_plot_button_clicked_event(self) -> None:
+        """Event handler for when the next plot button is clicked."""
+        pass
+
+    # TODO: Implement when Connector is implemented
+    def previous_plot_button_clicked_event(self) -> None:
+        """Event handler for when the previous plot button is clicked."""
+        pass
+
     def update_observer(self, publisher: Publisher) -> None:
         """
         Update the observer.

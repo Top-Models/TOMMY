@@ -59,8 +59,9 @@ class MainWindow(QMainWindow):
                                250, 8, 700, 400)
         self.initialize_widget(self.plot_navigation_view,
                                250, 408, 700, 50)
-        # TODO: Initialize the model selection view
-
+        # TODO: Uncomment when Connector is implemented
+        # self.initialize_widget(self.model_selection_view,
+        #                        250, 0, 700, 100)
         self.display_correct_initial_files()
         self.initialize_event_handlers()
 
