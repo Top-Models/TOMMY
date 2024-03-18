@@ -1,7 +1,7 @@
 import pytest
 from PySide6.QtWidgets import QApplication
 
-from interactive_topic_modeling.view.graph_view import GraphView
+from tommy.view.graph_view import GraphView
 
 
 @pytest.fixture
