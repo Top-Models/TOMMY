@@ -147,7 +147,7 @@ class GraphDisplay(QTabWidget):
         # Preprocess documents with additional stopwords exclusion
         # TODO: real preprocessing
         pipe = Pipeline()
-        print(additional_stopwords)
+        #print(additional_stopwords)
         pipe.add_stopwords(additional_stopwords)
         tokens = [pipe(doc_text) for doc_text in text_from_docs]
 
