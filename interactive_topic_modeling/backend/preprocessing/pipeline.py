@@ -48,6 +48,7 @@ class Pipeline:
     #     tokens = self.process_tokens(tokens)
     #     return tokens
 
+# Replace this functions for the one above
     def __call__(self, text: str) -> list[str]:
         tokens = set(text.lower().split())
         remove_these = [""]
