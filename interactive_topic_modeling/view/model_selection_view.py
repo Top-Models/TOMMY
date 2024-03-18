@@ -25,8 +25,8 @@ class ModelSelectionView(QTabWidget, Observer):
                     font-size: 15px;
                     padding-left: 10px;
                     padding-right: 10px;
-                    padding-top: 16px;
-                    padding-bottom: 16px;
+                    padding-top: 14px;
+                    padding-bottom: 14px;
                     font-weight: bold;
                 }}
 
