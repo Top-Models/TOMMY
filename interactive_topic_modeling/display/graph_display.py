@@ -344,8 +344,8 @@ class GraphDisplay(QTabWidget):
         for topic_id in range(self.num_topics):
             topic_tuples = lda_model.show_topic(topic_id, node_amount)
             for topic_tuple in topic_tuples:
-                graph.add_node(topic_id, color=colors[topic_id % 20])
-                graph.add_edge(topic_id, topic_tuple[0], color=colors[topic_id % 20], weight=topic_tuple[1])
+                graph.add_node(topic_id+1, color=colors[topic_id % 20])
+                graph.add_edge(topic_id+1, topic_tuple[0], color=colors[topic_id % 20], weight=topic_tuple[1])
         return graph
 
     def get_edge_scale_factor(self, lda_model: GensimLdaModel) -> float:
