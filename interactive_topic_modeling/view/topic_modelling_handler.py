@@ -1,4 +1,5 @@
 import random
+import matplotlib.figure
 
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_template import FigureCanvas
@@ -145,7 +146,7 @@ class TopicModellingHandler:
         self.plot_index[tab_name] = 0
 
     def construct_word_clouds(self, lda_model: GensimLdaModel) \
-            -> list[FigureCanvas]:
+            -> list[matplotlib.figure.Figure]:
         """
         Construct word cloud plots for the given LDA model
 
@@ -172,7 +173,7 @@ class TopicModellingHandler:
         return canvases
 
     def construct_probable_words(self, lda_model: GensimLdaModel) \
-            -> list[FigureCanvas]:
+            -> list[matplotlib.figure.Figure]:
         """
         Construct probable words plots for the given LDA model
 
@@ -193,11 +194,11 @@ class TopicModellingHandler:
             plt.ylabel("gewicht")
             plt.title("Woorden met het hoogste gewicht topic {}".format(i))
 
-            canvases.append(FigureCanvas(fig))
+            canvases.append(fig)
 
         return canvases
 
-    def construct_word_count(self) -> FigureCanvas:
+    def construct_word_count(self) -> matplotlib.figure.Figure:
         """
         Construct a word count plot
         :return: A word count plot
@@ -214,11 +215,11 @@ class TopicModellingHandler:
         plt.ylabel("aantal documenten")
         plt.title("Distributie aantal woorden per document")
 
-        return FigureCanvas(fig)
+        return fig
 
     def construct_correlation_matrix(self,
                                      lda_model: GensimLdaModel) \
-            -> FigureCanvas:
+            -> matplotlib.figure.Figure:
         """
         Construct a correlation matrix plot for the given LDA model
 
@@ -242,7 +243,7 @@ class TopicModellingHandler:
         fig.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
         fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
 
-        return FigureCanvas(fig)
+        return fig
 
 
 """

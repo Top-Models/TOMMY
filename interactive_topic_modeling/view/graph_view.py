@@ -7,6 +7,8 @@ from matplotlib.backends.backend_template import FigureCanvasTemplate
 from interactive_topic_modeling.backend.observer.publisher import Publisher
 from interactive_topic_modeling.view.observer.observer import Observer
 
+import matplotlib.figure
+
 
 class GraphView(QWidget, Observer):
     """A class for displaying the graphs made by topic modelling"""
@@ -26,7 +28,7 @@ class GraphView(QWidget, Observer):
         self.layout.setSpacing(0)
         self.setLayout(self.layout)
 
-    def display_plot(self, canvas: FigureCanvasTemplate) -> None:
+    def display_plot(self, canvas: matplotlib.figure.Figure) -> None:
         """
         Display the plots for the given tab.
 
