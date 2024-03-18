@@ -1,5 +1,6 @@
 import random
 import matplotlib.figure
+import networkx as nx
 
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_template import FigureCanvas
@@ -140,6 +141,7 @@ class TopicModellingHandler:
         canvases.extend(self.construct_word_clouds(lda_model))
         canvases.extend(self.construct_probable_words(lda_model))
         canvases.append(self.construct_correlation_matrix(lda_model))
+        canvases.append(self.construct_word_topic_network_vis(lda_model))
         # canvases.append(self.construct_word_count())
 
         self.plots_container[tab_name] = canvases
@@ -244,6 +246,93 @@ class TopicModellingHandler:
         fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
 
         return fig
+
+    def construct_word_topic_network_vis(self,
+                                         lda_model: GensimLdaModel) \
+            -> FigureCanvas:
+        """
+        Construct a word-topic network plot for the given LDA model
+        :param lda_model: The LDA model to construct the plot for
+        :return: A word-topic network plot
+        """
+        # Construct a plot and graph
+        fig = plt.figure()
+        graph = self.construct_word_topic_network(lda_model)
+
+        # Get the scale factor used for the displayed edge weight (width)
+        edge_scale_factor = self.get_edge_scale_factor(lda_model)
+
+        # Get graph elements
+        edges = graph.edges()
+        nodes = graph.nodes(data="color")
+
+        # Get drawing function arguments
+        node_sizes = [150 if node[1] is not None else 0 for node in nodes]
+        node_colors = [node[1] if node[1] is not None else "black" for node in
+                       nodes]
+
+        edge_colors = [graph[u][v]["color"] for (u, v) in edges]
+        edge_width = [(graph[u][v]["weight"] * edge_scale_factor) for u, v in
+                      edges]
+
+        # Draw the graph
+        nx.draw_kamada_kawai(graph,
+                             node_size=node_sizes,
+                             with_labels=True,
+                             width=edge_width,
+                             edge_color=edge_colors,
+                             node_color=node_colors,
+                             font_size=8)
+
+        return FigureCanvas(fig)
+
+    def construct_word_topic_network(self,
+                                     lda_model: GensimLdaModel) -> nx.Graph:
+        """"
+        Construct a word-topic network for the given LDA model
+        :param lda_model: The LDA model to construct the network for
+        :return: A networkx graph
+        """
+        graph = nx.Graph()
+
+        # Define colors for the topics
+        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+                  '#9a6324', '#46f0f0', '#f032e6', '#bcf60c',
+                  '#fabebe', '#008080', '#e6beff', '#000075', '#fffac8',
+                  '#800000', '#aaffc3', '#808000', '#ffd8b1',
+                  '#808080', '#911eb4']
+
+        # Amount of words displayed for each topic
+        node_amount = 15
+
+        for topic_id in range(self.num_topics):
+            topic_tuples = lda_model.show_topic(topic_id, node_amount)
+            for topic_tuple in topic_tuples:
+                graph.add_node(topic_id + 1, color=colors[topic_id % 20])
+                graph.add_edge(topic_id + 1, topic_tuple[0],
+                               color=colors[topic_id % 20],
+                               weight=topic_tuple[1])
+        return graph
+
+    def get_edge_scale_factor(self, lda_model: GensimLdaModel) -> float:
+        """
+        Get the edge scale factor for the given LDA model
+        :param lda_model: The LDA model to calculate the scale factor for
+        :return: The edge scale factor
+        """
+
+        # Find the maximum topic weight
+        max_topic_weight = 0
+        for topic_id in range(self.num_topics):
+            _, topic_weights = lda_model.show_topic_and_probs(topic_id, 1)
+            max_topic_weight = max(max_topic_weight, topic_weights[0])
+
+        # Choose a weight to display
+        chosen_weight = 1.5
+
+        scale_factor = (1 / max_topic_weight)
+
+        return scale_factor * chosen_weight
 
 
 """
