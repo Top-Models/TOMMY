@@ -13,27 +13,26 @@ before_script:
   - .\venv\Scripts\activate  # Activating virtual environment in Windows
 
 
-py-test:
-    stage: test
-    script:
-
-        - echo "Running the tests."
-        - python -m pytest test
 
 build:
     stage: build
     script:
+        - pip install -r requirements.txt
         - echo "building"
-        - cd interactive_topic_modeling  # Navigate to the directory
-        - python main.py
+        
+py-test:
+    stage: test
+    script:
+        - echo "Running the tests."
+        - python -m pytest test
 
 
 run:
   stage: run
   script:
-    - pip install -r requirements.txt
     - echo "run"
-    - python main.py interactive_topic_modeling
+    - cd interactive_topic_modeling  # Navigate to the directory
+    - python main.py
   dependencies:
     - build
     - py-test
