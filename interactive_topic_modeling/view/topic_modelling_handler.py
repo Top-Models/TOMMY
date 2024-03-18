@@ -168,7 +168,7 @@ class TopicModellingHandler:
             plt.axis('off')
             plt.tight_layout(pad=0)
 
-            canvases.append(FigureCanvas(fig))
+            canvases.append(fig)
 
         return canvases
 
