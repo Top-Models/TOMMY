@@ -226,11 +226,12 @@ class GraphDisplay(QTabWidget):
         canvases = []
 
         for i in range(self.num_topics):
-            topic_words, topic_weights = lda_model.show_topic_and_probs(i, 10)
+            topic_words, topic_weights = lda_model.show_topic_and_probs(i, 15)
 
-            # Construct a bar plot
+            # Construct a horizontal bar plot
             fig = plt.figure()
-            plt.bar(topic_words, topic_weights, color="darkblue")
+            plt.barh(topic_words, topic_weights, color="darkblue")
+            plt.gca().invert_yaxis()
 
             # Add margins and labels to the plot
             plt.margins(0.02)
