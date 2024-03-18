@@ -11,28 +11,23 @@ before_script:
   - pip install virtualenv
   - virtualenv venv
   - .\venv\Scripts\activate  # Activating virtual environment in Windows
+  - pip install -r requirements.txt
 
 
 
-build:
-  stage: build
-  script:
-    - pip install -r requirements.txt
-    - echo "building"
-        
 py-test:
+  tags:
+    - main
   stage: test
   script:
     - echo "Running the tests."
     - python -m pytest test
-  dependencies:
-    - build
 
-run:
-  stage: run
-  script:
-    - echo "run"
-    - cd interactive_topic_modeling  # Navigate to the directory
-    - python main.py
-  dependencies:
-    - build
+# This is not doable, we should just use test here and for the rest just deploy on local machines
+#run:
+#  stage: run
+#  script:
+#    - echo "run"
+#    - cd interactive_topic_modeling  # Navigate to the directory
+#    - python main.py
+
