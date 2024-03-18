@@ -23,12 +23,17 @@ py-test:
 build:
     stage: build
     script:
-        - pip install -r requirements.txt
         - echo "building"
+        - cd interactive_topic_modeling  # Navigate to the directory
+        - python main.py
+
 
 run:
-    stage: run
-    script:
-        - pip install -r requirements.txt
-        - echo "run"
-        - python main.py interactive_topic_modeling
+  stage: run
+  script:
+    - pip install -r requirements.txt
+    - echo "run"
+    - python main.py interactive_topic_modeling
+  dependencies:
+    - build
+    - py-test
