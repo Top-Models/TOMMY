@@ -1,9 +1,7 @@
-import os
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
 
-from tommy.backend.file_import.file import File
-from tommy.backend.file_import.file_reader import (
+from tommy.controller.file_import.file_reader import (
     FileReader)
 from tommy.view.imported_files_view.file_label \
     import FileLabel
@@ -13,7 +11,7 @@ from tommy.view.observer.observer import Observer
 from tommy.view.stopwords_view import (
     StopwordsView)
 from tommy.support.constant_variables import (
-    heading_font, seco_col_blue, hover_seco_col_blue, prim_col_red,
+    heading_font, prim_col_red,
     hover_prim_col_red)
 from tommy.support.project_settings import (
     current_project_settings)
@@ -49,9 +47,9 @@ class ImportedFilesView(QWidget, Observer):
         self.scroll_layout = QVBoxLayout(self.scroll_widget)
         self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.scroll_area.setVerticalScrollBarPolicy(
-                Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.scroll_area.setHorizontalScrollBarPolicy(
-                Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidget(self.scroll_widget)
         self.layout.addWidget(self.scroll_area)
 
@@ -66,9 +64,9 @@ class ImportedFilesView(QWidget, Observer):
 
         # Add scroll options
         self.scroll_area.setVerticalScrollBarPolicy(
-                Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.scroll_area.setHorizontalScrollBarPolicy(
-                Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidgetResizable(True)
 
     def initialize_title_label(self) -> None:
@@ -98,7 +96,7 @@ class ImportedFilesView(QWidget, Observer):
         :return: The list of files
         """
         all_files = list(self.file_reader.read_files(
-                current_project_settings.selected_folder))
+            current_project_settings.selected_folder))
         self.file_container[tab_name] = all_files
 
     def display_files(self, tab_name: str) -> None:

@@ -1,8 +1,6 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
-import os
 
-from tommy.support import project_settings
-from tommy.backend.file_import.file_reader import (
+from tommy.controller.file_import.file_reader import (
     FileReader)
 
 
@@ -11,6 +9,7 @@ class ReadInFilesButton(QWidget):
     The ReadInFilesButton class that defines the button to
     read in files.
     """
+
     def __init__(self) -> None:
         """Initialize the button."""
         super().__init__()
@@ -38,7 +37,6 @@ class ReadInFilesButton(QWidget):
 
 if __name__ == "__main__":
     print(globals())
-
 
 """
 This program has been developed by students from the bachelor Computer Science

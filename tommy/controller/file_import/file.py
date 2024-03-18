@@ -1,6 +1,12 @@
 from dataclasses import dataclass
 from datetime import date
 
+"""
+This class is now deprecated. Use RawFile instead
+"""
+
+
+# TODO: remove this class and change classes that reference it
 
 @dataclass
 class File:

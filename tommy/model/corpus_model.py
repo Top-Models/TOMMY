@@ -1,4 +1,16 @@
+from typing import List
+
+from gensim.corpora import Dictionary
+
+from tommy.controller.file_import.metadata import Metadata
+from tommy.controller.file_import.processed_corpus import ProcessedCorpus
+
+
 class CorpusModel:
+    metadatas: List[Metadata] = None
+    dictionary: Dictionary = None
+    processed_corpus: ProcessedCorpus = None
+
     def __init__(self):
         pass
 

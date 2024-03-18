@@ -1,9 +1,16 @@
 import os
 from typing import Generator
 
-from tommy.backend.file_import import (
+from tommy.controller.file_import import (
     generic_file_importer)
-from tommy.backend.file_import.file import File
+from tommy.controller.file_import.file import File
+
+"""
+This class is now deprecated. Use CorpusController instead
+"""
+
+
+# TODO: remove this class and change classes that reference it
 
 
 class FileReader:
@@ -13,6 +20,7 @@ class FileReader:
 
     This class uses a GenericFileImporter object to import files.
     """
+
     def __init__(self):
         """
         The initialization of the object.
