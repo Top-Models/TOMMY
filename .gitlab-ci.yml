@@ -15,17 +15,18 @@ before_script:
 
 
 build:
-    stage: build
-    script:
-        - pip install -r requirements.txt
-        - echo "building"
+  stage: build
+  script:
+    - pip install -r requirements.txt
+    - echo "building"
         
 py-test:
-    stage: test
-    script:
-        - echo "Running the tests."
-        - python -m pytest test
-
+  stage: test
+  script:
+    - echo "Running the tests."
+    - python -m pytest test
+  dependencies:
+    - build
 
 run:
   stage: run
@@ -35,4 +36,3 @@ run:
     - python main.py
   dependencies:
     - build
-    - py-test
