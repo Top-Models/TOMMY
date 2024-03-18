@@ -175,7 +175,7 @@ class TopicModellingHandler:
         return canvases
 
     def construct_probable_words(self, lda_model: GensimLdaModel) \
-            -> list[matplotlib.figure.FigureCanvasTemplate]:
+            -> list[matplotlib.figure.Figure]:
         """
         Construct probable words plots for the given LDA model
 
