@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
                                QLineEdit, QHBoxLayout, QPushButton)
 
 from interactive_topic_modeling.support.constant_variables import text_font, \
-    hover_seco_col_blue, pressed_seco_col_blue
+    hover_seco_col_blue, pressed_seco_col_blue, sec_col_purple
 from interactive_topic_modeling.view.observer.observer import Observer
 
 
@@ -123,7 +123,7 @@ class StopwordsView(QScrollArea, Observer):
     def create_word_label(self, stopword: str) -> QLabel:
         """Create a label for every word"""
         stopword_label = QLabel(stopword, self)
-        stopword_label.setStyleSheet(f"background-color: #00968F;"
+        stopword_label.setStyleSheet(f"background-color: {sec_col_purple};"
                                      f"color: white;"
                                      f"font-family: {text_font};"
                                      f"font-size: 12px;"
