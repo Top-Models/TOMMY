@@ -175,7 +175,7 @@ class TopicModellingHandler:
         return canvases
 
     def construct_probable_words(self, lda_model: GensimLdaModel) \
-            -> list[matplotlib.figure.Figure]:
+            -> list[matplotlib.figure.FigureCanvasTemplate]:
         """
         Construct probable words plots for the given LDA model
 
@@ -185,24 +185,26 @@ class TopicModellingHandler:
         canvases = []
 
         for i in range(self.num_topics):
-            topic_words, topic_weights = lda_model.show_topic_and_probs(i, 10)
+            topic_words, topic_weights = lda_model.show_topic_and_probs(i, 15)
 
-            # Construct a bar plot
+            # Construct a horizontal bar plot
             fig = plt.figure()
-            plt.bar(topic_words, topic_weights, color="darkblue")
+            plt.barh(topic_words, topic_weights, color="darkblue")
+            plt.gca().invert_yaxis()
 
             # Add margins and labels to the plot
             plt.margins(0.02)
             plt.ylabel("gewicht")
-            plt.title("Woorden met het hoogste gewicht topic {}".format(i))
+            plt.title("Woorden met het hoogste gewicht topic {}".format(i + 1))
 
-            canvases.append(fig)
+            canvases.append(FigureCanvas(fig))
 
         return canvases
 
     def construct_word_count(self) -> matplotlib.figure.Figure:
         """
         Construct a word count plot
+
         :return: A word count plot
         """
         document_counts = generate_list()
@@ -252,6 +254,7 @@ class TopicModellingHandler:
             -> FigureCanvas:
         """
         Construct a word-topic network plot for the given LDA model
+
         :param lda_model: The LDA model to construct the plot for
         :return: A word-topic network plot
         """
@@ -288,8 +291,9 @@ class TopicModellingHandler:
 
     def construct_word_topic_network(self,
                                      lda_model: GensimLdaModel) -> nx.Graph:
-        """"
+        """
         Construct a word-topic network for the given LDA model
+
         :param lda_model: The LDA model to construct the network for
         :return: A networkx graph
         """
@@ -317,6 +321,7 @@ class TopicModellingHandler:
     def get_edge_scale_factor(self, lda_model: GensimLdaModel) -> float:
         """
         Get the edge scale factor for the given LDA model
+
         :param lda_model: The LDA model to calculate the scale factor for
         :return: The edge scale factor
         """
