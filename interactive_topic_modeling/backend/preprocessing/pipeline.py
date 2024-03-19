@@ -73,7 +73,9 @@ class Pipeline:
         :return:
         """
         tokens = set(text.lower().split())
-        remove_these = [""]
+        remove_these = ["hebben", "heeft", "volgens", "wordt", "kunnen", "bekijk", "moeten", "worden", "omdat", "tegen",
+                        "onder", "zouden", "waarin", "andere", "waren", "komen", "alleen", "steeds", "tijdens",
+                        "pagina:", "oorspronkelijke", "zijn.", "bodegraven.", "werken", "maakt", "waarvan"]
         for token in tokens.copy():
             if len(token) <= 4 or token in remove_these or token in self._stopwords:
                 tokens.remove(token)

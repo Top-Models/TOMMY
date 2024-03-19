@@ -1,6 +1,7 @@
 import random
 import matplotlib.figure
 import networkx as nx
+import numpy as np
 
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_template import FigureCanvas
@@ -166,6 +167,7 @@ class TopicModellingHandler:
 
             # Construct a word cloud
             fig = plt.figure()
+            plt.title("Woordenwolk topic {}".format(i + 1))
             plt.imshow(wordcloud, interpolation='bilinear')
             plt.axis('off')
             plt.tight_layout(pad=0)
@@ -246,6 +248,10 @@ class TopicModellingHandler:
         plt.title("Correlatiematrix topics")
         fig.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
         fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+
+        # Adjust the plot ticks so that they start from 1 instead of 0
+        plt.xticks(np.arange(self.num_topics), np.arange(1, self.num_topics + 1))
+        plt.yticks(np.arange(self.num_topics), np.arange(1, self.num_topics + 1))
 
         return fig
 
