@@ -5,6 +5,8 @@ from spacy.tokens import Doc
 
 from interactive_topic_modeling.backend.preprocessing.stopwords import (
     StopWords)
+from interactive_topic_modeling.support.project_settings import (
+    current_project_settings)
 
 
 #    Entire pipeline:
@@ -31,11 +33,13 @@ class Pipeline:
         # download nl_core_news_sm)
         # TODO: optimize by downloading the model at another place
         #  (maybe use spacy_download)
-        spacy.cli.download("nl_core_news_sm")
-        nlp = spacy.load("nl_core_news_sm", exclude=["tagger",
-                                                     "attribute_ruler",
-                                                     "parser",
-                                                     "senter"])
+        pipeline_path = os.path.join(
+            current_project_settings.preprocessing_data_folder,
+            "pipeline_download", "nl_core_news_sm-3.7.0")
+        nlp = spacy.load(pipeline_path, exclude=["tagger",
+                                                 "attribute_ruler",
+                                                 "parser",
+                                                 "senter"])
         self._nlp = nlp
 
         self._entity_categories = {"PERSON", "FAC", "LAW", "TIME", "PERCENT",
@@ -44,10 +48,9 @@ class Pipeline:
         self._pos_categories = {"NOUN", "PROPN", "ADJ", "ADV", "VERB"}
 
         # Load stopwords
-        # print(os.getcwd())
-
-        with open(os.path.join("backend", "preprocessing", "stopwords.txt"),
-                  'r') as file:
+        with open(os.path.join(
+                current_project_settings.preprocessing_data_folder,
+                "stopwords.txt"), 'r') as file:
             file_content = file.read()
 
         stopword_list = file_content.split()
