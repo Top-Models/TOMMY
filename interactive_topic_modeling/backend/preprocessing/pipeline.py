@@ -21,6 +21,7 @@ from interactive_topic_modeling.backend.preprocessing.stopwords import (
 
 class Pipeline:
     """Text preprocessing pipeline."""
+
     def __init__(self) -> None:
         """
         Initialize the pipeline.
@@ -53,26 +54,27 @@ class Pipeline:
         self._stopwords = StopWords(stopword_list)
         # TODO: keep track of added stopwords
 
-    def __call__(self, text: str) -> list[str]:
-        """Process the text to tokens"""
-        tokens = self._nlp(text)
-        tokens = self.process_tokens(tokens)
-        return tokens
+    # def __call__(self, text: str) -> list[str]:
+    """Process the text to tokens"""
+
+    #    tokens = self._nlp(text)
+    #    tokens = self.process_tokens(tokens)
+    #    return tokens
 
     # Function for quick preprocessing (used when debugging plots for example)
-    # def __call__(self, text: str) -> list[str]:
-    #     """
-    #     Process the text to tokens.
-    #
-    #     :param text: The text to process.
-    #     :return:
-    #     """
-    #     tokens = set(text.lower().split())
-    #     remove_these = [""]
-    #     for token in tokens.copy():
-    #         if len(token) <= 4 or token in remove_these:
-    #             tokens.remove(token)
-    #     return list(tokens)
+    def __call__(self, text: str) -> list[str]:
+        """
+        Process the text to tokens.
+
+        :param text: The text to process.
+        :return:
+        """
+        tokens = set(text.lower().split())
+        remove_these = [""]
+        for token in tokens.copy():
+            if len(token) <= 4 or token in remove_these or token in self._stopwords:
+                tokens.remove(token)
+        return list(tokens)
 
     def process_tokens(self, doc: Doc) -> list[str]:
         """
