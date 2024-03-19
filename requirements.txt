@@ -12,6 +12,7 @@ pyinstaller==6.4.0
 matplotlib==3.8.3
 nltk==3.8.1
 numpy==1.26.4
+networkx==3.2.1
 striprtf==0.0.26 # rtf_files to csv file
 
 #pytest
