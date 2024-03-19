@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QLabel
 
 from interactive_topic_modeling.display.topic_display.topic_entity import TopicEntity
 
@@ -49,6 +49,7 @@ class FetchedTopicsDisplay(QScrollArea):
 
         # Add topic to display
         topic_entity = TopicEntity(topic_name, topic_words)
+        topic_entity.wordClicked.connect(self.on_word_clicked)  # Connect signal
         self.layout.addWidget(topic_entity)
 
     def display_topics(self, tab_name: str) -> None:
@@ -69,6 +70,7 @@ class FetchedTopicsDisplay(QScrollArea):
         # Add topics to display
         for topic_name, topic_words in self.topic_container[tab_name]:
             topic_entity = TopicEntity(topic_name, topic_words)
+            topic_entity.wordClicked.connect(self.on_word_clicked)  # Connect signal
             self.layout.addWidget(topic_entity)
 
     def remove_tab_from_container(self, tab_name: str) -> None:
@@ -87,3 +89,10 @@ class FetchedTopicsDisplay(QScrollArea):
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().deleteLater()
         self.topic_container = {}
+
+    def on_word_clicked(self, word: str):
+        # Iterate through all topic entities
+        for i in range(self.layout.count()):
+            topic_entity = self.layout.itemAt(i).widget()
+            if isinstance(topic_entity, TopicEntity):
+                topic_entity.change_word_style(word, "yellow", "black")
