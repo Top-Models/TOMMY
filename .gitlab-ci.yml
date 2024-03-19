@@ -24,12 +24,5 @@ py-test:
     - cd interactive_topic_modeling
     - echo "Running the tests."
     - python -m pytest ..\test
-
-# This is not doable, we should just use test here and for the rest just deploy on local machines
-#run:
-#  stage: run
-#  script:
-#    - echo "run"
-#    - cd interactive_topic_modeling  # Navigate to the directory
-#    - python main.py
-
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
