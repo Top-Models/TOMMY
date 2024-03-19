@@ -354,11 +354,20 @@ class GraphDisplay(QTabWidget):
         fig = plt.figure()
         graph = self.construct_doc_topic_network(lda_model)
         edges = graph.edges()
+        nodes = graph.nodes(data="color")
 
-        edge_width = [(graph[u][v]["weight"]) for u, v in edges]
+        node_sizes = [150 if node[1] is not None else 0 for node in nodes]
+        node_colors = [node[1] if node[1] is not None else "black" for node in nodes]
+
         edge_colors = [graph[u][v]["color"] for (u, v) in edges]
+        edge_width = [(graph[u][v]["weight"]) for u, v in edges]
 
-        nx.draw_kamada_kawai(graph, width=edge_width, node_size=0, edge_color=edge_colors)
+        nx.draw_kamada_kawai(graph,
+                             width=edge_width,
+                             node_size=node_sizes,
+                             edge_color=edge_colors,
+                             node_color=node_colors)
+
         return FigureCanvas(fig)
 
     def construct_doc_topic_network(self, lda_model: GensimLdaModel) -> nx.Graph:
@@ -374,7 +383,7 @@ class GraphDisplay(QTabWidget):
 
         for n in range(len(lda_model.bags_of_words)):
             for x in document_topics[n]:
-                if x[1] > 0.10:
+                if x[1] > 0.015:
                     graph.add_edge(x[0], n, weight=x[1], color=colors[x[0]%20])
 
         return graph
