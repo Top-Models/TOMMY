@@ -20,6 +20,8 @@ py-test:
     - main
   stage: test
   script:
+    - echo "Changing directory to interactive_topic_modeling."
+    - cd interactive_topic_modeling
     - echo "Running the tests."
     - python -m pytest test
 
