@@ -135,7 +135,7 @@ trailing underscore.
 | Method            | All-lowercase, underscores should be used between individual words <br> `def pyramid_giza():  # Public` <br> Protected methods should start with 1 underscore <br> `def _pyramid_giza():  # Protected` <br> Private methods should start with 2 underscores <br> `def __pyramid_giza():  # Private`                                                                                                                        |
 | Function Argument | All-lowercase, underscores should be used between individual words <br> `def function(function_argument : str)`                                                                                                                                                                                                                                                                                                            |
 | Method Argument   | All-lowercase, underscores should be used between individual words <br> `def instance_method(self):` <br> Instance methods should have their first argument named "self" <br> `@classmethod` <br> `def class_method(cls):` <br> Class methods should have their first argument named "cls". Static methods are similar to class methods, but do not require any arguments <br> `@staticmethod` <br> `def static_method():` |
-
+  | PyTests | test_*.py or \*_test.py in the current directory and its subdirectories.|
 In practice, private variables and methods (i.e. with 2 underscores) should not
 be used, since they are not actually
 made private; they are just renamed internally in a way that makes them harder
