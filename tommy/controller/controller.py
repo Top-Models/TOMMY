@@ -10,8 +10,8 @@ from tommy.controller.save_controller import SaveController
 
 
 class Controller:
-    _models: [Model] = [Model()]
-    _selected_model: int = 0
+    _models: [Model] = []
+    _selected_model: int = -1
 
     @staticmethod
     def select_model(model_index: int):

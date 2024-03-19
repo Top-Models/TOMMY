@@ -1,7 +1,8 @@
 import os
-from typing import Generator, Iterable
+from typing import Generator, Iterable, List
 
 from tommy.controller.file_import.generic_file_importer import GenericFileImporter
+from tommy.controller.file_import.metadata import Metadata
 from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.file_import.raw_body import RawBody
 from tommy.controller.file_import.raw_file import RawFile
@@ -29,7 +30,7 @@ class CorpusController:
         and all its subdirectories.
 
         :param path: The string of the path to the directory
-        :return Generator[File, None, None]: A generator yielding File objects.
+        :return: Generator[File, None, None]: A generator yielding File objects.
         """
         for root, dirs, files in os.walk(path):
             for file in files:
@@ -38,6 +39,8 @@ class CorpusController:
 
     @staticmethod
     def _read_files_from_input_folder() -> Generator[RawFile, None, None]:
+        print(CorpusController.project_settings_model)
+        print(CorpusController.project_settings_model.input_folder_path)
         return CorpusController._read_files(
             CorpusController.project_settings_model.input_folder_path)
 
@@ -46,12 +49,16 @@ class CorpusController:
         """
         Gets the metadata from all files in the directory specified by the
         project settings and stores it in the corpus model.
-        :return:
+        :return: None
         """
         files = CorpusController._read_files_from_input_folder()
         metadatas = [file.metadata for file in files]
 
         CorpusController.corpus_model.metadatas = metadatas
+
+    @staticmethod
+    def get_metadata() -> List[Metadata]:
+        return CorpusController.corpus_model.metadatas
 
     @staticmethod
     def get_raw_bodies() -> Generator[RawBody, None, None]:

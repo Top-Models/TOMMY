@@ -3,8 +3,6 @@ from datetime import date
 from dateutil import parser
 from typing import Generator
 
-from tommy.controller.file_import.file import File
-from tommy.controller.file_import.metadata import MetaData
 from tommy.controller.file_import.raw_file import RawFile
 
 

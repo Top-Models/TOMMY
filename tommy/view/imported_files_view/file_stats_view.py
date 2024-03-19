@@ -1,7 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
 
-from tommy.controller.file_import.file import File
+from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
     heading_font,
     prim_col_red, hover_prim_col_red)
@@ -97,7 +97,7 @@ class FileStatsView(QScrollArea, Observer):
                 else:
                     self.clear_sub_layout(item.layout())
 
-    def display_file_info(self, file: File) -> None:
+    def display_file_info(self, file: Metadata) -> None:
         """
         Display the file info
         :param file: The file to view

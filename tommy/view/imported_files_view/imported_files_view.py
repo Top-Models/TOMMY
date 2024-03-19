@@ -1,8 +1,8 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
 
-from tommy.controller.file_import.file_reader import (
-    FileReader)
+from tommy.controller.corpus_controller import CorpusController
+
 from tommy.view.imported_files_view.file_label \
     import FileLabel
 from tommy.view.imported_files_view. \
@@ -23,9 +23,6 @@ class ImportedFilesView(QWidget, Observer):
     def __init__(self) -> None:
         """Initialize the ImportedFileDisplay"""
         super().__init__()
-
-        # Initialize file reader
-        self.file_reader = FileReader()
 
         # Initialize widget properties
         self.setStyleSheet("background-color: rgba(230, 230, 230, 230);")
@@ -95,9 +92,8 @@ class ImportedFilesView(QWidget, Observer):
         Fetch the files from the selected directory
         :return: The list of files
         """
-        all_files = list(self.file_reader.read_files(
-            current_project_settings.selected_folder))
-        self.file_container[tab_name] = all_files
+        CorpusController.extract_and_store_metadata()
+        self.file_container[tab_name] = CorpusController.get_metadata()
 
     def display_files(self, tab_name: str) -> None:
         """

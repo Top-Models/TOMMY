@@ -9,6 +9,7 @@ from wordcloud import WordCloud
 from tommy.backend.model.abstract_model import TermLists
 from tommy.backend.model.lda_model import GensimLdaModel
 from tommy.backend.preprocessing.pipeline import Pipeline
+from tommy.controller.corpus_controller import CorpusController
 from tommy.view.graph_view import GraphView
 from tommy.view.model_selection_view import \
     ModelSelectionView
@@ -91,14 +92,16 @@ class TopicModellingHandler:
                                      to exclude during LDA
         :return: The trained LDA model
         """
+
         # Get text from documents
-        text_from_docs = [document.body for document in documents]
+        # text_from_docs = [document.body for document in documents]
+        text_from_docs = CorpusController.get_raw_bodies()
 
         # Preprocess documents with additional stopwords exclusion
         # TODO: real preprocessing
         pipe = Pipeline()
         pipe.add_stopwords(additional_stopwords)
-        tokens = [pipe(doc_text) for doc_text in text_from_docs]
+        tokens = [pipe(doc_text.body) for doc_text in text_from_docs]
 
         # Train LDA model
         lda_model = self.train_lda_model(tokens)

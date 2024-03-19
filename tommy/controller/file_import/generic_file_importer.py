@@ -1,6 +1,5 @@
 from typing import List, Generator
 
-from tommy.controller.file_import.file import File
 from tommy.controller.file_import import file_importer_base
 from tommy.controller.file_import import csv_file_importer
 from tommy.controller.file_import.raw_file import RawFile

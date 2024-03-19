@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import QLabel, QSizePolicy
 
-from tommy.controller.file_import.file import File
+from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
     heading_font,
     sec_col_orange,
@@ -17,7 +17,7 @@ class FileLabel(QLabel, Observer):
 
     clicked = Signal(object)
 
-    def __init__(self, file: File, parent=None) -> None:
+    def __init__(self, file: Metadata, parent=None) -> None:
         """Method to initialize the FileLabel object"""
         super().__init__(file.name, parent)
         self.file = file
