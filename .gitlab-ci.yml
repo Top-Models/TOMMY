@@ -23,7 +23,7 @@ py-test:
     - echo "Changing directory to interactive_topic_modeling."
     - cd interactive_topic_modeling
     - echo "Running the tests."
-    - python -m pytest test
+    - python -m pytest ..\test
 
 # This is not doable, we should just use test here and for the rest just deploy on local machines
 #run:
