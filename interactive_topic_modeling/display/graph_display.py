@@ -7,6 +7,7 @@ from wordcloud import WordCloud
 from gensim import corpora, models
 import random
 import networkx as nx
+import math
 
 from interactive_topic_modeling.backend.model.abstract_model import TermLists
 from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
@@ -281,6 +282,27 @@ class GraphDisplay(QTabWidget):
                              edge_color=edge_colors,
                              node_color=node_colors,
                              font_size=8)
+
+        # edge_nodes = set(graph)
+        # for i in range(self.num_topics):
+        #     edge_nodes = edge_nodes - {i}
+        #
+        # pos = nx.kamada_kawai_layout(graph.subgraph(edge_nodes))
+        #
+        # r = 0.5
+        # for i in range(self.num_topics):
+        #     xpos = r*math.cos(i*((2*math.pi)/self.num_topics))
+        #     ypos = r*math.sin(i*((2*math.pi)/self.num_topics))
+        #     pos[i] = np.array([xpos, ypos])
+        #
+        # nx.draw(graph,
+        #         pos=pos,
+        #         node_size=node_sizes,
+        #         with_labels=True,
+        #         width=edge_width,
+        #         edge_color=edge_colors,
+        #         node_color=node_colors,
+        #         font_size=8)
 
         return FigureCanvas(fig)
 
