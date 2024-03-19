@@ -71,7 +71,6 @@ class ModelParamsDisplay(QScrollArea):
 
         try:
             topic_num = int(topic_num_output)
-            print("Number of topics: ", topic_num)
             # reset style
             self.topic_input.setStyleSheet(f"border-radius: 5px;"
                                            f"font-size: 14px;"
