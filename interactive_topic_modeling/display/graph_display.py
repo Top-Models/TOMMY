@@ -283,27 +283,6 @@ class GraphDisplay(QTabWidget):
                              node_color=node_colors,
                              font_size=8)
 
-        # edge_nodes = set(graph)
-        # for i in range(self.num_topics):
-        #     edge_nodes = edge_nodes - {i}
-        #
-        # pos = nx.kamada_kawai_layout(graph.subgraph(edge_nodes))
-        #
-        # r = 0.5
-        # for i in range(self.num_topics):
-        #     xpos = r*math.cos(i*((2*math.pi)/self.num_topics))
-        #     ypos = r*math.sin(i*((2*math.pi)/self.num_topics))
-        #     pos[i] = np.array([xpos, ypos])
-        #
-        # nx.draw(graph,
-        #         pos=pos,
-        #         node_size=node_sizes,
-        #         with_labels=True,
-        #         width=edge_width,
-        #         edge_color=edge_colors,
-        #         node_color=node_colors,
-        #         font_size=8)
-
         return FigureCanvas(fig)
 
     def construct_word_topic_network(self, lda_model: GensimLdaModel) -> nx.Graph:
@@ -356,7 +335,7 @@ class GraphDisplay(QTabWidget):
         edges = graph.edges()
         nodes = graph.nodes(data="color")
 
-        node_sizes = [150 if node[1] is not None else 0 for node in nodes]
+        node_sizes = [150 if node[1] is not None else 8 for node in nodes]
         node_colors = [node[1] if node[1] is not None else "black" for node in nodes]
 
         edge_colors = [graph[u][v]["color"] for (u, v) in edges]
@@ -378,13 +357,24 @@ class GraphDisplay(QTabWidget):
                   '#fabebe', '#008080', '#e6beff', '#000075', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1',
                   '#808080', '#911eb4']
 
-        document_topics = [lda_model.get_document_topics(lda_model.bags_of_words[n], 0.0)
-                           for n in range(len(lda_model.bags_of_words))]
+        for topic_id in range(self.num_topics):
+            graph.add_node(topic_id, color=colors[topic_id%20])
 
-        for n in range(len(lda_model.bags_of_words)):
-            for x in document_topics[n]:
-                if x[1] > 0.015:
-                    graph.add_edge(x[0], n, weight=x[1], color=colors[x[0]%20])
+        for document_id in range(len(lda_model.bags_of_words)):
+            document_topic = (lda_model.get_document_topics(
+                              lda_model.bags_of_words[document_id],
+             0.02))
+            for (topic_id, topic_probability) in document_topic:
+                graph.add_edge(topic_id,
+                               document_id,
+                               color=colors[topic_id % 20],
+                               weight=topic_probability)
+
+        # for topic_id in range(self.num_topics):
+        #     topic_tuples = lda_model.show_topic(topic_id, node_amount)
+        #     for topic_tuple in topic_tuples:
+        #         graph.add_node(topic_id, color=colors[topic_id%20])
+        #         graph.add_edge(topic_id, topic_tuple[0], color=colors[topic_id%20], weight=topic_tuple[1])
 
         return graph
 
