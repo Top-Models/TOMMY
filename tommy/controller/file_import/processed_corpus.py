@@ -7,12 +7,14 @@ from tommy.controller.file_import.processed_file import ProcessedFile
 @dataclass
 class ProcessedCorpus:
     """
-    The ProcessedCorpus class is currently an iterable of ProcessedFile
-    objects
+    The ProcessedCorpus class is an iterable of ProcessedFile objects
     """
     documents: List[ProcessedFile] = None
 
     def __iter__(self):
+        """
+        :return: an iterator of ProcessedFile objects
+        """
         return iter(self.documents)
 
 

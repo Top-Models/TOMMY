@@ -11,6 +11,9 @@ from tommy.controller.file_import.raw_file import RawFile
 
 
 class CsvFileImporter(file_importer_base.FileImporterBase):
+    """
+    Handles importing of csv files
+    """
     mandatory_fields: List[str] = ['body']
 
     def __init__(self) -> None:

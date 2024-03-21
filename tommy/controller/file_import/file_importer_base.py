@@ -17,7 +17,8 @@ class FileImporterBase(ABC):
         Abstract method to load a file.
 
         :param path: The string path of the file.
-        :return Generator[File, None, None]: A generator yielding File objects.
+        :return: Generator[File, None, None]: A generator yielding File
+        objects.
         """
         pass
 
@@ -27,7 +28,7 @@ class FileImporterBase(ABC):
         Abstract method to check if a file is compatible.
 
         :param path: The path to the file.
-        :return bool: True is compatible, False otherwise.
+        :return: bool: True is compatible, False otherwise.
         """
         pass
 
@@ -36,7 +37,7 @@ class FileImporterBase(ABC):
         Parse the Dutch date string into a date object.
 
         :param file_date: The date string to parse.
-        :return date: The date object .
+        :return: date: The date object .
         """
         parse_info = DutchParseInfo()
         return parser.parse(file_date, parserinfo=parse_info, fuzzy=True,
