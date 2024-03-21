@@ -32,8 +32,6 @@ class ReadInFilesButton(QWidget):
         # Apply all other functions like preprocessing here
 
 
-if __name__ == "__main__":
-    print(globals())
 
 """
 This program has been developed by students from the bachelor Computer Science
