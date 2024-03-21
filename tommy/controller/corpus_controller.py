@@ -1,7 +1,8 @@
 import os
 from typing import Generator, Iterable, List
 
-from tommy.controller.file_import.generic_file_importer import GenericFileImporter
+from tommy.controller.file_import.generic_file_importer import (
+    GenericFileImporter)
 from tommy.controller.file_import.metadata import Metadata
 from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.file_import.raw_body import RawBody
@@ -17,10 +18,16 @@ class CorpusController:
 
     @staticmethod
     def set_corpus_model(corpus_model: CorpusModel):
+        """
+        Sets the corpus model
+        :param corpus_model:
+        :return:
+        """
         CorpusController.corpus_model = corpus_model
 
     @staticmethod
-    def set_project_settings_model(project_settings_model: ProjectSettingsModel):
+    def set_project_settings_model(
+            project_settings_model: ProjectSettingsModel):
         CorpusController.project_settings_model = project_settings_model
 
     @staticmethod
@@ -30,12 +37,13 @@ class CorpusController:
         and all its subdirectories.
 
         :param path: The string of the path to the directory
-        :return: Generator[File, None, None]: A generator yielding File objects.
+        :return: Generator[File, None, None]: A generator yielding File objects
         """
         for root, dirs, files in os.walk(path):
             for file in files:
-                yield from CorpusController.fileParsers.import_file(os.path.join(root,
-                                                                                 file))
+                yield from CorpusController.fileParsers.import_file(
+                    os.path.join(root,
+                                 file))
 
     @staticmethod
     def _read_files_from_input_folder() -> Generator[RawFile, None, None]:
@@ -68,6 +76,10 @@ class CorpusController:
     @staticmethod
     def get_processed_corpus() -> Iterable[ProcessedFile]:
         return CorpusController.corpus_model.processed_corpus
+
+    @staticmethod
+    def set_processed_corpus(corpus: List[ProcessedFile]) -> None:
+        CorpusController.corpus_model.processed_corpus.documents = corpus
 
 
 """

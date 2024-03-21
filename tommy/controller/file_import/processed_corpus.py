@@ -1,14 +1,19 @@
-from typing import List, Any
+from dataclasses import dataclass
+from typing import List
+
+from tommy.controller.file_import.processed_file import ProcessedFile
 
 
+@dataclass
 class ProcessedCorpus:
-    documentBows: List[Any] = None
-
-    def __init__(self):
-        pass
+    """
+    The ProcessedCorpus class is currently an iterable of ProcessedFile
+    objects
+    """
+    documents: List[ProcessedFile] = None
 
     def __iter__(self):
-        return iter(self.documentBows)
+        return iter(self.documents)
 
 
 """

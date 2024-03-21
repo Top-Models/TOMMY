@@ -17,15 +17,15 @@ class FileLabel(QLabel, Observer):
 
     clicked = Signal(object)
 
-    def __init__(self, file: Metadata, parent=None) -> None:
+    def __init__(self, file_metadata: Metadata, parent=None) -> None:
         """Method to initialize the FileLabel object"""
-        super().__init__(file.name, parent)
-        self.file = file
+        super().__init__(file_metadata.name, parent)
+        self.file = file_metadata
 
-        if file.title is not None:
-            self.setText(file.title)
+        if file_metadata.title is not None:
+            self.setText(file_metadata.title)
         else:
-            self.setText(file.name)
+            self.setText(file_metadata.name)
 
         self.setStyleSheet(f"font-family: {text_font};"
                            f"font-size: 15px;"

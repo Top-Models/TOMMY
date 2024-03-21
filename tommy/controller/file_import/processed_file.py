@@ -1,13 +1,18 @@
 from dataclasses import dataclass
 from typing import Any
 
+from tommy.controller.file_import.metadata import Metadata
+from tommy.controller.file_import.processed_body import ProcessedBody
+
 
 @dataclass
 class ProcessedFile:
     """
-    Represents the pre-processed contents of a file. The type is probably a bag of words
+    Contains information about a processed file. It contains both a
+    reference to the metadata and a ProcessedBody object
     """
-    body: Any
+    metadata: Metadata
+    body: ProcessedBody
 
 
 """
