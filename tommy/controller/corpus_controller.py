@@ -50,7 +50,8 @@ class CorpusController:
         and all its subdirectories.
 
         :param path: The string of the path to the directory
-        :return: Generator[File, None, None]: A generator yielding File objects
+        :return: Generator[RawFile, None, None]: A generator yielding File
+        objects
         """
         for root, dirs, files in os.walk(path):
             for file in files:
