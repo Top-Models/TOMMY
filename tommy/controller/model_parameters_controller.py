@@ -8,7 +8,7 @@ class ModelParametersController:
     @staticmethod
     def set_model_parameters_model(parameters_model: ModelParametersModel) -> (
             None):
-        ModelParametersModel.model_parameters_model = parameters_model
+        ModelParametersController.parameters_model = parameters_model
 
     @staticmethod
     def set_model_n_topics(n_topics: int) -> None:

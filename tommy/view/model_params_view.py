@@ -8,6 +8,9 @@ from tommy.support.constant_variables import (
     pressed_seco_col_blue, prim_col_red, hover_prim_col_red)
 from tommy.view.observer.observer import Observer
 
+from tommy.controller.model_parameters_controller import (
+    ModelParametersController)
+
 
 class ModelParamsView(QScrollArea, Observer):
     """The ModelParamsDisplay that displays the model settings"""
@@ -76,7 +79,8 @@ class ModelParamsView(QScrollArea, Observer):
         # Add input field
         self.topic_input = QLineEdit()
         self.topic_input.setPlaceholderText("Voer aantal topics in")
-        self.topic_input.setText("5")
+        self.topic_input.setText(
+            str(ModelParametersController.get_model_n_topics()))
         self.topic_input.setStyleSheet(f"border-radius: 5px;"
                                        f"font-size: 14px;"
                                        f"font-family: {text_font};"
