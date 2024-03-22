@@ -6,8 +6,7 @@ from tommy.controller.corpus_controller import CorpusController
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.file_stats_view import FileStatsView
 from tommy.view.observer.observer import Observer
-from tommy.view.stopwords_view import (
-    StopwordsView)
+from tommy.view.stopwords_view import StopwordsView
 from tommy.support.constant_variables import (
     heading_font, prim_col_red,
     hover_prim_col_red)
