@@ -1,3 +1,4 @@
+from tommy.controller.publisher.publisher import Publisher
 from tommy.model.model import Model
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
@@ -12,7 +13,7 @@ from tommy.controller.project_settings_controller import \
 from tommy.controller.save_controller import SaveController
 
 
-class Controller:
+class Controller(Publisher):
     _models: [Model] = [Model()]
     _selected_model: int = 0
 
