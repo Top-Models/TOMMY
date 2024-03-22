@@ -1,4 +1,10 @@
+import os
+
+
 class ProjectSettingsModel:
+    # temporarily set input_folder_path to "Import/csv_files" by default
+    input_folder_path: str = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)), "Import/csv_files")
 
     def __init__(self) -> None:
         pass

@@ -1,9 +1,6 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
-import os
 
-from tommy.support import project_settings
-from tommy.backend.file_import.file_reader import (
-    FileReader)
+from tommy.controller.corpus_controller import CorpusController
 
 
 class ReadInFilesButton(QWidget):
@@ -11,11 +8,10 @@ class ReadInFilesButton(QWidget):
     The ReadInFilesButton class that defines the button to
     read in files.
     """
+
     def __init__(self) -> None:
         """Initialize the button."""
         super().__init__()
-
-        self.file_reader = FileReader()
 
         # Initialize layout
         layout = QVBoxLayout()
@@ -30,14 +26,11 @@ class ReadInFilesButton(QWidget):
 
     def read_files(self) -> None:
         """Read the files with the file reader."""
-        files = self.file_reader.read_files()
+        # this assumes that the ProjectSettingsController already has
+        # the input folder selected
+        fileGenerator = CorpusController.get_raw_bodies()
         # Apply all other functions like preprocessing here
 
-        print(list(files))
-
-
-if __name__ == "__main__":
-    print(globals())
 
 
 """

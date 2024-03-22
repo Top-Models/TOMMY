@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
     QWidget
 )
 
+from tommy.controller.controller import Controller
 from tommy.support.constant_variables import (
     text_font)
 from tommy.view.graph_view import GraphView
@@ -29,6 +30,10 @@ class MainWindow(QMainWindow):
     def __init__(self) -> None:
         """Initialize the main window."""
         super().__init__()
+
+        # Create a Model and let the main Controller
+        # give references of the submodels to the subcontrollers
+        Controller.new_model()
 
         # Initialize window
         self.setWindowTitle("TOMMY")

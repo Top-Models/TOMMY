@@ -3,20 +3,22 @@ from datetime import date
 from dateutil import parser
 from typing import Generator
 
-from tommy.backend.file_import.file import File
+from tommy.controller.file_import.raw_file import RawFile
 
 
 class FileImporterBase(ABC):
     """
     Abstract base class for file importers.
     """
+
     @abstractmethod
-    def load_file(self, path: str) -> Generator[File, None, None]:
+    def load_file(self, path: str) -> Generator[RawFile, None, None]:
         """
         Abstract method to load a file.
 
         :param path: The string path of the file.
-        :return Generator[File, None, None]: A generator yielding File objects.
+        :return: Generator[File, None, None]: A generator yielding File
+        objects.
         """
         pass
 
@@ -26,7 +28,7 @@ class FileImporterBase(ABC):
         Abstract method to check if a file is compatible.
 
         :param path: The path to the file.
-        :return bool: True is compatible, False otherwise.
+        :return: bool: True is compatible, False otherwise.
         """
         pass
 
@@ -35,7 +37,7 @@ class FileImporterBase(ABC):
         Parse the Dutch date string into a date object.
 
         :param file_date: The date string to parse.
-        :return date: The date object .
+        :return: date: The date object .
         """
         parse_info = DutchParseInfo()
         return parser.parse(file_date, parserinfo=parse_info, fuzzy=True,
@@ -46,6 +48,7 @@ class DutchParseInfo(parser.parserinfo):
     """
     Dutch date information to parse dates.
     """
+
     def __init__(self):
         """
         The initialization of the DutchParseInfo object.

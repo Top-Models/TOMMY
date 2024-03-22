@@ -1,8 +1,8 @@
 from typing import List, Generator
 
-from tommy.backend.file_import.file import File
-from tommy.backend.file_import import file_importer_base
-from tommy.backend.file_import import csv_file_importer
+from tommy.controller.file_import import file_importer_base
+from tommy.controller.file_import import csv_file_importer
+from tommy.controller.file_import.raw_file import RawFile
 
 
 class GenericFileImporter:
@@ -10,6 +10,7 @@ class GenericFileImporter:
     The class GenericFileImporter is responsible for importing files using
      FileImporterBase objects
     """
+
     def __init__(self):
         """
         Initialization of a new GenericFileImporter object.
@@ -18,7 +19,7 @@ class GenericFileImporter:
             List)[file_importer_base.FileImporterBase] = [
             csv_file_importer.CsvFileImporter()]
 
-    def import_file(self, path: str) -> Generator[File, None, None]:
+    def import_file(self, path: str) -> Generator[RawFile, None, None]:
         """
         Imports a file from the specified path using compatible importers.
 
