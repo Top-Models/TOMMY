@@ -1,11 +1,11 @@
-from tommy.model.stopwords_model import StopWordsModel
+from tommy.model.stopwords_model import StopwordsModel
 
 
 class PreprocessingController:
-    stopwords_model: StopWordsModel = None
+    stopwords_model: StopwordsModel = None
 
     @staticmethod
-    def set_stopwords_model(stopwords_model: StopWordsModel):
+    def set_stopwords_model(stopwords_model: StopwordsModel):
         PreprocessingController.stopwords_model = stopwords_model
 
 

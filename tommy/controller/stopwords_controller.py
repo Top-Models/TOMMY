@@ -1,13 +1,13 @@
 from tommy.controller.publisher.publisher import Publisher
-from tommy.model.stopwords_model import StopWordsModel
+from tommy.model.stopwords_model import StopwordsModel
 
 
 class StopwordsController(Publisher):
     """A class that handles all stopword related functionality."""
-    stopwords_model: StopWordsModel = None
+    stopwords_model: StopwordsModel = None
 
     @staticmethod
-    def set_stopwords_model(stopwords_model: StopWordsModel):
+    def set_stopwords_model(stopwords_model: StopwordsModel):
         StopwordsController.stopwords_model = stopwords_model
 
     @staticmethod
