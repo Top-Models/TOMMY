@@ -4,7 +4,7 @@ from tommy.support.model_type import ModelType
 
 @dataclass
 class ModelParametersModel:
-    """A class representing the project parameters."""
+    """A class representing the topic modelling parameters."""
     n_topics: int = 3
     model_type: ModelType = ModelType.LDA
 
