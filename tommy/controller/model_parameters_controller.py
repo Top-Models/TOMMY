@@ -1,12 +1,30 @@
 from tommy.model.model_parameters_model import ModelParametersModel
+from tommy.support.model_type import ModelType
 
 
 class ModelParametersController:
-    model_parameters_model: ModelParametersModel = None
+    parameters_model: ModelParametersModel = None
 
     @staticmethod
-    def set_model_parameters_model(parameters_model: ModelParametersModel):
+    def set_model_parameters_model(parameters_model: ModelParametersModel) -> (
+            None):
         ModelParametersModel.model_parameters_model = parameters_model
+
+    @staticmethod
+    def set_model_n_topics(n_topics: int) -> None:
+        ModelParametersController.parameters_model.n_topics = n_topics
+
+    @staticmethod
+    def get_model_n_topics() -> int:
+        return ModelParametersController.parameters_model.n_topics
+
+    @staticmethod
+    def set_model_type(model_type) -> None:
+        ModelParametersController.parameters_model.model_type = model_type
+
+    @staticmethod
+    def get_model_type() -> ModelType:
+        return ModelParametersController.parameters_model.model_type
 
 
 """
