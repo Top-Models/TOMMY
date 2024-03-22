@@ -2,13 +2,38 @@ from tommy.model.project_settings_model import ProjectSettingsModel
 
 
 class ProjectSettingsController:
-    _project_settings_model: ProjectSettingsModel = None
+    project_settings_model: ProjectSettingsModel = None
 
-    def __init__(self) -> None:
-        pass
+    @staticmethod
+    def set_project_settings_model(
+            project_settings_model: ProjectSettingsModel) -> None:
+        """
+        Sets the reference to the project settings model
 
-    def set_model_refs(self, project_settings_model: ProjectSettingsModel):
-        self._project_settings_model = project_settings_model
+        :param project_settings_model: The project settings model
+        :return: None
+        """
+        ProjectSettingsController.project_settings_model = (
+            project_settings_model)
+
+    @staticmethod
+    def set_input_folder_path(path: str) -> None:
+        """
+        Set the input folder in the project settings model
+        :param path: The path to set
+        :return: None
+        """
+        ProjectSettingsController.project_settings_model.input_folder_path = (
+            path)
+
+    @staticmethod
+    def get_input_folder_path() -> str:
+        """
+        Get the input folder from the project settings model
+        :return: str: the path to the input folder
+        """
+        return (ProjectSettingsController.project_settings_model.
+                input_folder_path)
 
 
 """
