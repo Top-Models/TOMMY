@@ -1,15 +1,15 @@
 from tommy.controller.publisher.publisher import Publisher
 from tommy.model.model import Model
-from tommy.controller.model_parameters_controller import \
-    ModelParametersController
+from tommy.controller.model_parameters_controller import (
+    ModelParametersController)
 from tommy.controller.graph_controller import GraphController
-from tommy.controller.topic_modelling_controller import \
-    TopicModellingController
+from tommy.controller.topic_modelling_controller import (
+    TopicModellingController)
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.controller.preprocessing_controller import PreprocessingController
 from tommy.controller.corpus_controller import CorpusController
-from tommy.controller.project_settings_controller import \
-    ProjectSettingsController
+from tommy.controller.project_settings_controller import (
+    ProjectSettingsController)
 from tommy.controller.save_controller import SaveController
 
 
