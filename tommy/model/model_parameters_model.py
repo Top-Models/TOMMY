@@ -1,7 +1,12 @@
-class ModelParametersModel:
+from dataclasses import dataclass
+from tommy.support.model_type import ModelType
 
-    def __init__(self) -> None:
-        pass
+
+@dataclass
+class ModelParametersModel:
+    """A class representing the project parameters."""
+    n_topics: int = 3
+    model_type: ModelType = ModelType.LDA
 
 
 """

@@ -68,8 +68,6 @@ class CorpusController:
         :return: Generator[RawFile]: a generator that iterates over the raw
         file contents and their metadata.
         """
-        print(CorpusController.project_settings_model)
-        print(CorpusController.project_settings_model.input_folder_path)
         return CorpusController._read_files(
             CorpusController.project_settings_model.input_folder_path)
 

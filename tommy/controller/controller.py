@@ -1,4 +1,3 @@
-from tommy.controller.publisher.publisher import Publisher
 from tommy.model.model import Model
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
