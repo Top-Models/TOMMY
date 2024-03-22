@@ -1,10 +1,9 @@
-from PySide6.QtGui import QPalette, Qt
+from PySide6.QtGui import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as
                                                 FigureCanvas)
-from matplotlib.backends.backend_template import FigureCanvasTemplate
 
-from tommy.backend.observer.publisher import Publisher
+from tommy.controller.publisher.publisher import Publisher
 from tommy.view.observer.observer import Observer
 
 import matplotlib.figure
@@ -39,6 +38,9 @@ class GraphView(QWidget, Observer):
         # Clear the layout
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().setParent(None)
+
+        # Set dpi to 100
+        canvas.figure.set_dpi(100)
 
         # Add the canvas to the layout
         self.layout.addWidget(FigureCanvas(canvas.figure))

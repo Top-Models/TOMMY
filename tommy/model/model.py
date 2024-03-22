@@ -1,19 +1,19 @@
 from tommy.model.corpus_model import CorpusModel
 from tommy.model.project_settings_model import ProjectSettingsModel
-from tommy.model.stopwords_model import StopWordsModel
+from tommy.model.stopwords_model import StopwordsModel
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.model.topic_model import TopicModel
 
 
 class Model:
-    stopwords_model: StopWordsModel
+    stopwords_model: StopwordsModel
     model_parameters_model: ModelParametersModel
     project_settings_model: ProjectSettingsModel
     corpus_model: CorpusModel
     topic_model: TopicModel
 
     def __init__(self):
-        self.stopwords_model = StopWordsModel(())
+        self.stopwords_model = StopwordsModel()
         self.model_parameters_model = ModelParametersModel()
         self.project_settings_model = ProjectSettingsModel()
         self.corpus_model = CorpusModel()

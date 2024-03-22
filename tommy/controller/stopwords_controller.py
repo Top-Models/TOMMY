@@ -1,12 +1,25 @@
-from tommy.model.stopwords_model import StopWordsModel
+from tommy.controller.publisher.publisher import Publisher
+from tommy.model.stopwords_model import StopwordsModel
 
 
-class StopwordsController:
-    stopwords_model: StopWordsModel = None
+class StopwordsController(Publisher):
+    """A class that handles all stopword related functionality."""
+    stopwords_model: StopwordsModel = None
 
     @staticmethod
-    def set_stopwords_model(stopwords_model: StopWordsModel):
+    def set_stopwords_model(stopwords_model: StopwordsModel):
         StopwordsController.stopwords_model = stopwords_model
+
+    @staticmethod
+    def update_stopwords(words: list[str]) -> None:
+        """
+        Update the stopwords model with a new list of extra stopwords.
+
+        :param words: The new list of stopwords
+        :return: None
+        """
+
+        StopwordsController.stopwords_model.replace(words)
 
 
 """
