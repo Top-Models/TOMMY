@@ -1,11 +1,10 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
 
-from tommy.backend.file_import.file import File
+from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
-    seco_col_blue,
     heading_font,
-    hover_seco_col_blue, prim_col_red, hover_prim_col_red)
+    prim_col_red, hover_prim_col_red)
 from tommy.view.observer.observer import Observer
 
 
@@ -98,10 +97,10 @@ class FileStatsView(QScrollArea, Observer):
                 else:
                     self.clear_sub_layout(item.layout())
 
-    def display_file_info(self, file: File) -> None:
+    def display_file_info(self, file_metadata: Metadata) -> None:
         """
         Display the file info
-        :param file: The file to view
+        :param file_metadata: The file to view
         :return: None
         """
 
@@ -119,7 +118,7 @@ class FileStatsView(QScrollArea, Observer):
         self.layout.addLayout(vertical_layout)
 
         # Add file name
-        file_name = file.name.split("/")[-1]
+        file_name = file_metadata.name.split("/")[-1]
         file_name_label = QLabel(f"{file_name}")
         file_name_label.setStyleSheet(f"font-size: 18px;"
                                       f"font-family: {heading_font};"
@@ -130,28 +129,28 @@ class FileStatsView(QScrollArea, Observer):
         vertical_layout.addWidget(file_name_label)
 
         # Add file path
-        file_path_label = QLabel(f"Pad: {file.path}")
+        file_path_label = QLabel(f"Pad: {file_metadata.path}")
         file_path_label.setStyleSheet("font-size: 16px;")
         file_path_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(file_path_label)
 
         # Add file format
-        file_format_label = QLabel(f"Formaat: {file.format}")
+        file_format_label = QLabel(f"Formaat: {file_metadata.format}")
         file_format_label.setStyleSheet("font-size: 16px;")
         file_format_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                        Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(file_format_label)
 
         # Add word amount
-        word_amount_label = QLabel(f"Aantal woorden: {file.length}")
+        word_amount_label = QLabel(f"Aantal woorden: {file_metadata.length}")
         word_amount_label.setStyleSheet("font-size: 16px;")
         word_amount_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                        Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(word_amount_label)
 
         # Add file size
-        file_size_label = QLabel(f"Grootte: {file.size}B")
+        file_size_label = QLabel(f"Grootte: {file_metadata.size}B")
         file_size_label.setStyleSheet("font-size: 16px;")
         file_size_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignTop)
