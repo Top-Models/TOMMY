@@ -40,6 +40,9 @@ class GraphView(QWidget, Observer):
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().setParent(None)
 
+        # Set dpi to 100
+        canvas.figure.set_dpi(100)
+
         # Add the canvas to the layout
         self.layout.addWidget(FigureCanvas(canvas.figure))
 
