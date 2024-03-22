@@ -15,9 +15,12 @@ from tommy.support.constant_variables import (
 class ImportedFilesView(QWidget, Observer):
     """The ImportedFileDisplay class that shows the imported files."""
 
-    def __init__(self) -> None:
+    def __init__(self, corpus_controller: CorpusController) -> None:
         """Initialize the ImportedFileDisplay"""
         super().__init__()
+
+        # Set reference to the corpus controller
+        self._corpus_controller = corpus_controller
 
         # Initialize widget properties
         self.setStyleSheet("background-color: rgba(230, 230, 230, 230);")
@@ -87,8 +90,8 @@ class ImportedFilesView(QWidget, Observer):
         Fetch the files from the selected directory
         :return: The list of files
         """
-        CorpusController.extract_and_store_metadata()
-        self.file_container[tab_name] = CorpusController.get_metadata()
+        self._corpus_controller.extract_and_store_metadata()
+        self.file_container[tab_name] = self._corpus_controller.get_metadata()
 
     def display_files(self, tab_name: str) -> None:
         """

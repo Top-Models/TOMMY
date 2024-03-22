@@ -15,9 +15,13 @@ from tommy.controller.model_parameters_controller import (
 class ModelParamsView(QScrollArea, Observer):
     """The ModelParamsDisplay that displays the model settings"""
 
-    def __init__(self) -> None:
+    def __init__(self, model_parameters_controller: ModelParametersController
+                 ) -> None:
         """The initialization ot the ModelParamDisplay."""
         super().__init__()
+
+        # Set reference to the model parameters controller
+        self._model_parameters_controller = model_parameters_controller
 
         # Initialize widget properties
         self.setStyleSheet("background-color: rgba(230, 230, 230, 230);"
@@ -80,7 +84,7 @@ class ModelParamsView(QScrollArea, Observer):
         self.topic_input = QLineEdit()
         self.topic_input.setPlaceholderText("Voer aantal topics in")
         self.topic_input.setText(
-            str(ModelParametersController.get_model_n_topics()))
+            str(self._model_parameters_controller.get_model_n_topics()))
         self.topic_input.setStyleSheet(f"border-radius: 5px;"
                                        f"font-size: 14px;"
                                        f"font-family: {text_font};"

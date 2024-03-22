@@ -1,12 +1,18 @@
 from tommy.model.model import Model
+from typing import List
 
 
 class SaveController:
-    model: Model = None
 
-    @staticmethod
-    def set_model(model: Model):
-        SaveController.model = model
+    def __init__(self) -> None:
+        pass
+
+    def get_models(self) -> List[Model]:
+        """
+        Returns a list of the models in the current save.
+        note: dummy implementation for now that only returns one new model.
+        """
+        return [Model()]
 
 
 """

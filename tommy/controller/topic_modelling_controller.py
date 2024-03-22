@@ -6,13 +6,13 @@ class TopicModellingController:
     model_parameters_model: ModelParametersModel = None
     topic_model: TopicModel = None
 
-    @staticmethod
-    def set_model_parameters_model(parameters_model: ModelParametersModel) -> None:
-        TopicModellingController.model_parameters_model = parameters_model
+    def __init__(self) -> None:
+        pass
 
-    @staticmethod
-    def set_topic_model(topic_model: TopicModel) -> None:
-        TopicModellingController.topic_model = topic_model
+    def set_model_refs(self, parameters_model: ModelParametersModel,
+                       topic_model: TopicModel) -> None:
+        self.model_parameters_model = parameters_model
+        self.topic_model = topic_model
 
 
 """

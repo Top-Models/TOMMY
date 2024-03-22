@@ -9,9 +9,11 @@ class ReadInFilesButton(QWidget):
     read in files.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, corpus_controller: CorpusController) -> None:
         """Initialize the button."""
         super().__init__()
+
+        self._corpus_controller = corpus_controller
 
         # Initialize layout
         layout = QVBoxLayout()
@@ -25,12 +27,14 @@ class ReadInFilesButton(QWidget):
         btn.clicked.connect(self.read_files)
 
     def read_files(self) -> None:
-        """Read the files with the file reader."""
-        # this assumes that the ProjectSettingsController already has
-        # the input folder selected
-        fileGenerator = CorpusController.get_raw_bodies()
+        """
+        Read the files with the file reader assuming that the
+        ProjectSettingsController already has the input folder selected
+        """
+        fileGenerator = self._corpus_controller.get_raw_bodies()
         # Apply all other functions like preprocessing here
-
+        # todo: connect this button to actual functionality,
+        # it does not do anything right now.
 
 
 """

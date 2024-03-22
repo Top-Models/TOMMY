@@ -4,14 +4,15 @@ from tommy.model.stopwords_model import StopwordsModel
 
 class StopwordsController(Publisher):
     """A class that handles all stopword related functionality."""
-    stopwords_model: StopwordsModel = None
+    _stopwords_model: StopwordsModel = None
 
-    @staticmethod
-    def set_stopwords_model(stopwords_model: StopwordsModel):
-        StopwordsController.stopwords_model = stopwords_model
+    def __init__(self) -> None:
+        super().__init__()
 
-    @staticmethod
-    def update_stopwords(words: list[str]) -> None:
+    def set_model_refs(self, stopwords_model: StopwordsModel):
+        self._stopwords_model = stopwords_model
+
+    def update_stopwords(self, words: list[str]) -> None:
         """
         Update the stopwords model with a new list of extra stopwords.
 
@@ -19,7 +20,7 @@ class StopwordsController(Publisher):
         :return: None
         """
 
-        StopwordsController.stopwords_model.replace(words)
+        self._stopwords_model.replace(words)
 
 
 """

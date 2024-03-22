@@ -11,80 +11,93 @@ from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.controller.save_controller import SaveController
 
+from typing import List
+
 
 class Controller:
-    _models: [Model] = []
-    _selected_model: int = -1
+    """The main controller for the tommy that creates all sub-controllers"""
+    _models: List[Model]
+    _selected_model: int
 
-    @staticmethod
-    def select_model(model_index: int):
+    _model_parameters_controller: ModelParametersController
+
+    @property
+    def model_parameters_controller(self) -> ModelParametersController:
+        return self._model_parameters_controller
+
+    _graph_controller: GraphController
+    _topic_modelling_controller: TopicModellingController
+    _stopwords_controller: StopwordsController
+    _preprocessing_controller: PreprocessingController
+    _corpus_controller: CorpusController
+
+    @property
+    def corpus_controller(self) -> CorpusController:
+        return self._corpus_controller
+
+    _project_settings_controller: ProjectSettingsController
+    _save_controller: SaveController
+
+    def __init__(self):
+        self._initialize_components()
+
+        self._models = self._save_controller.get_models()
+        self.select_model(0)
+
+    def _initialize_components(self):
+        """Initialize all sub-components"""
+        self._model_parameters_controller = ModelParametersController()
+        self._graph_controller = GraphController()
+        self._topic_modelling_controller = TopicModellingController()
+        self._stopwords_controller = StopwordsController()
+        self._preprocessing_controller = PreprocessingController()
+        self._corpus_controller = CorpusController()
+        self._project_settings_controller = ProjectSettingsController()
+        self._save_controller = SaveController()
+
+    def select_model(self, model_index: int):
+        """
+        Select a model corresponding to the given index
+        :param model_index: The index of the model to be selected
+        """
         # TODO: input validation
-        Controller._selected_model = model_index
+        self._selected_model = model_index
 
-        ModelParametersController.set_model_parameters_model(
-            Controller._models[model_index].model_parameters_model)
+        self._model_parameters_controller.set_model_refs(
+            self._models[model_index].model_parameters_model)
 
-        GraphController.set_model_parameters_model(
-            Controller._models[model_index].model_parameters_model)
+        self._graph_controller.set_model_refs(
+            self._models[model_index].model_parameters_model)
 
-        TopicModellingController.set_model_parameters_model(
-            Controller._models[model_index].model_parameters_model)
-        TopicModellingController.set_topic_model(
-            Controller._models[model_index].topic_model)
+        self._topic_modelling_controller.set_model_refs(
+            self._models[model_index].model_parameters_model,
+            self._models[model_index].topic_model)
 
-        StopwordsController.set_stopwords_model(
-            Controller._models[model_index].stopwords_model)
+        self._stopwords_controller.set_model_refs(
+            self._models[model_index].stopwords_model)
 
-        PreprocessingController.set_stopwords_model(
-            Controller._models[model_index].stopwords_model)
+        self._preprocessing_controller.set_model_refs(
+            self._models[model_index].stopwords_model)
 
-        CorpusController.set_corpus_model(
-            Controller._models[model_index].corpus_model)
-        CorpusController.set_project_settings_model(
-            Controller._models[model_index].project_settings_model)
+        self._corpus_controller.set_model_refs(
+            self._models[model_index].corpus_model,
+            self._models[model_index].project_settings_model)
 
-        ProjectSettingsController.set_project_settings_model(
-            Controller._models[model_index].project_settings_model)
+        self._project_settings_controller.set_model_refs(
+            self._models[model_index].project_settings_model)
 
-        SaveController.set_model(Controller._models[model_index])
-
-    @staticmethod
-    def new_model():
-        # TODO: doc-strings
-        new_model = Model()
-        Controller._models.append(new_model)
-        Controller._selected_model = len(Controller._models) - 1
-
-        # Set references in sub-controller to sub-models.
-        ModelParametersController.set_model_parameters_model(
-            new_model.model_parameters_model)
-
-        GraphController.set_model_parameters_model(
-            new_model.model_parameters_model)
-
-        TopicModellingController.set_model_parameters_model(
-            new_model.model_parameters_model)
-        TopicModellingController.set_topic_model(new_model.topic_model)
-
-        StopwordsController.set_stopwords_model(new_model.stopwords_model)
-
-        PreprocessingController.set_stopwords_model(new_model.stopwords_model)
-
-        CorpusController.set_corpus_model(new_model.corpus_model)
-        CorpusController.set_project_settings_model(
-            new_model.project_settings_model)
-
-        ProjectSettingsController.set_project_settings_model(
-            new_model.project_settings_model)
-
-        SaveController.set_model(new_model)
-
-    @staticmethod
-    def on_run_topic_modelling():
+    def on_run_topic_modelling(self):
+        """
+        Run the topic modelling algorithm on the currently selected corpus
+        and using the current model parameters
+        """
         # TODO: call pre-processing and Gensim
         pass
 
-    @staticmethod
-    def on_input_folder_selected(input_folder):
-        # TODO: store input folder in model
-        pass
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

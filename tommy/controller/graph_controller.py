@@ -4,9 +4,11 @@ from tommy.model.model_parameters_model import ModelParametersModel
 class GraphController:
     model_parameters_model: ModelParametersModel = None
 
-    @staticmethod
-    def set_model_parameters_model(parameters_model: ModelParametersModel):
-        GraphController.model_parameters_model = parameters_model
+    def __init__(self) -> None:
+        pass
+
+    def set_model_refs(self, parameters_model: ModelParametersModel):
+        self.model_parameters_model = parameters_model
 
 
 """

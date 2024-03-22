@@ -3,28 +3,23 @@ from tommy.support.model_type import ModelType
 
 
 class ModelParametersController:
-    parameters_model: ModelParametersModel = None
+    _parameters_model: ModelParametersModel = None
 
-    @staticmethod
-    def set_model_parameters_model(parameters_model: ModelParametersModel) -> (
-            None):
-        ModelParametersController.parameters_model = parameters_model
+    def set_model_refs(self,
+                       parameters_model: ModelParametersModel) -> None:
+        self._parameters_model = parameters_model
 
-    @staticmethod
-    def set_model_n_topics(n_topics: int) -> None:
-        ModelParametersController.parameters_model.n_topics = n_topics
+    def set_model_n_topics(self, n_topics: int) -> None:
+        self._parameters_model.n_topics = n_topics
 
-    @staticmethod
-    def get_model_n_topics() -> int:
-        return ModelParametersController.parameters_model.n_topics
+    def get_model_n_topics(self) -> int:
+        return self._parameters_model.n_topics
 
-    @staticmethod
-    def set_model_type(model_type) -> None:
-        ModelParametersController.parameters_model.model_type = model_type
+    def set_model_type(self, model_type: ModelType) -> None:
+        self._parameters_model.model_type = model_type
 
-    @staticmethod
-    def get_model_type() -> ModelType:
-        return ModelParametersController.parameters_model.model_type
+    def get_model_type(self) -> ModelType:
+        return self._parameters_model.model_type
 
 
 """
