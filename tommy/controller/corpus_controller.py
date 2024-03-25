@@ -23,6 +23,11 @@ class CorpusController(Observer):
     """
 
     def update_observer(self, publisher: Publisher) -> None:
+        """
+        Updates the metadata when the project settings change
+        :param publisher: unused, the project settings controller
+        :return: None
+        """
         self.extract_and_store_metadata()
 
     _corpus_model: CorpusModel = None
