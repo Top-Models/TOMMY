@@ -9,32 +9,48 @@ from tommy.controller.file_import.metadata import Metadata
 from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.file_import.raw_body import RawBody
 from tommy.controller.file_import.raw_file import RawFile
+from tommy.controller.project_settings_controller import (
+    ProjectSettingsController)
+from tommy.controller.publisher.publisher import Publisher
 from tommy.model.corpus_model import CorpusModel
-from tommy.model.project_settings_model import ProjectSettingsModel
+from tommy.view.observer.observer import Observer
 
 
-class CorpusController:
+class CorpusController(Observer):
     """
     The corpus controller class is responsible for handling interactions with
     the corpus model.
     """
+
+    def update_observer(self, publisher: Publisher) -> None:
+        self.extract_and_store_metadata()
+
     _corpus_model: CorpusModel = None
-    _project_settings_model: ProjectSettingsModel = None
+    _project_settings_controller: ProjectSettingsController = None
     fileParsers: GenericFileImporter = GenericFileImporter()
 
     def __init__(self) -> None:
         pass
 
-    def set_model_refs(self, corpus_model: CorpusModel,
-                       project_settings_model: ProjectSettingsModel) -> None:
+    def set_controller_refs(self,
+                            project_settings_controller:
+                            ProjectSettingsController) -> None:
         """
-        Sets the reference to the corpus model and the project settings model
+        Sets the reference to the project settings controller, 
+        and subscribes to the publisher of project settings
+        :param project_settings_controller: the project settings controller
+        :return: None
+        """
+        self._project_settings_controller = project_settings_controller
+        self._project_settings_controller.add(self)
+
+    def set_model_refs(self, corpus_model: CorpusModel) -> None:
+        """
+        Sets the reference to the corpus model
         :param corpus_model: The corpus model
-        :param project_settings_model: The project settings model
         :return: None
         """
         self._corpus_model = corpus_model
-        self._project_settings_model = project_settings_model
 
     def _read_files(self, path: str) -> Generator[RawFile, None, None]:
         """
@@ -59,8 +75,8 @@ class CorpusController:
         :return: Generator[RawFile]: a generator that iterates over the raw
         file contents and their metadata.
         """
-        return self._read_files(
-            self._project_settings_model.input_folder_path)
+        path = self._project_settings_controller.get_input_folder_path()
+        return self._read_files(path)
 
     def extract_and_store_metadata(self) -> None:
         """
@@ -70,9 +86,9 @@ class CorpusController:
         :return: None
         """
         files = self._read_files_from_input_folder()
-        metadatas = [file.metadata for file in files]
+        metadata = [file.metadata for file in files]
 
-        self._corpus_model.metadatas = metadatas
+        self._corpus_model.metadata = metadata
 
     def get_metadata(self) -> List[Metadata]:
         """
@@ -81,7 +97,7 @@ class CorpusController:
 
         :return: List[Metadata]: The metadata of the files in the corpus
         """
-        return self._corpus_model.metadatas
+        return self._corpus_model.metadata
 
     def get_raw_bodies(self) -> Generator[RawBody, None, None]:
         """

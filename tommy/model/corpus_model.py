@@ -14,7 +14,7 @@ class CorpusModel:
     data is not stored as it wouldn't fit in memory. The processed corpus is
     stored in the ProcessedCorpus class.
     """
-    metadatas: List[Metadata] = None
+    metadata: List[Metadata] = None
     dictionary: Dictionary = None
     processed_corpus: ProcessedCorpus
 

@@ -56,6 +56,9 @@ class Controller:
         self._project_settings_controller = ProjectSettingsController()
         self._save_controller = SaveController()
 
+        self._corpus_controller.set_controller_refs(
+            self._project_settings_controller)
+
     def select_model(self, model_index: int):
         """
         Select a model corresponding to the given index
@@ -81,8 +84,7 @@ class Controller:
             self._models[model_index].stopwords_model)
 
         self._corpus_controller.set_model_refs(
-            self._models[model_index].corpus_model,
-            self._models[model_index].project_settings_model)
+            self._models[model_index].corpus_model)
 
         self._project_settings_controller.set_model_refs(
             self._models[model_index].project_settings_model)
