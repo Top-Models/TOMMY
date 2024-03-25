@@ -30,7 +30,7 @@ def get_preprocessing_data_folder() -> str:
     base_dir = get_base_dir()
     if hasattr(sys, '_MEIPASS'):
         return os.path.join(base_dir, "preprocessing_data")
-    return os.path.join(base_dir, "backend", "preprocessing")
+    return get_standard_input_folder()
 
 
 def get_base_dir() -> str:
