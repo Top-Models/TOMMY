@@ -2,11 +2,13 @@ from tommy.model.project_settings_model import ProjectSettingsModel
 
 
 class ProjectSettingsController:
-    project_settings_model: ProjectSettingsModel = None
+    _project_settings_model: ProjectSettingsModel = None
 
-    @staticmethod
-    def set_project_settings_model(project_settings_model: ProjectSettingsModel):
-        ProjectSettingsController.project_settings_model = project_settings_model
+    def __init__(self) -> None:
+        pass
+
+    def set_model_refs(self, project_settings_model: ProjectSettingsModel):
+        self._project_settings_model = project_settings_model
 
 
 """

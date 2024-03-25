@@ -31,9 +31,8 @@ class MainWindow(QMainWindow):
         """Initialize the main window."""
         super().__init__()
 
-        # Create a Model and let the main Controller
-        # give references of the submodels to the subcontrollers
-        Controller.new_model()
+        # Create the main Controller
+        self._controller: Controller = Controller()
 
         # Initialize window
         self.setWindowTitle("TOMMY")
@@ -45,9 +44,11 @@ class MainWindow(QMainWindow):
 
         # Create widgets
         self.stopwords_view = StopwordsView()
-        self.model_params_view = ModelParamsView()
+        self.model_params_view = ModelParamsView(
+            self._controller.model_parameters_controller)
         self.model_selection_view = ModelSelectionView()
-        self.imported_files_view = ImportedFilesView()
+        self.imported_files_view = ImportedFilesView(
+            self._controller.corpus_controller)
         self.graph_view = GraphView()
         self.plot_navigation_view = PlotNavigationView()
         self.fetched_topics_view = FetchedTopicsView()
@@ -55,7 +56,7 @@ class MainWindow(QMainWindow):
         # TODO: Remove when Connector is implemented
         self.topic_modelling_handler = TopicModellingHandler(
             self.model_selection_view, self.graph_view,
-            self.fetched_topics_view)
+            self.fetched_topics_view, self._controller.corpus_controller)
 
         # Initialize widgets
         self.initialize_widget(self.model_params_view,

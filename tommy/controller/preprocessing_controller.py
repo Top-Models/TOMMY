@@ -2,11 +2,13 @@ from tommy.model.stopwords_model import StopwordsModel
 
 
 class PreprocessingController:
-    stopwords_model: StopwordsModel = None
+    _stopwords_model: StopwordsModel = None
 
-    @staticmethod
-    def set_stopwords_model(stopwords_model: StopwordsModel):
-        PreprocessingController.stopwords_model = stopwords_model
+    def __init__(self) -> None:
+        pass
+
+    def set_model_refs(self, stopwords_model: StopwordsModel):
+        self._stopwords_model = stopwords_model
 
 
 """

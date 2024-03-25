@@ -38,11 +38,13 @@ class TopicModellingHandler:
     def __init__(self,
                  model: ModelSelectionView,
                  graph: GraphView,
-                 fetched_topics: FetchedTopicsView) -> None:
+                 fetched_topics: FetchedTopicsView,
+                 corpus_controller: CorpusController) -> None:
         self.num_topics = 5
         self.model_selection_view = model
         self.graph_view = graph
         self.fetched_topics_view = fetched_topics
+        self._corpus_controller = corpus_controller
 
         # { tab_name, lda_model }
         self.lda_model_container = {}
@@ -95,7 +97,7 @@ class TopicModellingHandler:
 
         # Get text from documents
         # text_from_docs = [document.body for document in documents]
-        text_from_docs = CorpusController.get_raw_bodies()
+        text_from_docs = self._corpus_controller.get_raw_bodies()
 
         # Preprocess documents with additional stopwords exclusion
         # TODO: real preprocessing
