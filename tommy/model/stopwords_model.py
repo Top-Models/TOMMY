@@ -14,7 +14,6 @@ class StopwordsModel:
 
     def __init__(self) -> None:
         """Initializes the stopwords model."""
-
         with open(os.path.join("backend", "preprocessing", "stopwords.txt"),
                   'r') as file:
             file_content = file.read()
@@ -56,8 +55,8 @@ class StopwordsModel:
         """
         Remove one or more extra stopwords.
 
-        :param args: The word(s) to remove from the iterable.
-        :return: None.
+        :param args: The word(s) to remove from the iterable
+        :return: None
         """
         # Only 1 argument and it's a list or tuple.
         if len(args) == 1 and isinstance(args[0], Iterable):
@@ -73,8 +72,8 @@ class StopwordsModel:
         """
         Replace the extra stopwords with a new set of stopwords.
 
-        :param args: The new word(s) to replace the old ones with.
-        :return: None.
+        :param args: The new word(s) to replace the old ones with
+        :return: None
         """
         self._extra_words.clear()
         self.add(args)

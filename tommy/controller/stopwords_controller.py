@@ -7,9 +7,11 @@ class StopwordsController(Publisher):
     _stopwords_model: StopwordsModel = None
 
     def __init__(self) -> None:
+        """Initializes the stopwords controller."""
         super().__init__()
 
     def set_model_refs(self, stopwords_model: StopwordsModel):
+        """Sets the reference to the stopwords model."""
         self._stopwords_model = stopwords_model
 
     def update_stopwords(self, words: list[str]) -> None:
