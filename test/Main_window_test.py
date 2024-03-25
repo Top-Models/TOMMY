@@ -1,8 +1,8 @@
 import pytest
 from PySide6 import QtCore
 from PySide6.QtCore import Qt
-from interactive_topic_modeling.main_window import MainWindow
-from interactive_topic_modeling.support.constant_variables import text_font, heading_font, seco_col_blue, \
+from tommy.main_window import MainWindow
+from tommy.support.constant_variables import text_font, heading_font, seco_col_blue, \
     hover_seco_col_blue
 
 @pytest.fixture

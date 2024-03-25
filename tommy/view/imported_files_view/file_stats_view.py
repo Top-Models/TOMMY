@@ -1,12 +1,12 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
 
-from interactive_topic_modeling.backend.file_import.file import File
-from interactive_topic_modeling.support.constant_variables import (
+from tommy.backend.file_import.file import File
+from tommy.support.constant_variables import (
     seco_col_blue,
     heading_font,
     hover_seco_col_blue, prim_col_red, hover_prim_col_red)
-from interactive_topic_modeling.view.observer.observer import Observer
+from tommy.view.observer.observer import Observer
 
 
 class FileStatsView(QScrollArea, Observer):

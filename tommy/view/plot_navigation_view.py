@@ -1,10 +1,10 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QPushButton, QLabel
 
-from interactive_topic_modeling.backend.observer.publisher import Publisher
-from interactive_topic_modeling.support.constant_variables import \
+from tommy.backend.observer.publisher import Publisher
+from tommy.support.constant_variables import \
     seco_col_blue, hover_seco_col_blue, pressed_seco_col_blue
-from interactive_topic_modeling.view.observer.observer import Observer
+from tommy.view.observer.observer import Observer
 
 
 class PlotNavigationView(QLabel, Observer):

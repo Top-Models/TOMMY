@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
 import os
 
-from interactive_topic_modeling.support import project_settings
-from interactive_topic_modeling.backend.file_import.file_reader import (
+from tommy.support import project_settings
+from tommy.backend.file_import.file_reader import (
     FileReader)
 
 

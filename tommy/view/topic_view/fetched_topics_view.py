@@ -1,8 +1,8 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
-from interactive_topic_modeling.view.observer.observer import Observer
-from interactive_topic_modeling.view.topic_view.topic_entity import (
+from tommy.view.observer.observer import Observer
+from tommy.view.topic_view.topic_entity import (
     TopicEntity)
 
 

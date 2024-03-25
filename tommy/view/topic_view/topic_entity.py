@@ -1,9 +1,9 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
 
-from interactive_topic_modeling.support.constant_variables import (
+from tommy.support.constant_variables import (
     heading_font, text_font, sec_col_purple)
-from interactive_topic_modeling.view.observer.observer import Observer
+from tommy.view.observer.observer import Observer
 
 
 class TopicEntity(QFrame, Observer):

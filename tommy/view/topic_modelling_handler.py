@@ -8,13 +8,13 @@ from matplotlib.backends.backend_template import FigureCanvas
 from matplotlib.ticker import MaxNLocator
 from wordcloud import WordCloud
 
-from interactive_topic_modeling.backend.model.abstract_model import TermLists
-from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
-from interactive_topic_modeling.backend.preprocessing.pipeline import Pipeline
-from interactive_topic_modeling.view.graph_view import GraphView
-from interactive_topic_modeling.view.model_selection_view import \
+from tommy.backend.model.abstract_model import TermLists
+from tommy.backend.model.lda_model import GensimLdaModel
+from tommy.backend.preprocessing.pipeline import Pipeline
+from tommy.view.graph_view import GraphView
+from tommy.view.model_selection_view import \
     ModelSelectionView
-from interactive_topic_modeling.view.topic_view.fetched_topics_view import \
+from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
 
 

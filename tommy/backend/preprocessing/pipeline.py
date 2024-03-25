@@ -3,9 +3,9 @@ import spacy
 from collections.abc import Iterable
 from spacy.tokens import Doc
 
-from interactive_topic_modeling.backend.preprocessing.stopwords import (
+from tommy.backend.preprocessing.stopwords import (
     StopWords)
-from interactive_topic_modeling.support.project_settings import (
+from tommy.support.project_settings import (
     current_project_settings)
 
 

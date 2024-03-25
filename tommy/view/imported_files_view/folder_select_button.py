@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QFileDialog
-from interactive_topic_modeling.support import project_settings
+from tommy.support import project_settings
 import os
 
-from interactive_topic_modeling.view.observer.observer import Observer
+from tommy.view.observer.observer import Observer
 
 
 class FolderSelectButton(QWidget, Observer):

@@ -1,8 +1,8 @@
 from typing import List, Generator
 
-from interactive_topic_modeling.backend.file_import.file import File
-from interactive_topic_modeling.backend.file_import import file_importer_base
-from interactive_topic_modeling.backend.file_import import csv_file_importer
+from tommy.backend.file_import.file import File
+from tommy.backend.file_import import file_importer_base
+from tommy.backend.file_import import csv_file_importer
 
 
 class GenericFileImporter:

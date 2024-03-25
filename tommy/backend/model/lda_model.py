@@ -5,8 +5,8 @@ from gensim.models.ldamodel import LdaModel
 from collections.abc import Iterable
 from typing import Tuple, List
 
-from interactive_topic_modeling.backend.model.abstract_model import (Model,
-                                                                     TermLists)
+from tommy.backend.model.abstract_model import (Model,
+                                                TermLists)
 
 
 class GensimLdaModel(Model):

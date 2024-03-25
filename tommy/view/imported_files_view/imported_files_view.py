@@ -2,20 +2,20 @@ import os
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
 
-from interactive_topic_modeling.backend.file_import.file import File
-from interactive_topic_modeling.backend.file_import.file_reader import (
+from tommy.backend.file_import.file import File
+from tommy.backend.file_import.file_reader import (
     FileReader)
-from interactive_topic_modeling.view.imported_files_view.file_label \
+from tommy.view.imported_files_view.file_label \
     import FileLabel
-from interactive_topic_modeling.view.imported_files_view. \
+from tommy.view.imported_files_view. \
     file_stats_view import FileStatsView
-from interactive_topic_modeling.view.observer.observer import Observer
-from interactive_topic_modeling.view.stopwords_view import (
+from tommy.view.observer.observer import Observer
+from tommy.view.stopwords_view import (
     StopwordsView)
-from interactive_topic_modeling.support.constant_variables import (
+from tommy.support.constant_variables import (
     heading_font, seco_col_blue, hover_seco_col_blue, prim_col_red,
     hover_prim_col_red)
-from interactive_topic_modeling.support.project_settings import (
+from tommy.support.project_settings import (
     current_project_settings)
 
 

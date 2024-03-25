@@ -2,14 +2,14 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import QLabel, QSizePolicy
 
-from interactive_topic_modeling.backend.file_import.file import File
-from interactive_topic_modeling.support.constant_variables import (
+from tommy.backend.file_import.file import File
+from tommy.support.constant_variables import (
     heading_font,
     sec_col_orange,
     hover_seco_col_orange,
     pressed_seco_col_orange,
     text_font)
-from interactive_topic_modeling.view.observer.observer import Observer
+from tommy.view.observer.observer import Observer
 
 
 class FileLabel(QLabel, Observer):

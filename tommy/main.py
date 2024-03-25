@@ -1,7 +1,7 @@
 import sys
 from PySide6.QtWidgets import QApplication
 
-from interactive_topic_modeling.main_window import MainWindow
+from tommy.main_window import MainWindow
 
 """This file is the program entry point."""
 

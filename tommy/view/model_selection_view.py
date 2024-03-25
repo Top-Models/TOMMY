@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import QWidget, QTabWidget
 
-from interactive_topic_modeling.support.constant_variables import \
+from tommy.support.constant_variables import \
     hover_prim_col_red
-from interactive_topic_modeling.view.observer.observer import Observer
+from tommy.view.observer.observer import Observer
 
 
 class ModelSelectionView(QTabWidget, Observer):

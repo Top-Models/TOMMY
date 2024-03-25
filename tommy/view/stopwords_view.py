@@ -2,9 +2,9 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
                                QLineEdit, QHBoxLayout, QPushButton)
 
-from interactive_topic_modeling.support.constant_variables import text_font, \
+from tommy.support.constant_variables import text_font, \
     hover_seco_col_blue, pressed_seco_col_blue, sec_col_purple
-from interactive_topic_modeling.view.observer.observer import Observer
+from tommy.view.observer.observer import Observer
 
 
 class StopwordsView(QScrollArea, Observer):

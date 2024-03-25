@@ -4,8 +4,8 @@ from os import stat
 from typing import List, Generator
 from datetime import date
 
-from interactive_topic_modeling.backend.file_import import file_importer_base
-from interactive_topic_modeling.backend.file_import.file import File
+from tommy.backend.file_import import file_importer_base
+from tommy.backend.file_import.file import File
 
 
 class CsvFileImporter(file_importer_base.FileImporterBase):

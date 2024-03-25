@@ -1,6 +1,6 @@
 import pytest
 from PySide6.QtCore import Qt
-from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
+from tommy.backend.model.lda_model import GensimLdaModel
 
 
 @pytest.fixture

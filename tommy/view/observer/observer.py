@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from interactive_topic_modeling.backend.observer.publisher import Publisher
+from tommy.backend.observer.publisher import Publisher
 
 
 class Observer:

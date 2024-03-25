@@ -4,8 +4,8 @@ from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as
                                                 FigureCanvas)
 from matplotlib.backends.backend_template import FigureCanvasTemplate
 
-from interactive_topic_modeling.backend.observer.publisher import Publisher
-from interactive_topic_modeling.view.observer.observer import Observer
+from tommy.backend.observer.publisher import Publisher
+from tommy.view.observer.observer import Observer
 
 import matplotlib.figure
 

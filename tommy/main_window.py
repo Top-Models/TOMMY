@@ -4,22 +4,22 @@ from PySide6.QtWidgets import (
     QWidget
 )
 
-from interactive_topic_modeling.support.constant_variables import (
+from tommy.support.constant_variables import (
     text_font)
-from interactive_topic_modeling.view.graph_view import GraphView
-from interactive_topic_modeling.view.imported_files_view. \
+from tommy.view.graph_view import GraphView
+from tommy.view.imported_files_view. \
     imported_files_view import ImportedFilesView
-from interactive_topic_modeling.view.model_params_view import (
+from tommy.view.model_params_view import (
     ModelParamsView)
-from interactive_topic_modeling.view.model_selection_view import (
+from tommy.view.model_selection_view import (
     ModelSelectionView)
-from interactive_topic_modeling.view.plot_navigation_view import (
+from tommy.view.plot_navigation_view import (
     PlotNavigationView)
-from interactive_topic_modeling.view.stopwords_view import (
+from tommy.view.stopwords_view import (
     StopwordsView)
-from interactive_topic_modeling.view.topic_modelling_handler import \
+from tommy.view.topic_modelling_handler import \
     TopicModellingHandler
-from interactive_topic_modeling.view.topic_view.fetched_topics_view import \
+from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
 
 
