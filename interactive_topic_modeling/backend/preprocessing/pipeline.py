@@ -58,6 +58,15 @@ class Pipeline:
                 tokens.remove(token)
         return list(tokens)
 
+# Function for quick preprocessing (used when debugging plots for example)
+#     def __call__(self, text: str) -> list[str]:
+#         tokens = set(text.lower().split())
+#         remove_these = [""]
+#         for token in tokens.copy():
+#             if len(token) <= 4 or token in remove_these:
+#                 tokens.remove(token)
+#         return list(tokens)
+
     def process_tokens(self, doc: Doc) -> list[str]:
         # 2, 3, 4 - all steps that require token-level information
         lemmas = [token.lemma_ for token in doc if

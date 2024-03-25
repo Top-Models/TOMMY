@@ -179,6 +179,7 @@ class GraphDisplay(QTabWidget):
             plt.imshow(wordcloud, interpolation='bilinear')
             plt.axis('off')
             plt.tight_layout(pad=0)
+            plt.title("Woordenwolk topic {}".format(i+1))
 
             canvases.append(FigureCanvas(fig))
 
@@ -195,16 +196,17 @@ class GraphDisplay(QTabWidget):
         canvases = []
 
         for i in range(self.num_topics):
-            topic_words, topic_weights = lda_model.show_topic_and_probs(i, 10)
+            topic_words, topic_weights = lda_model.show_topic_and_probs(i, 15)
 
-            # Construct a bar plot
+            # Construct a horizontal bar plot
             fig = plt.figure()
-            plt.bar(topic_words, topic_weights, color="darkblue")
+            plt.barh(topic_words, topic_weights, color="darkblue")
+            plt.gca().invert_yaxis()
 
             # Add margins and labels to the plot
             plt.margins(0.02)
             plt.ylabel("gewicht")
-            plt.title("Woorden met het hoogste gewicht topic {}".format(i))
+            plt.title("Woorden met het hoogste gewicht topic {}".format(i+1))
 
             canvases.append(FigureCanvas(fig))
 
@@ -255,6 +257,10 @@ class GraphDisplay(QTabWidget):
         plt.title("Correlatiematrix topics")
         fig.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
         fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+
+        # Adjust the plot ticks so that they start from 1 instead of 0
+        plt.xticks(np.arange(self.num_topics), np.arange(1, self.num_topics+1))
+        plt.yticks(np.arange(self.num_topics), np.arange(1, self.num_topics + 1))
 
         return FigureCanvas(fig)
 
