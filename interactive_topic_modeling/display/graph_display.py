@@ -4,9 +4,11 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from wordcloud import WordCloud
+import pandas as pd
 from gensim import corpora, models
 import random
 import networkx as nx
+import geonetworkx as gnx
 import math
 
 from interactive_topic_modeling.backend.model.abstract_model import TermLists
@@ -149,6 +151,7 @@ class GraphDisplay(QTabWidget):
         :return: None
         """
         canvases = []
+        canvases.append(self.construct_doc_topic_network_vis2(lda_model))
         canvases.append(self.construct_doc_topic_network_vis(lda_model))
         canvases.append(self.construct_word_topic_network_vis(lda_model))
         canvases.extend(self.construct_word_clouds(lda_model))
@@ -399,22 +402,109 @@ class GraphDisplay(QTabWidget):
         for document_id in range(len(lda_model.bags_of_words)):
             document_topic = (lda_model.get_document_topics(
                               lda_model.bags_of_words[document_id],
-             0.25))
+             0.02))
             for (topic_id, topic_probability) in document_topic:
                 graph.add_edge(topic_id,
-                               document_id,
+                               'document:' + str(document_id),
                                color=colors[topic_id % 20],
                                weight=topic_probability)
 
-        # for topic_id in range(self.num_topics):
-        #     for neighbor in graph[topic_id]:
-        #         if graph.degree[neighbor] < 2
-
         nodes_to_be_removed = [node for node,degree in graph.degree()
-                               if degree < 2]
+                               if degree < 1]
         graph.remove_nodes_from(nodes_to_be_removed)
 
         return graph
+
+    def construct_doc_topic_network_vis2(self, lda_model: GensimLdaModel) \
+            -> FigureCanvas:
+        fig = plt.figure()
+        graph = self.construct_doc_topic_network2(lda_model)
+        edges = graph.edges()
+        nodes = graph.nodes(data="color")
+
+        node_sizes = [150 if node[1] is not None else 8 for node in nodes]
+        node_colors = [node[1] if node[1] is not None else "black"
+                       for node in nodes]
+
+        edge_colors = [graph[u][v]["color"] for (u, v) in edges]
+        edge_width = [(graph[u][v]["weight"]/10) for u, v in edges]
+
+        shortest_path_lengths = dict(
+            nx.shortest_path_length(graph, weight="weight", method="dijkstra"))
+        print(shortest_path_lengths)
+
+        pos = nx.kamada_kawai_layout(graph, dist=shortest_path_lengths)
+
+        nx.draw(graph,
+                pos=pos,
+                width=edge_width,
+                node_size=node_sizes,
+                edge_color=edge_colors,
+                node_color=node_colors)
+
+        return FigureCanvas(fig)
+
+    # TODO fix division by zero bug
+    # TODO fix edge width
+    # TODO fix node size and color
+    # TODO add edge labels with number of docs
+    # TODO make doc topic network scalable
+    # TODO fix double edges bug
+
+    def construct_doc_topic_network2(self, lda_model: GensimLdaModel) \
+            -> nx.Graph:
+        graph = nx.Graph()
+
+        # List of simple, distinct colors from
+        # https://sashamaps.net/docs/resources/20-colors/
+        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+                  '#9a6324', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+                  '#008080', '#e6beff', '#000075', '#fffac8', '#800000',
+                  '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
+
+        for topic_id in range(self.num_topics):
+            graph.add_node(topic_id, color=colors[topic_id%20])
+
+
+        # TODO get accurate data instead of lda_model.bags_of_words
+        for document_id in range(len(lda_model.bags_of_words)):
+            document_topic = (lda_model.get_document_topics(
+                              lda_model.bags_of_words[document_id],
+                0.02))
+            for (topic_id, topic_probability) in document_topic:
+                graph.add_edge(topic_id,
+                               'document:' + str(document_id),
+                               color=colors[topic_id % 20],
+                               weight=topic_probability)
+
+        g = nx.Graph()
+
+        for topic_id in range(self.num_topics):
+            g.add_node(topic_id, color=colors[topic_id%20])
+            lonely_nodes = [node for node in graph.neighbors(topic_id) if graph.degree(node) == 1]
+            g.add_edge(topic_id,
+                       "lonely"+str(topic_id),
+                       color=colors[topic_id % 20],
+                       weight=len(lonely_nodes))
+
+        for i in range(self.num_topics):
+            set1 = set(graph.neighbors(i))
+            for j in range(self.num_topics):
+                if i == j:
+                    continue
+                set2 = set(graph.neighbors(j))
+                intersection = set1.intersection(set2)
+                if len(intersection) != 0:
+                    g.add_edge(i,
+                               "document" + str(10*i + j),
+                               color=colors[i % 20],
+                               weight=len(intersection))
+                    g.add_edge(j,
+                               "document" + str(10*i + j),
+                               color=colors[j % 20],
+                               weight=len(intersection))
+
+        return g
 
     def get_active_tab_name(self) -> str:
         """
