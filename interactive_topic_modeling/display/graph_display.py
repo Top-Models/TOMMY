@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from wordcloud import WordCloud
 import networkx as nx
+import math
 
 from interactive_topic_modeling.backend.model.abstract_model import TermLists
 from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
@@ -412,11 +413,15 @@ class GraphDisplay(QTabWidget):
 
     def construct_doc_topic_network_vis2(self, lda_model: GensimLdaModel) \
             -> FigureCanvas:
+        # Construct a plot and a graph
         fig = plt.figure()
         graph = self.construct_doc_topic_network2(lda_model)
+
+        # Get graph elements
         edges = graph.edges()
         nodes = graph.nodes(data="color")
 
+        # Get drawing function arguments
         node_sizes = [200 if node[1] is not None else 15 for node in nodes]
         node_colors = [node[1] if node[1] is not None else "black"
                        for node in nodes]
@@ -424,11 +429,24 @@ class GraphDisplay(QTabWidget):
         edge_colors = [graph[u][v]["color"] for (u, v) in edges]
         edge_width = [(graph[u][v]["weight"]/10) for u, v in edges]
 
+        # Calculate the shortest paths using dijkstra's algorithm
         shortest_path_lengths = dict(
             nx.shortest_path_length(graph, weight="weight"))
 
+        # Calculate new "shortest" paths to aid visualization
+        for source in shortest_path_lengths:
+            for target in shortest_path_lengths[source]:
+                x = shortest_path_lengths[source][target]
+                if x == 0:
+                    continue
+                shortest_path_lengths[source][target] = (
+                    max(x + 3*math.log(x, 2), 15))
+
+        # Define a custom position using the new "shortest" paths
         pos = nx.kamada_kawai_layout(graph, dist=shortest_path_lengths)
 
+        # Draw the network using the kamada-kawai algorithm to position the
+        # nodes in an aesthetically pleasing way.
         nx.draw(graph,
                 pos=pos,
                 width=edge_width,
@@ -436,11 +454,18 @@ class GraphDisplay(QTabWidget):
                 edge_color=edge_colors,
                 node_color=node_colors)
 
+        # Add labels to the topic nodes
+        labels = {}
+        for topic_id in range(self.num_topics):
+            labels[topic_id] = topic_id+1
+
+        nx.draw_networkx_labels(graph, pos, labels=labels)
+
         return FigureCanvas(fig)
 
     # TODO fix division by zero bug
     # TODO fix edge width
-    # TODO fix node size
+    # fix node size
     # TODO add edge labels with number of docs
     # TODO make doc topic network scalable
     # fix double edges bug
@@ -456,6 +481,7 @@ class GraphDisplay(QTabWidget):
                   '#008080', '#e6beff', '#000075', '#fffac8', '#800000',
                   '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
 
+        # Add topic nodes to the graph
         for topic_id in range(self.num_topics):
             graph.add_node(topic_id, color=colors[topic_id%20])
 
@@ -464,7 +490,7 @@ class GraphDisplay(QTabWidget):
         for document_id in range(len(lda_model.bags_of_words)):
             document_topic = (lda_model.get_document_topics(
                               lda_model.bags_of_words[document_id],
-                0.02))
+                0.05))
             for (topic_id, topic_probability) in document_topic:
                 graph.add_edge(topic_id,
                                'document:' + str(document_id),
