@@ -4,12 +4,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from wordcloud import WordCloud
-import pandas as pd
-from gensim import corpora, models
-import random
 import networkx as nx
-import geonetworkx as gnx
-import math
 
 from interactive_topic_modeling.backend.model.abstract_model import TermLists
 from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
@@ -422,7 +417,7 @@ class GraphDisplay(QTabWidget):
         edges = graph.edges()
         nodes = graph.nodes(data="color")
 
-        node_sizes = [150 if node[1] is not None else 8 for node in nodes]
+        node_sizes = [200 if node[1] is not None else 15 for node in nodes]
         node_colors = [node[1] if node[1] is not None else "black"
                        for node in nodes]
 
@@ -430,8 +425,7 @@ class GraphDisplay(QTabWidget):
         edge_width = [(graph[u][v]["weight"]/10) for u, v in edges]
 
         shortest_path_lengths = dict(
-            nx.shortest_path_length(graph, weight="weight", method="dijkstra"))
-        print(shortest_path_lengths)
+            nx.shortest_path_length(graph, weight="weight"))
 
         pos = nx.kamada_kawai_layout(graph, dist=shortest_path_lengths)
 
@@ -446,10 +440,10 @@ class GraphDisplay(QTabWidget):
 
     # TODO fix division by zero bug
     # TODO fix edge width
-    # TODO fix node size and color
+    # TODO fix node size
     # TODO add edge labels with number of docs
     # TODO make doc topic network scalable
-    # TODO fix double edges bug
+    # fix double edges bug
 
     def construct_doc_topic_network2(self, lda_model: GensimLdaModel) \
             -> nx.Graph:
@@ -488,10 +482,10 @@ class GraphDisplay(QTabWidget):
                        weight=len(lonely_nodes))
 
         for i in range(self.num_topics):
-            set1 = set(graph.neighbors(i))
             for j in range(self.num_topics):
-                if i == j:
+                if i >= j:
                     continue
+                set1 = set(graph.neighbors(i))
                 set2 = set(graph.neighbors(j))
                 intersection = set1.intersection(set2)
                 if len(intersection) != 0:
