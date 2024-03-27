@@ -12,7 +12,7 @@ from tommy.main_window import MainWindow
 app = QApplication(sys.argv)
 
 # Set window icon
-icon_path = os.path.abspath("../assets/tommy.png")
+icon_path = os.path.abspath("../assets/tommy.ico")
 app.setWindowIcon(QIcon(icon_path))
 
 # Set application name
