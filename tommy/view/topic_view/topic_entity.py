@@ -38,6 +38,21 @@ class TopicEntity(QFrame):
 
         # Adding words horizontally
         horizontal_layout = QHBoxLayout()
+        self.add_words(horizontal_layout, topic_words)
+
+        # Add remaining widgets if any
+        if horizontal_layout.count() > 0:
+            self.word_layout.addLayout(horizontal_layout)
+
+    def add_words(self,
+                  horizontal_layout: QHBoxLayout,
+                  topic_words: list[str]) -> None:
+        """
+        Add words to the layout
+        :param horizontal_layout: The layout to add the words
+        :param topic_words: Topic words to add
+        :return: None
+        """
         for i, word in enumerate(topic_words):
             cleaned_word = word.replace('"', ' ')
             word_label = QLabel(cleaned_word, self)
@@ -60,10 +75,6 @@ class TopicEntity(QFrame):
             if (i + 1) % 2 == 0 or len(word) >= 8:
                 self.word_layout.addLayout(horizontal_layout)
                 horizontal_layout = QHBoxLayout()
-
-        # Add remaining widgets if any
-        if horizontal_layout.count() > 0:
-            self.word_layout.addLayout(horizontal_layout)
 
     def on_word_clicked(self, word: str):
         """

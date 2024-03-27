@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
+from tommy.support.constant_variables import sec_col_orange
 from tommy.view.observer.observer import Observer
 from tommy.view.topic_view.topic_entity import (
     TopicEntity)
@@ -117,7 +118,7 @@ class FetchedTopicsView(QScrollArea, Observer):
             topic_entity = self.layout.itemAt(i).widget()
             if isinstance(topic_entity, TopicEntity):
                 topic_entity.change_word_style(word,
-                                               "yellow",
+                                               sec_col_orange,
                                                "black")
 
     def update_observer(self, publisher) -> None:
