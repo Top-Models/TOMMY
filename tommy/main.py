@@ -1,15 +1,26 @@
 import os
 import sys
-
+import platform
+import ctypes
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
-
 from tommy.main_window import MainWindow
 
 """This file is the program entry point."""
 
+
+def set_app_user_model_id():
+    if platform.system() == 'Windows':
+        try:
+            app_id = 'top-models.tommy.tommy.1'
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
+        except (ImportError, AttributeError):
+            print("Failed to set AppUserModelID.")
+
+
 # Program entry point
 app = QApplication(sys.argv)
+set_app_user_model_id()
 
 # Set window icon
 icon_path = os.path.abspath("../assets/tommy.ico")
@@ -23,7 +34,7 @@ window = MainWindow()
 window.show()
 
 # Execute the application
-app.exec()
+sys.exit(app.exec())
 
 """
 This program has been developed by students from the bachelor Computer Science
