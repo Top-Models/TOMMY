@@ -7,11 +7,13 @@ class ProjectSettingsController(Publisher):
 
     def set_input_folder_path(self, path: str) -> None:
         """
-        Set the input folder in the project settings model
+        Set the input folder in the project settings model and notify
+        observers of the change to the input folder
         :param path: The path to set
         :return: None
         """
         self._project_settings_model.input_folder_path = path
+        self.notify()
 
     def get_input_folder_path(self) -> str:
         """
@@ -34,7 +36,6 @@ class ProjectSettingsController(Publisher):
         :return: None
         """
         self._project_settings_model = project_settings_model
-        self.notify()
 
 
 """
