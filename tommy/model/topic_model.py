@@ -1,6 +1,11 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class TopicModel:
-    def __init__(self):
-        pass
+    """dataclass that holds the data and objects necessary to run a topic
+    modelling algorithm"""
+    model: dict = None
 
 
 """

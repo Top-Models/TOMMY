@@ -20,8 +20,8 @@ from tommy.view.plot_navigation_view import (
     PlotNavigationView)
 from tommy.view.stopwords_view import (
     StopwordsView)
-from tommy.view.topic_modelling_handler import TopicModellingHandler
-from tommy.view.topic_view.fetched_topics_view import FetchedTopicsView
+from tommy.view.topic_view.fetched_topics_view import \
+    FetchedTopicsView
 
 
 class MainWindow(QMainWindow):
@@ -43,20 +43,21 @@ class MainWindow(QMainWindow):
                            "border: none;")
 
         # Create widgets
-        self.stopwords_view = StopwordsView()
-        self.model_params_view = ModelParamsView(
-            self._controller.model_parameters_controller)
+        # self.stopwords_view = StopwordsView(
+        #     self._controller.stopwords_controller)
         self.model_selection_view = ModelSelectionView()
         self.imported_files_view = ImportedFilesView(
-            self._controller.corpus_controller)
-        self.graph_view = GraphView()
-        self.plot_navigation_view = PlotNavigationView()
-        self.fetched_topics_view = FetchedTopicsView()
-
-        # TODO: Remove when Connector is implemented
-        self.topic_modelling_handler = TopicModellingHandler(
-            self.model_selection_view, self.graph_view,
-            self.fetched_topics_view, self._controller.corpus_controller)
+            self._controller.corpus_controller,
+            self._controller.stopwords_controller)
+        self.model_params_view = ModelParamsView(
+            self._controller.model_parameters_controller,
+            self._controller,
+            self.imported_files_view.stopwords_display)
+        self.graph_view = GraphView(self._controller.graph_controller)
+        self.plot_navigation_view = PlotNavigationView(
+            self._controller.graph_controller)
+        self.fetched_topics_view = FetchedTopicsView(
+            self._controller.graph_controller)
 
         # Initialize widgets
         self.initialize_widget(self.model_params_view,
@@ -97,50 +98,6 @@ class MainWindow(QMainWindow):
         widget.show()
 
     # TODO: Extract method when Connector is implemented
-    def on_next_plot_clicked(self) -> None:
-        """
-        Event handler for when the next plot button is clicked.
-
-        :return: None
-        """
-        # Get plot to display
-        active_tab_name = self.model_selection_view.get_active_tab_name()
-
-        # Get the next plot index
-        self.topic_modelling_handler.plot_index[active_tab_name] += 1
-        self.topic_modelling_handler.plot_index[active_tab_name] %= len(
-            self.topic_modelling_handler.plots_container[active_tab_name])
-
-        # Get the canvas from the plots container
-        canvas = self.topic_modelling_handler.plots_container[active_tab_name][
-            self.topic_modelling_handler.plot_index[active_tab_name]]
-
-        # Display the plot
-        self.graph_view.display_plot(canvas)
-
-    # TODO: Extract method when Connector is implemented
-    def on_previous_plot_clicked(self) -> None:
-        """
-        Event handler for when the previous plot button is clicked.
-
-        :return: None
-        """
-        # Get plot to display
-        active_tab_name = self.model_selection_view.get_active_tab_name()
-
-        # Get the previous plot index
-        self.topic_modelling_handler.plot_index[active_tab_name] -= 1
-        self.topic_modelling_handler.plot_index[active_tab_name] %= len(
-            self.topic_modelling_handler.plots_container[active_tab_name])
-
-        # Get the canvas from the plots container
-        canvas = self.topic_modelling_handler.plots_container[active_tab_name][
-            self.topic_modelling_handler.plot_index[active_tab_name]]
-
-        # Display the plot
-        self.graph_view.display_plot(canvas)
-
-    # TODO: Extract method when Connector is implemented
     def display_correct_initial_files(self) -> None:
         """
         Display the correct initial files in the main window.
@@ -170,15 +127,6 @@ class MainWindow(QMainWindow):
         :return: None
         """
 
-        # Next plot button
-        self.plot_navigation_view.next_plot_button.clicked.connect(
-            self.on_next_plot_clicked)
-
-        # Remove when Connector is implemented
-        # Previous plot button
-        self.plot_navigation_view.previous_plot_button.clicked.connect(
-            self.on_previous_plot_clicked)
-
         # Connecting the tabBarClicked signal to a method in
         # ImportedFilesDisplay
         self.model_selection_view.tabBarClicked.connect(
@@ -191,31 +139,6 @@ class MainWindow(QMainWindow):
         self.model_selection_view.tabBarClicked.connect(
             lambda tab_index: self.imported_files_view.file_stats_display.
             display_no_file_selected()
-        )
-
-        # Connecting the tabBarClicked signal to a method in
-        # FetchedTopicsView
-        self.model_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.fetched_topics_view.display_topics(
-                self.model_selection_view.tabText(tab_index))
-        )
-
-        # Connecting the tabBarClicked signal to a method in GraphView
-        self.model_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.graph_view.display_plot(
-                self.topic_modelling_handler.plots_container[
-                    self.model_selection_view.tabText(tab_index)][0])
-        )
-
-        # Connecting the apply button to the graph view
-        self.model_params_view.apply_button.clicked.connect(
-            lambda: self.topic_modelling_handler.apply_topic_modelling(
-                self.imported_files_view.file_container[
-                    self.model_selection_view.get_active_tab_name()],
-                self.model_params_view.fetch_topic_num(),
-                self.imported_files_view.stopwords_display.
-                additional_stopwords
-            )
         )
 
 

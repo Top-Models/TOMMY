@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
                                QWidget, QPushButton)
 
+from tommy.controller.controller import Controller
 from tommy.controller.publisher.publisher import Publisher
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
@@ -10,18 +11,23 @@ from tommy.view.observer.observer import Observer
 
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
+from tommy.view.stopwords_view import StopwordsView
 
 
 class ModelParamsView(QScrollArea, Observer):
     """The ModelParamsDisplay that displays the model settings"""
 
-    def __init__(self, model_parameters_controller: ModelParametersController
+    def __init__(self, model_parameters_controller: ModelParametersController,
+                 controller: Controller,
+                 stopwords_view: StopwordsView
                  ) -> None:
         """The initialization ot the ModelParamDisplay."""
         super().__init__()
 
         # Set reference to the model parameters controller
         self._model_parameters_controller = model_parameters_controller
+        self._controller = controller
+        self._stopwords_view = stopwords_view
 
         # Initialize widget properties
         self.setStyleSheet("background-color: rgba(230, 230, 230, 230);"
@@ -142,6 +148,8 @@ class ModelParamsView(QScrollArea, Observer):
             """)
         self.button_layout.addWidget(self.apply_button,
                                      alignment=Qt.AlignBottom)
+        self.apply_button.clicked.connect(
+            self.apply_button_clicked_event)
 
     def fetch_topic_num(self) -> int:
         """
@@ -157,12 +165,15 @@ class ModelParamsView(QScrollArea, Observer):
         """
         return self.fetch_topic_num()
 
-    def apply_button_clicked_event(self) -> NotImplementedError:
+    def apply_button_clicked_event(self) -> None:
         """
         The event when the apply button is clicked.
         :return: None
         """
-        return NotImplementedError()
+        # todo: remove these additional stopwords as parameters once stopwords
+        # controller is finished
+        self._controller.on_run_topic_modelling(
+            self._stopwords_view.additional_stopwords)
 
     def update_observer(self, publisher: Publisher) -> None:
         """

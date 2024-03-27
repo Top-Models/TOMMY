@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
 
 from tommy.controller.corpus_controller import CorpusController
+from tommy.controller.stopwords_controller import StopwordsController
 
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.file_stats_view import FileStatsView
@@ -15,7 +16,8 @@ from tommy.support.constant_variables import (
 class ImportedFilesView(QWidget, Observer):
     """The ImportedFileDisplay class that shows the imported files."""
 
-    def __init__(self, corpus_controller: CorpusController) -> None:
+    def __init__(self, corpus_controller: CorpusController,
+                 stopwords_model: StopwordsController) -> None:
         """Initialize the ImportedFileDisplay"""
         super().__init__()
 
@@ -50,7 +52,7 @@ class ImportedFilesView(QWidget, Observer):
         self.layout.addWidget(self.scroll_area)
 
         # Initialize widgets
-        self.stopwords_display = StopwordsView()
+        self.stopwords_display = StopwordsView(stopwords_model)
         self.file_stats_display = FileStatsView()
 
         # { tab_name, files }

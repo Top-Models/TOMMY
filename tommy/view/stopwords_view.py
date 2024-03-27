@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
                                QLineEdit, QHBoxLayout, QPushButton)
 
+from tommy.controller.stopwords_controller import StopwordsController
 from tommy.support.constant_variables import text_font, \
     hover_seco_col_blue, pressed_seco_col_blue
 from tommy.view.observer.observer import Observer
@@ -9,9 +10,13 @@ from tommy.view.observer.observer import Observer
 
 class StopwordsView(QScrollArea, Observer):
     """The StopWordsDisplay area to view all stopwords."""
-    def __init__(self) -> None:
+    def __init__(self, stopwords_controller: StopwordsController) -> None:
         """The initialization of the StopwordsDisplay."""
         super().__init__()
+
+        # Set reference to the controller
+        self._stopwords_controller = stopwords_controller
+        # todo: use this controller, when stopwords_controller is finished
 
         # Initialize widget properties
         self.setStyleSheet("background-color: white;")
