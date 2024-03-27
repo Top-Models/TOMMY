@@ -424,6 +424,8 @@ class GraphDisplay(QTabWidget):
         edges = graph.edges()
         nodes = graph.nodes(data="color")
 
+        scaling_factor = self.get_scaling_doc_topic(graph)
+
         # Get drawing function arguments
         node_sizes = []
         for node in nodes:
@@ -433,14 +435,13 @@ class GraphDisplay(QTabWidget):
             # Give doc_set nodes a scaling size
             else:
                 first_neighbor = list(graph.neighbors(node[0]))[0]
-                node_sizes.append(graph[node[0]][first_neighbor]["weight"])
-            print(node[0])
+                node_sizes.append(graph[node[0]][first_neighbor]["weight"]*scaling_factor*10)
 
         node_colors = [node[1] if node[1] is not None else "black"
                        for node in nodes]
 
         edge_colors = [graph[u][v]["color"] for (u, v) in edges]
-        edge_width = [(graph[u][v]["weight"])/11
+        edge_width = [(graph[u][v]["weight"])*scaling_factor
                       for u, v in edges]
 
         # Calculate the shortest paths using dijkstra's algorithm
