@@ -1,3 +1,5 @@
+import os
+
 from PySide6.QtCore import QSize
 from PySide6.QtWidgets import (
     QMainWindow,
@@ -8,8 +10,8 @@ from tommy.controller.controller import Controller
 from tommy.support.constant_variables import (
     text_font)
 from tommy.view.graph_view import GraphView
-from tommy.view.imported_files_view. \
-    imported_files_view import ImportedFilesView
+from tommy.view.imported_files_view.imported_files_view import (
+    ImportedFilesView)
 from tommy.view.model_params_view import (
     ModelParamsView)
 from tommy.view.model_selection_view import (
@@ -18,10 +20,8 @@ from tommy.view.plot_navigation_view import (
     PlotNavigationView)
 from tommy.view.stopwords_view import (
     StopwordsView)
-from tommy.view.topic_modelling_handler import \
-    TopicModellingHandler
-from tommy.view.topic_view.fetched_topics_view import \
-    FetchedTopicsView
+from tommy.view.topic_modelling_handler import TopicModellingHandler
+from tommy.view.topic_view.fetched_topics_view import FetchedTopicsView
 
 
 class MainWindow(QMainWindow):
@@ -144,13 +144,22 @@ class MainWindow(QMainWindow):
     def display_correct_initial_files(self) -> None:
         """
         Display the correct initial files in the main window.
-
+        Setting the input folder path in the project settings will
+        automatically notify the corpus model to extract the metadata from
+        the files. Once the metadata is extracted, the imported files view
+        will automatically get updated.
         :return: None
         """
-        self.imported_files_view.fetch_files(
-            self.model_selection_view.get_active_tab_name())
-        self.imported_files_view.display_files(
-            self.model_selection_view.get_active_tab_name())
+
+        # TODO: the default input folder path is currently hardcoded in
+        #  project_settings_model, rethink whether it should be hardcoded or
+        #  be loaded from a project instead
+        # get and immediately reset the input folder path to cause the
+        # project settings controller to notify its observers
+        path = (self._controller.project_settings_controller
+                .get_input_folder_path())
+        self._controller.project_settings_controller.set_input_folder_path(
+            path)
 
     # TODO: Extract method when Connector is implemented
     # Some of the event handlers can be used to update observers

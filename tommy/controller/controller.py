@@ -36,6 +36,10 @@ class Controller:
     def corpus_controller(self) -> CorpusController:
         return self._corpus_controller
 
+    @property
+    def project_settings_controller(self) -> ProjectSettingsController:
+        return self._project_settings_controller
+
     _project_settings_controller: ProjectSettingsController
     _save_controller: SaveController
 

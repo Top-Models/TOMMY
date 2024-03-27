@@ -21,6 +21,7 @@ class ImportedFilesView(QWidget, Observer):
 
         # Set reference to the corpus controller
         self._corpus_controller = corpus_controller
+        corpus_controller.add(self)
 
         # Initialize widget properties
         self.setStyleSheet("background-color: rgba(230, 230, 230, 230);")
@@ -87,10 +88,10 @@ class ImportedFilesView(QWidget, Observer):
 
     def fetch_files(self, tab_name: str) -> None:
         """
-        Fetch the files from the selected directory
-        :return: The list of files
+        Fetch the metadata from the selected directory and store it in
+        file_container
+        :return: None
         """
-        self._corpus_controller.extract_and_store_metadata()
         self.file_container[tab_name] = self._corpus_controller.get_metadata()
 
     def display_files(self, tab_name: str) -> None:
@@ -146,11 +147,16 @@ class ImportedFilesView(QWidget, Observer):
 
     def update_observer(self, publisher) -> None:
         """
-        Update the observer.
+        Update the observer. This fetches and displays the files when the
+        metadata is updated.
         :param publisher: The publisher that is being observed
         :return: None
         """
-        pass
+        # TODO: when the implementation of tabs is updated, it should no longer
+        #  hard-code the tab name
+        self.fetch_files("lda_model")
+        self.display_files("lda_model")
+        print("fetched and displayed files")
 
 
 """

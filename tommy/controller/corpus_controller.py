@@ -16,7 +16,7 @@ from tommy.model.corpus_model import CorpusModel
 from tommy.view.observer.observer import Observer
 
 
-class CorpusController(Observer):
+class CorpusController(Observer, Publisher):
     """
     The corpus controller class is responsible for handling interactions with
     the corpus model.
@@ -36,9 +36,9 @@ class CorpusController(Observer):
 
     def __init__(self) -> None:
         """
-        Initialize corpus controller
+        Initialize corpus controller and publisher
         """
-        pass
+        super().__init__()
 
     def set_controller_refs(self,
                             project_settings_controller:
@@ -89,7 +89,8 @@ class CorpusController(Observer):
     def extract_and_store_metadata(self) -> None:
         """
         Gets the metadata from all files in the directory specified by the
-        project settings and stores it in the corpus model.
+        project settings and stores it in the corpus model and notifies its
+        subscribers of the change in metadata
 
         :return: None
         """
@@ -97,6 +98,8 @@ class CorpusController(Observer):
         metadata = [file.metadata for file in files]
 
         self._corpus_model.metadata = metadata
+
+        self.notify()
 
     def get_metadata(self) -> list[Metadata]:
         """
