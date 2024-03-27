@@ -425,7 +425,14 @@ class GraphDisplay(QTabWidget):
         nodes = graph.nodes(data="color")
 
         # Get drawing function arguments
-        node_sizes = [200 if node[1] is not None else 15 for node in nodes]
+        node_sizes = []
+        for node in nodes:
+            if node[1] is not None:
+                node_sizes.append(200)
+            else:
+                first_neighbor = list(graph.neighbors(node[0]))[0]
+                node_sizes.append(graph[node[0]][first_neighbor]["weight"])
+
         node_colors = [node[1] if node[1] is not None else "black"
                        for node in nodes]
 
@@ -515,11 +522,11 @@ class GraphDisplay(QTabWidget):
                 intersection = set1.intersection(set2)
                 if len(intersection) != 0:
                     graph.add_edge(i,
-                                   "doc_set" + str(10*i + j),
+                                   "doc_set_" + str(10*i + j),
                                    color=colors[i % 20],
                                    weight=len(intersection))
                     graph.add_edge(j,
-                                   "doc_set" + str(10*i + j),
+                                   "doc_set_" + str(10*i + j),
                                    color=colors[j % 20],
                                    weight=len(intersection))
 
