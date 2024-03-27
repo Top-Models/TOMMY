@@ -43,11 +43,12 @@ class FetchedTopicsView(QScrollArea, Observer):
         # Set default tab
         self.display_topics("lda_model")
 
-    def add_topic(self, tab_name: str, topic_name: str,
+    def add_topic(self,
+                  tab_name: str,
+                  topic_name: str,
                   topic_words: list[str]) -> None:
         """
-        Add a new topic to the view.
-
+        Add a new topic to the display
         :param tab_name: Name of the tab to add the topic to
         :param topic_name: Name of the topic
         :param topic_words: List of words in the topic
@@ -61,18 +62,19 @@ class FetchedTopicsView(QScrollArea, Observer):
         # Add topic to tab
         self.topic_container[tab_name].append((topic_name, topic_words))
 
-        # Add topic to view
+        # Add topic to display
         topic_entity = TopicEntity(topic_name, topic_words)
+        topic_entity.wordClicked.connect(self.on_word_clicked)
         self.layout.addWidget(topic_entity)
 
     def display_topics(self, tab_name: str) -> None:
         """
         Display topics in the given tab
-
-        :param tab_name: Name of the tab to view
+        :param tab_name: Name of the tab to display
         :return: None
         """
-        # Clear current view
+
+        # Clear current display
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().deleteLater()
 
@@ -80,14 +82,16 @@ class FetchedTopicsView(QScrollArea, Observer):
         if tab_name not in self.topic_container:
             return
 
-        # Add topics to view
+        # Add topics to display
         for topic_name, topic_words in self.topic_container[tab_name]:
             topic_entity = TopicEntity(topic_name, topic_words)
+            topic_entity.wordClicked.connect(self.on_word_clicked)
+
             self.layout.addWidget(topic_entity)
 
     def remove_tab_from_container(self, tab_name: str) -> None:
         """
-        Remove tab from topic container.
+        Remove tab from topic container
         :param tab_name: Name of the tab to remove
         :return: None
         """
@@ -95,13 +99,26 @@ class FetchedTopicsView(QScrollArea, Observer):
 
     def clear_topics(self) -> None:
         """
-        Clear the topics from the view.
-
+        Clear the topics from the display
         :return: None
         """
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().deleteLater()
         self.topic_container = {}
+
+    def on_word_clicked(self, word: str):
+        """
+        Event handler for when a word is clicked
+
+        :param word: The word that was clicked
+        :return: None
+        """
+        for i in range(self.layout.count()):
+            topic_entity = self.layout.itemAt(i).widget()
+            if isinstance(topic_entity, TopicEntity):
+                topic_entity.change_word_style(word,
+                                               "yellow",
+                                               "black")
 
     def update_observer(self, publisher) -> None:
         """
