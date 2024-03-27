@@ -18,6 +18,11 @@ class CorpusModel:
     processed_corpus: ProcessedCorpus
 
     def __init__(self):
+        """
+        Initialize the corpus model and create an empty instance of the
+        ProcessedCorpus so files can be added to the processed corpus after
+        pre-processing
+        """
         self.processed_corpus = ProcessedCorpus()
 
 

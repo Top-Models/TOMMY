@@ -16,11 +16,14 @@ class ProjectSettingsController(Publisher):
     def get_input_folder_path(self) -> str:
         """
         Get the input folder from the project settings model
-        :return: str: the path to the input folder
+        :return: The path to the input folder
         """
         return self._project_settings_model.input_folder_path
 
     def __init__(self) -> None:
+        """
+        Initialize the publisher
+        """
         super().__init__()
 
     def set_model_refs(self, project_settings_model: ProjectSettingsModel):

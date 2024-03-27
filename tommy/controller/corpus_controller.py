@@ -35,6 +35,9 @@ class CorpusController(Observer):
     fileParsers: GenericFileImporter = GenericFileImporter()
 
     def __init__(self) -> None:
+        """
+        Initialize corpus controller
+        """
         pass
 
     def set_controller_refs(self,
@@ -63,7 +66,7 @@ class CorpusController(Observer):
         and all its subdirectories.
 
         :param path: The string of the path to the directory
-        :return: Generator[RawFile, None, None]: A generator yielding File
+        :return: A generator yielding File
         objects
         """
         for root, dirs, files in os.walk(path):
@@ -77,7 +80,7 @@ class CorpusController(Observer):
         Private method to read all files in the folder specified in the
         project settings model
 
-        :return: Generator[RawFile]: a generator that iterates over the raw
+        :return: A generator that iterates over the raw
         file contents and their metadata.
         """
         path = self._project_settings_controller.get_input_folder_path()
@@ -100,7 +103,7 @@ class CorpusController(Observer):
         Gets the metadata from all files in the corpus model. This method
         assumes that extract_and_store_metadata has already been called.
 
-        :return: List[Metadata]: The metadata of the files in the corpus
+        :return: The metadata of the files in the corpus
         """
         return self._corpus_model.metadata
 
@@ -109,8 +112,8 @@ class CorpusController(Observer):
         Get a generator that reads all the raw file contents from the input
         folder
 
-        :return: Generator[RawBody]: a generator for just the contents of
-        the raw corpus, but without the metadata
+        :return: A generator for just the contents of the raw corpus,
+        but without the metadata
         """
         files = self._read_files_from_input_folder()
         return (file.body for file in files)
@@ -120,8 +123,7 @@ class CorpusController(Observer):
         Get an iterable of the processed corpus. Only works after
         pre-processing has been completed.
 
-        :return: Iterable[ProcessedFile]: The pre-processed files and a
-        reference to their metadata
+        :return: The pre-processed files and a reference to their metadata
         """
         return self._corpus_model.processed_corpus
 
@@ -129,8 +131,8 @@ class CorpusController(Observer):
         """
         Set the processed corpus using a list
 
-        :param corpus: List of pre-processed files in
-        a bag-of-words representation
+        :param corpus: List of pre-processed files in a bag-of-words
+        representation
         :return: None
         """
         self._corpus_model.processed_corpus.documents = corpus
@@ -141,8 +143,7 @@ class CorpusController(Observer):
         the pre-processed documents. It is only set after pre-processing
         has been completed.
 
-        :return: corpora.Dictionary: the dictionary of the pre-processed
-        documents
+        :return: the dictionary of the pre-processed documents
         """
         return self._corpus_model.dictionary
 
