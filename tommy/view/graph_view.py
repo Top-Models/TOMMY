@@ -1,13 +1,11 @@
-from PySide6.QtGui import QPalette, Qt
+import matplotlib.figure
+from PySide6.QtGui import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as
                                                 FigureCanvas)
-from matplotlib.backends.backend_template import FigureCanvasTemplate
 
 from tommy.backend.observer.publisher import Publisher
 from tommy.view.observer.observer import Observer
-
-import matplotlib.figure
 
 
 class GraphView(QWidget, Observer):
@@ -20,7 +18,7 @@ class GraphView(QWidget, Observer):
         # Set color of the widget to black
         self.setAutoFillBackground(True)
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
-        self.setStyleSheet("background-color: white;")
+        self.setStyleSheet("background-color: black;")
 
         # Setup layout
         self.layout = QVBoxLayout(self)

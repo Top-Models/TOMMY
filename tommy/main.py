@@ -10,10 +10,16 @@ from tommy.main_window import MainWindow
 
 
 def set_app_user_model_id():
-    if platform.system() == 'Windows':
+    """
+    Set the AppUserModelID for the application.
+
+    :return: None
+    """
+    if platform.system() == "Windows":
         try:
-            app_id = 'top-models.tommy.tommy.1'
-            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
+            app_id = "top-models.tommy.tommy.1"
+            (ctypes.windll.shell32.
+             SetCurrentProcessExplicitAppUserModelID(app_id))
         except (ImportError, AttributeError):
             print("Failed to set AppUserModelID.")
 
@@ -34,7 +40,8 @@ window = MainWindow()
 window.show()
 
 # Execute the application
-sys.exit(app.exec())
+app.exec()
+
 
 """
 This program has been developed by students from the bachelor Computer Science
