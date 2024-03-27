@@ -1,5 +1,5 @@
 import os
-from typing import Generator, Iterable, List
+from collections.abc import Generator, Iterable
 
 from gensim.corpora import Dictionary
 
@@ -95,7 +95,7 @@ class CorpusController(Observer):
 
         self._corpus_model.metadata = metadata
 
-    def get_metadata(self) -> List[Metadata]:
+    def get_metadata(self) -> list[Metadata]:
         """
         Gets the metadata from all files in the corpus model. This method
         assumes that extract_and_store_metadata has already been called.
@@ -125,11 +125,11 @@ class CorpusController(Observer):
         """
         return self._corpus_model.processed_corpus
 
-    def set_processed_corpus(self, corpus: List[ProcessedFile]) -> None:
+    def set_processed_corpus(self, corpus: list[ProcessedFile]) -> None:
         """
         Set the processed corpus using a list
 
-        :param corpus: List[ProcessedFile]: List of pre-processed files in
+        :param corpus: List of pre-processed files in
         a bag-of-words representation
         :return: None
         """

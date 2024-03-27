@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import List
 
 from gensim.corpora import Dictionary
 
@@ -14,7 +13,7 @@ class CorpusModel:
     data is not stored as it wouldn't fit in memory. The processed corpus is
     stored in the ProcessedCorpus class.
     """
-    metadata: List[Metadata] = None
+    metadata: list[Metadata] = None
     dictionary: Dictionary = None
     processed_corpus: ProcessedCorpus
 
