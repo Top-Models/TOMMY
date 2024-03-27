@@ -366,7 +366,7 @@ class GraphDisplay(QTabWidget):
         edges = graph.edges()
         nodes = graph.nodes(data="color")
 
-        node_sizes = [150 if node[1] is not None else 5 for node in nodes]
+        node_sizes = [150 if node[1] is not None else 0 for node in nodes]
         node_colors = [node[1] if node[1] is not None else "black"
                        for node in nodes]
 
@@ -416,7 +416,7 @@ class GraphDisplay(QTabWidget):
     def construct_doc_topic_network_vis2(self, lda_model: GensimLdaModel) \
             -> FigureCanvas:
         # Construct a plot and a graph
-        fig = plt.figure(dpi=70)
+        fig = plt.figure(dpi=60)
         plt.title("Netwerk topics en documenten die daar minstens 5% bij horen")
         graph = self.construct_doc_topic_network2(lda_model)
 
@@ -430,16 +430,17 @@ class GraphDisplay(QTabWidget):
             # Give topic nodes a constant size
             if node[1] is not None:
                 node_sizes.append(200)
-            # Give document set nodes a scaling size
+            # Give doc_set nodes a scaling size
             else:
                 first_neighbor = list(graph.neighbors(node[0]))[0]
                 node_sizes.append(graph[node[0]][first_neighbor]["weight"])
+            print(node[0])
 
         node_colors = [node[1] if node[1] is not None else "black"
                        for node in nodes]
 
         edge_colors = [graph[u][v]["color"] for (u, v) in edges]
-        edge_width = [(graph[u][v]["weight"]*self.get_edge_scale_factor2(graph))
+        edge_width = [(graph[u][v]["weight"])/11
                       for u, v in edges]
 
         # Calculate the shortest paths using dijkstra's algorithm
@@ -476,7 +477,7 @@ class GraphDisplay(QTabWidget):
 
         return FigureCanvas(fig)
 
-    # TODO fix division by zero bug
+    # fix division by zero bug
     # TODO fix edge width
     # fix node size
     # TODO add edge labels with number of docs
@@ -485,14 +486,16 @@ class GraphDisplay(QTabWidget):
 
     def construct_doc_topic_network2(self, lda_model: GensimLdaModel) \
             -> nx.Graph:
-        init_graph = nx.Graph()
-
         # List of simple, distinct colors from
         # https://sashamaps.net/docs/resources/20-colors/
         colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
                   '#9a6324', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
                   '#008080', '#e6beff', '#000075', '#fffac8', '#800000',
                   '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
+
+        init_graph = nx.Graph()
+        for topic_id in range(self.num_topics):
+            init_graph.add_node(topic_id)
 
         # TODO get accurate data instead of lda_model.bags_of_words
         # Generate initial document topic network
@@ -507,35 +510,38 @@ class GraphDisplay(QTabWidget):
         graph = nx.Graph()
 
         for topic_id in range(self.num_topics):
-            graph.add_node(topic_id, color=colors[topic_id%20])
+            graph.add_node(topic_id, color=colors[topic_id % 20])
             lonely_nodes = [node for node in init_graph.neighbors(topic_id)
                             if init_graph.degree(node) == 1]
             if len(lonely_nodes) > 0:
                 graph.add_edge(topic_id,
-                               "lonely"+str(topic_id),
+                               'doc_set_'+str(topic_id),
                                color=colors[topic_id % 20],
                                weight=len(lonely_nodes))
 
-        for i in range(self.num_topics):
+        doc_set_id = self.num_topics - 1
+        for topic_id in range(self.num_topics):
             for j in range(self.num_topics):
-                if i >= j:
+                doc_set_id += 1
+                if topic_id >= j:
+                    doc_set_id -= 1
                     continue
-                set1 = set(init_graph.neighbors(i))
+                set1 = set(init_graph.neighbors(topic_id))
                 set2 = set(init_graph.neighbors(j))
                 intersection = set1.intersection(set2)
                 if len(intersection) != 0:
-                    graph.add_edge(i,
-                                   "doc_set_" + str(10*i + j),
-                                   color=colors[i % 20],
+                    graph.add_edge(topic_id,
+                                   "doc_set_" + str(doc_set_id),
+                                   color=colors[topic_id % 20],
                                    weight=len(intersection))
                     graph.add_edge(j,
-                                   "doc_set_" + str(10*i + j),
+                                   "doc_set_" + str(doc_set_id),
                                    color=colors[j % 20],
                                    weight=len(intersection))
 
         return graph
 
-    def get_edge_scale_factor2(self, graph: nx.Graph) -> float:
+    def get_scaling_doc_topic(self, graph: nx.Graph) -> float:
         """
         Calculates the scale factor to make sure the biggest edge in a network
         is always the same size, regardless of the maximum edge weight
@@ -547,23 +553,12 @@ class GraphDisplay(QTabWidget):
         weight = [weight for node1, node2, weight in graph.edges(data="weight")]
         max_edge_weight = max(weight)
 
+        # A constant which is multiplied by the scale factor according to an
+        # edge width that is visually pleasing
         chosen_weight = 10
 
         scale_factor = (1/max_edge_weight)
 
-        # Find the maximum topic weight
-        # max_topic_weight = 0
-        # for topic_id in range(self.num_topics):
-        #     _, topic_weights = lda_model.show_topic_and_probs(topic_id, 1)
-        #     max_topic_weight = max(max_topic_weight, topic_weights[0])
-
-        # A constant which is multiplied by the scale factor according to an
-        # edge width that is visually pleasing
-        # chosen_weight = 1.5
-        #
-        # scale_factor = (1/max_topic_weight)
-
-        #return scale_factor*chosen_weight
         return scale_factor*chosen_weight
 
     def get_active_tab_name(self) -> str:
