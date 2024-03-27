@@ -427,8 +427,10 @@ class GraphDisplay(QTabWidget):
         # Get drawing function arguments
         node_sizes = []
         for node in nodes:
+            # Give topic nodes a constant size
             if node[1] is not None:
                 node_sizes.append(200)
+            # Give document set nodes a scaling size
             else:
                 first_neighbor = list(graph.neighbors(node[0]))[0]
                 node_sizes.append(graph[node[0]][first_neighbor]["weight"])
@@ -437,7 +439,8 @@ class GraphDisplay(QTabWidget):
                        for node in nodes]
 
         edge_colors = [graph[u][v]["color"] for (u, v) in edges]
-        edge_width = [(graph[u][v]["weight"]/10) for u, v in edges]
+        edge_width = [(graph[u][v]["weight"]*self.get_edge_scale_factor2(graph))
+                      for u, v in edges]
 
         # Calculate the shortest paths using dijkstra's algorithm
         shortest_path_lengths = dict(
@@ -531,6 +534,37 @@ class GraphDisplay(QTabWidget):
                                    weight=len(intersection))
 
         return graph
+
+    def get_edge_scale_factor2(self, graph: nx.Graph) -> float:
+        """
+        Calculates the scale factor to make sure the biggest edge in a network
+        is always the same size, regardless of the maximum edge weight
+        :param graph: The graph model to calculate the scale factor for
+        :return: The edge scale factor
+        """
+
+        # Find the maximum edge weight
+        weight = [weight for node1, node2, weight in graph.edges(data="weight")]
+        max_edge_weight = max(weight)
+
+        chosen_weight = 10
+
+        scale_factor = (1/max_edge_weight)
+
+        # Find the maximum topic weight
+        # max_topic_weight = 0
+        # for topic_id in range(self.num_topics):
+        #     _, topic_weights = lda_model.show_topic_and_probs(topic_id, 1)
+        #     max_topic_weight = max(max_topic_weight, topic_weights[0])
+
+        # A constant which is multiplied by the scale factor according to an
+        # edge width that is visually pleasing
+        # chosen_weight = 1.5
+        #
+        # scale_factor = (1/max_topic_weight)
+
+        #return scale_factor*chosen_weight
+        return scale_factor*chosen_weight
 
     def get_active_tab_name(self) -> str:
         """
