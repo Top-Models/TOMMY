@@ -1,7 +1,8 @@
 from PySide6.QtCore import QSize
+from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import (
     QMainWindow,
-    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy, QLayout
+    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy, QLayout, QApplication
 )
 
 from tommy.support.constant_variables import (
@@ -32,7 +33,7 @@ class MainWindow(QMainWindow):
 
         # Initialize window
         self.setWindowTitle("TOMMY")
-        self.setMinimumSize(QSize(1050, 578))
+        self.set_initial_window_size()
         self.setStyleSheet("background-color: white;"
                            "font-size: 15px;"
                            f"font-family: {text_font};"
@@ -90,6 +91,19 @@ class MainWindow(QMainWindow):
 
         self.display_correct_initial_files()
         self.initialize_event_handlers()
+
+    def set_initial_window_size(self) -> None:
+        """
+        Set the initial window size based on screen size.
+
+        :return: None
+        """
+        app = QGuiApplication.instance()
+        screen = app.primaryScreen()
+        screen_geometry = screen.availableGeometry()
+        initial_width = max(screen_geometry.width() / 1.5, 1050)
+        initial_height = max(screen_geometry.height() / 1.5, 578)
+        self.resize(initial_width, initial_height)
 
     # TODO: Extract method when Connector is implemented
     def on_next_plot_clicked(self) -> None:
