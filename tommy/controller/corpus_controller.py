@@ -35,9 +35,7 @@ class CorpusController(Observer, Publisher):
     fileParsers: GenericFileImporter = GenericFileImporter()
 
     def __init__(self) -> None:
-        """
-        Initialize corpus controller and publisher
-        """
+        """Initialize corpus controller and publisher"""
         super().__init__()
 
     def set_controller_refs(self,

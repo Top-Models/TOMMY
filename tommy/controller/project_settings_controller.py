@@ -3,6 +3,10 @@ from tommy.model.project_settings_model import ProjectSettingsModel
 
 
 class ProjectSettingsController(Publisher):
+    """
+    The project settings controller class is responsible for handling interactions with
+    the project settings.
+    """
     _project_settings_model: ProjectSettingsModel = None
 
     def set_input_folder_path(self, path: str) -> None:
