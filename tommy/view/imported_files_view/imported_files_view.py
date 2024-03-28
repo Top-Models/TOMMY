@@ -41,9 +41,6 @@ class ImportedFilesView(QWidget, Observer):
         self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.layout.setSpacing(0)
 
-        self.header_layout = QVBoxLayout()
-        self.layout.addLayout(self.header_layout)
-
         # Initialize title label
         self.title_label = None
         self.initialize_title_label()
@@ -100,7 +97,7 @@ class ImportedFilesView(QWidget, Observer):
                                       Qt.AlignmentFlag.AlignTop)
         self.title_label.setContentsMargins(0, 0, 0, 0)
         self.title_label.setFixedHeight(50)
-        self.header_layout.addWidget(self.title_label)
+        self.layout.addWidget(self.title_label)
 
         # Connect label click event to toggle_collapse method
         self.title_label.mousePressEvent = self.toggle_collapse
@@ -174,15 +171,15 @@ class ImportedFilesView(QWidget, Observer):
             self.scroll_area.setVisible(False)
             # Move the header to the bottom of the layout
             self.layout.addStretch(1)
-            self.layout.addLayout(self.header_layout)
+            self.layout.addWidget(self.title_label)
         else:
             # Show the scroll area
             self.scroll_area.setVisible(True)
-            # Move the header back to its original position
+            # Remove the stretch from the layout to move the header
+            # back to its original position
             self.layout.removeWidget(self.title_label)
-            self.layout.addLayout(self.header_layout)
-            self.layout.removeItem(self.layout.itemAt(
-                    self.layout.count() - 1))
+            self.layout.insertWidget(0, self.title_label)
+            self.layout.removeItem(self.layout.itemAt(self.layout.count() - 1))
 
     def update_observer(self, publisher) -> None:
         """
