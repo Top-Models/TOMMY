@@ -259,7 +259,7 @@ class GraphDisplay(QTabWidget):
 
         # Adjust the plot ticks so that they start from 1 instead of 0
         plt.xticks(np.arange(self.num_topics), np.arange(1, self.num_topics+1))
-        plt.yticks(np.arange(self.num_topics), np.arange(1, self.num_topics + 1))
+        plt.yticks(np.arange(self.num_topics), np.arange(1, self.num_topics+1))
 
         return FigureCanvas(fig)
 
@@ -272,8 +272,8 @@ class GraphDisplay(QTabWidget):
         :return: A word-topic network plot
         """
         # Construct a plot and graph
-        fig = plt.figure(dpi=70)
-        plt.title("Netwerk topics en de 15 meest voorkomende woorden")
+        fig = plt.figure(dpi=80)
+        plt.title("Topics en 15 meest voorkomende woorden")
         graph = self.construct_word_topic_network(lda_model)
 
         # Get the scale factor used for the displayed edge weight (width)
@@ -326,8 +326,12 @@ class GraphDisplay(QTabWidget):
 
         for topic_id in range(self.num_topics):
             topic_tuples = lda_model.show_topic(topic_id, node_amount)
+
+            # Add topic node to graph
+            graph.add_node(topic_id, color=colors[topic_id % 20])
+
+            # Add edge from topic node to its words
             for topic_tuple in topic_tuples:
-                graph.add_node(topic_id, color=colors[topic_id%20])
                 graph.add_edge(
                     topic_id,
                     topic_tuple[0],
@@ -358,14 +362,21 @@ class GraphDisplay(QTabWidget):
 
         return scale_factor*chosen_weight
 
+    # This graph will only be exported (to Gephi for example), since it is
+    # not possible to visualize it well in the application. For now, it is
+    # included in the visualizations, mainly for review.
+    # TODO only export construct_doc_topic_network, not visualize it.
     def construct_doc_topic_network_vis(self, lda_model: GensimLdaModel) \
             -> FigureCanvas:
-        fig = plt.figure(dpi=15)
-        plt.title("Leuk netwerkje")
+        # Construct a plot and graph
+        fig = plt.figure(dpi=20)
         graph = self.construct_doc_topic_network(lda_model)
+
+        # Get graph elements
         edges = graph.edges()
         nodes = graph.nodes(data="color")
 
+        # Get drawing function arguments
         node_sizes = [150 if node[1] is not None else 0 for node in nodes]
         node_colors = [node[1] if node[1] is not None else "black"
                        for node in nodes]
@@ -373,6 +384,8 @@ class GraphDisplay(QTabWidget):
         edge_colors = [graph[u][v]["color"] for (u, v) in edges]
         edge_width = [(graph[u][v]["weight"]) for u, v in edges]
 
+        # Draw the network using the kamada-kawai algorithm to position the
+        # nodes in an aesthetically pleasing way
         nx.draw_kamada_kawai(graph,
                              width=edge_width,
                              node_size=node_sizes,
@@ -395,35 +408,31 @@ class GraphDisplay(QTabWidget):
         for topic_id in range(self.num_topics):
             graph.add_node(topic_id, color=colors[topic_id%20])
 
+        # Generate initial document topic network
+        for document_id, document in enumerate(lda_model.bags_of_words):
+            document_topic = (lda_model.get_document_topics(document, 0.05))
 
-        # TODO get accurate data instead of lda_model.bags_of_words
-        for document_id in range(len(lda_model.bags_of_words)):
-            document_topic = (lda_model.get_document_topics(
-                              lda_model.bags_of_words[document_id],
-             0.25))
+            # Add edges from each document to all associated topics
             for (topic_id, topic_probability) in document_topic:
                 graph.add_edge(topic_id,
                                'document:' + str(document_id),
                                color=colors[topic_id % 20],
                                weight=topic_probability)
-
-        # nodes_to_be_removed = [node for node,degree in graph.degree()
-        #                        if degree < 2]
-        # graph.remove_nodes_from(nodes_to_be_removed)
-
         return graph
 
     def construct_doc_topic_network_vis2(self, lda_model: GensimLdaModel) \
             -> FigureCanvas:
         # Construct a plot and a graph
         fig = plt.figure(dpi=60)
-        plt.title("Netwerk topics en documenten die daar minstens 5% bij horen")
+        plt.title("Topics en documenten die daar ten minste 5% bij horen")
         graph = self.construct_doc_topic_network2(lda_model)
 
         # Get graph elements
         edges = graph.edges()
         nodes = graph.nodes(data="color")
 
+        # Get scaling factor used for scaling the nodes and edges to make sure
+        # these don't increase when more documents are added
         scaling_factor = self.get_scaling_doc_topic(graph)
 
         # Get drawing function arguments
@@ -432,16 +441,18 @@ class GraphDisplay(QTabWidget):
             # Give topic nodes a constant size
             if node[1] is not None:
                 node_sizes.append(200)
+
             # Give doc_set nodes a scaling size
             else:
                 first_neighbor = list(graph.neighbors(node[0]))[0]
-                node_sizes.append(graph[node[0]][first_neighbor]["weight"]*scaling_factor*10)
+                node_sizes.append(graph[node[0]][first_neighbor]["weight"]
+                                  * scaling_factor * 10)
 
         node_colors = [node[1] if node[1] is not None else "black"
                        for node in nodes]
 
         edge_colors = [graph[u][v]["color"] for (u, v) in edges]
-        edge_width = [(graph[u][v]["weight"])*scaling_factor
+        edge_width = [(graph[u][v]["weight"]) * scaling_factor
                       for u, v in edges]
 
         # Calculate the shortest paths using dijkstra's algorithm
@@ -478,13 +489,6 @@ class GraphDisplay(QTabWidget):
 
         return FigureCanvas(fig)
 
-    # fix division by zero bug
-    # TODO fix edge width
-    # fix node size
-    # TODO add edge labels with number of docs
-    # TODO make doc topic network scalable
-    # fix double edges bug
-
     def construct_doc_topic_network2(self, lda_model: GensimLdaModel) \
             -> nx.Graph:
         # List of simple, distinct colors from
@@ -494,11 +498,11 @@ class GraphDisplay(QTabWidget):
                   '#008080', '#e6beff', '#000075', '#fffac8', '#800000',
                   '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
 
+        # Construct a graph with topic nodes
         init_graph = nx.Graph()
         for topic_id in range(self.num_topics):
             init_graph.add_node(topic_id)
 
-        # TODO get accurate data instead of lda_model.bags_of_words
         # Generate initial document topic network
         for document_id, document in enumerate(lda_model.bags_of_words):
             document_topic = (lda_model.get_document_topics(document, 0.05))
@@ -510,6 +514,7 @@ class GraphDisplay(QTabWidget):
         # Construct simplified document topic network
         graph = nx.Graph()
 
+        # Add topic nodes and nodes with degree one to graph
         for topic_id in range(self.num_topics):
             graph.add_node(topic_id, color=colors[topic_id % 20])
             lonely_nodes = [node for node in init_graph.neighbors(topic_id)
@@ -520,6 +525,7 @@ class GraphDisplay(QTabWidget):
                                color=colors[topic_id % 20],
                                weight=len(lonely_nodes))
 
+        # Add nodes shared by multiple topics
         doc_set_id = self.num_topics - 1
         for topic_id in range(self.num_topics):
             for j in range(self.num_topics):
@@ -527,9 +533,14 @@ class GraphDisplay(QTabWidget):
                 if topic_id >= j:
                     doc_set_id -= 1
                     continue
+
+                # Calculate the intersection of two node's neighbors
                 set1 = set(init_graph.neighbors(topic_id))
                 set2 = set(init_graph.neighbors(j))
                 intersection = set1.intersection(set2)
+
+                # Add an edge from both topic nodes to a single "intersection"
+                # node
                 if len(intersection) != 0:
                     graph.add_edge(topic_id,
                                    "doc_set_" + str(doc_set_id),
