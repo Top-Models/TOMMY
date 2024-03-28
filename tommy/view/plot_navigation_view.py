@@ -14,6 +14,9 @@ class PlotNavigationView(QLabel, Observer):
         """Initialize the PlotNavigationView."""
         super().__init__()
 
+        # Initialize widget properties
+        self.setFixedHeight(40)
+
         # Initialize horizontal layout
         self.layout = QHBoxLayout()
         self.layout.setAlignment(Qt.AlignmentFlag.AlignCenter)

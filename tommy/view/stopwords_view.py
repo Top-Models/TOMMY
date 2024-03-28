@@ -14,6 +14,7 @@ class StopwordsView(QScrollArea, Observer):
         super().__init__()
 
         # Initialize widget properties
+        self.setFixedWidth(250)
         self.setStyleSheet("background-color: white;")
 
         # Initialize container for all elements

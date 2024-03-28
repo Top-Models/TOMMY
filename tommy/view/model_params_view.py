@@ -17,6 +17,7 @@ class ModelParamsView(QScrollArea, Observer):
         super().__init__()
 
         # Initialize widget properties
+        self.setFixedWidth(250)
         self.setStyleSheet("background-color: rgba(230, 230, 230, 230);"
                            "margin: 0px;"
                            "padding: 0px;"

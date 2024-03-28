@@ -30,6 +30,8 @@ class ImportedFilesView(QWidget, Observer):
         self.file_reader = FileReader()
 
         # Initialize widget properties
+        self.setMinimumHeight(200)
+        self.setMaximumHeight(300)
         self.setStyleSheet("background-color: rgba(230, 230, 230, 230);")
 
         # Initialize layout for the entire widget
@@ -56,8 +58,8 @@ class ImportedFilesView(QWidget, Observer):
         self.layout.addWidget(self.scroll_area)
 
         # Initialize widgets
-        self.stopwords_display = StopwordsView()
-        self.file_stats_display = FileStatsView()
+        self.stopwords_view = StopwordsView()
+        self.file_stats_view = FileStatsView()
 
         # { tab_name, files }
         self.file_container = {}
@@ -141,7 +143,7 @@ class ImportedFilesView(QWidget, Observer):
         self.selected_label = clicked_label
 
         # Display the file stats
-        self.file_stats_display.display_file_info(clicked_label.file)
+        self.file_stats_view.display_file_info(clicked_label.file)
 
     def initialize_files_for_label(self, tab_name: str, files: list) -> None:
         """

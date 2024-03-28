@@ -1,7 +1,7 @@
 from PySide6.QtCore import QSize
 from PySide6.QtWidgets import (
     QMainWindow,
-    QWidget
+    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy, QLayout
 )
 
 from tommy.support.constant_variables import (
@@ -32,11 +32,32 @@ class MainWindow(QMainWindow):
 
         # Initialize window
         self.setWindowTitle("TOMMY")
-        self.setFixedSize(QSize(1200, 700))
+        self.setMinimumSize(QSize(1050, 578))
         self.setStyleSheet("background-color: white;"
                            "font-size: 15px;"
                            f"font-family: {text_font};"
                            "border: none;")
+
+        # Create the main layout
+        self.layout = QHBoxLayout()
+        self.left_container = QVBoxLayout()
+        self.center_container = QVBoxLayout()
+        self.right_container = QVBoxLayout()
+        self.layout.addLayout(self.left_container)
+        self.layout.addLayout(self.center_container)
+        self.layout.addLayout(self.right_container)
+
+        # Set spacing of the layout
+        self.layout.setSpacing(0)
+        self.left_container.setSpacing(0)
+        self.center_container.setSpacing(0)
+        self.right_container.setSpacing(0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+
+        # Set the central widget
+        central_widget = QWidget()
+        central_widget.setLayout(self.layout)
+        self.setCentralWidget(central_widget)
 
         # Create widgets
         self.stopwords_view = StopwordsView()
@@ -53,42 +74,22 @@ class MainWindow(QMainWindow):
             self.fetched_topics_view)
 
         # Initialize widgets
-        self.initialize_widget(self.model_params_view,
-                               0, 0, 250, 300)
-        self.initialize_widget(self.imported_files_view.stopwords_display,
-                               0, 300, 250, 397)
-        self.initialize_widget(self.imported_files_view,
-                               250, 458, 700, 240)
-        self.initialize_widget(self.imported_files_view.file_stats_display,
-                               950, 458, 250, 240)
-        self.initialize_widget(self.fetched_topics_view,
-                               950, 0, 250, 458)
-        self.initialize_widget(self.graph_view,
-                               250, 50, 700, 360)
-        self.initialize_widget(self.plot_navigation_view,
-                               250, 408, 700, 50)
-        # TODO: Uncomment when Connector is implemented
-        self.initialize_widget(self.model_selection_view,
-                               250, 0, 700, 50)
+        self.left_container.addWidget(self.model_params_view)
+        self.left_container.addWidget(self.stopwords_view)
+        self.center_container.addWidget(self.model_selection_view)
+        self.center_container.addWidget(self.graph_view)
+        self.center_container.addWidget(self.plot_navigation_view)
+        self.center_container.addWidget(self.imported_files_view)
+        self.right_container.addWidget(self.fetched_topics_view)
+        self.right_container.addWidget(
+            self.imported_files_view.file_stats_view)
+
+        # Make graph view resize with screen
+        self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Expanding,
+                                       QSizePolicy.Policy.Expanding))
+
         self.display_correct_initial_files()
         self.initialize_event_handlers()
-
-    def initialize_widget(self, widget: QWidget,
-                          x: int, y: int, w: int, h: int) -> None:
-        """
-        Initialize a widget on the main window.
-
-        :param widget: The widget to initialize
-        :param x: The x-coordinate of the widget
-        :param y: The y-coordinate of the widget
-        :param w: The width of the widget
-        :param h: The height of the widget
-        :return: None
-        """
-
-        widget.setParent(self)
-        widget.setGeometry(x, y, w, h)
-        widget.show()
 
     # TODO: Extract method when Connector is implemented
     def on_next_plot_clicked(self) -> None:
@@ -174,7 +175,7 @@ class MainWindow(QMainWindow):
         # Connecting the tabBarClicked signal to a method in
         # ImportedFilesDisplay
         self.model_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.imported_files_view.file_stats_display.
+            lambda tab_index: self.imported_files_view.file_stats_view.
             display_no_file_selected()
         )
 
@@ -198,7 +199,7 @@ class MainWindow(QMainWindow):
                 self.imported_files_view.file_container[
                     self.model_selection_view.get_active_tab_name()],
                 self.model_params_view.fetch_topic_num(),
-                self.imported_files_view.stopwords_display.
+                self.imported_files_view.stopwords_view.
                 additional_stopwords
             )
         )
