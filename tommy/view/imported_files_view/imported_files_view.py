@@ -184,7 +184,6 @@ class ImportedFilesView(QWidget, Observer):
             self.layout.removeItem(self.layout.itemAt(
                     self.layout.count() - 1))
 
-
     def update_observer(self, publisher) -> None:
         """
         Update the observer.
