@@ -1,4 +1,5 @@
 from PySide6.QtCore import QSize
+from PySide6.QtGui import QIcon
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import (
     QMainWindow,
@@ -34,6 +35,8 @@ class MainWindow(QMainWindow):
         # Initialize window
         self.setWindowTitle("TOMMY")
         self.set_initial_window_size()
+        self.setWindowIcon(QIcon("../assets/tommy.png"))
+        self.setFixedSize(QSize(1200, 700))
         self.setStyleSheet("background-color: white;"
                            "font-size: 15px;"
                            f"font-family: {text_font};"
