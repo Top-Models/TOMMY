@@ -162,7 +162,7 @@ class ImportedFilesView(QWidget, Observer):
         """
         self.file_container[tab_name] = files
 
-    def toggle_collapse(self, clicked_header):
+    def toggle_collapse(self, clicked_header) -> None:
         """
         Toggle visibility of the scroll area and adjust layout accordingly.
         """
