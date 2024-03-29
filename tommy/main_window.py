@@ -36,7 +36,6 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("TOMMY")
         self.set_initial_window_size()
         self.setWindowIcon(QIcon("../assets/tommy.png"))
-        self.setFixedSize(QSize(1200, 700))
         self.setStyleSheet("background-color: white;"
                            "font-size: 15px;"
                            f"font-family: {text_font};"
