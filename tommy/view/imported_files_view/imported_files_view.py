@@ -170,9 +170,10 @@ class ImportedFilesView(QWidget, Observer):
             # Hide the scroll area
             self.scroll_area.setVisible(False)
             # Move the header to the bottom of the layout
-            self.layout.addStretch(1)
+            self.layout.addStretch(0.1)
             self.layout.addWidget(self.title_label)
-            self.adjustSize()
+            # Fix widget size to allow entire layout to be moved to
+            self.setFixedHeight(self.title_label.height())
         else:
             # Show the scroll area
             self.scroll_area.setVisible(True)
@@ -181,8 +182,9 @@ class ImportedFilesView(QWidget, Observer):
             self.layout.removeWidget(self.title_label)
             self.layout.insertWidget(0, self.title_label)
             self.layout.removeItem(self.layout.itemAt(self.layout.count() - 1))
-            self.adjustSize()
-
+            # Restore actual height
+            self.setMinimumHeight(200)
+            self.setMaximumHeight(300)
 
     def update_observer(self, publisher) -> None:
         """
