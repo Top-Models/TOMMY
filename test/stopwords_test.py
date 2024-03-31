@@ -71,9 +71,12 @@ def test_stopwords_remove_single_word(stopwords):
     """
     Test removing a single word from stop words.
     """
-    stopwords.remove("al")
-    assert "al" not in stopwords
-    assert len(stopwords) == 351
+    stopwords.add("test")
+    assert "test" in stopwords
+    assert len(stopwords) == 353
+    stopwords.remove("test")
+    assert "test" not in stopwords
+    assert len(stopwords) == 352
 
 
 def test_stopwords_remove_multiple_words(stopwords):
@@ -107,6 +110,25 @@ def test_stopwords_remove_list(stopwords):
     assert len(stopwords) == 352
 
 
+def test_stopwords_replace(stopwords):
+    """
+    Test replacing extra stopwords with a new set.
+    """
+    # Initial extra stopwords
+    initial_extra_stopwords = ["extra1", "extra2", "extra3"]
+    stopwords.add(initial_extra_stopwords)
+
+    # New stopwords to replace the existing ones
+    new_stopwords = ["new1", "new2", "new3"]
+    stopwords.replace(*new_stopwords)
+
+    # Check if old extra stopwords are removed
+    for word in initial_extra_stopwords:
+        assert word not in stopwords
+
+    # Check if new stopwords are added
+    for word in new_stopwords:
+        assert word in stopwords
 
 #def test_stopwords_add_invalid_argument_type(stopwords):
 #    """
@@ -114,7 +136,6 @@ def test_stopwords_remove_list(stopwords):
 #    """
 #    with pytest.raises(TypeError):
 #        stopwords.add(123)
-
 
 # def test_stopwords_remove_invalid_argument_type(stopwords):
 #    """

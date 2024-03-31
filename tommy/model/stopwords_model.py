@@ -44,15 +44,12 @@ class StopwordsModel:
         :param args: The word(s) to add to the iterable
         :return: None
         """
-        # Only 1 argument and it's a list or tuple.
-        if len(args) == 1 and isinstance(args[0], Iterable):
-            words = args[0]
-        # Otherwise the arguments should be the words themselves.
-        else:
-            words = args
-        # Add the words to the set.
-        for word in words:
-            self._extra_words.add(word)
+        for arg in args:
+            if isinstance(arg, str):
+                self._extra_words.add(arg)
+            elif isinstance(arg, Iterable):
+                for word in arg:
+                    self._extra_words.add(word)
 
     def remove(self, *args: str | Iterable[str]) -> None:
         """
@@ -61,15 +58,12 @@ class StopwordsModel:
         :param args: The word(s) to remove from the iterable
         :return: None
         """
-        # Only 1 argument and it's a list or tuple.
-        if len(args) == 1 and isinstance(args[0], Iterable):
-            words = args[0]
-        # Otherwise the arguments should be the words themselves.
-        else:
-            words = args
-        # Remove the words from the set.
-        for word in words:
-            self._extra_words.discard(word)
+        for arg in args:
+            if isinstance(arg, str):
+                self._extra_words.remove(arg)
+            elif isinstance(arg, Iterable):
+                for word in arg:
+                    self._extra_words.remove(word)
 
     def replace(self, *args: str | Iterable[str]) -> None:
         """
