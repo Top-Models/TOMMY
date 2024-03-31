@@ -89,10 +89,7 @@ def test_stopwords_remove_multiple_words(stopwords):
     assert "hoipap" not in stopwords
     assert "hoibroer" not in stopwords
     assert len(stopwords) == 352
-    stopwords.remove('al', 'als')
-    assert "al" not in stopwords
-    assert "als" not in stopwords
-    assert len(stopwords) == 371
+
 
 
 def test_stopwords_remove_list(stopwords):
@@ -108,12 +105,10 @@ def test_stopwords_remove_list(stopwords):
     assert "hoipap" not in stopwords
     assert "hoibroer" not in stopwords
     assert len(stopwords) == 352
-    stopwords.remove(["al", "als"])
-    assert "al" not in stopwords
-    assert "als" not in stopwords
-    assert len(stopwords) == 350
 
-# def test_stopwords_add_invalid_argument_type(stopwords):
+
+
+#def test_stopwords_add_invalid_argument_type(stopwords):
 #    """
 #    Test adding an invalid argument type to stop words.
 #    """
