@@ -71,9 +71,12 @@ def test_stopwords_remove_single_word(stopwords):
     """
     Test removing a single word from stop words.
     """
-    stopwords.remove("al")
-    assert "al" not in stopwords
-    assert len(stopwords) == 351
+    stopwords.add("test")
+    assert "test" in stopwords
+    assert len(stopwords) == 353
+    stopwords.remove("test")
+    assert "test" not in stopwords
+    assert len(stopwords) == 352
 
 
 def test_stopwords_remove_multiple_words(stopwords):
