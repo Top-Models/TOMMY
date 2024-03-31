@@ -50,6 +50,9 @@ class StopwordsModel:
             elif isinstance(arg, Iterable):
                 for word in arg:
                     self._extra_words.add(word)
+            else:
+                raise TypeError(
+                    "Arguments must be strings or iterables of strings.")
 
     def remove(self, *args: str | Iterable[str]) -> None:
         """
@@ -64,6 +67,9 @@ class StopwordsModel:
             elif isinstance(arg, Iterable):
                 for word in arg:
                     self._extra_words.remove(word)
+            else:
+                raise TypeError(
+                    "Arguments must be strings or iterables of strings.")
 
     def replace(self, *args: str | Iterable[str]) -> None:
         """
