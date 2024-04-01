@@ -215,8 +215,7 @@ class MainWindow(QMainWindow):
                 self.imported_files_view.file_container[
                     self.model_selection_view.get_active_tab_name()],
                 self.model_params_view.fetch_topic_num(),
-                self.imported_files_view.stopwords_view.
-                additional_stopwords
+                self.stopwords_view.additional_stopwords
             )
         )
 
