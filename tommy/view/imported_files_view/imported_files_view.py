@@ -10,8 +10,6 @@ from tommy.view.imported_files_view.file_label \
 from tommy.view.imported_files_view. \
     file_stats_view import FileStatsView
 from tommy.view.observer.observer import Observer
-from tommy.view.stopwords_view import (
-    StopwordsView)
 from tommy.support.constant_variables import (
     heading_font, seco_col_blue, hover_seco_col_blue, prim_col_red,
     hover_prim_col_red)
@@ -58,7 +56,6 @@ class ImportedFilesView(QWidget, Observer):
         self.layout.addWidget(self.scroll_area)
 
         # Initialize widgets
-        self.stopwords_view = StopwordsView()
         self.file_stats_view = FileStatsView()
 
         # { tab_name, files }
