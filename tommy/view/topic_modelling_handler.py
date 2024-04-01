@@ -196,10 +196,10 @@ class TopicModellingHandler:
 
             # Add margins and labels to the plot
             plt.margins(0.02)
-            plt.ylabel("gewicht")
+            plt.xlabel("gewicht")
             plt.title("Woorden met het hoogste gewicht topic {}".format(i + 1))
 
-            canvases.append(FigureCanvas(fig))
+            canvases.append(fig)
 
         return canvases
 

@@ -24,6 +24,7 @@ class GraphView(QWidget, Observer):
         self.layout = QVBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
+        self.setMinimumHeight(350)
         self.setLayout(self.layout)
 
     def display_plot(self, canvas: matplotlib.figure.Figure) -> None:
@@ -44,7 +45,9 @@ class GraphView(QWidget, Observer):
         # Resize canvas based on plot type
         plot_type = canvas.figure.axes[0].get_title().lower()
         if plot_type.__contains__("gewicht"):
-            canvas.figure.subplots_adjust(0.3, 0.2, 0.9, 0.8)
+            canvas.figure.subplots_adjust(0.2, 0.2, 0.8, 0.8)
+        elif plot_type.__contains__("correlatiematrix"):
+            canvas.figure.subplots_adjust(0.3, 0.2, 0.7, 0.8)
         else:
             canvas.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
 

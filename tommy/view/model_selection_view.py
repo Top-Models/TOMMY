@@ -13,6 +13,7 @@ class ModelSelectionView(QTabWidget, Observer):
         super().__init__()
 
         # Initialize widget properties
+        self.setFixedHeight(50)
         self.setStyleSheet(f"""        
                 QTabWidget {{
                     color: black;
@@ -25,8 +26,8 @@ class ModelSelectionView(QTabWidget, Observer):
                     font-size: 15px;
                     padding-left: 10px;
                     padding-right: 10px;
-                    padding-top: 14px;
-                    padding-bottom: 14px;
+                    padding-top: 15px;
+                    padding-bottom: 15px;
                     font-weight: bold;
                 }}
 
