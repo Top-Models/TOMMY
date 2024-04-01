@@ -75,6 +75,9 @@ class GensimLdaModel(Model):
     def get_correlation_matrix(self, num_words):
         return self.model.diff(self.model, distance='jaccard', num_words=num_words)[0]
 
+    def get_document_topics(self, doc, minimum_probability):
+        return self.model.get_document_topics(doc, minimum_probability=minimum_probability)
+
     def save(self, fpath):
         raise NotImplementedError("Saving the model has not been implemented in GensimLdaModel")
 

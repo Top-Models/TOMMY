@@ -118,12 +118,12 @@ class Model(ABC):
 
     @abstractmethod
     def show_topic(self, topic_id: int, n: int) -> list[tuple[str, float]]:
-        """"Returns the top n probability pairs where words are actual strings for the current topic_id"""
+        """Returns the top n probability pairs where words are actual strings for the current topic_id"""
         pass
 
     @abstractmethod
     def show_topic_and_probs(self, topic_id: int, n: int) -> tuple[list[str], list[float]]:
-        """"Return the top n words represented as strings and their associated probabilities in two separate lists"""
+        """Return the top n words represented as strings and their associated probabilities in two separate lists"""
         pass
 
     @abstractmethod
@@ -136,6 +136,11 @@ class Model(ABC):
     @abstractmethod
     def get_correlation_matrix(self, num_words: int) -> ndarray:
         """Returns the n_topics x n_topics array of similarities between different topics of the same LDA model"""
+        pass
+
+    @abstractmethod
+    def get_document_topics(self, doc, minimum_probability: float) -> ndarray:
+        """Returns the topic distribution for the give bow doc, as a list of (topic_id, topic_probability) tuples"""
         pass
 
     @abstractmethod
