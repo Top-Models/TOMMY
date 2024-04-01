@@ -1,17 +1,20 @@
-import numpy as np
-from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout, QPushButton
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import math
+
 import matplotlib.pyplot as plt
+import networkx as nx
+import numpy as np
+from PySide6.QtWidgets import QWidget, QTabWidget, QVBoxLayout
+from matplotlib.backends.backend_qt5agg import \
+    FigureCanvasQTAgg as FigureCanvas
 from matplotlib.ticker import MaxNLocator
 from wordcloud import WordCloud
-import networkx as nx
-import math
 
 from interactive_topic_modeling.backend.model.abstract_model import TermLists
 from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
 from interactive_topic_modeling.backend.preprocessing.pipeline import Pipeline
 # Assuming you have this import statement
-from interactive_topic_modeling.display.topic_display.fetched_topics_display import FetchedTopicsDisplay
+from interactive_topic_modeling.display.topic_display.fetched_topics_display \
+    import (FetchedTopicsDisplay)
 
 
 class GraphDisplay(QTabWidget):
@@ -68,12 +71,16 @@ class GraphDisplay(QTabWidget):
         self.lda_model.setLayout(self.init_model_layout)
         self.addTab(self.lda_model, "lda_model")
 
-    def apply_topic_modelling(self, corpus: list, topic_amount: int, additional_stopwords: set) -> None:
+    def apply_topic_modelling(self,
+                              corpus: list,
+                              topic_amount: int,
+                              additional_stopwords: set) -> None:
         """
         Apply topic modelling to the given corpus
         :param corpus: The corpus to apply topic modelling to
         :param topic_amount: The amount of topics to generate
-        :param additional_stopwords: The set of addtional stopwords to exclude during topic modeling
+        :param additional_stopwords: The set of addtional stopwords
+        to exclude during topic modeling
         :return: None
         """
         self.corpus = corpus
@@ -84,7 +91,8 @@ class GraphDisplay(QTabWidget):
         active_tab_name = self.tabText(self.currentIndex())
 
         # Perform LDA with additional stopwords exclusion
-        lda_model = self.perform_lda_on_docs(active_tab_name, corpus, additional_stopwords)
+        lda_model = self.perform_lda_on_docs(active_tab_name, corpus,
+                                             additional_stopwords)
 
         # Add LDA plots to active tab
         self.add_lda_plots(active_tab_name, lda_model)
@@ -94,12 +102,16 @@ class GraphDisplay(QTabWidget):
 
         self.display_plot(active_tab_name, 0)
 
-    def perform_lda_on_docs(self, tab_name: str, documents: list, additional_stopwords: set[str]) -> GensimLdaModel:
+    def perform_lda_on_docs(self,
+                            tab_name: str,
+                            documents: list,
+                            additional_stopwords: set[str]) -> GensimLdaModel:
         """
         Perform LDA on the given text
         :param tab_name: Name of the tab to perform LDA on
         :param documents: The documents to perform LDA on
-        :param additional_stopwords: The set of additional stopwords to exclude during LDA
+        :param additional_stopwords: The set of additional
+        stopwords to exclude during LDA
         :return: The trained LDA model
         """
         # Get text from documents
@@ -108,7 +120,6 @@ class GraphDisplay(QTabWidget):
         # Preprocess documents with additional stopwords exclusion
         # TODO: real preprocessing
         pipe = Pipeline()
-        #print(additional_stopwords)
         pipe.add_stopwords(additional_stopwords)
         tokens = [pipe(doc_text) for doc_text in text_from_docs]
 
@@ -126,7 +137,8 @@ class GraphDisplay(QTabWidget):
             topic_name = f"Topic {i + 1}"
             topic_words = lda_model.show_topic_terms(i, 10)
             cleaned_topic_words = [word for word, _ in topic_words]
-            self.fetched_topics_display.add_topic(tab_name, topic_name, cleaned_topic_words)
+            self.fetched_topics_display.add_topic(tab_name, topic_name,
+                                                  cleaned_topic_words)
 
         return lda_model
 
@@ -146,10 +158,9 @@ class GraphDisplay(QTabWidget):
         :param lda_model: The LDA model to add the plots for
         :return: None
         """
-        canvases = []
-        canvases.append(self.construct_doc_topic_network_vis2(lda_model))
-        canvases.append(self.construct_doc_topic_network_vis(lda_model))
-        canvases.append(self.construct_word_topic_network_vis(lda_model))
+        canvases = [self.construct_doc_topic_network_vis_summary(lda_model),
+                    # self.construct_doc_topic_network_vis(lda_model),
+                    self.construct_word_topic_network_vis(lda_model)]
         canvases.extend(self.construct_word_clouds(lda_model))
         canvases.extend(self.construct_probable_words(lda_model))
         canvases.append(self.construct_correlation_matrix(lda_model))
@@ -178,7 +189,7 @@ class GraphDisplay(QTabWidget):
             plt.imshow(wordcloud, interpolation='bilinear')
             plt.axis('off')
             plt.tight_layout(pad=0)
-            plt.title("Woordenwolk topic {}".format(i+1))
+            plt.title("Woordenwolk topic {}".format(i + 1))
 
             canvases.append(FigureCanvas(fig))
 
@@ -205,7 +216,7 @@ class GraphDisplay(QTabWidget):
             # Add margins and labels to the plot
             plt.margins(0.02)
             plt.ylabel("gewicht")
-            plt.title("Woorden met het hoogste gewicht topic {}".format(i+1))
+            plt.title("Woorden met het hoogste gewicht topic {}".format(i + 1))
 
             canvases.append(FigureCanvas(fig))
 
@@ -258,8 +269,10 @@ class GraphDisplay(QTabWidget):
         fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
 
         # Adjust the plot ticks so that they start from 1 instead of 0
-        plt.xticks(np.arange(self.num_topics), np.arange(1, self.num_topics+1))
-        plt.yticks(np.arange(self.num_topics), np.arange(1, self.num_topics+1))
+        plt.xticks(np.arange(self.num_topics),
+                   np.arange(1, self.num_topics + 1))
+        plt.yticks(np.arange(self.num_topics),
+                   np.arange(1, self.num_topics + 1))
 
         return FigureCanvas(fig)
 
@@ -335,7 +348,7 @@ class GraphDisplay(QTabWidget):
                 graph.add_edge(
                     topic_id,
                     topic_tuple[0],
-                    color=colors[topic_id%20],
+                    color=colors[topic_id % 20],
                     weight=topic_tuple[1])
 
         return graph
@@ -344,6 +357,7 @@ class GraphDisplay(QTabWidget):
         """
         Calculates the scale factor to make sure the biggest edge in a network
         is always the same size, regardless of the maximum topic weight
+
         :param lda_model: The LDA model to calculate the scale factor for
         :return: The edge scale factor
         """
@@ -358,9 +372,9 @@ class GraphDisplay(QTabWidget):
         # edge width that is visually pleasing
         chosen_weight = 1.5
 
-        scale_factor = (1/max_topic_weight)
+        scale_factor = (1 / max_topic_weight)
 
-        return scale_factor*chosen_weight
+        return scale_factor * chosen_weight
 
     # This graph will only be exported (to Gephi for example), since it is
     # not possible to visualize it well in the application. For now, it is
@@ -368,6 +382,12 @@ class GraphDisplay(QTabWidget):
     # TODO only export construct_doc_topic_network, not visualize it.
     def construct_doc_topic_network_vis(self, lda_model: GensimLdaModel) \
             -> FigureCanvas:
+        """
+        Construct a document-topic network plot showing the relations between
+
+        :param lda_model: The LDA model to construct the plot for
+        :return: A document-topic network plot
+        """
         # Construct a plot and graph
         fig = plt.figure(dpi=20)
         graph = self.construct_doc_topic_network(lda_model)
@@ -396,6 +416,12 @@ class GraphDisplay(QTabWidget):
 
     def construct_doc_topic_network(self, lda_model: GensimLdaModel) \
             -> nx.Graph:
+        """
+        Construct a document-topic network which is used to plot the relations
+
+        :param lda_model: The LDA model to construct the network for
+        :return: A networkx graph
+        """
         graph = nx.Graph()
 
         # List of simple, distinct colors from
@@ -406,7 +432,7 @@ class GraphDisplay(QTabWidget):
                   '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
 
         for topic_id in range(self.num_topics):
-            graph.add_node(topic_id, color=colors[topic_id%20])
+            graph.add_node(topic_id, color=colors[topic_id % 20])
 
         # Generate initial document topic network
         for document_id, document in enumerate(lda_model.bags_of_words):
@@ -420,8 +446,16 @@ class GraphDisplay(QTabWidget):
                                weight=topic_probability)
         return graph
 
-    def construct_doc_topic_network_vis2(self, lda_model: GensimLdaModel) \
-            -> FigureCanvas:
+    def construct_doc_topic_network_vis_summary(
+            self,
+            lda_model: GensimLdaModel) -> FigureCanvas:
+        """
+        Construct a document-topic network plot showing the relations between
+
+        :param lda_model: The LDA model to construct the plot for
+        :return: A document-topic network plot
+        """
+
         # Construct a plot and a graph
         fig = plt.figure(dpi=60)
         plt.title("Topics en documenten die daar ten minste 5% bij horen")
@@ -466,7 +500,7 @@ class GraphDisplay(QTabWidget):
                 if x == 0:
                     continue
                 shortest_path_lengths[source][target] = (
-                    max(x + 5*math.log(x, 2), 15))
+                    max(x + 5 * math.log(x, 2), 15))
 
         # Define a custom position using the new "shortest" paths
         pos = nx.kamada_kawai_layout(graph, dist=shortest_path_lengths)
@@ -483,7 +517,7 @@ class GraphDisplay(QTabWidget):
         # Add labels to the topic nodes
         labels = {}
         for topic_id in range(self.num_topics):
-            labels[topic_id] = topic_id+1
+            labels[topic_id] = topic_id + 1
 
         nx.draw_networkx_labels(graph, pos, labels=labels)
 
@@ -491,6 +525,11 @@ class GraphDisplay(QTabWidget):
 
     def construct_doc_topic_network2(self, lda_model: GensimLdaModel) \
             -> nx.Graph:
+        """
+        Construct a document-topic network which is used to plot the relations
+        :param lda_model: The LDA model to construct the network for
+        :return: A networkx graph
+        """
         # List of simple, distinct colors from
         # https://sashamaps.net/docs/resources/20-colors/
         colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
@@ -521,7 +560,7 @@ class GraphDisplay(QTabWidget):
                             if init_graph.degree(node) == 1]
             if len(lonely_nodes) > 0:
                 graph.add_edge(topic_id,
-                               'doc_set_'+str(topic_id),
+                               'doc_set_' + str(topic_id),
                                color=colors[topic_id % 20],
                                weight=len(lonely_nodes))
 
@@ -562,16 +601,17 @@ class GraphDisplay(QTabWidget):
         """
 
         # Find the maximum edge weight
-        weight = [weight for node1, node2, weight in graph.edges(data="weight")]
+        weight = [weight for node1, node2, weight in
+                  graph.edges(data="weight")]
         max_edge_weight = max(weight)
 
         # A constant which is multiplied by the scale factor according to an
         # edge width that is visually pleasing
         chosen_weight = 10
 
-        scale_factor = (1/max_edge_weight)
+        scale_factor = (1 / max_edge_weight)
 
-        return scale_factor*chosen_weight
+        return scale_factor * chosen_weight
 
     def get_active_tab_name(self) -> str:
         """
@@ -597,7 +637,8 @@ class GraphDisplay(QTabWidget):
             return
 
         # Add the plot to the layout
-        self.init_model_layout.addWidget(self.plots_container[tab_name][plot_index])
+        self.init_model_layout.addWidget(
+            self.plots_container[tab_name][plot_index])
 
     def on_tab_clicked(self, index) -> None:
         """
@@ -623,7 +664,8 @@ class GraphDisplay(QTabWidget):
         if tab_name not in self.plots_container:
             return
 
-        self.plot_index[tab_name] = (self.plot_index[tab_name] + 1) % len(self.plots_container[tab_name])
+        self.plot_index[tab_name] = (self.plot_index[tab_name] + 1) % len(
+            self.plots_container[tab_name])
         self.display_plot(tab_name, self.plot_index[tab_name])
 
     def previous_plot(self, tab_name: str) -> None:
@@ -636,5 +678,6 @@ class GraphDisplay(QTabWidget):
         if tab_name not in self.plots_container:
             return
 
-        self.plot_index[tab_name] = (self.plot_index[tab_name] - 1) % len(self.plots_container[tab_name])
+        self.plot_index[tab_name] = (self.plot_index[tab_name] - 1) % len(
+            self.plots_container[tab_name])
         self.display_plot(tab_name, self.plot_index[tab_name])
