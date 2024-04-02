@@ -41,15 +41,17 @@ class StopwordsModel:
         """
         Adds one or more extra stopwords.
 
-        :param args: The word(s) to add to the iterable
+        :param args: The word(s) to add
         :return: None
         """
         for arg in args:
+            # The argument is a string.
             if isinstance(arg, str):
                 self._extra_words.add(arg)
+            # The argument is an iterable.
             elif isinstance(arg, Iterable):
-                for word in arg:
-                    self._extra_words.add(word)
+                self._extra_words.update(arg)
+            # The argument is of an unexpected type.
             else:
                 raise TypeError(
                     "Arguments must be strings or iterables of strings.")
@@ -58,15 +60,17 @@ class StopwordsModel:
         """
         Remove one or more extra stopwords.
 
-        :param args: The word(s) to remove from the iterable
+        :param args: The word(s) to remove
         :return: None
         """
         for arg in args:
+            # The argument is a string.
             if isinstance(arg, str):
-                self._extra_words.remove(arg)
+                self._extra_words.discard(arg)
+            # The argument is an iterable.
             elif isinstance(arg, Iterable):
-                for word in arg:
-                    self._extra_words.remove(word)
+                self._extra_words.difference_update(arg)
+            # The argument is of an unexpected type.
             else:
                 raise TypeError(
                     "Arguments must be strings or iterables of strings.")
@@ -79,7 +83,17 @@ class StopwordsModel:
         :return: None
         """
         self._extra_words.clear()
-        self.add(args)
+        for arg in args:
+            # The argument is a string.
+            if isinstance(arg, str):
+                self._extra_words.add(arg)
+            # The argument is an iterable.
+            elif isinstance(arg, Iterable):
+                self._extra_words.update(arg)
+            # The argument is of an unexpected type.
+            else:
+                raise TypeError(
+                    "Arguments must be strings or iterables of strings.")
 
 
 """

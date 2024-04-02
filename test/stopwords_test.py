@@ -94,7 +94,6 @@ def test_stopwords_remove_multiple_words(stopwords):
     assert len(stopwords) == 352
 
 
-
 def test_stopwords_remove_list(stopwords):
     """
     Test removing a list of words from stop words.
@@ -130,7 +129,8 @@ def test_stopwords_replace(stopwords):
     for word in new_stopwords:
         assert word in stopwords
 
-#def test_stopwords_add_invalid_argument_type(stopwords):
+
+# def test_stopwords_add_invalid_argument_type(stopwords):
 #    """
 #    Test adding an invalid argument type to stop words.
 #    """
@@ -143,3 +143,11 @@ def test_stopwords_replace(stopwords):
 #    """
 #    with pytest.raises(TypeError):
 #        stopwords.remove(123)
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

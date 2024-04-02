@@ -28,7 +28,7 @@ def test_process_text(preprocessing_controller, stopwords_model):
     assert "token2" in tokens
 
 
-def test_process_tokens(preprocessing_controller,stopwords_model):
+def test_process_tokens(preprocessing_controller, stopwords_model):
     """
         Test the process_tokens method of PreprocessingController.
     """
@@ -57,3 +57,11 @@ def test_filter_stopwords(preprocessing_controller, stopwords_model):
     assert all(isinstance(token, str) for token in
                filtered_tokens)  # Ensure all tokens are strings
     assert "dit" not in filtered_tokens  # Check if specific stopwords are removed
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""
