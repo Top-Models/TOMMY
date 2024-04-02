@@ -158,6 +158,18 @@ class GensimLdaModel(Model):
                                distance='jaccard',
                                num_words=num_words)[0]
 
+    def get_document_topics(self, doc, minimum_probability):
+        """
+        Get the topics for a document.
+        :param doc: Document to get the topics for.
+        :param minimum_probability: Minimum probability for a topic
+        to be included.
+        :return: List of tuples containing topic ID and probability.
+        """
+        return self.model.get_document_topics(
+            doc,
+            minimum_probability=minimum_probability)
+
     def save(self, fpath) -> None:
         """
         Save the internal state of the model to the location
