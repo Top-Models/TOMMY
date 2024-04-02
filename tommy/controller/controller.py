@@ -1,4 +1,3 @@
-from tommy.backend.preprocessing.pipeline import Pipeline
 from tommy.model.model import Model
 
 from tommy.controller.file_import.processed_body import ProcessedBody
@@ -113,18 +112,14 @@ class Controller:
         and using the current model parameters
         :return: None
         """
-        raw_bodies = self._corpus_controller.get_raw_bodies()
+        raw_files = self._corpus_controller.get_raw_files()
 
         # todo: add preprocessing pipeline here using preprocessing_controller
-        pipe = Pipeline()
-        pipe.add_stopwords(additional_stopwords)
-        tokens = [pipe(doc_text.body) for doc_text in raw_bodies]
-        processed_dummy_files = [ProcessedFile(
-            Metadata("dummy", -1, -1, "dummy"),
-            ProcessedBody(processed_tokens))
-            for processed_tokens in tokens]
-        self._corpus_controller.set_processed_corpus(processed_dummy_files)
+        processed_files = [ProcessedFile(doc.metadata, ProcessedBody(
+            self._preprocessing_controller.process_text(doc.body.body)))
+                  for doc in raw_files]
 
+        self._corpus_controller.set_processed_corpus(processed_files)
         self._topic_modelling_controller.train_model()
 
 

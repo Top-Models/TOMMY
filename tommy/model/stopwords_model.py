@@ -1,7 +1,7 @@
 import os
 from collections.abc import Iterable
 
-from tommy.support.application_settings import current_project_settings
+from tommy.support.application_settings import application_settings
 
 
 class StopwordsModel:
@@ -17,7 +17,7 @@ class StopwordsModel:
     def __init__(self) -> None:
         """Initializes the stopwords model."""
         with open(os.path.join(
-                current_project_settings.preprocessing_data_folder,
+                application_settings.preprocessing_data_folder,
                 "stopwords.txt"), 'r') as file:
             file_content = file.read()
         stopword_list = file_content.split()

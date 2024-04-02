@@ -4,7 +4,7 @@ import spacy
 from spacy.tokens import Doc
 
 from tommy.model.stopwords_model import StopwordsModel
-from tommy.support.application_settings import current_project_settings
+from tommy.support.application_settings import application_settings
 
 
 class PreprocessingController:
@@ -13,7 +13,7 @@ class PreprocessingController:
 
     def __init__(self) -> None:
         pipeline_path = os.path.join(
-            current_project_settings.preprocessing_data_folder
+            application_settings.preprocessing_data_folder
             , "pipeline_download", "nl_core_news_sm-3.7.0")
         nlp = spacy.load(pipeline_path,
                          exclude=["tagger", "attribute_ruler", "parser",

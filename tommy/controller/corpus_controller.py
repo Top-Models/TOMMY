@@ -119,6 +119,15 @@ class CorpusController(Observer, Publisher):
         files = self._read_files_from_input_folder()
         return (file.body for file in files)
 
+    def get_raw_files(self) -> Generator[RawFile, None, None]:
+        """
+        Get a generator that reads all the raw file contents and their metadata
+        from the input folder
+
+        :return: A generator of the raw corpus
+        """
+        return self._read_files_from_input_folder()
+
     def get_processed_corpus(self) -> Iterable[ProcessedFile]:
         """
         Get an iterable of the processed corpus. Only works after

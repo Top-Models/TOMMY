@@ -44,7 +44,7 @@ def get_base_dir() -> str:
     return os.path.abspath(getattr(sys, '_MEIPASS', os.getcwd()))
 
 
-current_project_settings = ApplicationSettings(get_preprocessing_data_folder())
+application_settings = ApplicationSettings(get_preprocessing_data_folder())
 
 """
 This program has been developed by students from the bachelor Computer Science
