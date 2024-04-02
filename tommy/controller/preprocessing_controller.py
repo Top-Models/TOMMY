@@ -4,7 +4,7 @@ import spacy
 from spacy.tokens import Doc
 
 from tommy.model.stopwords_model import StopwordsModel
-from tommy.support.project_settings import current_project_settings
+from tommy.support.application_settings import current_project_settings
 
 
 class PreprocessingController:
@@ -79,3 +79,6 @@ at Utrecht University within the Software Project course.
 © Copyright Utrecht University 
 (Department of Information and Computing Sciences)
 """
+
+if __name__ == "__main__":
+    p = PreprocessingController()

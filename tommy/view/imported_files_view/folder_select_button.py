@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QFileDialog
-from tommy.support import project_settings
+from tommy.controller.project_settings_controller import (
+    ProjectSettingsController)
 import os
 
 from tommy.view.observer.observer import Observer
@@ -7,7 +8,8 @@ from tommy.view.observer.observer import Observer
 
 class FolderSelectButton(QWidget, Observer):
     """A button for selecting a folder containing input documents"""
-    def __init__(self) -> None:
+    def __init__(self, project_settings_controller: ProjectSettingsController
+                 ) -> None:
         super().__init__()
         """Initialize the FolderSelectButton widget."""
 
@@ -21,11 +23,13 @@ class FolderSelectButton(QWidget, Observer):
         btn.resize(btn.sizeHint())
         btn.clicked.connect(self.select_folder)
 
+        self.project_settings_controller = project_settings_controller
+
     def select_folder(self) -> None:
         """Open a file dialog to select a folder."""
         dialog = QFileDialog.getExistingDirectory(self, "Select folder")
         if dialog:
-            project_settings.current_project_settings.selected_folder = (
+            self.project_settings_controller.set_input_folder_path(
                 os.path.relpath(dialog))
 
     def update_observer(self, publisher) -> None:

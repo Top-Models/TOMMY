@@ -1,7 +1,7 @@
 import os
 from collections.abc import Iterable
 
-from tommy.support.project_settings import current_project_settings
+from tommy.support.application_settings import current_project_settings
 
 
 class StopwordsModel:
