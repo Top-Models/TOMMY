@@ -1,5 +1,5 @@
 # Global requirements file.
-# Keep the listed packages up to date when new packages/versions are being used. 
+# Keep the listed packages up to date when new packages/versions are being used.
 # The requirements file format is explained at https://pip.pypa.io/en/latest/reference/requirements-file-format/.
 
 PySide6==6.6.2
@@ -7,6 +7,7 @@ plotly==5.19.0
 python-dateutil==2.8.2
 spacy==3.7.4
 gensim==4.3.2
+scipy==1.12.0 # 1.13 does not work due to scipy.linalg.triu
 wordcloud==1.9.3
 pyinstaller==6.4.0
 matplotlib==3.8.3
