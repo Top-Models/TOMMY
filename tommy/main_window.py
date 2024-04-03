@@ -48,7 +48,8 @@ class MainWindow(QMainWindow):
         self.model_selection_view = ModelSelectionView()
         self.imported_files_view = ImportedFilesView(
             self._controller.corpus_controller,
-            self._controller.stopwords_controller)
+            self._controller.stopwords_controller,
+            self._controller.project_settings_controller)
         self.model_params_view = ModelParamsView(
             self._controller.model_parameters_controller,
             self._controller,
