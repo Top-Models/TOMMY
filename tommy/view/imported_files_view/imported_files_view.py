@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (QLabel, QVBoxLayout, QScrollArea, QWidget,
                                QSizePolicy, QPushButton, QGridLayout)
 
 from tommy.backend.file_import.file import File
+
 from tommy.backend.file_import.file_reader import FileReader
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.file_stats_view import FileStatsView
