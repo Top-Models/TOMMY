@@ -57,7 +57,6 @@ class ImportedFilesView(QWidget, Observer):
                            QSizePolicy.Policy.Expanding)
 
         # Initialize widgets
-        self.stopwords_view = StopwordsView()
         self.file_stats_view = FileStatsView()
 
         # { tab_name, files }

@@ -1,3 +1,4 @@
+import math
 import random
 import matplotlib.figure
 import networkx as nx
@@ -138,11 +139,12 @@ class TopicModellingHandler:
         :param lda_model: The LDA model to add the plots for
         :return: None
         """
-        canvases = []
+        canvases = [self.construct_word_topic_network_vis(lda_model),
+                    # self.construct_doc_topic_network_vis(lda_model),
+                    self.construct_doc_topic_network_vis_summary(lda_model)]
         canvases.extend(self.construct_word_clouds(lda_model))
         canvases.extend(self.construct_probable_words(lda_model))
         canvases.append(self.construct_correlation_matrix(lda_model))
-        canvases.append(self.construct_word_topic_network_vis(lda_model))
         # canvases.append(self.construct_word_count())
 
         self.plots_container[tab_name] = canvases
@@ -161,9 +163,8 @@ class TopicModellingHandler:
         for i in range(self.num_topics):
             wordcloud = (WordCloud(width=800, height=400,
                                    background_color='white').
-            generate_from_frequencies(
-                dict(lda_model.show_topic(i, 30))
-            ))
+                         generate_from_frequencies(
+                dict(lda_model.show_topic(i, 30))))
 
             # Construct a word cloud
             fig = plt.figure()
@@ -196,10 +197,10 @@ class TopicModellingHandler:
 
             # Add margins and labels to the plot
             plt.margins(0.02)
-            plt.ylabel("gewicht")
+            plt.xlabel("gewicht")
             plt.title("Woorden met het hoogste gewicht topic {}".format(i + 1))
 
-            canvases.append(FigureCanvas(fig))
+            canvases.append(fig)
 
         return canvases
 
@@ -250,8 +251,10 @@ class TopicModellingHandler:
         fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
 
         # Adjust the plot ticks so that they start from 1 instead of 0
-        plt.xticks(np.arange(self.num_topics), np.arange(1, self.num_topics + 1))
-        plt.yticks(np.arange(self.num_topics), np.arange(1, self.num_topics + 1))
+        plt.xticks(np.arange(self.num_topics),
+                   np.arange(1, self.num_topics + 1))
+        plt.yticks(np.arange(self.num_topics),
+                   np.arange(1, self.num_topics + 1))
 
         return fig
 
@@ -342,6 +345,245 @@ class TopicModellingHandler:
         chosen_weight = 1.5
 
         scale_factor = (1 / max_topic_weight)
+
+        return scale_factor * chosen_weight
+
+    # This graph will only be exported (to Gephi for example), since it is
+    # not possible to visualize it well in the application. For now, it is
+    # included in the visualizations, mainly for review.
+    # TODO only export construct_doc_topic_network, not visualize it.
+    def construct_doc_topic_network_vis(self, lda_model: GensimLdaModel) \
+            -> FigureCanvas:
+        """
+        Construct a document-topic network plot showing the relations between
+
+        :param lda_model: The LDA model to construct the plot for
+        :return: A document-topic network plot
+        """
+        # Construct a plot and graph
+        fig = plt.figure(dpi=20)
+        graph = self.construct_doc_topic_network(lda_model)
+
+        # Get graph elements
+        edges = graph.edges()
+        nodes = graph.nodes(data="color")
+
+        # Get drawing function arguments
+        node_sizes = [150 if node[1] is not None else 0 for node in nodes]
+        node_colors = [node[1] if node[1] is not None else "black"
+                       for node in nodes]
+
+        edge_colors = [graph[u][v]["color"] for (u, v) in edges]
+        edge_width = [(graph[u][v]["weight"]) for u, v in edges]
+
+        # Draw the network using the kamada-kawai algorithm to position the
+        # nodes in an aesthetically pleasing way
+        nx.draw_kamada_kawai(graph,
+                             width=edge_width,
+                             node_size=node_sizes,
+                             edge_color=edge_colors,
+                             node_color=node_colors)
+
+        return FigureCanvas(fig)
+
+    def construct_doc_topic_network(self, lda_model: GensimLdaModel) \
+            -> nx.Graph:
+        """
+        Construct a document-topic network which is used to plot the relations
+
+        :param lda_model: The LDA model to construct the network for
+        :return: A networkx graph
+        """
+        graph = nx.Graph()
+
+        # List of simple, distinct colors from
+        # https://sashamaps.net/docs/resources/20-colors/
+        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+                  '#9a6324', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+                  '#008080', '#e6beff', '#000075', '#fffac8', '#800000',
+                  '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
+
+        for topic_id in range(self.num_topics):
+            graph.add_node(topic_id, color=colors[topic_id % 20])
+
+        # Generate initial document topic network
+        for document_id, document in enumerate(lda_model.bags_of_words):
+            document_topic = (
+                lda_model.get_document_topics(document, 0.05))
+
+            # Add edges from each document to all associated topics
+            for (topic_id, topic_probability) in document_topic:
+                graph.add_edge(topic_id,
+                               'document:' + str(document_id),
+                               color=colors[topic_id % 20],
+                               weight=topic_probability)
+        return graph
+
+    def construct_doc_topic_network_vis_summary(
+            self,
+            lda_model: GensimLdaModel) -> FigureCanvas:
+        """
+        Construct a document-topic network plot showing the relations between
+
+        :param lda_model: The LDA model to construct the plot for
+        :return: A document-topic network plot
+        """
+
+        # Construct a plot and a graph
+        fig = plt.figure(dpi=60)
+        plt.title("Topics en documenten die daar ten minste 5% bij horen")
+        graph = self.construct_doc_topic_network2(lda_model)
+
+        # Get graph elements
+        edges = graph.edges()
+        nodes = graph.nodes(data="color")
+
+        # Get scaling factor used for scaling the nodes and edges to make sure
+        # these don't increase when more documents are added
+        scaling_factor = self.get_scaling_doc_topic(graph)
+
+        # Get drawing function arguments
+        node_sizes = []
+        for node in nodes:
+            # Give topic nodes a constant size
+            if node[1] is not None:
+                node_sizes.append(200)
+
+            # Give doc_set nodes a scaling size
+            else:
+                first_neighbor = list(graph.neighbors(node[0]))[0]
+                node_sizes.append(graph[node[0]][first_neighbor]["weight"]
+                                  * scaling_factor * 10)
+
+        node_colors = [node[1] if node[1] is not None else "black"
+                       for node in nodes]
+
+        edge_colors = [graph[u][v]["color"] for (u, v) in edges]
+        edge_width = [(graph[u][v]["weight"]) * scaling_factor
+                      for u, v in edges]
+
+        # Calculate the shortest paths using dijkstra's algorithm
+        shortest_path_lengths = dict(
+            nx.shortest_path_length(graph, weight="weight"))
+
+        # Calculate new "shortest" paths to aid visualization
+        for source in shortest_path_lengths:
+            for target in shortest_path_lengths[source]:
+                x = shortest_path_lengths[source][target]
+                if x == 0:
+                    continue
+                shortest_path_lengths[source][target] = (
+                    max(x + 5 * math.log(x, 2), 15))
+
+        # Define a custom position using the new "shortest" paths
+        pos = nx.kamada_kawai_layout(graph, dist=shortest_path_lengths)
+
+        # Draw the network using the kamada-kawai algorithm to position the
+        # nodes in an aesthetically pleasing way.
+        nx.draw(graph,
+                pos=pos,
+                width=edge_width,
+                node_size=node_sizes,
+                edge_color=edge_colors,
+                node_color=node_colors)
+
+        # Add labels to the topic nodes
+        labels = {}
+        for topic_id in range(self.num_topics):
+            labels[topic_id] = topic_id + 1
+
+        nx.draw_networkx_labels(graph, pos, labels=labels)
+
+        return FigureCanvas(fig)
+
+    def construct_doc_topic_network2(self, lda_model: GensimLdaModel) \
+            -> nx.Graph:
+        """
+        Construct a document-topic network which is used to plot the relations
+        :param lda_model: The LDA model to construct the network for
+        :return: A networkx graph
+        """
+        # List of simple, distinct colors from
+        # https://sashamaps.net/docs/resources/20-colors/
+        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+                  '#9a6324', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+                  '#008080', '#e6beff', '#000075', '#fffac8', '#800000',
+                  '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
+
+        # Construct a graph with topic nodes
+        init_graph = nx.Graph()
+        for topic_id in range(self.num_topics):
+            init_graph.add_node(topic_id)
+
+        # Generate initial document topic network
+        for document_id, document in enumerate(lda_model.bags_of_words):
+            document_topic = (
+                lda_model.get_document_topics(document, 0.05))
+
+            # Add edges from each document to all associated topics
+            for topic_id, topic_probability in document_topic:
+                init_graph.add_edge(topic_id, 'd' + str(document_id))
+
+        # Construct simplified document topic network
+        graph = nx.Graph()
+
+        # Add topic nodes and nodes with degree one to graph
+        for topic_id in range(self.num_topics):
+            graph.add_node(topic_id, color=colors[topic_id % 20])
+            lonely_nodes = [node for node in init_graph.neighbors(topic_id)
+                            if init_graph.degree(node) == 1]
+            if len(lonely_nodes) > 0:
+                graph.add_edge(topic_id,
+                               'doc_set_' + str(topic_id),
+                               color=colors[topic_id % 20],
+                               weight=len(lonely_nodes))
+
+        # Add nodes shared by multiple topics
+        doc_set_id = self.num_topics - 1
+        for topic_id in range(self.num_topics):
+            for j in range(self.num_topics):
+                doc_set_id += 1
+                if topic_id >= j:
+                    doc_set_id -= 1
+                    continue
+
+                # Calculate the intersection of two node's neighbors
+                set1 = set(init_graph.neighbors(topic_id))
+                set2 = set(init_graph.neighbors(j))
+                intersection = set1.intersection(set2)
+
+                # Add an edge from both topic nodes to a single "intersection"
+                # node
+                if len(intersection) != 0:
+                    graph.add_edge(topic_id,
+                                   "doc_set_" + str(doc_set_id),
+                                   color=colors[topic_id % 20],
+                                   weight=len(intersection))
+                    graph.add_edge(j,
+                                   "doc_set_" + str(doc_set_id),
+                                   color=colors[j % 20],
+                                   weight=len(intersection))
+
+        return graph
+
+    def get_scaling_doc_topic(self, graph: nx.Graph) -> float:
+        """
+        Calculates the scale factor to make sure the biggest edge in a network
+        is always the same size, regardless of the maximum edge weight
+        :param graph: The graph model to calculate the scale factor for
+        :return: The edge scale factor
+        """
+
+        # Find the maximum edge weight
+        weight = [weight for node1, node2, weight in
+                  graph.edges(data="weight")]
+        max_edge_weight = max(weight)
+
+        # A constant which is multiplied by the scale factor according to an
+        # edge width that is visually pleasing
+        chosen_weight = 10
+
+        scale_factor = (1 / max_edge_weight)
 
         return scale_factor * chosen_weight
 
