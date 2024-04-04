@@ -1,8 +1,9 @@
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame, \
+    QLineEdit, QSizePolicy
 
 from tommy.support.constant_variables import heading_font, \
-    text_font, sec_col_purple
+    text_font, sec_col_purple, pressed_seco_col_purple, light_seco_col_purple
 
 
 class TopicEntity(QFrame):
@@ -16,16 +17,22 @@ class TopicEntity(QFrame):
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         # Initialize widget properties
-        self.setStyleSheet(f"background-color: {sec_col_purple}; "
-                           f"color: white;")
+        self.setStyleSheet(f"background-color: {sec_col_purple};")
         self.setFixedWidth(200)
 
         # Initialize title widget
-        topic_label = QLabel(topic_name, self)
+        topic_label = QLineEdit(topic_name, self)
         topic_label.setStyleSheet(f"font-family: {heading_font}; "
+                                  f"color: white;"
                                   f"font-size: 15px; "
                                   f"font-weight: bold; "
-                                  f"text-transform: uppercase;")
+                                  f"text-transform: uppercase;"
+                                  f"background-color: "
+                                  f"{pressed_seco_col_purple};"
+                                  f"padding: 5px 5px;"
+                                  f"border-radius: 2px;"
+                                  f"border:"
+                                  f"2px solid {light_seco_col_purple};")
         topic_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(topic_label)
 
