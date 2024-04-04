@@ -75,7 +75,6 @@ class ImportedFilesView(QWidget, Observer):
     def initialize_title_widget(self) -> None:
         """
         Initialize the title label.
-
         :return: None
         """
 
