@@ -105,7 +105,7 @@ class ImportedFilesView(QWidget, Observer):
         self.title_widget.title_label.setContentsMargins(50, 0, 0, 0)
 
         # Create the title button
-        self.title_widget.title_button = QPushButton("-")
+        self.title_widget.title_button = QPushButton("🡻")
         (self.title_widget.title_button.
          setStyleSheet(f"font-size: 13px;"
                        f"font-family: {heading_font};"
@@ -201,9 +201,9 @@ class ImportedFilesView(QWidget, Observer):
         """
 
         if self.scroll_area.isVisible():
-            self.title_widget.title_button.setText("-")
+            self.title_widget.title_button.setText("🡻")
         else:
-            self.title_widget.title_button.setText("+")
+            self.title_widget.title_button.setText("🡹")
 
     def collapse_component(self) -> None:
         """
