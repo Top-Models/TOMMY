@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import date, datetime
 from dateutil import parser
-from interactive_topic_modeling.backend.file_import.file import File
+from tommy.backend.file_import.file import File
 from typing import Generator
 
 

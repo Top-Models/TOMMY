@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QScrollArea, QWidget, QVBoxLayout, QLineEdit, QHBoxLayout, QPushButton
-from interactive_topic_modeling.support.constant_variables import text_font
+from tommy.support.constant_variables import text_font
 
 
 class StopwordsDisplay(QScrollArea):

@@ -1,6 +1,6 @@
 from numpy import ndarray
 
-from interactive_topic_modeling.backend.model.abstract_model import Model, TermLists
+from tommy.backend.model.abstract_model import Model, TermLists
 
 from gensim.corpora.dictionary import Dictionary
 from gensim.models.ldamodel import LdaModel
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     # test lda model
     # todo: remove during review, svp?
     print("Executing test code for GensimLdaModel in main_window.py.MainWindow.__init__(). Please remove after use")
-    from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
+    from tommy.backend.model.lda_model import GensimLdaModel
 
     docs = [
         "In de bruisende stad Londen, te midden van de iconische bezienswaardigheden en levendige straten, ligt een verborgen parel van rust en verwondering - de London Zoo. In het weelderige groen van zijn terrein worden bezoekers meegenomen naar een wereld van betovering, waar ze enkele van de meest fascinerende wezens van de planeet kunnen ontmoeten. Onder de sterattracties bevinden zich de geliefde reuzenpanda's, ambassadeurs van China's rijke biodiversiteit en symbolen van wereldwijde natuurbescherming. Terwijl bezoekers wandelen door de weelderige bamboebossen van het Panda-verblijf van de dierentuin, worden ze betoverd door het zicht op deze zachtaardige reuzen, Mei Xiang en Tian Tian, terwijl ze speels op bamboescheuten knabbelen of lui luieren in de schaduw. Londenaren en toeristen stromen toe om een glimp op te vangen van deze schattige wezens, zich verbazend over hun kenmerkende zwart-witte vacht en vertederende capriolen. De aanwezigheid van panda's in Londen dient niet alleen als een bron van vreugde, maar ook als een aangrijpende herinnering aan het belang van het behouden van de kostbare flora en fauna van onze planeet voor toekomstige generaties.",

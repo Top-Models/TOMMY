@@ -1,9 +1,9 @@
 import os.path
 
-from interactive_topic_modeling.backend.file_import import file_importer_base
+from tommy.backend.file_import import file_importer_base
 import csv
 from typing import List, Generator
-from interactive_topic_modeling.backend.file_import.file import File
+from tommy.backend.file_import.file import File
 from datetime import date
 from os import stat
 

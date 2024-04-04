@@ -1,7 +1,7 @@
 import os
-from interactive_topic_modeling.backend.file_import import generic_file_importer
+from tommy.backend.file_import import generic_file_importer
 from typing import Generator
-from interactive_topic_modeling.backend.file_import.file import File
+from tommy.backend.file_import.file import File
 
 
 class FileReader:

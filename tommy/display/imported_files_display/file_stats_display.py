@@ -1,8 +1,8 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
 
-from interactive_topic_modeling.backend.file_import.file import File
-from interactive_topic_modeling.support.constant_variables import seco_col_blue, heading_font, hover_seco_col_blue
+from tommy.backend.file_import.file import File
+from tommy.support.constant_variables import seco_col_blue, heading_font, hover_seco_col_blue
 
 
 class FileStatsDisplay(QScrollArea):

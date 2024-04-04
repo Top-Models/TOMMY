@@ -9,11 +9,11 @@ from matplotlib.backends.backend_qt5agg import \
 from matplotlib.ticker import MaxNLocator
 from wordcloud import WordCloud
 
-from interactive_topic_modeling.backend.model.abstract_model import TermLists
-from interactive_topic_modeling.backend.model.lda_model import GensimLdaModel
-from interactive_topic_modeling.backend.preprocessing.pipeline import Pipeline
+from tommy.backend.model.abstract_model import TermLists
+from tommy.backend.model.lda_model import GensimLdaModel
+from tommy.backend.preprocessing.pipeline import Pipeline
 # Assuming you have this import statement
-from interactive_topic_modeling.display.topic_display.fetched_topics_display \
+from tommy.display.topic_display.fetched_topics_display \
     import (FetchedTopicsDisplay)
 
 
