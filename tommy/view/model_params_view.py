@@ -155,12 +155,14 @@ class ModelParamsView(QScrollArea, Observer):
         """
         return int(self.topic_input.text())
 
-    def topic_input_return_pressed_event(self) -> int:
+    def topic_input_return_pressed_event(self) -> None:
         """
-        The event when the topic input field is pressed.
-        :return: The number of topics
+        The event when the topic input field is pressed. Updates topic
+        amount in model_parameters_controller
+        :return: None
         """
-        return self.fetch_topic_num()
+        self._model_parameters_controller.set_model_n_topics(
+            self.fetch_topic_num())
 
     def apply_button_clicked_event(self) -> None:
         """
