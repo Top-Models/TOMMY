@@ -5,9 +5,9 @@ from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
 
 from tommy.backend.file_import.file import File
 from tommy.backend.file_import.file_reader import FileReader
-from tommy.display.imported_files_display.file_label import FileLabel
-from tommy.display.imported_files_display.file_stats_display import FileStatsDisplay
-from tommy.display.stopwords_display import StopwordsDisplay
+from tommy.view.imported_files_view.file_label import FileLabel
+from tommy.view.imported_files_view.file_stats_view import FileStatsDisplay
+from tommy.view.stopwords_view import StopwordsDisplay
 from tommy.support.constant_variables import heading_font, seco_col_blue, hover_seco_col_blue
 from tommy.support.project_settings import current_project_settings
 
@@ -17,8 +17,8 @@ class ImportedFilesDisplay(QWidget):
     def __init__(self):
         super().__init__()
 
-        # Initialize file reader
-        self.file_reader = FileReader()
+        # Initialize file readerk0l
+        # self.file_reader = FileReader()
 
         # Initialize widget properties
         self.setStyleSheet("background-color: rgba(230, 230, 230, 230);")

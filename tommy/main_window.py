@@ -5,10 +5,10 @@ from PySide6.QtWidgets import (
     QPushButton
 )
 
-from tommy.display.graph_display import GraphDisplay
-from tommy.display.imported_files_display.imported_files_display import \
+from tommy.view.graph_view import GraphDisplay
+from tommy.view.imported_files_view.imported_files_view import \
     ImportedFilesDisplay
-from tommy.display.model_params_display import \
+from tommy.view.model_params_view import \
     ModelParamsDisplay
 from tommy.support.constant_variables import text_font, \
     seco_col_blue, hover_seco_col_blue, \

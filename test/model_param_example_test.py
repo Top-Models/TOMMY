@@ -1,6 +1,6 @@
 import pytest
 from PySide6.QtCore import Qt
-from tommy.display.model_params_display import ModelParamsDisplay
+from tommy.view.model_params_view import ModelParamsDisplay
 
 
 @pytest.fixture

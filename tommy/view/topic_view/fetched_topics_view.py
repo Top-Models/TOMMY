@@ -1,7 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QLabel
 
-from tommy.display.topic_display.topic_entity import TopicEntity
+from tommy.view.topic_view.topic_entity import TopicEntity
 
 
 class FetchedTopicsDisplay(QScrollArea):

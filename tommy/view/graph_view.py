@@ -13,7 +13,7 @@ from tommy.backend.model.abstract_model import TermLists
 from tommy.backend.model.lda_model import GensimLdaModel
 from tommy.backend.preprocessing.pipeline import Pipeline
 # Assuming you have this import statement
-from tommy.display.topic_display.fetched_topics_display \
+from tommy.view.topic_view.fetched_topics_view \
     import (FetchedTopicsDisplay)
 
 
