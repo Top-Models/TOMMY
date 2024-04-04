@@ -11,7 +11,6 @@ from tommy.view.observer.observer import Observer
 
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
-from tommy.view.stopwords_view import StopwordsView
 
 
 class ModelParamsView(QScrollArea, Observer):
@@ -19,7 +18,6 @@ class ModelParamsView(QScrollArea, Observer):
 
     def __init__(self, model_parameters_controller: ModelParametersController,
                  controller: Controller,
-                 stopwords_view: StopwordsView
                  ) -> None:
         """The initialization ot the ModelParamDisplay."""
         super().__init__()
@@ -27,7 +25,6 @@ class ModelParamsView(QScrollArea, Observer):
         # Set reference to the model parameters controller
         self._model_parameters_controller = model_parameters_controller
         self._controller = controller
-        self._stopwords_view = stopwords_view
 
         # Initialize widget properties
         self.setStyleSheet("background-color: rgba(230, 230, 230, 230);"
@@ -170,10 +167,7 @@ class ModelParamsView(QScrollArea, Observer):
         The event when the apply button is clicked.
         :return: None
         """
-        # todo: remove these additional stopwords as parameters once stopwords
-        # controller is finished
-        self._controller.on_run_topic_modelling(
-            self._stopwords_view.additional_stopwords)
+        self._controller.on_run_topic_modelling()
 
     def update_observer(self, publisher: Publisher) -> None:
         """

@@ -1,5 +1,3 @@
-import os
-
 from PySide6.QtCore import QSize
 from PySide6.QtWidgets import (
     QMainWindow,
@@ -18,8 +16,6 @@ from tommy.view.model_selection_view import (
     ModelSelectionView)
 from tommy.view.plot_navigation_view import (
     PlotNavigationView)
-from tommy.view.stopwords_view import (
-    StopwordsView)
 from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
 
@@ -52,8 +48,7 @@ class MainWindow(QMainWindow):
             self._controller.project_settings_controller)
         self.model_params_view = ModelParamsView(
             self._controller.model_parameters_controller,
-            self._controller,
-            self.imported_files_view.stopwords_display)
+            self._controller)
         self.graph_view = GraphView(self._controller.graph_controller)
         self.plot_navigation_view = PlotNavigationView(
             self._controller.graph_controller)

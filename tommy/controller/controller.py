@@ -106,7 +106,7 @@ class Controller:
         self._project_settings_controller.set_model_refs(
             self._models[model_index].project_settings_model)
 
-    def on_run_topic_modelling(self, additional_stopwords: set[str]) -> None:
+    def on_run_topic_modelling(self) -> None:
         """
         Run the topic modelling algorithm on the currently selected corpus
         and using the current model parameters
@@ -116,8 +116,8 @@ class Controller:
 
         # todo: add preprocessing pipeline here using preprocessing_controller
         processed_files = [ProcessedFile(doc.metadata, ProcessedBody(
-            self._preprocessing_controller.process_text(doc.body.body)))
-                  for doc in raw_files]
+            self._preprocessing_controller.process_text(doc.body.body))) for
+                           doc in raw_files]
 
         self._corpus_controller.set_processed_corpus(processed_files)
         self._topic_modelling_controller.train_model()

@@ -14,6 +14,14 @@ class StopwordsModel:
     be added, removed or replaced.
     """
 
+    @property
+    def default_words(self) -> set[str]:
+        return self._default_words
+
+    @property
+    def extra_words(self) -> set[str]:
+        return self._extra_words
+
     def __init__(self) -> None:
         """Initializes the stopwords model."""
         with open(os.path.join(
@@ -33,6 +41,7 @@ class StopwordsModel:
         """Checks if the set of stopwords contains a word."""
         return word in self._default_words or word in self._extra_words
 
+    # TODO: probably deprecated
     def __iter__(self) -> Iterable[str]:
         """Returns an iterable of stopwords."""
         return iter(self._default_words | self._extra_words)
