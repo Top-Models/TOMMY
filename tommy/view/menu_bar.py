@@ -12,7 +12,7 @@ class MenuBar(QMenuBar):
         super().__init__(parent)
 
         # Create actions
-        import_input_folder_action = QAction("Importeer input folder", self)
+        import_input_folder_action = QAction("Selecteer input folder", self)
         export_action = QAction("Exporteren", self)
 
         # Create submenu for export
