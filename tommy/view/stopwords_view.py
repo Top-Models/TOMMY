@@ -4,7 +4,8 @@ from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
                                QTextEdit)
 
 from tommy.support.constant_variables import text_font, \
-    hover_seco_col_blue, pressed_seco_col_blue, sec_col_purple
+    hover_seco_col_blue, pressed_seco_col_blue, sec_col_purple, \
+    hover_prim_col_red
 from tommy.view.observer.observer import Observer
 
 
@@ -16,22 +17,55 @@ class StopwordsView(QScrollArea, Observer):
 
         # Initialize widget properties
         self.setFixedWidth(250)
-        self.setStyleSheet("background-color: white;")
+        self.setStyleSheet(f"""        
+                       QTabWidget {{
+                           color: black;
+                           border: none;
+                       }}
 
+                       QTabBar::tab {{ 
+                           background-color: #FFFFFF; 
+                           color: gray;
+                           font-size: 15px;
+                           padding-left: 10px;
+                           padding-right: 10px;
+                           padding-top: 15px;
+                           padding-bottom: 15px;
+                           font-weight: bold;
+                       }}
+
+                       QTabBar::tab:selected {{
+                           border-bottom: 3px solid {hover_prim_col_red};
+                           color: #000000;
+                           background-color: rgba(240, 240, 240, 1);
+                       }}
+
+                       QTabBar::tab:hover {{
+                           color: #000000;
+                       }}
+
+                       QTabWidget::tab-bar {{
+                           alignment: left;
+                       }}
+                   """)
         # Initialize container for all elements
         self.container = QTabWidget()
 
         # Initialize tabs
-        self.stopwords_tab = QTextEdit()
-        self.ngrams_tab = QWidget()
-        self.blacklist_tab = QWidget()
+        self.stopwords_tab = QWidget()
+        self.ngrams_tab = QTextEdit()
+        self.synoniemen_tab = QTextEdit()
+        self.blacklist_tab = QTextEdit()
 
         # Set layouts for tabs
-        self.container.addTab(self.stopwords_tab, "Stopwords")
-        self.container.addTab(self.ngrams_tab, "Ngrams")
         self.container.addTab(self.blacklist_tab, "Blacklist")
+        self.container.addTab(self.synoniemen_tab, "Synoniemen")
+        self.container.addTab(self.ngrams_tab, "N-grams")
+        self.container.addTab(self.stopwords_tab, "Stopwords")
         # Initialize the set of additional stopwords
         self.additional_stopwords = set()
+        self.synoniemen = set()
+        self.ngrams = set()
 
         # Set container as the focal point
         self.setWidget(self.container)
@@ -42,7 +76,7 @@ class StopwordsView(QScrollArea, Observer):
         self.setWidgetResizable(True)
 
         # Connect text changed event to update additional_stopwords
-        self.stopwords_tab.textChanged.connect(self.update_additional_stopwords)
+        self.blacklist_tab.textChanged.connect(self.update_additional_stopwords)
 
     def update_additional_stopwords(self) -> None:
         """
@@ -50,7 +84,7 @@ class StopwordsView(QScrollArea, Observer):
 
         :return: None
         """
-        text = self.stopwords_tab.toPlainText()
+        text = self.blacklist_tab.toPlainText()
         self.additional_stopwords = set(text.split())
 
 
