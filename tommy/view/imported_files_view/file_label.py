@@ -5,10 +5,8 @@ from PySide6.QtWidgets import QLabel, QSizePolicy
 from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
     heading_font,
-    sec_col_orange,
-    hover_seco_col_orange,
-    pressed_seco_col_orange,
-    text_font)
+    text_font, medium_light_gray, hover_medium_light_gray,
+    pressed_medium_light_gray)
 from tommy.view.observer.observer import Observer
 
 
@@ -29,7 +27,7 @@ class FileLabel(QLabel, Observer):
 
         self.setStyleSheet(f"font-family: {text_font};"
                            f"font-size: 15px;"
-                           f"background-color: {sec_col_orange};"
+                           f"background-color: {medium_light_gray};"
                            f"color: black;"
                            f"margin: 0px;"
                            f"padding: 10px;")
@@ -48,7 +46,8 @@ class FileLabel(QLabel, Observer):
         if not self.selected:
             self.setStyleSheet(f"font-family: {text_font};"
                                f"font-size: 15px;"
-                               f"background-color: {hover_seco_col_orange};"
+                               f"background-color: "
+                               f"{hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 10px;")
@@ -62,7 +61,7 @@ class FileLabel(QLabel, Observer):
         if not self.selected:
             self.setStyleSheet(f"font-family: {text_font};"
                                f"font-size: 15px;"
-                               f"background-color: {sec_col_orange};"
+                               f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 10px;")
@@ -77,7 +76,8 @@ class FileLabel(QLabel, Observer):
             self.selected = True
             self.setStyleSheet(f"font-family: {text_font};"
                                f"font-size: 15px;"
-                               f"background-color: {pressed_seco_col_orange};"
+                               f"background-color: "
+                               f"{pressed_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 10px;")
@@ -93,7 +93,7 @@ class FileLabel(QLabel, Observer):
             self.selected = False
             self.setStyleSheet(f"font-family: {text_font};"
                                f"font-size: 15px;"
-                               f"background-color: {sec_col_orange};"
+                               f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 10px;")
@@ -109,7 +109,7 @@ class FileLabel(QLabel, Observer):
         if not self.selected:
             self.setStyleSheet(f"font-family: {heading_font};"
                                f"font-size: 15px;"
-                               f"background-color: {hover_seco_col_orange};"
+                               f"background-color: {hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 10px;")

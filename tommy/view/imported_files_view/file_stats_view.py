@@ -3,8 +3,9 @@ from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
 
 from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
+    seco_col_blue,
     heading_font,
-    prim_col_red, hover_prim_col_red)
+    hover_seco_col_blue, prim_col_red, hover_prim_col_red)
 from tommy.view.observer.observer import Observer
 
 
@@ -16,6 +17,7 @@ class FileStatsView(QScrollArea, Observer):
         super().__init__()
 
         # Initialize widget properties
+        self.setFixedWidth(250)
         self.setStyleSheet(f"background-color: white;"
                            f"color: black;")
         self.setMinimumHeight(200)
@@ -47,7 +49,7 @@ class FileStatsView(QScrollArea, Observer):
                                   f"{hover_prim_col_red};")
 
         title_label.setContentsMargins(0, 0, 0, 0)
-        title_label.setMaximumHeight(50)
+        title_label.setFixedHeight(50)
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
                                  Qt.AlignmentFlag.AlignTop)
         self.layout.addWidget(title_label)
@@ -62,7 +64,7 @@ class FileStatsView(QScrollArea, Observer):
         self.layout.setContentsMargins(0, 0, 0, 0)
 
         # Add label
-        no_file_selected_label = QLabel("Geen bestand geselecteerd")
+        no_file_selected_label = QLabel("Geen bestand\ngeselecteerd")
         no_file_selected_label.setStyleSheet("font-size: 20px;")
         no_file_selected_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(no_file_selected_label)
@@ -100,7 +102,7 @@ class FileStatsView(QScrollArea, Observer):
     def display_file_info(self, file_metadata: Metadata) -> None:
         """
         Display the file info
-        :param file_metadata: The file to view
+        :param file_metadata: The metatdata of the file to view
         :return: None
         """
 

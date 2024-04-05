@@ -13,6 +13,7 @@ pyinstaller==6.4.0
 matplotlib==3.8.3
 nltk==3.8.1
 numpy==1.26.4
+networkx==3.2.1
 striprtf==0.0.26 # rtf_files to csv file
 
 #pytest
@@ -20,3 +21,4 @@ pytest==8.0.2
 pytest-qt==4.4.0
 pluggy==1.4.0
 iniconfig==2.0.0
+coverage==7.4.4

@@ -28,15 +28,16 @@ class TopWordsBarPlotCreator(AbstractVisualizationPerTopic):
             each word is associated with the topic.
         """
         topic = topic_runner.get_topic_with_scores(topic_id=topic_id,
-                                                   n_words=10)
+                                                   n_words=15)
 
-        # Construct a bar plot
+        # Construct a horizontal bar plot
         fig = plt.figure()
-        plt.bar(topic.top_words, topic.word_scores, color="darkblue")
+        plt.barh(topic.top_words, topic.word_scores, color="darkblue")
+        plt.gca().invert_yaxis()
 
         # Add margins and labels to the plot
         plt.margins(0.02)
-        plt.ylabel("gewicht")
+        plt.xlabel("gewicht")
         plt.title(f"Woorden met het hoogste gewicht topic {topic_id+1}")
 
         return fig

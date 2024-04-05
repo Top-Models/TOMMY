@@ -20,8 +20,8 @@ from tommy.view.model_params_view import ModelParamsView
 #    assert parameter_display.fetch_topic_num() == 10
 
 
-if __name__ == '__main__':
-    pytest.main()
+# if __name__ == '__main__':
+#     pytest.main()
 
 """
 This program has been developed by students from the bachelor Computer Science

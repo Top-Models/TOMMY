@@ -1,15 +1,14 @@
+import os
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
 
 from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
-from tommy.controller.stopwords_controller import StopwordsController
 
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.file_stats_view import FileStatsView
 from tommy.view.observer.observer import Observer
-from tommy.view.stopwords_view import StopwordsView
 from tommy.support.constant_variables import (
     heading_font, prim_col_red,
     hover_prim_col_red)
@@ -21,7 +20,6 @@ class ImportedFilesView(QWidget, Observer):
     """The ImportedFileDisplay class that shows the imported files."""
 
     def __init__(self, corpus_controller: CorpusController,
-                 stopwords_model: StopwordsController,
                  project_settings_controller: ProjectSettingsController) -> \
             None:
         """Initialize the ImportedFileDisplay"""
@@ -32,6 +30,8 @@ class ImportedFilesView(QWidget, Observer):
         corpus_controller.add(self)
 
         # Initialize widget properties
+        self.setMinimumHeight(200)
+        self.setMaximumHeight(300)
         self.setStyleSheet("background-color: rgba(230, 230, 230, 230);")
 
         # Initialize layout for the entire widget
@@ -58,8 +58,7 @@ class ImportedFilesView(QWidget, Observer):
         self.layout.addWidget(self.scroll_area)
 
         # Initialize widgets
-        self.stopwords_display = StopwordsView(stopwords_model)
-        self.file_stats_display = FileStatsView()
+        self.file_stats_view = FileStatsView()
         self.folder_select_button = FolderSelectButton(
             project_settings_controller)
 
@@ -145,7 +144,7 @@ class ImportedFilesView(QWidget, Observer):
         self.selected_label = clicked_label
 
         # Display the file stats
-        self.file_stats_display.display_file_info(clicked_label.file)
+        self.file_stats_view.display_file_info(clicked_label.file)
 
     def initialize_files_for_label(self, tab_name: str, files: list) -> None:
         """

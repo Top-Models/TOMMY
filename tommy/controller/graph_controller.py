@@ -1,9 +1,14 @@
 from itertools import product
+from collections.abc import Iterable, Callable
 
 import matplotlib.figure
 
+from tommy.controller.corpus_controller import CorpusController
 from tommy.view.observer.observer import Observer
 from tommy.datatypes.topics import TopicWithScores
+from tommy.controller.publisher.publisher import Publisher
+from tommy.controller.file_import.processed_file import ProcessedFile
+from tommy.controller.file_import.metadata import Metadata
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
@@ -13,12 +18,23 @@ from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
 from tommy.controller.visualizations.abstract_visualizations_per_topic import (
     AbstractVisualizationPerTopic)
+from tommy.controller.visualizations.abstract_visualization_on_data import (
+    AbstractVisualizationOnData)
 from tommy.controller.visualizations.correlation_matrix_creator import (
     CorrelationMatrixCreator)
 from tommy.controller.visualizations.top_words_bar_plot_creator import (
     TopWordsBarPlotCreator)
 from tommy.controller.visualizations.word_cloud_creator import WordCloudCreator
-from tommy.controller.publisher.publisher import Publisher
+from tommy.controller.visualizations.word_topic_network_creator import (
+    WordTopicNetworkCreator)
+from tommy.controller.visualizations.document_topic_network_summary_creator \
+    import DocumentTopicNetworkSummaryCreator
+from tommy.controller.visualizations.document_topic_network_creator import (
+    DocumentTopicNetworkCreator)
+from tommy.controller.visualizations.document_word_count_creator import (
+    DocumentWordCountCreator)
+from tommy.controller.visualizations.visualization_input_datatypes import (
+    ProcessedCorpus, MetadataCorpus)
 
 
 class GraphController(Observer):
@@ -29,11 +45,19 @@ class GraphController(Observer):
     when the topics have changed.
     """
     _topic_modelling_controller: TopicModellingController = None
-    GLOBAL_VISUALIZATIONS: list[AbstractVisualization] = [
-        CorrelationMatrixCreator()]
+    _corpus_controller: CorpusController = None
+
+    GLOBAL_VISUALIZATIONS: list[AbstractVisualization
+                                | AbstractVisualizationOnData] = [
+        CorrelationMatrixCreator(),
+        WordTopicNetworkCreator(),
+        DocumentTopicNetworkSummaryCreator(),
+        DocumentWordCountCreator()
+    ]
     TOPIC_VISUALIZATIONS: list[AbstractVisualizationPerTopic] = [
         WordCloudCreator(),
-        TopWordsBarPlotCreator()]
+        TopWordsBarPlotCreator()
+    ]
     _possible_global_visualizations: list[int] = None
     _possible_topic_visualizations: list[int] = None
 
@@ -66,6 +90,10 @@ class GraphController(Observer):
         """Set reference to the TM controller and add self to its publisher"""
         self._topic_modelling_controller = topic_modelling_controller
         self._topic_modelling_controller.add(self)
+
+    def set_controller_refs(self,
+                            corpus_controller: CorpusController):
+        self._corpus_controller = corpus_controller
 
     def get_number_of_topics(self) -> int:
         """
@@ -171,8 +199,36 @@ class GraphController(Observer):
         :return: matplotlib figure of visualization corresponding to the index
         """
         selected_vis = self._possible_global_visualizations[vis_index]
-        return (self.GLOBAL_VISUALIZATIONS[selected_vis]
-                .get_figure(self._current_topic_runner))
+
+        vis_creator = self.GLOBAL_VISUALIZATIONS[selected_vis]
+        # check if the visualization creator needs processed corpus as input
+        if isinstance(vis_creator,
+                      AbstractVisualizationOnData):
+            return self._run_global_visualization_on_data(vis_creator)
+
+        # otherwise run the visualization without additional data
+        return vis_creator.get_figure(self._current_topic_runner)
+
+    def _run_global_visualization_on_data(self,
+            vis_creator: AbstractVisualizationOnData):
+        """
+        Runs the global visualization on the additional data that it needs
+        :param vis_creator: Index of the visualization to be requested
+        :return: matplotlib figure of visualization corresponding to the index
+        """
+
+        if vis_creator.input_data_type == ProcessedCorpus:
+            processed_corpus = self._corpus_controller.get_processed_corpus()
+            return vis_creator.get_figure(self._current_topic_runner,
+                                          processed_corpus)
+        if vis_creator.input_data_type == MetadataCorpus:
+            metadata = self._corpus_controller.get_metadata()
+            return vis_creator.get_figure(self._current_topic_runner,
+                                          metadata)
+
+        raise Exception("The graph-controller is asked to supply data of type"
+                        f" {vis_creator.input_data_type}, which is not "
+                        " supported")
 
     def _get_topic_visualization(self,
                                  vis_index: int) -> matplotlib.figure.Figure:

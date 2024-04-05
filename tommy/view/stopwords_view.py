@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
 
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.support.constant_variables import text_font, \
-    hover_seco_col_blue, pressed_seco_col_blue
+    hover_seco_col_blue, pressed_seco_col_blue, sec_col_purple
 from tommy.view.observer.observer import Observer
 
 
@@ -20,6 +20,7 @@ class StopwordsView(QScrollArea, Observer):
         stopwords_controller.add(self)
 
         # Initialize widget properties
+        self.setFixedWidth(250)
         self.setStyleSheet("background-color: white;")
 
         # Initialize container for all elements
@@ -128,7 +129,7 @@ class StopwordsView(QScrollArea, Observer):
     def create_word_label(self, stopword: str) -> QLabel:
         """Create a label for every word"""
         stopword_label = QLabel(stopword, self)
-        stopword_label.setStyleSheet(f"background-color: #00968F;"
+        stopword_label.setStyleSheet(f"background-color: {sec_col_purple};"
                                      f"color: white;"
                                      f"font-family: {text_font};"
                                      f"font-size: 12px;"

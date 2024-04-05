@@ -57,7 +57,6 @@ class FolderSelectButton(QWidget):
             # the controller
             self.project_settings_controller.set_input_folder_path(
                 os.path.relpath(dialog))
-        print(self.project_settings_controller.get_input_folder_path())
 
 
 """

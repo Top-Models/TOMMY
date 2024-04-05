@@ -74,6 +74,7 @@ class Controller:
 
         self._corpus_controller.set_controller_refs(
             self._project_settings_controller)
+        self._graph_controller.set_controller_refs(self._corpus_controller)
 
     def select_model(self, model_index: int) -> None:
         """
@@ -114,7 +115,7 @@ class Controller:
         """
         raw_files = self._corpus_controller.get_raw_files()
 
-        # todo: add preprocessing pipeline here using preprocessing_controller
+        # todo: move running the preprocessing to corpus_controller
         processed_files = [ProcessedFile(doc.metadata, ProcessedBody(
             self._preprocessing_controller.process_text(doc.body.body))) for
                            doc in raw_files]

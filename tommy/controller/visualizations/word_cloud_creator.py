@@ -15,7 +15,7 @@ class WordCloudCreator(AbstractVisualizationPerTopic):
     runner and returning it as a matplotlib figure.
     """
     _required_interfaces = []
-    name = 'Wordcloud'
+    name = 'Woordenwolk'
 
     def get_figure(self,
                    topic_runner: TopicRunner,
@@ -32,7 +32,6 @@ class WordCloudCreator(AbstractVisualizationPerTopic):
         topic = topic_runner.get_topic_with_scores(topic_id, 30)
         word_to_score_dict = dict(topic.top_words_with_scores)
 
-        # todo: make the size of the wordcloud variable
         wordcloud = (WordCloud(width=800,
                                height=400,
                                background_color='white').
@@ -40,6 +39,7 @@ class WordCloudCreator(AbstractVisualizationPerTopic):
 
         # Construct a word cloud
         fig = plt.figure()
+        plt.title("Woordenwolk topic {}".format(topic_id + 1))
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis('off')
         plt.tight_layout(pad=0)

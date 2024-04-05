@@ -2,9 +2,9 @@ import pytest
 from PySide6 import QtCore
 from PySide6.QtCore import Qt
 from tommy.main_window import MainWindow
-from tommy.support.constant_variables import text_font, heading_font, \
-    seco_col_blue, \
-    hover_seco_col_blue
+from tommy.support.constant_variables import (text_font, heading_font,
+    seco_col_blue,
+    hover_seco_col_blue)
 
 # @pytest.fixture
 # def mainwindow(qtbot):
@@ -53,8 +53,8 @@ from tommy.support.constant_variables import text_font, heading_font, \
 #    assert f"border-radius: 5px;font-size: 14px;font-family: {text_font};color: black;border: 2px solid #00968F;padding: 5px;background-color: white;" in mainwindow.model_params_view.topic_input.styleSheet()
 
 
-if __name__ == '__main__':
-    pytest.main()
+# if __name__ == '__main__':
+#     pytest.main()
 
 """
 This program has been developed by students from the bachelor Computer Science

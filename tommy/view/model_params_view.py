@@ -7,10 +7,10 @@ from tommy.controller.publisher.publisher import Publisher
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
     pressed_seco_col_blue, prim_col_red, hover_prim_col_red)
-from tommy.view.observer.observer import Observer
-
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
+
+from tommy.view.observer.observer import Observer
 
 
 class ModelParamsView(QScrollArea, Observer):
@@ -27,6 +27,7 @@ class ModelParamsView(QScrollArea, Observer):
         self._controller = controller
 
         # Initialize widget properties
+        self.setFixedWidth(250)
         self.setStyleSheet("background-color: rgba(230, 230, 230, 230);"
                            "margin: 0px;"
                            "padding: 0px;"
@@ -178,7 +179,9 @@ class ModelParamsView(QScrollArea, Observer):
         :param publisher: The publisher that is being observed
         :return: None
         """
-        pass
+        # todo: look into whether this should still be an
+        #   observer. We should probably observe changes to
+        #   model parameters here.
 
 
 """

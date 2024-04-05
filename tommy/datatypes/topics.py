@@ -26,7 +26,7 @@ class TopicWithScores(Topic):
     @property
     def top_words_with_scores(self) -> list[tuple[str, float]]:
         """Get tuples of top words with their corresponding score"""
-        return zip(self.top_words, self.word_scores)
+        return list(zip(self.top_words, self.word_scores))
 
     def __init__(self, topic_id: int,
                  top_words_with_scores: list[tuple[str, float]]) -> None:
@@ -38,7 +38,9 @@ class TopicWithScores(Topic):
             corresponding score
         :return: None
         """
-        top_words, word_scores = zip(*top_words_with_scores)
+        top_words, word_scores = (zip(*top_words_with_scores)
+                                  if len(top_words_with_scores) > 0
+                                  else ([], []))
         self.word_scores = word_scores
         super().__init__(topic_id, top_words)
 

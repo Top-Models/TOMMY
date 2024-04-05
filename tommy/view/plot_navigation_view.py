@@ -17,6 +17,9 @@ class PlotNavigationView(QLabel):
         # Set reference to the graph-controller
         self._graph_controller = graph_controller
 
+        # Initialize widget properties
+        self.setFixedHeight(40)
+
         # Initialize horizontal layout
         self.layout = QHBoxLayout()
         self.layout.setAlignment(Qt.AlignmentFlag.AlignCenter)

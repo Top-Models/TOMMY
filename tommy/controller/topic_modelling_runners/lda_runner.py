@@ -8,6 +8,8 @@ from tommy.model.topic_model import TopicModel
 from tommy.datatypes.topics import Topic, TopicWithScores
 from tommy.controller.result_interfaces.correlation_matrix_interface import (
     CorrelationMatrixInterface)
+from tommy.controller.result_interfaces.document_topics_interface import (
+    DocumentTopicsInterface)
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
@@ -15,7 +17,9 @@ from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
 STANDARD_RANDOM_SEED = 42
 
 
-class LdaRunner(TopicRunner, CorrelationMatrixInterface):
+class LdaRunner(TopicRunner,
+                CorrelationMatrixInterface,
+                DocumentTopicsInterface):
     """GensimLdaModel class for topic modeling using LDA with Gensim."""
     _num_topics: int
     _random_seed: int
@@ -96,7 +100,7 @@ class LdaRunner(TopicRunner, CorrelationMatrixInterface):
         """
         Get the array of distances (in the sense of similarity) between
         different topics in the model.
-        :n_words_to_process: The number of to take into account when
+        :param n_words_to_process: The number of to take into account when
             calculating the distance between topics.
         :return: n_topic x n_topics matrix of floats between 0 and 1 where
             entry i,j is the distance between topic i and topic j. Entry i,j is
@@ -106,6 +110,12 @@ class LdaRunner(TopicRunner, CorrelationMatrixInterface):
         return self._model.diff(self._model,
                                 distance='jaccard',
                                 num_words=n_words_to_process)[0]
+
+    def get_document_topics(self, doc, minimum_probability):
+        bag_of_words = self._dictionary.doc2bow(doc)
+        return self._model.get_document_topics(bag_of_words,
+                                               minimum_probability=
+                                               minimum_probability)
 
 
 """
