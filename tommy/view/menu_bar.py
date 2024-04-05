@@ -1,6 +1,7 @@
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMenuBar, QMenu, QWidget
-from tommy.support.constant_variables import prim_col_red, extra_light_gray, text_font
+from tommy.support.constant_variables import (
+    prim_col_red, extra_light_gray, text_font)
 
 
 class MenuBar(QMenuBar):
