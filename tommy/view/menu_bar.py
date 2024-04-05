@@ -30,12 +30,29 @@ class MenuBar(QMenuBar):
         file_menu.addAction(export_action)
 
         # Set style
-        self.setStyleSheet(
-            f"QMenuBar {{ background-color: {prim_col_red}; color: {extra_light_gray}; font-family: {text_font}; }}"
-            f"QMenuBar::item:selected {{ background-color: {extra_light_gray}; color: {prim_col_red}; }}"
-            f"QMenuBar::item:pressed {{ background-color: {extra_light_gray}; color: {prim_col_red}; }}"
-            f"QMenu {{ background-color: {prim_col_red}; color: {extra_light_gray}; }}"
-            f"QMenu::item:selected {{ background-color: {extra_light_gray}; color: {prim_col_red}; }}")
+        self.setStyleSheet(f"""
+            QMenuBar {{
+                background-color: {prim_col_red};
+                color: {extra_light_gray};
+                font-family: {text_font};
+            }}
+            QMenuBar::item:selected {{
+                background-color: {extra_light_gray};
+                color: {prim_col_red};
+            }}
+            QMenuBar::item:pressed {{
+                background-color: {extra_light_gray};
+                color: {prim_col_red};
+            }}
+            QMenu {{
+                background-color: {prim_col_red};
+                color: {extra_light_gray};
+            }}
+            QMenu::item:selected {{
+                background-color: {extra_light_gray};
+                color: {prim_col_red};
+            }}
+        """)
 
     def import_input_folder(self) -> None:
         """
