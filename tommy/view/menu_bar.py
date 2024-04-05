@@ -1,5 +1,6 @@
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMenuBar, QMenu, QWidget
+from tommy.support.constant_variables import prim_col_red, extra_light_gray, text_font
 
 
 class MenuBar(QMenuBar):
@@ -27,6 +28,14 @@ class MenuBar(QMenuBar):
         file_menu = self.addMenu("Bestand")
         file_menu.addAction(import_input_folder_action)
         file_menu.addAction(export_action)
+
+        # Set style
+        self.setStyleSheet(
+            f"QMenuBar {{ background-color: {prim_col_red}; color: {extra_light_gray}; font-family: {text_font}; }}"
+            f"QMenuBar::item:selected {{ background-color: {extra_light_gray}; color: {prim_col_red}; }}"
+            f"QMenuBar::item:pressed {{ background-color: {extra_light_gray}; color: {prim_col_red}; }}"
+            f"QMenu {{ background-color: {prim_col_red}; color: {extra_light_gray}; }}"
+            f"QMenu::item:selected {{ background-color: {extra_light_gray}; color: {prim_col_red}; }}")
 
     def import_input_folder(self) -> None:
         """
