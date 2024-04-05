@@ -1,11 +1,8 @@
-from PySide6 import QtGui
-from PySide6.QtCore import QSize
-from PySide6.QtGui import QIcon, QAction
 from PySide6.QtGui import QGuiApplication
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QMainWindow,
-    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy, QLayout, QApplication,
-    QToolBar, QMenu
+    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy
 )
 
 from tommy.support.constant_variables import (
@@ -13,6 +10,7 @@ from tommy.support.constant_variables import (
 from tommy.view.graph_view import GraphView
 from tommy.view.imported_files_view. \
     imported_files_view import ImportedFilesView
+from tommy.view.menu_bar import MenuBar
 from tommy.view.model_params_view import (
     ModelParamsView)
 from tommy.view.model_selection_view import (
@@ -65,7 +63,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
         # Initialize the menu bar
-        self.init_menu_bar()
+        self.setMenuBar(MenuBar(self))
 
         # Create widgets
         self.stopwords_view = StopwordsView()
@@ -111,36 +109,6 @@ class MainWindow(QMainWindow):
         initial_width = max(screen_geometry.width() / 1.5, 1050)
         initial_height = max(screen_geometry.height() / 1.5, 578)
         self.resize(initial_width, initial_height)
-
-    def init_menu_bar(self) -> None:
-        """
-        Initialize the menu bar.
-
-        :return: None
-        """
-        # Create actions
-        export_action = QAction("Export", self)
-
-        # Create submenu for export
-        export_to_gexf = QMenu(self)
-        export_to_gexf.addAction("Graph Exchange XML Format (.gexf)")
-        export_action.setMenu(export_to_gexf)
-
-        # Connect actions to event handlers
-        export_to_gexf.triggered.connect(lambda: print(True))
-
-        # Create menu bar
-        menu_bar = self.menuBar()
-        file_menu = menu_bar.addMenu("File")
-        file_menu.addAction(export_action)
-
-    def export_to_gexf(self) -> None:
-        """
-        Export the current graph to a GEXF file.
-
-        :return: None
-        """
-        pass
 
     # TODO: Extract method when Connector is implemented
     def on_next_plot_clicked(self) -> None:
