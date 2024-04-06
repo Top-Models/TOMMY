@@ -51,8 +51,7 @@ class DocumentTopicNetworkSummaryCreator(
         # Construct a plot and a graph
         fig = plt.figure(dpi=60)
         plt.title(self.name)
-        graph = self._construct_doc_topic_network(topic_runner,
-                                                  data)
+        graph = self._construct_doc_topic_network(topic_runner, data)
 
         # Get graph elements
         edges = graph.edges()
@@ -116,8 +115,8 @@ class DocumentTopicNetworkSummaryCreator(
 
         return fig
 
-    def _construct_doc_topic_network(self,
-                                     topic_runner: TopicRunner
+    @staticmethod
+    def _construct_doc_topic_network(topic_runner: TopicRunner
                                                    | DocumentTopicsInterface,
                                      processed_files: ProcessedCorpus
                                      ) -> nx.Graph:
@@ -144,8 +143,8 @@ class DocumentTopicNetworkSummaryCreator(
 
         # Generate initial document topic network
         for document_id, file in enumerate(processed_files):
-            document_topic = (topic_runner.get_document_topics(file.body.body,
-                                                               0.05))
+            document_topic = topic_runner.get_document_topics(file.body.body,
+                                                              0.05)
 
             # Add edges from each document to all associated topics
             for topic_id, topic_probability in document_topic:
@@ -194,7 +193,8 @@ class DocumentTopicNetworkSummaryCreator(
 
         return graph
 
-    def _get_scaling_doc_topic(self, graph: nx.Graph) -> float:
+    @staticmethod
+    def _get_scaling_doc_topic(graph: nx.Graph) -> float:
         """
         Calculates the scale factor to make sure the biggest edge in a network
         is always the same size, regardless of the maximum edge weight
