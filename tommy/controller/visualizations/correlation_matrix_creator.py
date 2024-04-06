@@ -1,6 +1,7 @@
 import matplotlib.figure
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
+import numpy as np
 
 from tommy.controller.result_interfaces.correlation_matrix_interface import (
     CorrelationMatrixInterface)
@@ -35,7 +36,8 @@ class CorrelationMatrixCreator(AbstractVisualization):
         """
 
         # Construct the correlation matrix
-        correlation_matrix = topic_runner.get_correlation_matrix(20)
+        correlation_matrix = topic_runner.get_correlation_matrix(
+            n_words_to_process=30)
 
         # Construct a plot and axes
         fig, ax = plt.subplots()
@@ -50,6 +52,13 @@ class CorrelationMatrixCreator(AbstractVisualization):
         plt.title(self.name)
         fig.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
         fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+
+        # Adjust the plot ticks so that they start from 1 instead of 0
+        num_topics = topic_runner.get_n_topics()
+        plt.xticks(np.arange(num_topics),
+                   np.arange(1, num_topics + 1))
+        plt.yticks(np.arange(num_topics),
+                   np.arange(1, num_topics + 1))
 
         return fig
 
