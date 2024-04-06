@@ -27,10 +27,8 @@ class WordTopicNetworkCreator(AbstractVisualization):
         :param topic_runner: The topic runner to extract topic data from
         :return: matplotlib figure showing a word-topic network plot
         """
-
         # Construct a plot and graph
-        fig = plt.figure(dpi=80)
-        plt.title(self.name)
+        fig = plt.figure()
         graph = self._construct_word_topic_network(topic_runner)
 
         # Get the scale factor used for the displayed edge weight (width)
@@ -42,15 +40,14 @@ class WordTopicNetworkCreator(AbstractVisualization):
 
         # Get drawing function arguments
         node_sizes = [150 if node[1] is not None else 0 for node in nodes]
-        node_colors = [node[1] if node[1] is not None else "black"
-                       for node in nodes]
+        node_colors = [node[1] if node[1] is not None else "black" for node in
+                       nodes]
 
         edge_colors = [graph[u][v]["color"] for (u, v) in edges]
-        edge_width = [(graph[u][v]["weight"] * edge_scale_factor)
-                      for u, v in edges]
+        edge_width = [(graph[u][v]["weight"] * edge_scale_factor) for u, v in
+                      edges]
 
-        # Draw the network using the kamada-kawai algorithm to position the
-        # nodes in an aesthetically pleasing way
+        # Draw the graph
         nx.draw_kamada_kawai(graph,
                              node_size=node_sizes,
                              with_labels=True,
@@ -61,8 +58,8 @@ class WordTopicNetworkCreator(AbstractVisualization):
 
         return fig
 
-    def _construct_word_topic_network(self,
-                                      topic_runner: TopicRunner) -> nx.Graph:
+    @staticmethod
+    def _construct_word_topic_network(topic_runner: TopicRunner) -> nx.Graph:
         """
         Construct a word-topic network which is used to plot the relations
         between topics and probable words
@@ -84,19 +81,21 @@ class WordTopicNetworkCreator(AbstractVisualization):
         for topic in topic_runner.get_topics_with_scores(
                 n_words=node_amount):
             # Add topic node to graph
-            graph.add_node(topic.topic_id, colors=colors[topic.topic_id % 20])
+            graph.add_node(topic.topic_id + 1,
+                           color=colors[topic.topic_id % 20])
 
             # Add edge from topic node to its words
-            for (word, score) in topic.top_words_with_scores:
+            for word, score in topic.top_words_with_scores:
                 graph.add_edge(
-                    topic.topic_id,
+                    topic.topic_id + 1,
                     word,
                     color=colors[topic.topic_id % 20],
                     weight=score)
 
         return graph
 
-    def _get_edge_scale_factor(self, topic_runner: TopicRunner) -> float:
+    @staticmethod
+    def _get_edge_scale_factor(topic_runner: TopicRunner) -> float:
         """
         Calculates the scale factor to make sure the biggest edge in a network
         is always the same size, regardless of the maximum edge weight
@@ -107,7 +106,7 @@ class WordTopicNetworkCreator(AbstractVisualization):
 
         # Find the maximum topic weight
         max_topic_weight = max(
-            topic.top_words_with_scores[0][1]
+            topic.word_scores[0]
             for topic
             in topic_runner.get_topics_with_scores(n_words=1)
         )
