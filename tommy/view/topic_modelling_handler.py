@@ -17,6 +17,7 @@ from tommy.view.model_selection_view import \
     ModelSelectionView
 from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
+from tommy.support.constant_variables import plot_colors
 
 
 def generate_list():
@@ -192,7 +193,9 @@ class TopicModellingHandler:
 
             # Construct a horizontal bar plot
             fig = plt.figure()
-            plt.barh(topic_words, topic_weights, color="darkblue")
+            plt.barh(topic_words,
+                     topic_weights,
+                     color=plot_colors[i % len(plot_colors)])
             plt.gca().invert_yaxis()
 
             # Add margins and labels to the plot
@@ -308,22 +311,16 @@ class TopicModellingHandler:
         """
         graph = nx.Graph()
 
-        # Define colors for the topics
-        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
-                  '#9a6324', '#46f0f0', '#f032e6', '#bcf60c',
-                  '#fabebe', '#008080', '#e6beff', '#000075', '#fffac8',
-                  '#800000', '#aaffc3', '#808000', '#ffd8b1',
-                  '#808080', '#911eb4']
-
         # Amount of words displayed for each topic
         node_amount = 15
 
         for topic_id in range(self.num_topics):
             topic_tuples = lda_model.show_topic(topic_id, node_amount)
             for topic_tuple in topic_tuples:
-                graph.add_node(topic_id + 1, color=colors[topic_id % 20])
+                graph.add_node(topic_id + 1,
+                               color=plot_colors[topic_id % len(plot_colors)])
                 graph.add_edge(topic_id + 1, topic_tuple[0],
-                               color=colors[topic_id % 20],
+                               color=plot_colors[topic_id % len(plot_colors)],
                                weight=topic_tuple[1])
         return graph
 
@@ -396,15 +393,9 @@ class TopicModellingHandler:
         """
         graph = nx.Graph()
 
-        # List of simple, distinct colors from
-        # https://sashamaps.net/docs/resources/20-colors/
-        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
-                  '#9a6324', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
-                  '#008080', '#e6beff', '#000075', '#fffac8', '#800000',
-                  '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
-
         for topic_id in range(self.num_topics):
-            graph.add_node(topic_id, color=colors[topic_id % 20])
+            graph.add_node(topic_id,
+                           color=plot_colors[topic_id % len(plot_colors)])
 
         # Generate initial document topic network
         for document_id, document in enumerate(lda_model.bags_of_words):
@@ -415,7 +406,7 @@ class TopicModellingHandler:
             for (topic_id, topic_probability) in document_topic:
                 graph.add_edge(topic_id,
                                'document:' + str(document_id),
-                               color=colors[topic_id % 20],
+                               color=plot_colors[topic_id % len(plot_colors)],
                                weight=topic_probability)
         return graph
 
@@ -503,12 +494,6 @@ class TopicModellingHandler:
         :param lda_model: The LDA model to construct the network for
         :return: A networkx graph
         """
-        # List of simple, distinct colors from
-        # https://sashamaps.net/docs/resources/20-colors/
-        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
-                  '#9a6324', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
-                  '#008080', '#e6beff', '#000075', '#fffac8', '#800000',
-                  '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
 
         # Construct a graph with topic nodes
         init_graph = nx.Graph()
@@ -529,39 +514,40 @@ class TopicModellingHandler:
 
         # Add topic nodes and nodes with degree one to graph
         for topic_id in range(self.num_topics):
-            graph.add_node(topic_id, color=colors[topic_id % 20])
+            graph.add_node(topic_id,
+                           color=plot_colors[topic_id % len(plot_colors)])
             lonely_nodes = [node for node in init_graph.neighbors(topic_id)
                             if init_graph.degree(node) == 1]
             if len(lonely_nodes) > 0:
                 graph.add_edge(topic_id,
                                'doc_set_' + str(topic_id),
-                               color=colors[topic_id % 20],
+                               color=plot_colors[topic_id % len(plot_colors)],
                                weight=len(lonely_nodes))
 
         # Add nodes shared by multiple topics
         doc_set_id = self.num_topics - 1
-        for topic_id in range(self.num_topics):
+        for i in range(self.num_topics):
             for j in range(self.num_topics):
                 doc_set_id += 1
-                if topic_id >= j:
+                if i >= j:
                     doc_set_id -= 1
                     continue
 
                 # Calculate the intersection of two node's neighbors
-                set1 = set(init_graph.neighbors(topic_id))
+                set1 = set(init_graph.neighbors(i))
                 set2 = set(init_graph.neighbors(j))
                 intersection = set1.intersection(set2)
 
                 # Add an edge from both topic nodes to a single "intersection"
                 # node
                 if len(intersection) != 0:
-                    graph.add_edge(topic_id,
+                    graph.add_edge(i,
                                    "doc_set_" + str(doc_set_id),
-                                   color=colors[topic_id % 20],
+                                   color=plot_colors[i % len(plot_colors)],
                                    weight=len(intersection))
                     graph.add_edge(j,
                                    "doc_set_" + str(doc_set_id),
-                                   color=colors[j % 20],
+                                   color=plot_colors[j % len(plot_colors)],
                                    weight=len(intersection))
 
         return graph
