@@ -2,8 +2,10 @@ import os
 import sys
 import platform
 import ctypes
+
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
+
 from tommy.main_window import MainWindow
 
 """This file is the program entry point."""

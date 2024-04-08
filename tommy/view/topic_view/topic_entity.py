@@ -1,14 +1,24 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
 
-from tommy.support.constant_variables import heading_font, \
-    text_font, sec_col_purple
+from tommy.support.constant_variables import (
+    heading_font,
+    text_font,
+    sec_col_purple)
 
 
 class TopicEntity(QFrame):
+    """The TopicEntity frame that shows the topics and related words"""
     wordClicked = Signal(str)
 
     def __init__(self, topic_name: str, topic_words: list[str]):
+        """
+        Initialize a topic frame.
+
+        :param topic_name: The name of the topic.
+        :param topic_words: The words related to the topic.
+        :return: None.
+        """
         super().__init__()
 
         # Initialize layout
