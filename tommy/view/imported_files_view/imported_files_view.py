@@ -192,11 +192,11 @@ class ImportedFilesView(QWidget, Observer):
         Toggle visibility of the scroll area and adjust layout accordingly.
         """
         self.collapse_component()
-        self.change_header_appearance()
+        self.change_button_appearance()
 
-    def change_header_appearance(self) -> None:
+    def change_button_appearance(self) -> None:
         """
-        Change the appearance of the header.
+        Change the appearance of the toggle button.
         """
 
         if self.scroll_area.isVisible():
@@ -219,12 +219,14 @@ class ImportedFilesView(QWidget, Observer):
         else:
             # Show the scroll area
             self.scroll_area.setVisible(True)
+
             # Remove the stretch from the layout to move the header
             # back to its original position
             self.layout.removeWidget(self.title_widget)
             self.layout.insertWidget(0, self.title_widget)
             self.layout.removeItem(self.layout.itemAt(self.layout.count() - 1))
-            # Restore actual height
+
+            # Restore beginning height
             self.setMinimumHeight(200)
             self.setMaximumHeight(300)
 
