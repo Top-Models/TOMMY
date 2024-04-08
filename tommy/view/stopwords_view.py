@@ -87,98 +87,24 @@ class StopwordsView(QScrollArea, Observer):
         text = self.blacklist_tab.toPlainText()
         self.additional_stopwords = set(text.split())
 
-
-    def add_to_word_list_stopwords(self) -> None:
+    def update_synonyms(self) -> None:
         """
-        Add words to the list of excluded words for stopwords tab and update the UI.
-
+        Update synoniems set with the text from the synoniems tab.
+        should be updated to handle the right parsing.
         :return: None
         """
-        new_word = self.input_field_stopwords.text()
-        if new_word:
-            self.additional_stopwords.add(new_word)
-            self.update_word_vis_stopwords()
-            self.input_field_stopwords.clear()
+        text = self.synoniemen_tab.toPlainText()
+        self.synoniemen = set(text.split())
 
-    def update_word_vis_stopwords(self):
+    def update_ngrams(self) -> None:
         """
-        Remove current words from excluded word UI for stopwords tab and show new ones.
-
+        Update ngrams set with the text from the ngrams tab.
+        should be updated to handle the right parsing.
         :return: None
         """
-        # Clear current view
-        for i in reversed(range(self.stopwords_layout.count())):
-            layout_item = self.stopwords_layout.itemAt(i)
-            if layout_item is not None:
-                while layout_item.count():
-                    item = layout_item.takeAt(0)
-                    current_item = item.widget()
-                    if current_item:
-                        current_item.setParent(None)
+        text = self.ngrams_tab.toPlainText()
+        self.ngrams = set(text.split())
 
-        # Display updated words in UI
-        self.show_excluded_words(list(self.additional_stopwords), self.stopwords_layout)
-
-    def show_excluded_words(self, word_list: list[str], layout) -> None:
-        """
-        Visualize words in the words list for a particular tab.
-
-        :param word_list: The list of words needed to be shown
-        :param layout: The layout to which words should be added
-        :return: None
-        """
-        for word in word_list:
-            # Make and format word
-            word_label = self.create_word_label(word)
-            layout.addWidget(word_label)
-
-    def create_word_label(self, stopword: str) -> QLabel:
-        """Create a label for every word"""
-        stopword_label = QLabel(stopword, self)
-        stopword_label.setStyleSheet(f"background-color: {sec_col_purple};"
-                                      f"color: white;"
-                                      f"font-family: {text_font};"
-                                      f"font-size: 12px;"
-                                      f"padding: 15px;")
-        stopword_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        stopword_label.setScaledContents(True)
-        stopword_label.setWordWrap(True)
-        stopword_label.setCursor(Qt.PointingHandCursor)
-
-        # Connect click event to remove_word method
-        stopword_label.mousePressEvent = lambda event: (
-            self.remove_word(stopword))
-
-        return stopword_label
-
-    def remove_word(self, word) -> None:
-        """
-        Remove a word from the list of excluded words and update the UI.
-
-        :param word: The word to be removed
-        :return: None
-        """
-        self.additional_stopwords.discard(word)
-        self.update_word_vis_stopwords()
-
-    def update_word_vis(self):
-        """
-        Remove current words from excluded word UI and show new ones.
-
-        :return: None
-        """
-        # Clear current view
-        for i in reversed(range(self.word_layout.count())):
-            layout_item = self.word_layout.itemAt(i)
-            if layout_item is not None:
-                while layout_item.count():
-                    item = layout_item.takeAt(0)
-                    current_item = item.widget()
-                    if current_item:
-                        current_item.setParent(None)
-
-        # Display updated words in UI
-        self.show_excluded_words(list(self.additional_stopwords))
 
     def update_observer(self, publisher) -> None:
         """
