@@ -161,7 +161,6 @@ class ImportedFilesView(QWidget, Observer):
         #  hard-code the tab name
         self.fetch_files("lda_model")
         self.display_files("lda_model")
-        print("fetched and displayed files")
 
 
 """

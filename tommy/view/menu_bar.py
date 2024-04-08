@@ -70,8 +70,11 @@ class MenuBar(QMenuBar):
         """)
 
     def import_input_folder(self) -> None:
-        print("teataaesttataaetes")
-        """Open a file dialog to select a folder."""
+        """
+        Open a file dialog to select a folder and set input folder in
+        project settings
+        :return: None
+        """
         dialog = QFileDialog.getExistingDirectory(self,
                                                   "Selecteer input folder")
         if dialog:
