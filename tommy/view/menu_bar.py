@@ -1,7 +1,7 @@
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMenuBar, QMenu, QWidget
 from tommy.support.constant_variables import (
-    prim_col_red, extra_light_gray, text_font)
+    prim_col_red, dark_prim_col_red, extra_light_gray, text_font)
 
 
 class MenuBar(QMenuBar):
@@ -36,6 +36,9 @@ class MenuBar(QMenuBar):
                 background-color: {prim_col_red};
                 color: {extra_light_gray};
                 font-family: {text_font};
+            }}
+            QMenuBar::item {{
+                background-color: {dark_prim_col_red};
             }}
             QMenuBar::item:selected {{
                 background-color: {extra_light_gray};
