@@ -12,8 +12,6 @@ from tommy.view.observer.observer import Observer
 from tommy.support.constant_variables import (
     heading_font, prim_col_red,
     hover_prim_col_red)
-from tommy.view.imported_files_view.folder_select_button import (
-    FolderSelectButton)
 
 
 class ImportedFilesView(QWidget, Observer):
@@ -59,10 +57,7 @@ class ImportedFilesView(QWidget, Observer):
 
         # Initialize widgets
         self.file_stats_view = FileStatsView()
-        self.folder_select_button = FolderSelectButton(
-            project_settings_controller)
 
-        self.layout.addWidget(self.folder_select_button)
         # { tab_name, files }
         self.file_container = {}
         self.selected_label = None

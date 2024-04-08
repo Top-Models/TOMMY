@@ -64,7 +64,8 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
         # Initialize the menu bar
-        self.setMenuBar(MenuBar(self))
+        self.setMenuBar(MenuBar(self,
+                                self._controller.project_settings_controller))
 
         # Create widgets
         self.stopwords_view = StopwordsView(
