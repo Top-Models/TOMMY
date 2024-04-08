@@ -24,7 +24,7 @@ class DocumentTopicNetworkCreator(
     number of documents that contain that topic for the topics in the given
     topic runner and the given preprocessed documents; and returning it as a
     matplotlib figure.
-    Note: this visualization is only to be used for exporting purposed
+    Note: this visualization is only to be used for exporting purposes
     """
     _required_interfaces = [DocumentTopicsInterface]
     name = 'Topics en documenten die daar ten minste 5% bij horen'
