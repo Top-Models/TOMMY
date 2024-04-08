@@ -4,9 +4,14 @@ from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
 from tommy.support.constant_variables import heading_font, \
     text_font, sec_col_purple, pressed_seco_col_purple, hover_seco_col_purple, \
     extra_light_gray, light_gray
+from tommy.view.imported_files_view.word_entity import WordEntity
 
 
 class TopicEntity(QFrame):
+    """
+    A class representing a topic.
+    """
+
     wordClicked = Signal(str)
     clicked = Signal(object)
 
@@ -36,58 +41,40 @@ class TopicEntity(QFrame):
         main_layout.addLayout(self.word_layout)
 
         # List to store word labels
-        self.word_labels = []
+        self.word_entities = []
 
-        # Adding words horizontally
-        horizontal_layout = QHBoxLayout()
-        self.add_words(horizontal_layout, topic_words)
+        # Adding words vertically
+        vertical_word_layout = QVBoxLayout()
+        self.add_words(vertical_word_layout, topic_words)
 
         # Add remaining widgets if any
-        if horizontal_layout.count() > 0:
-            self.word_layout.addLayout(horizontal_layout)
+        if vertical_word_layout.count() > 0:
+            self.word_layout.addLayout(vertical_word_layout)
 
         self.selected = False
 
-    # TODO: Create separate WordEntity class
     # TODO: Make sure TopicEntities can be selected and deselected
 
     def add_words(self,
-                  horizontal_layout: QHBoxLayout,
+                  layout: QHBoxLayout,
                   topic_words: list[str]) -> None:
         """
         Add words to the layout
-        :param horizontal_layout: The layout to add the words
+        :param layout: The layout to add the words
         :param topic_words: Topic words to add
         :return: None
         """
         for i, word in enumerate(topic_words):
             cleaned_word = word.replace('"', ' ')
-            word_label = QLabel(cleaned_word, self)
-            word_label.setStyleSheet(
-                f"font-family: {text_font}; "
-                f"font-size: 12px; "
-                f"background-color: white; "
-                f"padding: 10px; "
-                f"color: black")
-            word_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            word_label.setCursor(Qt.CursorShape.PointingHandCursor)
-            word_label.mousePressEvent = \
-                lambda event, w=word_label: self.on_word_clicked(w.text())
-            word_label.enterEvent = \
-                lambda event, w=word_label: self.on_word_hover(w.text())
-            horizontal_layout.addWidget(word_label)
-            word_label.leaveEvent = \
-                lambda event, w=word_label: self.on_word_leave()
+            word_entity = WordEntity(cleaned_word, self)
 
             # Add word label to list
-            self.word_labels.append(word_label)
+            self.word_entities.append(word_entity)
 
-            # Go to next row after 2 words or after long word
-            if (i + 1) % 2 == 0 or len(word) >= 8:
-                self.word_layout.addLayout(horizontal_layout)
-                horizontal_layout = QHBoxLayout()
+            # Add word label to layout
+            layout.addWidget(word_entity)
 
-    def enterEvent(self, event):
+    def enterEvent(self, event) -> None:
         """
         Change the style of the label when the mouse enters.
 
@@ -144,51 +131,10 @@ class TopicEntity(QFrame):
         self.setStyleSheet(f"background-color: {hover_seco_col_purple}; "
                            f"color: white;")
 
-    def on_word_hover(self, word: str):
-        """
-        Change the style of the word when hovered
-
-        :param word: The word to be hovered
-        :return: None
-        """
-        for word_label in self.word_labels:
-            if word_label.text() == word:
-                word_label.setStyleSheet(
-                    f"font-family: {text_font}; "
-                    f"font-size: 12px; "
-                    f"background-color: {light_gray}; "
-                    f"padding: 10px; "
-                    f"color: black")
-
-    def on_word_leave(self):
-        """
-        Change the style of the word when left
-
-        :return: None
-        """
-        for word_label in self.word_labels:
-            if word_label.selected:
-                continue
-
-            word_label.setStyleSheet(
-                f"font-family: {text_font}; "
-                f"font-size: 12px; "
-                f"background-color: white; "
-                f"padding: 10px; "
-                f"color: black")
-
-    def on_word_clicked(self, word: str):
-        """
-        Emit signal when word is clicked
-        :param word: The word that was clicked
-        :return: None
-        """
-        self.wordClicked.emit(word)
-
     def change_word_style(self,
                           word: str,
                           background_color: str,
-                          text_color: str):
+                          text_color: str) -> None:
         """
         Change the style of a word
         :param word: The word to be changed
@@ -196,18 +142,28 @@ class TopicEntity(QFrame):
         :param text_color: The new text color
         :return: None
         """
-        for word_label in self.word_labels:
-            if word_label.text() == word:
-                word_label.setStyleSheet(
+        for word_entity in self.word_entities:
+            if word_entity.text() == word:
+                word_entity.selected = True
+                word_entity.setStyleSheet(
                     f"font-family: {text_font}; "
                     f"font-size: 12px; "
                     f"background-color: {background_color}; "
                     f"padding: 10px; "
                     f"color: {text_color}")
             else:
-                word_label.setStyleSheet(
+                word_entity.selected = False
+                word_entity.setStyleSheet(
                     f"font-family: {text_font}; "
                     f"font-size: 12px; "
                     f"background-color: white; "
                     f"padding: 10px; "
                     f"color: black")
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""
