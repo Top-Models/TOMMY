@@ -10,7 +10,7 @@ from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.observer.observer import Observer
 
 
-class FileStatsView(QScrollArea, Observer):
+class SelectedInformationView(QScrollArea, Observer):
     """Class to define the FileStatsDisplay UI component"""
 
     def __init__(self) -> None:
