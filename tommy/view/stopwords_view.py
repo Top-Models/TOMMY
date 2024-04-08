@@ -149,20 +149,16 @@ class StopwordsView(QScrollArea, Observer):
         :param word_list: The list of words needed to be shown
         :return: None
         """
-        horizontal_layout = QHBoxLayout()
+        verticle_layout = QVBoxLayout()
 
         for i, word in enumerate(word_list):
             # Make and format word
             word_label = self.create_word_label(word)
-            horizontal_layout.addWidget(word_label)
-
-            if (i + 1) % 2 == 0 or len(word) >= 8:
-                self.word_layout.addLayout(horizontal_layout)
-                horizontal_layout = QHBoxLayout()
+            verticle_layout.addWidget(word_label)
 
         # Add remaining widgets if any
-        if horizontal_layout.count() > 0:
-            self.word_layout.addLayout(horizontal_layout)
+        if verticle_layout.count() > 0:
+            self.word_layout.addLayout(verticle_layout)
 
     def add_to_word_list(self) -> None:
         """
