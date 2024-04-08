@@ -67,7 +67,7 @@ class FetchedTopicsView(QScrollArea, Observer):
 
         # Add topic to display
         topic_entity = TopicEntity(topic_name, topic_words)
-        # topic_entity.wordClicked.connect(self.on_word_clicked)
+        topic_entity.wordClicked.connect(self.on_word_clicked)
         self.layout.addWidget(topic_entity)
 
     def display_topics(self, tab_name: str) -> None:
@@ -88,7 +88,7 @@ class FetchedTopicsView(QScrollArea, Observer):
         # Add topics to view
         for topic_name, topic_words in self.topic_container[tab_name]:
             topic_entity = TopicEntity(topic_name, topic_words)
-            # topic_entity.wordClicked.connect(self.on_word_clicked)
+            topic_entity.wordClicked.connect(self.on_word_clicked)
             self.layout.addWidget(topic_entity)
 
     def remove_tab_from_container(self, tab_name: str) -> None:
