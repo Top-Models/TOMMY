@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
 
 from tommy.support.constant_variables import heading_font, \
-    text_font, sec_col_purple
+    text_font, sec_col_purple, label_height
 
 
 class TopicEntity(QFrame):
@@ -56,11 +56,13 @@ class TopicEntity(QFrame):
         for i, word in enumerate(topic_words):
             cleaned_word = word.replace('"', ' ')
             word_label = QLabel(cleaned_word, self)
+            word_label.setMaximumHeight(label_height)
+            print(word_label.height())
             word_label.setStyleSheet(
                 f"font-family: {text_font}; "
                 f"font-size: 12px; "
                 f"background-color: white; "
-                f"padding: 10px; "
+                f"padding: 3px; "
                 f"color: black")
             word_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             word_label.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -101,12 +103,12 @@ class TopicEntity(QFrame):
                     f"font-family: {text_font}; "
                     f"font-size: 12px; "
                     f"background-color: {background_color}; "
-                    f"padding: 10px; "
+                    f"padding: 3px; "
                     f"color: {text_color}")
             else:
                 word_label.setStyleSheet(
                     f"font-family: {text_font}; "
                     f"font-size: 12px; "
                     f"background-color: white; "
-                    f"padding: 10px; "
+                    f"padding: 3px; "
                     f"color: black")

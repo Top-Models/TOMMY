@@ -34,6 +34,9 @@ darker_gray = "#222222"
 text_font = "Corbel"
 heading_font = "Century Gothic"
 
+# Label properties
+label_height = 25
+
 
 """
 This program has been developed by students from the bachelor Computer Science
