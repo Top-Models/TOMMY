@@ -54,8 +54,57 @@ class StopwordsView(QScrollArea, Observer):
         # Initialize tabs
         self.stopwords_tab = QWidget()
         self.ngrams_tab = QTextEdit()
+        self.ngrams_tab.setStyleSheet(f"border-radius: 5px;"
+                                      f"font-size: 14px;"
+                                      f"font-family: {text_font};"
+                                      f"color: black;"
+                                      f"border: 2px solid #00968F;"
+                                      f"padding: 5px;"
+                                      f"background-color: white;"
+                                      f"margin: 5px;")
         self.synoniemen_tab = QTextEdit()
+        self.synoniemen_tab.setStyleSheet(f"border-radius: 5px;"
+                                          f"font-size: 14px;"
+                                          f"font-family: {text_font};"
+                                          f"color: black;"
+                                          f"border: 2px solid #00968F;"
+                                          f"padding: 5px;"
+                                          f"background-color: white;"
+                                          f"margin: 5px;")
         self.blacklist_tab = QTextEdit()
+        self.blacklist_tab.setStyleSheet(f"border-radius: 5px;"
+                                         f"font-size: 14px;"
+                                         f"font-family: {text_font};"
+                                         f"color: black;"
+                                         f"border: 2px solid #00968F;"
+                                         f"padding: 5px;"
+                                         f"background-color: white;"
+                                         f"margin: 5px;")
+
+        # Set styles for QScrollArea and its scrollbar
+        self.setStyleSheet(f"""
+            QScrollArea {{
+                border: 0px solid #00968F;
+                border-radius: 10px;
+            }}
+            QScrollBar:vertical {{
+                border: none;
+                background: #F0F0F0;
+                width: 30px;
+                margin: 0px;
+            }}
+            QScrollBar::handle:vertical {{
+                background: #CCCCCC;
+                min-height: 20px;
+                border-radius: 10px;
+            }}
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
+                height: 0px;
+            }}
+        """)
+
+        # Set container as the focal point
+        self.setWidget(self.container)
 
         # Set layouts for tabs
         self.container.addTab(self.blacklist_tab, "Blacklist")
