@@ -7,11 +7,16 @@ Welcome to Tommy's documentation!
 =================================
 **Tommy** is an application for performing topic modelling.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+.. autosummary::
+    :toctree: _autosummary
+    :recursive:
 
-   randomtestpage
+    tommy
+    tommy.backend
+    tommy.controller
+    tommy.model
+    tommy.view
+    tommy.support
 
 
 
