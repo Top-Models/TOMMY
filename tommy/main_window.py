@@ -1,8 +1,7 @@
-from PySide6.QtCore import QSize
 from PySide6.QtGui import QIcon, QGuiApplication
 from PySide6.QtWidgets import (
     QMainWindow,
-    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy, QLayout, QApplication
+    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy
 )
 
 from tommy.controller.controller import Controller
@@ -11,6 +10,7 @@ from tommy.support.constant_variables import (
 from tommy.view.graph_view import GraphView
 from tommy.view.imported_files_view.imported_files_view import (
     ImportedFilesView)
+from tommy.view.menu_bar import MenuBar
 from tommy.view.model_params_view import (
     ModelParamsView)
 from tommy.view.model_selection_view import (
@@ -41,6 +41,7 @@ class MainWindow(QMainWindow):
                            "font-size: 15px;"
                            f"font-family: {text_font};"
                            "border: none;")
+
         # Create the main layout
         self.layout = QHBoxLayout()
         self.left_container = QVBoxLayout()
@@ -61,6 +62,9 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(self.layout)
         self.setCentralWidget(central_widget)
+
+        # Initialize the menu bar
+        self.setMenuBar(MenuBar(self))
 
         # Create widgets
         self.stopwords_view = StopwordsView(
@@ -88,6 +92,10 @@ class MainWindow(QMainWindow):
         self.right_container.addWidget(self.fetched_topics_view)
         self.right_container.addWidget(
             self.imported_files_view.file_stats_view)
+
+        # Make graph view resize with screen
+        self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Expanding,
+                                       QSizePolicy.Policy.Expanding))
 
         self.display_correct_initial_files()
         self.initialize_event_handlers()
