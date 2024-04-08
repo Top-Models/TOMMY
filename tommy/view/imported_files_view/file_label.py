@@ -80,7 +80,6 @@ class FileLabel(QLabel, Observer):
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 10px;")
-            self.clicked.emit(self)
         else:
             self.deselect()
 
@@ -132,6 +131,7 @@ class FileLabel(QLabel, Observer):
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 10px;")
+        self.clicked.emit(self)
         super().mouseReleaseEvent(event)
 
     def update_observer(self, publisher) -> None:

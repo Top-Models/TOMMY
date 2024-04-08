@@ -139,14 +139,17 @@ class ImportedFilesView(QWidget, Observer):
         # Deselect the previously selected label
         self.deselect_all_files()
 
-        # Set the selected file
-        self.selected_file = clicked_label.file
+        # Select the clicked label
+        if self.selected_label == clicked_label:
+            self.selected_label = None
+            self.selected_file = None
+            clicked_label.enterEvent(None)
+        else:
+            self.selected_label = clicked_label
+            self.selected_file = clicked_label.file
+            clicked_label.select()
 
-        # Set the selected label
-        self.selected_label = clicked_label
-
-        # Highlight the clicked label
-        clicked_label.select()
+        print("Label selected: ", clicked_label.selected)
 
         # Display the file stats
         self.fileClicked.emit(clicked_label)
