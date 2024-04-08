@@ -150,6 +150,7 @@ class FetchedTopicsView(QScrollArea, Observer):
         Deselect all topics
         :return: None
         """
+        self.selected_topic = None
         for i in range(self.layout.count()):
             topic_entity = self.layout.itemAt(i).widget()
             if isinstance(topic_entity, TopicEntity):
