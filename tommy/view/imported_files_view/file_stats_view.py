@@ -6,6 +6,7 @@ from tommy.support.constant_variables import (
     seco_col_blue,
     heading_font,
     hover_seco_col_blue, prim_col_red, hover_prim_col_red)
+from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.observer.observer import Observer
 
 
@@ -99,12 +100,20 @@ class FileStatsView(QScrollArea, Observer):
                 else:
                     self.clear_sub_layout(item.layout())
 
-    def display_file_info(self, file: File) -> None:
+    def display_file_info(self, file_label: FileLabel) -> None:
         """
         Display the file info
-        :param file: The file to view
+        :param file_label: The file label to display
         :return: None
         """
+
+        if not file_label.selected:
+
+            # TODO: Display run info when available
+            self.display_no_component_selected()
+            return
+
+        file = file_label.file
 
         # Prepare layout
         self.clear_layout()
@@ -165,6 +174,13 @@ class FileStatsView(QScrollArea, Observer):
         :param topic_entity: The topic entity to display
         :return: None
         """
+
+        if not topic_entity.selected:
+
+            # TODO: Display run info when available
+            self.display_no_component_selected()
+            return
+
         # Prepare layout
         self.clear_layout()
 

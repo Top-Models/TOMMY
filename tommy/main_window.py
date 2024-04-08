@@ -10,6 +10,7 @@ from tommy.backend.file_import.file import File
 from tommy.support.constant_variables import (
     text_font)
 from tommy.view.graph_view import GraphView
+from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.file_stats_view import FileStatsView
 from tommy.view.imported_files_view. \
     imported_files_view import ImportedFilesView
@@ -26,6 +27,7 @@ from tommy.view.topic_modelling_handler import \
     TopicModellingHandler
 from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
+from tommy.view.topic_view.topic_entity import TopicEntity
 
 
 class MainWindow(QMainWindow):
@@ -114,7 +116,7 @@ class MainWindow(QMainWindow):
         initial_height = max(screen_geometry.height() / 1.5, 578)
         self.resize(initial_width, initial_height)
 
-    def on_file_clicked(self, file: File) -> None:
+    def on_file_clicked(self, file: FileLabel) -> None:
         """
         Event handler for when a file is clicked.
 
@@ -124,15 +126,15 @@ class MainWindow(QMainWindow):
         self.fetched_topics_view.deselect_all_topics()
         self.information_view.display_file_info(file)
 
-    def on_topic_clicked(self, topic_name: str) -> None:
+    def on_topic_clicked(self, topic_entity: TopicEntity) -> None:
         """
         Event handler for when a topic is clicked.
 
-        :param topic_name: The name of the topic that was clicked
+        :param topic_entity: The topic that was clicked
         :return: None
         """
         self.imported_files_view.deselect_all_files()
-        self.information_view.display_topic_info(topic_name)
+        self.information_view.display_topic_info(topic_entity)
 
     # TODO: Extract method when Connector is implemented
     def on_next_plot_clicked(self) -> None:

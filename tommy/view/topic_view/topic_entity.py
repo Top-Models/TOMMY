@@ -1,9 +1,9 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
 
-from tommy.support.constant_variables import heading_font, \
-    text_font, sec_col_purple, pressed_seco_col_purple, hover_seco_col_purple, \
-    extra_light_gray, light_gray
+from tommy.support.constant_variables import (
+    heading_font, text_font, sec_col_purple, pressed_seco_col_purple,
+    hover_seco_col_purple)
 from tommy.view.imported_files_view.word_entity import WordEntity
 
 
@@ -115,7 +115,7 @@ class TopicEntity(QFrame):
         :return: None
         """
         self.selected = False
-        self.setStyleSheet(f"background-color: {sec_col_purple}; "
+        self.setStyleSheet(f"background-color: {hover_seco_col_purple}; "
                            f"color: white;")
 
     def mousePressEvent(self, event) -> None:
@@ -125,12 +125,7 @@ class TopicEntity(QFrame):
         :param event: The mouse press event
         :return: None
         """
-        if self.selected:
-            self.setStyleSheet(f"background-color: {sec_col_purple};")
-            return
-
-        self.setStyleSheet(f"background-color: {pressed_seco_col_purple}; "
-                           f"color: white;")
+        self.setStyleSheet(f"background-color: {pressed_seco_col_purple}; ")
 
     def mouseReleaseEvent(self, event) -> None:
         """
@@ -139,12 +134,6 @@ class TopicEntity(QFrame):
         :param event: The mouse release event
         :return: None
         """
-        if self.selected:
-            self.setStyleSheet(f"background-color: {pressed_seco_col_purple};")
-            return
-
-        self.setStyleSheet(f"background-color: {hover_seco_col_purple}; "
-                           f"color: white;")
         self.clicked.emit(self)
 
     def change_word_style(self,

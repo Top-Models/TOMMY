@@ -149,7 +149,7 @@ class ImportedFilesView(QWidget, Observer):
         clicked_label.select()
 
         # Display the file stats
-        self.fileClicked.emit(clicked_label.file)
+        self.fileClicked.emit(clicked_label)
 
     def initialize_files_for_label(self, tab_name: str, files: list) -> None:
         """

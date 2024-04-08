@@ -2,7 +2,6 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
 from tommy.support.constant_variables import sec_col_orange
-from tommy.view.imported_files_view.file_stats_view import FileStatsView
 from tommy.view.observer.observer import Observer
 from tommy.view.topic_view.topic_entity import (
     TopicEntity)
@@ -136,9 +135,14 @@ class FetchedTopicsView(QScrollArea, Observer):
         :param topic_entity: The topic entity that was clicked
         :return: None
         """
-        print("Topic clicked")
         self.deselect_all_topics()
-        topic_entity.select()
+        if self.selected_topic == topic_entity:
+            topic_entity.deselect()
+            self.selected_topic = None
+        else:
+            topic_entity.select()
+            self.selected_topic = topic_entity
+
         self.topicClicked.emit(topic_entity)
 
     def deselect_all_topics(self) -> None:
