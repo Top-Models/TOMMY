@@ -57,7 +57,6 @@ class TopicEntity(QFrame):
             cleaned_word = word.replace('"', ' ')
             word_label = QLabel(cleaned_word, self)
             word_label.setMaximumHeight(label_height)
-            print(word_label.height())
             word_label.setStyleSheet(
                 f"font-family: {text_font}; "
                 f"font-size: 12px; "
