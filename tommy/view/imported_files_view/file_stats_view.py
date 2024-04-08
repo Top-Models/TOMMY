@@ -158,6 +158,7 @@ class FileStatsView(QScrollArea, Observer):
                                      Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(file_size_label)
 
+    # TODO: Displayed information not final
     def display_topic_info(self, topic_entity) -> None:
         """
         Display the topic information

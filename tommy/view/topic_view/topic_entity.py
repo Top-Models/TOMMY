@@ -67,7 +67,8 @@ class TopicEntity(QFrame):
         """
         for i, word in enumerate(topic_words):
             cleaned_word = word.replace('"', ' ')
-            word_entity = WordEntity(cleaned_word, self)
+            word_entity = WordEntity(cleaned_word)
+            word_entity.clicked.connect(self.wordClicked.emit)
 
             # Add word label to list
             self.word_entities.append(word_entity)

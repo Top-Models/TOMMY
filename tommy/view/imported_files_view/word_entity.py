@@ -12,10 +12,9 @@ class WordEntity(QLabel):
 
     clicked = Signal(str)
 
-    def __init__(self, word: str, parent):
+    def __init__(self, word: str):
         super().__init__(word)
         self.word = word
-        self.parent = parent
         self.setStyleSheet(f"font-family: {text_font}; "
                            f"font-size: 12px; "
                            f"background-color: white; "
@@ -72,7 +71,7 @@ class WordEntity(QLabel):
         :param event: The mouse release event
         :return: None
         """
-        self.parent.wordClicked.emit(self.word)
+        self.clicked.emit(self.word)
 
 
 """

@@ -1,15 +1,13 @@
-from PySide6.QtCore import QSize
 from PySide6.QtGui import QIcon
-from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import (
     QMainWindow,
-    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy, QLayout, QApplication
+    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy
 )
 
+from tommy.backend.file_import.file import File
 from tommy.support.constant_variables import (
     text_font)
 from tommy.view.graph_view import GraphView
-from tommy.view.imported_files_view import file_stats_view
 from tommy.view.imported_files_view.file_stats_view import FileStatsView
 from tommy.view.imported_files_view. \
     imported_files_view import ImportedFilesView
@@ -71,8 +69,8 @@ class MainWindow(QMainWindow):
         self.graph_view = GraphView()
         self.information_view = FileStatsView()
         self.plot_navigation_view = PlotNavigationView()
-        self.imported_files_view = ImportedFilesView(self.information_view)
-        self.fetched_topics_view = FetchedTopicsView(self.information_view)
+        self.imported_files_view = ImportedFilesView()
+        self.fetched_topics_view = FetchedTopicsView()
 
         # TODO: Remove when Connector is implemented
         self.topic_modelling_handler = TopicModellingHandler(
@@ -109,6 +107,26 @@ class MainWindow(QMainWindow):
         initial_width = max(screen_geometry.width() / 1.5, 1050)
         initial_height = max(screen_geometry.height() / 1.5, 578)
         self.resize(initial_width, initial_height)
+
+    def on_file_clicked(self, file: File) -> None:
+        """
+        Event handler for when a file is clicked.
+
+        :param file: The file that was clicked
+        :return: None
+        """
+        self.fetched_topics_view.deselect_all_topics()
+        self.information_view.display_file_info(file)
+
+    def on_topic_clicked(self, topic_name: str) -> None:
+        """
+        Event handler for when a topic is clicked.
+
+        :param topic_name: The name of the topic that was clicked
+        :return: None
+        """
+        self.imported_files_view.deselect_all_files()
+        self.information_view.display_topic_info(topic_name)
 
     # TODO: Extract method when Connector is implemented
     def on_next_plot_clicked(self) -> None:
@@ -194,7 +212,7 @@ class MainWindow(QMainWindow):
         # Connecting the tabBarClicked signal to a method in
         # ImportedFilesDisplay
         self.model_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.imported_files_view.information_view.
+            lambda tab_index: self.information_view.
             display_no_component_selected()
         )
 
@@ -221,6 +239,10 @@ class MainWindow(QMainWindow):
                 self.stopwords_view.additional_stopwords
             )
         )
+
+        # Initialize events for clickable information containers
+        self.imported_files_view.fileClicked.connect(self.on_file_clicked)
+        self.fetched_topics_view.topicClicked.connect(self.on_topic_clicked)
 
 
 """

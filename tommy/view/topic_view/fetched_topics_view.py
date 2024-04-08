@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
 from tommy.support.constant_variables import sec_col_orange
@@ -10,7 +10,10 @@ from tommy.view.topic_view.topic_entity import (
 
 class FetchedTopicsView(QScrollArea, Observer):
     """A widget for displaying the found topics."""
-    def __init__(self, information_view: FileStatsView) -> None:
+
+    topicClicked = Signal(object)
+
+    def __init__(self) -> None:
         """Initialize the FetchedTopicDisplay widget."""
         super().__init__()
 
@@ -39,9 +42,6 @@ class FetchedTopicsView(QScrollArea, Observer):
 
         # Set scroll area as focal point
         self.setWidget(self.scroll_area)
-
-        # Initialize widgets
-        self.information_view = information_view
 
         # Add Scroll options
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
@@ -139,7 +139,7 @@ class FetchedTopicsView(QScrollArea, Observer):
         print("Topic clicked")
         self.deselect_all_topics()
         topic_entity.select()
-        self.display_topic_info(topic_entity)
+        self.topicClicked.emit(topic_entity)
 
     def deselect_all_topics(self) -> None:
         """
@@ -150,14 +150,6 @@ class FetchedTopicsView(QScrollArea, Observer):
             topic_entity = self.layout.itemAt(i).widget()
             if isinstance(topic_entity, TopicEntity):
                 topic_entity.deselect()
-
-    def display_topic_info(self, topic_entity: TopicEntity) -> None:
-        """
-        Display the topic information
-        :param topic_entity: The topic entity to display
-        :return: None
-        """
-        self.information_view.display_topic_info(topic_entity)
 
     def update_observer(self, publisher) -> None:
         """

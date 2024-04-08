@@ -1,5 +1,5 @@
 import os
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
 
 from tommy.backend.file_import.file import File
@@ -20,7 +20,9 @@ from tommy.support.project_settings import (
 class ImportedFilesView(QWidget, Observer):
     """The ImportedFileDisplay class that shows the imported files."""
 
-    def __init__(self, information_view) -> None:
+    fileClicked = Signal(object)
+
+    def __init__(self) -> None:
         """Initialize the ImportedFileDisplay"""
         super().__init__()
 
@@ -54,9 +56,6 @@ class ImportedFilesView(QWidget, Observer):
                 Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidget(self.scroll_widget)
         self.layout.addWidget(self.scroll_area)
-
-        # Initialize widgets
-        self.information_view = information_view
 
         # { tab_name, files }
         self.file_container = {}
@@ -121,6 +120,15 @@ class ImportedFilesView(QWidget, Observer):
             file_label.clicked.connect(self.label_clicked)
             self.scroll_layout.addWidget(file_label)
 
+    def deselect_all_files(self) -> None:
+        """
+        Deselect all the files
+        :return: None
+        """
+        for i in range(self.scroll_layout.count()):
+            file_label = self.scroll_layout.itemAt(i).widget()
+            file_label.deselect()
+
     def label_clicked(self, clicked_label) -> None:
         """
         Handle the click event on a file label
@@ -129,9 +137,7 @@ class ImportedFilesView(QWidget, Observer):
         """
 
         # Deselect the previously selected label
-        if (self.selected_label is not None
-                and self.selected_label is not clicked_label):
-            self.selected_label.deselect()
+        self.deselect_all_files()
 
         # Set the selected file
         self.selected_file = clicked_label.file
@@ -139,8 +145,11 @@ class ImportedFilesView(QWidget, Observer):
         # Set the selected label
         self.selected_label = clicked_label
 
+        # Highlight the clicked label
+        clicked_label.select()
+
         # Display the file stats
-        self.information_view.display_file_info(clicked_label.file)
+        self.fileClicked.emit(clicked_label.file)
 
     def initialize_files_for_label(self, tab_name: str, files: list) -> None:
         """
