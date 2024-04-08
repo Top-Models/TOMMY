@@ -2,11 +2,13 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
 
 from tommy.support.constant_variables import heading_font, \
-    text_font, sec_col_purple
+    text_font, sec_col_purple, pressed_seco_col_purple, hover_seco_col_purple, \
+    extra_light_gray, light_gray
 
 
 class TopicEntity(QFrame):
     wordClicked = Signal(str)
+    clicked = Signal(object)
 
     def __init__(self, topic_name: str, topic_words: list[str]):
         super().__init__()
@@ -44,6 +46,11 @@ class TopicEntity(QFrame):
         if horizontal_layout.count() > 0:
             self.word_layout.addLayout(horizontal_layout)
 
+        self.selected = False
+
+    # TODO: Create separate WordEntity class
+    # TODO: Make sure TopicEntities can be selected and deselected
+
     def add_words(self,
                   horizontal_layout: QHBoxLayout,
                   topic_words: list[str]) -> None:
@@ -66,7 +73,11 @@ class TopicEntity(QFrame):
             word_label.setCursor(Qt.CursorShape.PointingHandCursor)
             word_label.mousePressEvent = \
                 lambda event, w=word_label: self.on_word_clicked(w.text())
+            word_label.enterEvent = \
+                lambda event, w=word_label: self.on_word_hover(w.text())
             horizontal_layout.addWidget(word_label)
+            word_label.leaveEvent = \
+                lambda event, w=word_label: self.on_word_leave()
 
             # Add word label to list
             self.word_labels.append(word_label)
@@ -75,6 +86,96 @@ class TopicEntity(QFrame):
             if (i + 1) % 2 == 0 or len(word) >= 8:
                 self.word_layout.addLayout(horizontal_layout)
                 horizontal_layout = QHBoxLayout()
+
+    def enterEvent(self, event):
+        """
+        Change the style of the label when the mouse enters.
+
+        :param event: The mouse enter event
+        :return: None
+        """
+        if not self.selected:
+            self.setStyleSheet(f"background-color: {hover_seco_col_purple}; "
+                               f"color: white;")
+
+    def leaveEvent(self, event) -> None:
+        """
+        Change the style of the label when the mouse leaves.
+
+        :param event: The mouse leave event
+        :return: None
+        """
+        if not self.selected:
+            self.setStyleSheet(f"background-color: {sec_col_purple}; "
+                               f"color: white;")
+
+    def mousePressEvent(self, event) -> None:
+        """
+        Change the style of the label when the mouse is pressed.
+
+        :param event: The mouse press event
+        :return: None
+        """
+        self.selected = True
+        self.setStyleSheet(f"background-color: {pressed_seco_col_purple}; "
+                           f"color: white;")
+        self.clicked.emit(self)
+
+    def deselect(self) -> None:
+        """
+        Deselect the label.
+
+        :return: None
+        """
+        self.selected = False
+        self.setStyleSheet(f"background-color: {sec_col_purple}; "
+                           f"color: white;")
+
+    def mouseReleaseEvent(self, event) -> None:
+        """
+        Change the style of the label when the mouse is released.
+        :param event: The mouse release event
+        :return: None
+        """
+        if self.selected:
+            self.setStyleSheet(f"background-color: {pressed_seco_col_purple};")
+            return
+
+        self.setStyleSheet(f"background-color: {hover_seco_col_purple}; "
+                           f"color: white;")
+
+    def on_word_hover(self, word: str):
+        """
+        Change the style of the word when hovered
+
+        :param word: The word to be hovered
+        :return: None
+        """
+        for word_label in self.word_labels:
+            if word_label.text() == word:
+                word_label.setStyleSheet(
+                    f"font-family: {text_font}; "
+                    f"font-size: 12px; "
+                    f"background-color: {light_gray}; "
+                    f"padding: 10px; "
+                    f"color: black")
+
+    def on_word_leave(self):
+        """
+        Change the style of the word when left
+
+        :return: None
+        """
+        for word_label in self.word_labels:
+            if word_label.selected:
+                continue
+
+            word_label.setStyleSheet(
+                f"font-family: {text_font}; "
+                f"font-size: 12px; "
+                f"background-color: white; "
+                f"padding: 10px; "
+                f"color: black")
 
     def on_word_clicked(self, word: str):
         """

@@ -36,7 +36,7 @@ class FileStatsView(QScrollArea, Observer):
         """
         Add the title label widget
         """
-        title_label = QLabel("Bestandsinformatie")
+        title_label = QLabel("Informatie")
         title_label.setStyleSheet(f"font-size: 13px;"
                                   f"font-family: {heading_font};"
                                   f"font-weight: bold;"

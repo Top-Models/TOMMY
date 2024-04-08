@@ -16,6 +16,8 @@ sec_col_orange = "#FFA300"
 hover_seco_col_orange = "#D88C00"
 pressed_seco_col_orange = "#B97A00"
 sec_col_purple = "#3F2A56"
+hover_seco_col_purple = "#2D1E3E"
+pressed_seco_col_purple = "#1C1226"
 sec_col_brown = "#94795D"
 
 # Gray color properties

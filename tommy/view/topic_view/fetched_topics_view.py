@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
 from tommy.support.constant_variables import sec_col_orange
+from tommy.view.imported_files_view.file_stats_view import FileStatsView
 from tommy.view.observer.observer import Observer
 from tommy.view.topic_view.topic_entity import (
     TopicEntity)
@@ -9,7 +10,7 @@ from tommy.view.topic_view.topic_entity import (
 
 class FetchedTopicsView(QScrollArea, Observer):
     """A widget for displaying the found topics."""
-    def __init__(self) -> None:
+    def __init__(self, information_view: FileStatsView) -> None:
         """Initialize the FetchedTopicDisplay widget."""
         super().__init__()
 
@@ -37,6 +38,9 @@ class FetchedTopicsView(QScrollArea, Observer):
 
         # Set scroll area as focal point
         self.setWidget(self.scroll_area)
+
+        # Initialize widgets
+        self.information_view = information_view
 
         # Add Scroll options
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)

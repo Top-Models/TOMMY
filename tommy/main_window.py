@@ -9,6 +9,8 @@ from PySide6.QtWidgets import (
 from tommy.support.constant_variables import (
     text_font)
 from tommy.view.graph_view import GraphView
+from tommy.view.imported_files_view import file_stats_view
+from tommy.view.imported_files_view.file_stats_view import FileStatsView
 from tommy.view.imported_files_view. \
     imported_files_view import ImportedFilesView
 from tommy.view.model_params_view import (
@@ -66,10 +68,11 @@ class MainWindow(QMainWindow):
         self.stopwords_view = StopwordsView()
         self.model_params_view = ModelParamsView()
         self.model_selection_view = ModelSelectionView()
-        self.imported_files_view = ImportedFilesView()
         self.graph_view = GraphView()
+        self.information_view = FileStatsView()
         self.plot_navigation_view = PlotNavigationView()
-        self.fetched_topics_view = FetchedTopicsView()
+        self.imported_files_view = ImportedFilesView(self.information_view)
+        self.fetched_topics_view = FetchedTopicsView(self.information_view)
 
         # TODO: Remove when Connector is implemented
         self.topic_modelling_handler = TopicModellingHandler(
@@ -85,7 +88,7 @@ class MainWindow(QMainWindow):
         self.center_container.addWidget(self.imported_files_view)
         self.right_container.addWidget(self.fetched_topics_view)
         self.right_container.addWidget(
-            self.imported_files_view.file_stats_view)
+            self.information_view)
 
         # Make graph view resize with screen
         self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Expanding,
@@ -191,7 +194,7 @@ class MainWindow(QMainWindow):
         # Connecting the tabBarClicked signal to a method in
         # ImportedFilesDisplay
         self.model_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.imported_files_view.file_stats_view.
+            lambda tab_index: self.imported_files_view.information_view.
             display_no_file_selected()
         )
 

@@ -20,7 +20,7 @@ from tommy.support.project_settings import (
 class ImportedFilesView(QWidget, Observer):
     """The ImportedFileDisplay class that shows the imported files."""
 
-    def __init__(self) -> None:
+    def __init__(self, information_view) -> None:
         """Initialize the ImportedFileDisplay"""
         super().__init__()
 
@@ -56,7 +56,7 @@ class ImportedFilesView(QWidget, Observer):
         self.layout.addWidget(self.scroll_area)
 
         # Initialize widgets
-        self.file_stats_view = FileStatsView()
+        self.information_view = information_view
 
         # { tab_name, files }
         self.file_container = {}
@@ -140,7 +140,7 @@ class ImportedFilesView(QWidget, Observer):
         self.selected_label = clicked_label
 
         # Display the file stats
-        self.file_stats_view.display_file_info(clicked_label.file)
+        self.information_view.display_file_info(clicked_label.file)
 
     def initialize_files_for_label(self, tab_name: str, files: list) -> None:
         """
