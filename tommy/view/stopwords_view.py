@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
-                               QLineEdit, QHBoxLayout, QPushButton)
+                               QLineEdit, QHBoxLayout, QPushButton,
+                               QSizePolicy)
 
 from tommy.support.constant_variables import (
     text_font, hover_seco_col_blue, pressed_seco_col_blue,
@@ -10,6 +11,7 @@ from tommy.view.observer.observer import Observer
 
 class StopwordsView(QScrollArea, Observer):
     """The StopWordsDisplay area to view all stopwords."""
+
     def __init__(self) -> None:
         """The initialization of the StopwordsDisplay."""
         super().__init__()
@@ -99,7 +101,7 @@ class StopwordsView(QScrollArea, Observer):
                                       f"border: none;")
 
         self.add_button.setStyleSheet(
-            f"""
+                f"""
                 QPushButton {{
                     background-color: #00968F;
                     color: white;
@@ -126,6 +128,8 @@ class StopwordsView(QScrollArea, Observer):
         """Create a label for every word"""
         stopword_label = QLabel(stopword, self)
         stopword_label.setMaximumHeight(label_height)
+        stopword_label.setSizePolicy(QSizePolicy.Policy.Expanding,
+                                     QSizePolicy.Policy.Preferred)
         stopword_label.setStyleSheet(f"background-color: {sec_col_purple};"
                                      f"color: white;"
                                      f"font-family: {text_font};"
@@ -149,16 +153,16 @@ class StopwordsView(QScrollArea, Observer):
         :param word_list: The list of words needed to be shown
         :return: None
         """
-        verticle_layout = QVBoxLayout()
+        vertical_layout = QVBoxLayout()
 
         for i, word in enumerate(word_list):
             # Make and format word
             word_label = self.create_word_label(word)
-            verticle_layout.addWidget(word_label)
+            vertical_layout.addWidget(word_label)
 
         # Add remaining widgets if any
-        if verticle_layout.count() > 0:
-            self.word_layout.addLayout(verticle_layout)
+        if vertical_layout.count() > 0:
+            self.word_layout.addLayout(vertical_layout)
 
     def add_to_word_list(self) -> None:
         """
