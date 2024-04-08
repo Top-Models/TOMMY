@@ -1,17 +1,15 @@
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtGui import QIcon
-from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QMainWindow,
     QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy
 )
 
-from tommy.backend.file_import.file import File
 from tommy.support.constant_variables import (
     text_font)
 from tommy.view.graph_view import GraphView
 from tommy.view.imported_files_view.file_label import FileLabel
-from tommy.view.imported_files_view.file_stats_view import FileStatsView
+from tommy.view.imported_files_view.selected_information_view import SelectedInformationView
 from tommy.view.imported_files_view. \
     imported_files_view import ImportedFilesView
 from tommy.view.menu_bar import MenuBar
@@ -75,7 +73,7 @@ class MainWindow(QMainWindow):
         self.model_params_view = ModelParamsView()
         self.model_selection_view = ModelSelectionView()
         self.graph_view = GraphView()
-        self.information_view = FileStatsView()
+        self.selected_information_view = SelectedInformationView()
         self.plot_navigation_view = PlotNavigationView()
         self.imported_files_view = ImportedFilesView()
         self.fetched_topics_view = FetchedTopicsView()
@@ -94,7 +92,7 @@ class MainWindow(QMainWindow):
         self.center_container.addWidget(self.imported_files_view)
         self.right_container.addWidget(self.fetched_topics_view)
         self.right_container.addWidget(
-            self.information_view)
+            self.selected_information_view)
 
         # Make graph view resize with screen
         self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Expanding,
@@ -124,7 +122,7 @@ class MainWindow(QMainWindow):
         :return: None
         """
         self.fetched_topics_view.deselect_all_topics()
-        self.information_view.display_file_info(file)
+        self.selected_information_view.display_file_info(file)
 
     def on_topic_clicked(self, topic_entity: TopicEntity) -> None:
         """
@@ -134,7 +132,7 @@ class MainWindow(QMainWindow):
         :return: None
         """
         self.imported_files_view.deselect_all_files()
-        self.information_view.display_topic_info(topic_entity)
+        self.selected_information_view.display_topic_info(topic_entity)
 
     # TODO: Extract method when Connector is implemented
     def on_next_plot_clicked(self) -> None:
@@ -220,7 +218,7 @@ class MainWindow(QMainWindow):
         # Connecting the tabBarClicked signal to a method in
         # ImportedFilesDisplay
         self.model_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.information_view.
+            lambda tab_index: self.selected_information_view.
             display_no_component_selected()
         )
 

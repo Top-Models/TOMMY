@@ -8,7 +8,7 @@ from tommy.backend.file_import.file_reader import (
 from tommy.view.imported_files_view.file_label \
     import FileLabel
 from tommy.view.imported_files_view. \
-    file_stats_view import FileStatsView
+    selected_information_view import SelectedInformationView
 from tommy.view.observer.observer import Observer
 from tommy.support.constant_variables import (
     heading_font, seco_col_blue, hover_seco_col_blue, prim_col_red,
