@@ -1,5 +1,6 @@
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame, \
+    QSizePolicy
 
 from tommy.support.constant_variables import heading_font, \
     text_font, sec_col_purple, label_height
@@ -36,46 +37,43 @@ class TopicEntity(QFrame):
         # List to store word labels
         self.word_labels = []
 
-        # Adding words horizontally
-        horizontal_layout = QHBoxLayout()
-        self.add_words(horizontal_layout, topic_words)
+        # Adding words vertically
+        vertical_layout = QVBoxLayout()
+        self.add_words(vertical_layout, topic_words)
 
         # Add remaining widgets if any
-        if horizontal_layout.count() > 0:
-            self.word_layout.addLayout(horizontal_layout)
+        if vertical_layout.count() > 0:
+            self.word_layout.addLayout(vertical_layout)
 
     def add_words(self,
-                  horizontal_layout: QHBoxLayout,
+                  vertical_layout: QVBoxLayout,
                   topic_words: list[str]) -> None:
         """
         Add words to the layout
-        :param horizontal_layout: The layout to add the words
+        :param vertical_layout: The layout to add the words
         :param topic_words: Topic words to add
         :return: None
         """
         for i, word in enumerate(topic_words):
             cleaned_word = word.replace('"', ' ')
             word_label = QLabel(cleaned_word, self)
+            word_label.setSizePolicy(QSizePolicy.Policy.Expanding,
+                                     QSizePolicy.Policy.Preferred)
             word_label.setMaximumHeight(label_height)
             word_label.setStyleSheet(
-                f"font-family: {text_font}; "
-                f"font-size: 12px; "
-                f"background-color: white; "
-                f"padding: 3px; "
-                f"color: black")
-            word_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                    f"font-family: {text_font}; "
+                    f"font-size: 12px; "
+                    f"background-color: white; "
+                    f"padding: 3px; "
+                    f"color: black")
             word_label.setCursor(Qt.CursorShape.PointingHandCursor)
+            word_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             word_label.mousePressEvent = \
                 lambda event, w=word_label: self.on_word_clicked(w.text())
-            horizontal_layout.addWidget(word_label)
+            vertical_layout.addWidget(word_label)
 
             # Add word label to list
             self.word_labels.append(word_label)
-
-            # Go to next row after 2 words or after long word
-            if (i + 1) % 2 == 0 or len(word) >= 8:
-                self.word_layout.addLayout(horizontal_layout)
-                horizontal_layout = QHBoxLayout()
 
     def on_word_clicked(self, word: str):
         """
@@ -99,15 +97,15 @@ class TopicEntity(QFrame):
         for word_label in self.word_labels:
             if word_label.text() == word:
                 word_label.setStyleSheet(
-                    f"font-family: {text_font}; "
-                    f"font-size: 12px; "
-                    f"background-color: {background_color}; "
-                    f"padding: 3px; "
-                    f"color: {text_color}")
+                        f"font-family: {text_font}; "
+                        f"font-size: 12px; "
+                        f"background-color: {background_color}; "
+                        f"padding: 3px; "
+                        f"color: {text_color}")
             else:
                 word_label.setStyleSheet(
-                    f"font-family: {text_font}; "
-                    f"font-size: 12px; "
-                    f"background-color: white; "
-                    f"padding: 3px; "
-                    f"color: black")
+                        f"font-family: {text_font}; "
+                        f"font-size: 12px; "
+                        f"background-color: white; "
+                        f"padding: 3px; "
+                        f"color: black")
