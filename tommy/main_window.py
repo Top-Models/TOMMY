@@ -195,7 +195,7 @@ class MainWindow(QMainWindow):
         # ImportedFilesDisplay
         self.model_selection_view.tabBarClicked.connect(
             lambda tab_index: self.imported_files_view.information_view.
-            display_no_file_selected()
+            display_no_component_selected()
         )
 
         # Connecting the tabBarClicked signal to a method in

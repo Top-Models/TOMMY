@@ -29,6 +29,7 @@ class FetchedTopicsView(QScrollArea, Observer):
 
         # { tab_name, [(topic_name, [words])] }
         self.topic_container = {}
+        self.selected_topic = None
 
         # Initialize layout for scroll area
         self.scroll_area = QWidget()
@@ -72,6 +73,7 @@ class FetchedTopicsView(QScrollArea, Observer):
         # Add topic to display
         topic_entity = TopicEntity(topic_name, topic_words)
         topic_entity.wordClicked.connect(self.on_word_clicked)
+        topic_entity.clicked.connect(self.on_topic_clicked)
         self.layout.addWidget(topic_entity)
 
     def display_topics(self, tab_name: str) -> None:
@@ -113,7 +115,7 @@ class FetchedTopicsView(QScrollArea, Observer):
             self.layout.itemAt(i).widget().deleteLater()
         self.topic_container = {}
 
-    def on_word_clicked(self, word: str):
+    def on_word_clicked(self, word: str) -> None:
         """
         Event handler for when a word is clicked
 
@@ -126,6 +128,36 @@ class FetchedTopicsView(QScrollArea, Observer):
                 topic_entity.change_word_style(word,
                                                sec_col_orange,
                                                "black")
+
+    def on_topic_clicked(self, topic_entity: TopicEntity) -> None:
+        """
+        Event handler for when a topic is clicked
+
+        :param topic_entity: The topic entity that was clicked
+        :return: None
+        """
+        print("Topic clicked")
+        self.deselect_all_topics()
+        topic_entity.select()
+        self.display_topic_info(topic_entity)
+
+    def deselect_all_topics(self) -> None:
+        """
+        Deselect all topics
+        :return: None
+        """
+        for i in range(self.layout.count()):
+            topic_entity = self.layout.itemAt(i).widget()
+            if isinstance(topic_entity, TopicEntity):
+                topic_entity.deselect()
+
+    def display_topic_info(self, topic_entity: TopicEntity) -> None:
+        """
+        Display the topic information
+        :param topic_entity: The topic entity to display
+        :return: None
+        """
+        self.information_view.display_topic_info(topic_entity)
 
     def update_observer(self, publisher) -> None:
         """

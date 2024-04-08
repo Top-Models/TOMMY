@@ -30,7 +30,7 @@ class FileStatsView(QScrollArea, Observer):
         self.add_title_widget()
 
         # Initialize widgets
-        self.display_no_file_selected()
+        self.display_no_component_selected()
 
     def add_title_widget(self) -> None:
         """
@@ -54,7 +54,7 @@ class FileStatsView(QScrollArea, Observer):
                                  Qt.AlignmentFlag.AlignTop)
         self.layout.addWidget(title_label)
 
-    def display_no_file_selected(self) -> None:
+    def display_no_component_selected(self) -> None:
         """
         Display a message when no file is selected.
         :return: None
@@ -64,7 +64,7 @@ class FileStatsView(QScrollArea, Observer):
         self.layout.setContentsMargins(0, 0, 0, 0)
 
         # Add label
-        no_file_selected_label = QLabel("Geen bestand\ngeselecteerd")
+        no_file_selected_label = QLabel("Geen component\ngeselecteerd")
         no_file_selected_label.setStyleSheet("font-size: 20px;")
         no_file_selected_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(no_file_selected_label)
@@ -157,6 +157,44 @@ class FileStatsView(QScrollArea, Observer):
         file_size_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(file_size_label)
+
+    def display_topic_info(self, topic_entity) -> None:
+        """
+        Display the topic information
+        :param topic_entity: The topic entity to display
+        :return: None
+        """
+        # Prepare layout
+        self.clear_layout()
+
+        # Use a vertical layout
+        vertical_layout = QVBoxLayout()
+        vertical_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                     Qt.AlignmentFlag.AlignLeft)
+
+        # Adjust the left margin here
+        vertical_layout.setContentsMargins(20, 20, 0, 0)
+        vertical_layout.setSpacing(10)
+        self.layout.addLayout(vertical_layout)
+
+        # Add topic name
+        topic_name = topic_entity.topic_name
+        topic_name_label = QLabel(f"{topic_name}")
+        topic_name_label.setStyleSheet(f"font-size: 18px;"
+                                       f"font-family: {heading_font};"
+                                       f"font-weight: bold;"
+                                       f"text-transform: uppercase;")
+        topic_name_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                      Qt.AlignmentFlag.AlignTop)
+        vertical_layout.addWidget(topic_name_label)
+
+        # Add words
+        for word_entity in topic_entity.word_entities:
+            word_label = QLabel(f"{word_entity.word}")
+            word_label.setStyleSheet(f"font-size: 16px;")
+            word_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                    Qt.AlignmentFlag.AlignTop)
+            vertical_layout.addWidget(word_label)
 
     def update_observer(self, publisher) -> None:
         """

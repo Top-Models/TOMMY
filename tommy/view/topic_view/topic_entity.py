@@ -17,6 +17,8 @@ class TopicEntity(QFrame):
 
     def __init__(self, topic_name: str, topic_words: list[str]):
         super().__init__()
+        self.topic_name = topic_name
+        self.topic_words = topic_words
 
         # Initialize layout
         main_layout = QVBoxLayout(self)
@@ -53,13 +55,12 @@ class TopicEntity(QFrame):
 
         self.selected = False
 
-    # TODO: Make sure TopicEntities can be selected and deselected
-
     def add_words(self,
                   layout: QHBoxLayout,
                   topic_words: list[str]) -> None:
         """
-        Add words to the layout
+        Add words to the layout.
+
         :param layout: The layout to add the words
         :param topic_words: Topic words to add
         :return: None
@@ -96,17 +97,15 @@ class TopicEntity(QFrame):
             self.setStyleSheet(f"background-color: {sec_col_purple}; "
                                f"color: white;")
 
-    def mousePressEvent(self, event) -> None:
+    def select(self) -> None:
         """
-        Change the style of the label when the mouse is pressed.
+        Select the label.
 
-        :param event: The mouse press event
         :return: None
         """
         self.selected = True
         self.setStyleSheet(f"background-color: {pressed_seco_col_purple}; "
                            f"color: white;")
-        self.clicked.emit(self)
 
     def deselect(self) -> None:
         """
@@ -118,9 +117,24 @@ class TopicEntity(QFrame):
         self.setStyleSheet(f"background-color: {sec_col_purple}; "
                            f"color: white;")
 
+    def mousePressEvent(self, event) -> None:
+        """
+        Change the style of the label when the mouse is pressed.
+
+        :param event: The mouse press event
+        :return: None
+        """
+        if self.selected:
+            self.setStyleSheet(f"background-color: {sec_col_purple};")
+            return
+
+        self.setStyleSheet(f"background-color: {pressed_seco_col_purple}; "
+                           f"color: white;")
+
     def mouseReleaseEvent(self, event) -> None:
         """
         Change the style of the label when the mouse is released.
+
         :param event: The mouse release event
         :return: None
         """
@@ -130,13 +144,15 @@ class TopicEntity(QFrame):
 
         self.setStyleSheet(f"background-color: {hover_seco_col_purple}; "
                            f"color: white;")
+        self.clicked.emit(self)
 
     def change_word_style(self,
                           word: str,
                           background_color: str,
                           text_color: str) -> None:
         """
-        Change the style of a word
+        Change the style of a word.
+
         :param word: The word to be changed
         :param background_color: The new background color
         :param text_color: The new text color
