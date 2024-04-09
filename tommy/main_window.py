@@ -143,6 +143,7 @@ class MainWindow(QMainWindow):
         :return: None
         """
         self.fetched_topics_view.deselect_all_topics()
+        self.fetched_topics_view.selected_topic = None
         self.selected_information_view.display_file_info(file)
 
     def on_topic_clicked(self, topic_entity: TopicEntity) -> None:
@@ -153,9 +154,9 @@ class MainWindow(QMainWindow):
         :return: None
         """
         self.imported_files_view.deselect_all_files()
+        self.imported_files_view.selected_label = None
         self.selected_information_view.display_topic_info(topic_entity)
 
-    # TODO: Extract method when Connector is implemented
     def display_correct_initial_files(self) -> None:
         """
         Display the correct initial files in the main window.
@@ -176,7 +177,6 @@ class MainWindow(QMainWindow):
         self._controller.project_settings_controller.set_input_folder_path(
             path)
 
-    # TODO: Extract method when Connector is implemented
     # Some of the event handlers can be used to update observers
     def initialize_event_handlers(self) -> None:
         """
