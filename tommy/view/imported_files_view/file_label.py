@@ -4,7 +4,6 @@ from PySide6.QtWidgets import QLabel, QSizePolicy
 
 from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
-    heading_font,
     text_font, medium_light_gray, hover_medium_light_gray,
     pressed_medium_light_gray)
 from tommy.view.observer.observer import Observer

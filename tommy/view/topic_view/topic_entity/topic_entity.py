@@ -125,7 +125,7 @@ class TopicEntity(QFrame):
         :param event: The mouse press event
         :return: None
         """
-        self.setStyleSheet(f"background-color: {pressed_seco_col_purple}; ")
+        self.setStyleSheet(f"background-color: {pressed_seco_col_purple};")
 
     def mouseReleaseEvent(self, event) -> None:
         """
