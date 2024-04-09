@@ -95,7 +95,7 @@ class FetchedTopicsView(QScrollArea, Observer):
         if tab_name not in self.topic_container:
             return
 
-        # Add topics to display
+        # Add topics to view
         for topic_name, topic_words in self.topic_container[tab_name]:
             topic_entity = TopicEntity(topic_name, topic_words)
             topic_entity.wordClicked.connect(self._on_word_clicked)
