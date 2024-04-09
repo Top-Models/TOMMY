@@ -1,9 +1,8 @@
-from PySide6.QtCore import QSize
-from PySide6.QtGui import QIcon
 from PySide6.QtGui import QGuiApplication
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QMainWindow,
-    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy, QLayout, QApplication
+    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy
 )
 
 from tommy.support.constant_variables import (
@@ -11,6 +10,7 @@ from tommy.support.constant_variables import (
 from tommy.view.graph_view import GraphView
 from tommy.view.imported_files_view. \
     imported_files_view import ImportedFilesView
+from tommy.view.menu_bar import MenuBar
 from tommy.view.model_params_view import (
     ModelParamsView)
 from tommy.view.model_selection_view import (
@@ -61,6 +61,9 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(self.layout)
         self.setCentralWidget(central_widget)
+
+        # Initialize the menu bar
+        self.setMenuBar(MenuBar(self))
 
         # Create widgets
         self.stopwords_view = StopwordsView()
