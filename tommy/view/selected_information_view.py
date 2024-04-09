@@ -1,11 +1,9 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
 
-from tommy.backend.file_import.file import File
 from tommy.support.constant_variables import (
-    seco_col_blue,
     heading_font,
-    hover_seco_col_blue, prim_col_red, hover_prim_col_red)
+    prim_col_red, hover_prim_col_red)
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.observer.observer import Observer
 
@@ -212,6 +210,19 @@ class SelectedInformationView(QScrollArea, Observer):
             word_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                     Qt.AlignmentFlag.AlignTop)
             vertical_layout.addWidget(word_label)
+
+    def display_run_info(self, run_entity=None) -> None:
+        """
+        Display the run information
+
+        :param run_entity: The run entity to display
+        :return: None
+        """
+        if run_entity is None:
+            self.display_no_component_selected()
+            return
+
+        # TODO: Display run info when available
 
     def update_observer(self, publisher) -> None:
         """

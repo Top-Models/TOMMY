@@ -9,7 +9,7 @@ from tommy.support.constant_variables import (
     text_font)
 from tommy.view.graph_view import GraphView
 from tommy.view.imported_files_view.file_label import FileLabel
-from tommy.view.imported_files_view.selected_information_view import SelectedInformationView
+from tommy.view.selected_information_view import SelectedInformationView
 from tommy.view.imported_files_view. \
     imported_files_view import ImportedFilesView
 from tommy.view.menu_bar import MenuBar
@@ -25,7 +25,7 @@ from tommy.view.topic_modelling_handler import \
     TopicModellingHandler
 from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
-from tommy.view.topic_view.topic_entity import TopicEntity
+from tommy.view.topic_view.topic_entity.topic_entity import TopicEntity
 
 
 class MainWindow(QMainWindow):
