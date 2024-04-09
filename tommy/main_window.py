@@ -86,6 +86,7 @@ class MainWindow(QMainWindow):
         self.fetched_topics_view = FetchedTopicsView(
             self._controller.graph_controller)
         self.selected_information_view = SelectedInformationView(
+            self._controller.graph_controller,
             self._controller.model_parameters_controller)
 
         # Initialize widgets

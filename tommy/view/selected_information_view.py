@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
 
+from tommy.controller.graph_controller import GraphController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
 from tommy.support.constant_variables import (
@@ -14,6 +15,7 @@ class SelectedInformationView(QScrollArea, Observer):
     """Class to define the FileStatsDisplay UI component"""
 
     def __init__(self,
+                 graph_controller: GraphController,
                  model_parameters_controller: ModelParametersController) \
             -> None:
         """Initialize the FileStatsDisplay."""
@@ -32,7 +34,8 @@ class SelectedInformationView(QScrollArea, Observer):
         # Add title widget
         self.add_title_widget()
 
-        # Initialize model parameters controller
+        # Initialize controllers
+        self._graph_controller = graph_controller
         self._model_parameters_controller = model_parameters_controller
 
         # Initialize widgets
@@ -224,6 +227,16 @@ class SelectedInformationView(QScrollArea, Observer):
         :return: None
         """
 
+        # Display no component selected if no run is available
+        try:
+            topic_amount: int = (
+                self._graph_controller.get_number_of_topics())
+            model_type: str = (
+                self._model_parameters_controller.get_model_type().name)
+        except RuntimeError:
+            self.display_no_component_selected()
+            return
+
         # Prepare layout
         self.clear_layout()
 
@@ -248,14 +261,13 @@ class SelectedInformationView(QScrollArea, Observer):
         vertical_layout.addWidget(run_name_label)
 
         # Display model type
-        model_type = self._model_parameters_controller.get_model_type().name
         model_type_label = QLabel(f"Model type: {model_type}")
         model_type_label.setStyleSheet("font-size: 16px;")
         model_type_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                       Qt.AlignmentFlag.AlignTop)
+        vertical_layout.addWidget(model_type_label)
 
         # Display topic amount
-        topic_amount = self._model_parameters_controller.get_model_n_topics()
         topic_amount_label = QLabel(f"Aantal topics: {topic_amount}")
         topic_amount_label.setStyleSheet("font-size: 16px;")
         topic_amount_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
