@@ -85,7 +85,8 @@ class MainWindow(QMainWindow):
             self._controller.graph_controller)
         self.fetched_topics_view = FetchedTopicsView(
             self._controller.graph_controller)
-        self.selected_information_view = SelectedInformationView()
+        self.selected_information_view = SelectedInformationView(
+            self._controller.model_parameters_controller)
 
         # Initialize widgets
         self.left_container.addWidget(self.model_params_view)
@@ -144,6 +145,13 @@ class MainWindow(QMainWindow):
         """
         self.fetched_topics_view.deselect_all_topics()
         self.fetched_topics_view.selected_topic = None
+
+        # TODO: Hardcoded save name
+        # Show info about run if no file is selected
+        if not file.selected:
+            self.selected_information_view.display_run_info("lda_model")
+            return
+
         self.selected_information_view.display_file_info(file)
 
     def on_topic_clicked(self, topic_entity: TopicEntity) -> None:
@@ -155,6 +163,13 @@ class MainWindow(QMainWindow):
         """
         self.imported_files_view.deselect_all_files()
         self.imported_files_view.selected_label = None
+
+        # TODO: Hardcoded save name
+        # Show info about run if no topic is selected
+        if not topic_entity.selected:
+            self.selected_information_view.display_run_info("lda_model")
+            return
+
         self.selected_information_view.display_topic_info(topic_entity)
 
     def display_correct_initial_files(self) -> None:

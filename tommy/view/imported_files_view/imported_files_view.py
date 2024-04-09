@@ -179,11 +179,9 @@ class ImportedFilesView(QWidget, Observer):
 
         # Select the clicked label
         if self.selected_label == clicked_label:
-            print("Same label clicked")
             self.selected_label = None
             clicked_label.enterEvent(None)
         else:
-            print("Different label clicked")
             self.selected_label = clicked_label
             clicked_label.select()
 

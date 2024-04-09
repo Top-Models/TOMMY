@@ -1,6 +1,8 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
 
+from tommy.controller.model_parameters_controller import \
+    ModelParametersController
 from tommy.support.constant_variables import (
     heading_font,
     prim_col_red, hover_prim_col_red)
@@ -11,7 +13,9 @@ from tommy.view.observer.observer import Observer
 class SelectedInformationView(QScrollArea, Observer):
     """Class to define the FileStatsDisplay UI component"""
 
-    def __init__(self) -> None:
+    def __init__(self,
+                 model_parameters_controller: ModelParametersController) \
+            -> None:
         """Initialize the FileStatsDisplay."""
         super().__init__()
 
@@ -27,6 +31,9 @@ class SelectedInformationView(QScrollArea, Observer):
 
         # Add title widget
         self.add_title_widget()
+
+        # Initialize model parameters controller
+        self._model_parameters_controller = model_parameters_controller
 
         # Initialize widgets
         self.display_no_component_selected()
@@ -106,7 +113,6 @@ class SelectedInformationView(QScrollArea, Observer):
         """
 
         if not file_label.selected:
-
             # TODO: Display run info when available
             self.display_no_component_selected()
             return
@@ -174,7 +180,6 @@ class SelectedInformationView(QScrollArea, Observer):
         """
 
         if not topic_entity.selected:
-
             # TODO: Display run info when available
             self.display_no_component_selected()
             return
@@ -211,18 +216,51 @@ class SelectedInformationView(QScrollArea, Observer):
                                     Qt.AlignmentFlag.AlignTop)
             vertical_layout.addWidget(word_label)
 
-    def display_run_info(self, run_entity=None) -> None:
+    def display_run_info(self, run_name: str) -> None:
         """
         Display the run information
 
-        :param run_entity: The run entity to display
+        :param run_name: The name of the run
         :return: None
         """
-        if run_entity is None:
-            self.display_no_component_selected()
-            return
 
-        # TODO: Display run info when available
+        # Prepare layout
+        self.clear_layout()
+
+        # Use a vertical layout
+        vertical_layout = QVBoxLayout()
+        vertical_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                     Qt.AlignmentFlag.AlignLeft)
+
+        # Adjust the left margin here
+        vertical_layout.setContentsMargins(20, 20, 0, 0)
+        vertical_layout.setSpacing(10)
+        self.layout.addLayout(vertical_layout)
+
+        # Add run name
+        run_name_label = QLabel(f"{run_name}")
+        run_name_label.setStyleSheet(f"font-size: 18px;"
+                                     f"font-family: {heading_font};"
+                                     f"font-weight: bold;"
+                                     f"text-transform: uppercase;")
+        run_name_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                    Qt.AlignmentFlag.AlignTop)
+        vertical_layout.addWidget(run_name_label)
+
+        # Display model type
+        model_type = self._model_parameters_controller.get_model_type().name
+        model_type_label = QLabel(f"Model type: {model_type}")
+        model_type_label.setStyleSheet("font-size: 16px;")
+        model_type_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                      Qt.AlignmentFlag.AlignTop)
+
+        # Display topic amount
+        topic_amount = self._model_parameters_controller.get_model_n_topics()
+        topic_amount_label = QLabel(f"Aantal topics: {topic_amount}")
+        topic_amount_label.setStyleSheet("font-size: 16px;")
+        topic_amount_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                        Qt.AlignmentFlag.AlignTop)
+        vertical_layout.addWidget(topic_amount_label)
 
     def update_observer(self, publisher) -> None:
         """
