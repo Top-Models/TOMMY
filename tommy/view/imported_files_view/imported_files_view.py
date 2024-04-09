@@ -7,8 +7,6 @@ from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 
-from tommy.backend.file_import.file import File
-from tommy.backend.file_import.file_reader import FileReader
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.file_stats_view import FileStatsView
 from tommy.view.observer.observer import Observer
