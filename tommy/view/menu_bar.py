@@ -1,5 +1,10 @@
+import os
+
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QMenuBar, QMenu, QWidget
+from PySide6.QtWidgets import QMenuBar, QMenu, QWidget, QFileDialog
+
+from tommy.controller.project_settings_controller import (
+    ProjectSettingsController)
 from tommy.support.constant_variables import (
     prim_col_red, dark_prim_col_red, extra_light_gray, text_font)
 
@@ -7,9 +12,15 @@ from tommy.support.constant_variables import (
 class MenuBar(QMenuBar):
     """Menu bar class for the topic modelling application"""
 
-    def __init__(self, parent: QWidget) -> None:
+    def __init__(self,
+                 parent: QWidget,
+                 project_settings_controller: ProjectSettingsController
+                 ) -> None:
         """Initialize the menu bar."""
         super().__init__(parent)
+
+        # Set reference to project settings controller for input folder button
+        self._project_settings_controller = project_settings_controller
 
         # Create actions
         import_input_folder_action = QAction("Selecteer input folder", self)
@@ -21,6 +32,9 @@ class MenuBar(QMenuBar):
         export_action.setMenu(export_to_gexf)
 
         # Connect actions to event handlers
+        import_input_folder_action.triggered.connect(
+            self.import_input_folder)
+        export_to_gexf.triggered.connect(self.export_to_gexf)
         import_input_folder_action.triggered.connect(self.import_input_folder)
         export_to_gexf.triggered.connect(self.export_to_gexf)
 
@@ -59,11 +73,17 @@ class MenuBar(QMenuBar):
 
     def import_input_folder(self) -> None:
         """
-        Import a folder with input files.
-
+        Open a file dialog to select a folder and set input folder in
+        project settings
         :return: None
         """
-        pass
+        dialog = QFileDialog.getExistingDirectory(self,
+                                                  "Selecteer input folder")
+        if dialog:
+            # Publishing duties to inform people this has changed are done by
+            # the controller
+            self._project_settings_controller.set_input_folder_path(
+                os.path.relpath(dialog))
 
     def export_to_gexf(self) -> None:
         """

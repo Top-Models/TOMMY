@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from tommy.backend.observer.publisher import Publisher
+from tommy.controller.publisher.publisher import Publisher
 
 
 class Observer:

@@ -1,17 +1,19 @@
-import matplotlib.figure
 from PySide6.QtGui import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as
                                                 FigureCanvas)
+import matplotlib.figure
 
-from tommy.backend.observer.publisher import Publisher
+from tommy.controller.graph_controller import GraphController
+from tommy.controller.publisher.publisher import Publisher
+
 from tommy.view.observer.observer import Observer
 
 
 class GraphView(QWidget, Observer):
-    """A class for displaying the graphs made by topic modelling"""
+    """A class for displaying the graphs made by the graph-controller"""
 
-    def __init__(self) -> None:
+    def __init__(self, graph_controller: GraphController) -> None:
         """Initialize the GraphDisplay."""
         super().__init__()
 
@@ -26,6 +28,10 @@ class GraphView(QWidget, Observer):
         self.layout.setSpacing(0)
         self.setMinimumHeight(350)
         self.setLayout(self.layout)
+
+        # Set reference to the graph-controller and add self to its publisher
+        self._graph_controller = graph_controller
+        self._graph_controller.plots_changed_publisher.add(self)
 
     def display_plot(self, canvas: matplotlib.figure.Figure) -> None:
         """
@@ -42,6 +48,9 @@ class GraphView(QWidget, Observer):
         # Set the DPI for the canvas
         canvas.figure.set_dpi(100)
 
+        # todo: rework this later possibly by adding additional data
+        #   about this plot (like size) to the return value
+        #   from the graphcontroller
         # Resize canvas based on plot type
         plot_type = canvas.figure.axes[0].get_title().lower()
         if plot_type.__contains__("gewicht"):
@@ -56,12 +65,14 @@ class GraphView(QWidget, Observer):
 
     def update_observer(self, publisher: Publisher) -> None:
         """
-        Update the view.
+        Update the view by retrieving the new visualization from the
+        graph-controller and displaying it.
 
         :param publisher: The publisher to update the view from
         :return: None
         """
-        pass
+        new_graph = self._graph_controller.get_current_visualization()
+        self.display_plot(new_graph)
 
 
 """
