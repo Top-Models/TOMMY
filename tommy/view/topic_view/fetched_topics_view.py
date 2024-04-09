@@ -3,10 +3,8 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
 from tommy.controller.graph_controller import GraphController
 from tommy.support.constant_variables import sec_col_orange
-from tommy.datatypes.topics import TopicWithScores
 from tommy.view.observer.observer import Observer
-from tommy.view.topic_view.topic_entity.topic_entity import (
-    TopicEntity)
+from tommy.view.topic_view.topic_entity.topic_entity import TopicEntity
 
 
 class FetchedTopicsView(QScrollArea, Observer):
@@ -78,8 +76,7 @@ class FetchedTopicsView(QScrollArea, Observer):
 
         # Add topic to display
         topic_entity = TopicEntity(topic_name, topic_words)
-        topic_entity.wordClicked.connect(self.on_word_clicked)
-        topic_entity.clicked.connect(self.on_topic_clicked)
+        topic_entity.clicked.connect(self._on_topic_clicked)
         topic_entity.wordClicked.connect(self._on_word_clicked)
         self.layout.addWidget(topic_entity)
 
@@ -102,7 +99,7 @@ class FetchedTopicsView(QScrollArea, Observer):
         for topic_name, topic_words in self.topic_container[tab_name]:
             topic_entity = TopicEntity(topic_name, topic_words)
             topic_entity.wordClicked.connect(self._on_word_clicked)
-
+            topic_entity.clicked.connect(self._on_topic_clicked)
             self.layout.addWidget(topic_entity)
 
     def remove_tab_from_container(self, tab_name: str) -> None:
@@ -148,7 +145,7 @@ class FetchedTopicsView(QScrollArea, Observer):
                                                sec_col_orange,
                                                "black")
 
-    def on_topic_clicked(self, topic_entity: TopicEntity) -> None:
+    def _on_topic_clicked(self, topic_entity: TopicEntity) -> None:
         """
         Event handler for when a topic is clicked
 
@@ -156,12 +153,14 @@ class FetchedTopicsView(QScrollArea, Observer):
         :return: None
         """
         self.deselect_all_topics()
+
+        # Deselect topic if it was already selected
         if self.selected_topic == topic_entity:
-            topic_entity.deselect()
             self.selected_topic = None
+            topic_entity.enterEvent(None)
         else:
-            topic_entity.select()
             self.selected_topic = topic_entity
+            topic_entity.select()
 
         self.topicClicked.emit(topic_entity)
 
@@ -170,7 +169,6 @@ class FetchedTopicsView(QScrollArea, Observer):
         Deselect all topics
         :return: None
         """
-        self.selected_topic = None
         for i in range(self.layout.count()):
             topic_entity = self.layout.itemAt(i).widget()
             if isinstance(topic_entity, TopicEntity):

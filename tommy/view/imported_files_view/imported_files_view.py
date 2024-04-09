@@ -1,20 +1,14 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
 
-from tommy.backend.file_import.file_reader import (
-    FileReader)
-from tommy.view.imported_files_view.file_label \
-    import FileLabel
 from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
-
-from tommy.view.imported_files_view.file_label import FileLabel
-from tommy.view.imported_files_view.file_stats_view import FileStatsView
-from tommy.view.observer.observer import Observer
 from tommy.support.constant_variables import (
-    heading_font, seco_col_blue, hover_seco_col_blue, prim_col_red,
+    heading_font, prim_col_red,
     hover_prim_col_red)
+from tommy.view.imported_files_view.file_label import FileLabel
+from tommy.view.observer.observer import Observer
 
 
 class ImportedFilesView(QWidget, Observer):
@@ -63,7 +57,6 @@ class ImportedFilesView(QWidget, Observer):
         # { tab_name, files }
         self.file_container = {}
         self.selected_label = None
-        self.selected_file = None
 
         # Add scroll options
         self.scroll_area.setVerticalScrollBarPolicy(
@@ -131,7 +124,7 @@ class ImportedFilesView(QWidget, Observer):
             file_label = self.scroll_layout.itemAt(i).widget()
             file_label.deselect()
 
-    def label_clicked(self, clicked_label) -> None:
+    def label_clicked(self, clicked_label: FileLabel) -> None:
         """
         Handle the click event on a file label
         :param clicked_label: The label that was clicked
@@ -140,17 +133,15 @@ class ImportedFilesView(QWidget, Observer):
 
         # Deselect the previously selected label
         self.deselect_all_files()
-        self.selected_label = None
-        self.selected_file = None
 
         # Select the clicked label
         if self.selected_label == clicked_label:
+            print("Same label clicked")
             self.selected_label = None
-            self.selected_file = None
             clicked_label.enterEvent(None)
         else:
+            print("Different label clicked")
             self.selected_label = clicked_label
-            self.selected_file = clicked_label.file
             clicked_label.select()
 
         # Display the file stats
@@ -172,8 +163,8 @@ class ImportedFilesView(QWidget, Observer):
         :param publisher: The publisher that is being observed
         :return: None
         """
-        # TODO: when the implementation of tabs is updated, it should no longer
-        #  hard-code the tab name
+        # TODO: when the implementation of tabs is updated, it
+        #  should no longer hard-code the tab name
         self.fetch_files("lda_model")
         self.display_files("lda_model")
 

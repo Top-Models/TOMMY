@@ -1,7 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
 
-from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
     heading_font,
     prim_col_red, hover_prim_col_red)
@@ -112,7 +111,7 @@ class SelectedInformationView(QScrollArea, Observer):
             self.display_no_component_selected()
             return
 
-        file = file_label.file
+        file_metadata = file_label.file
 
         # Prepare layout
         self.clear_layout()

@@ -115,7 +115,7 @@ class TopicEntity(QFrame):
         :return: None
         """
         self.selected = False
-        self.setStyleSheet(f"background-color: {hover_seco_col_purple}; "
+        self.setStyleSheet(f"background-color: {sec_col_purple}; "
                            f"color: white;")
 
     def mousePressEvent(self, event) -> None:
