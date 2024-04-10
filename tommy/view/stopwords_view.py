@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
                                QLineEdit, QHBoxLayout, QPushButton, QTabWidget,
                                QTextEdit)
 
+from tommy.controller.stopwords_controller import StopwordsController
 from tommy.support.constant_variables import text_font, \
     hover_seco_col_blue, pressed_seco_col_blue, sec_col_purple, \
     hover_prim_col_red
@@ -11,9 +12,14 @@ from tommy.view.observer.observer import Observer
 
 class StopwordsView(QScrollArea, Observer):
     """The StopWordsDisplay area to view all stopwords."""
-    def __init__(self) -> None:
+
+    def __init__(self, stopwords_controller: StopwordsController) -> None:
         """The initialization of the StopwordsDisplay."""
         super().__init__()
+
+        # Set reference to the controller
+        self._stopwords_controller = stopwords_controller
+        stopwords_controller.add(self)
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -155,6 +161,53 @@ class StopwordsView(QScrollArea, Observer):
         self.ngrams = set(text.split())
 
 
+            if (i + 1) % 2 == 0 or len(word) >= 8:
+                self.word_layout.addLayout(horizontal_layout)
+                horizontal_layout = QHBoxLayout()
+
+        # Add remaining widgets if any
+        if horizontal_layout.count() > 0:
+            self.word_layout.addLayout(horizontal_layout)
+
+    def add_to_word_list(self) -> None:
+        """
+        Add words to the list of excluded words and update the UI.
+
+        :return: None
+        """
+        new_word = self.input_field.text()
+        if new_word:
+            self._stopwords_controller.add_stopword(new_word)
+            self.input_field.clear()
+
+    def remove_word(self, word) -> None:
+        """
+        Remove a word from the list of excluded words and update the UI.
+
+        :param word: The word to be removed
+        :return: None
+        """
+        self._stopwords_controller.remove_stopword(word)
+
+    def update_word_vis(self, stopwords: list[str]) -> None:
+        """
+        Remove current words from excluded word UI and show new ones.
+
+        :return: None
+        """
+        # Clear current view
+        for i in reversed(range(self.word_layout.count())):
+            layout_item = self.word_layout.itemAt(i)
+            if layout_item is not None:
+                while layout_item.count():
+                    item = layout_item.takeAt(0)
+                    current_item = item.widget()
+                    if current_item:
+                        current_item.setParent(None)
+
+        # Display updated words in UI
+        self.show_excluded_words(stopwords)
+
     def update_observer(self, publisher) -> None:
         """
         Update the observer.
@@ -162,7 +215,7 @@ class StopwordsView(QScrollArea, Observer):
         :param publisher: The publisher that is being observed
         :return: None
         """
-        pass
+        self.update_word_vis(list(publisher.stopwords_model.extra_words))
 
 
 """

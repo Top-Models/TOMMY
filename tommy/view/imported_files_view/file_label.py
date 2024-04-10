@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import QLabel, QSizePolicy
 
-from tommy.backend.file_import.file import File
+from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
     heading_font,
     text_font, medium_light_gray, hover_medium_light_gray,
@@ -15,15 +15,15 @@ class FileLabel(QLabel, Observer):
 
     clicked = Signal(object)
 
-    def __init__(self, file: File, parent=None) -> None:
+    def __init__(self, file_metadata: Metadata, parent=None) -> None:
         """Method to initialize the FileLabel object"""
-        super().__init__(file.name, parent)
-        self.file = file
+        super().__init__(file_metadata.name, parent)
+        self.file = file_metadata
 
-        if file.title is not None:
-            self.setText(file.title)
+        if file_metadata.title is not None:
+            self.setText(file_metadata.title)
         else:
-            self.setText(file.name)
+            self.setText(file_metadata.name)
 
         self.setStyleSheet(f"font-family: {text_font};"
                            f"font-size: 15px;"

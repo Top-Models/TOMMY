@@ -1,18 +1,21 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QPushButton, QLabel
 
-from tommy.backend.observer.publisher import Publisher
-from tommy.support.constant_variables import \
-    seco_col_blue, hover_seco_col_blue, pressed_seco_col_blue
-from tommy.view.observer.observer import Observer
+from tommy.controller.graph_controller import GraphController
+from tommy.controller.publisher.publisher import Publisher
+from tommy.support.constant_variables import (
+    seco_col_blue, hover_seco_col_blue, pressed_seco_col_blue)
 
 
-class PlotNavigationView(QLabel, Observer):
+class PlotNavigationView(QLabel):
     """View containing buttons to navigate plots."""
 
-    def __init__(self) -> None:
+    def __init__(self, graph_controller: GraphController) -> None:
         """Initialize the PlotNavigationView."""
         super().__init__()
+
+        # Set reference to the graph-controller
+        self._graph_controller = graph_controller
 
         # Initialize widget properties
         self.setFixedHeight(40)
@@ -57,6 +60,8 @@ class PlotNavigationView(QLabel, Observer):
         self.next_plot_button.setFixedWidth(40)
         self.next_plot_button.setFixedHeight(40)
         self.layout.addWidget(self.next_plot_button)
+        self.next_plot_button.clicked.connect(
+            self.next_plot_button_clicked_event)
 
     def initialize_previous_plot_button(self) -> None:
         """Initialize the previous plot button."""
@@ -80,25 +85,16 @@ class PlotNavigationView(QLabel, Observer):
         self.previous_plot_button.setFixedWidth(40)
         self.previous_plot_button.setFixedHeight(40)
         self.layout.addWidget(self.previous_plot_button)
+        self.previous_plot_button.clicked.connect(
+            self.previous_plot_button_clicked_event)
 
-    # TODO: Implement when Connector is implemented
     def next_plot_button_clicked_event(self) -> None:
         """Event handler for when the next plot button is clicked."""
-        pass
+        self._graph_controller.on_next_plot()
 
-    # TODO: Implement when Connector is implemented
     def previous_plot_button_clicked_event(self) -> None:
         """Event handler for when the previous plot button is clicked."""
-        pass
-
-    def update_observer(self, publisher: Publisher) -> None:
-        """
-        Update the observer.
-
-        :param publisher: The publisher that is being observed
-        :return: None
-        """
-        pass
+        self._graph_controller.on_previous_plot()
 
 
 """
