@@ -144,6 +144,7 @@ class SelectedInformationView(QScrollArea, Observer):
                                       f"text-transform: uppercase;")
         file_name_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignTop)
+        file_name_label.setMinimumHeight(20)
         vertical_layout.addWidget(file_name_label)
 
         # Add file path
@@ -151,6 +152,7 @@ class SelectedInformationView(QScrollArea, Observer):
         file_path_label.setStyleSheet("font-size: 16px;")
         file_path_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignTop)
+        file_path_label.setMinimumHeight(20)
         vertical_layout.addWidget(file_path_label)
 
         # Add file format
@@ -158,6 +160,7 @@ class SelectedInformationView(QScrollArea, Observer):
         file_format_label.setStyleSheet("font-size: 16px;")
         file_format_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                        Qt.AlignmentFlag.AlignTop)
+        file_format_label.setMinimumHeight(20)
         vertical_layout.addWidget(file_format_label)
 
         # Add word amount
@@ -165,6 +168,7 @@ class SelectedInformationView(QScrollArea, Observer):
         word_amount_label.setStyleSheet("font-size: 16px;")
         word_amount_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                        Qt.AlignmentFlag.AlignTop)
+        word_amount_label.setMinimumHeight(20)
         vertical_layout.addWidget(word_amount_label)
 
         # Add file size
@@ -172,6 +176,7 @@ class SelectedInformationView(QScrollArea, Observer):
         file_size_label.setStyleSheet("font-size: 16px;")
         file_size_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignTop)
+        file_size_label.setMinimumHeight(20)
         vertical_layout.addWidget(file_size_label)
 
     # TODO: Displayed information not final
@@ -209,6 +214,7 @@ class SelectedInformationView(QScrollArea, Observer):
                                        f"text-transform: uppercase;")
         topic_name_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                       Qt.AlignmentFlag.AlignTop)
+        topic_name_label.setMinimumHeight(20)
         vertical_layout.addWidget(topic_name_label)
 
         # Add words
@@ -217,6 +223,8 @@ class SelectedInformationView(QScrollArea, Observer):
             word_label.setStyleSheet(f"font-size: 16px;")
             word_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                     Qt.AlignmentFlag.AlignTop)
+            # Make sure word_label is always big enough
+            word_label.setMinimumHeight(20)
             vertical_layout.addWidget(word_label)
 
     def display_run_info(self, run_name: str) -> None:
@@ -258,6 +266,7 @@ class SelectedInformationView(QScrollArea, Observer):
                                      f"text-transform: uppercase;")
         run_name_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                     Qt.AlignmentFlag.AlignTop)
+        run_name_label.setMinimumHeight(20)
         vertical_layout.addWidget(run_name_label)
 
         # Display model type
@@ -265,6 +274,7 @@ class SelectedInformationView(QScrollArea, Observer):
         model_type_label.setStyleSheet("font-size: 16px;")
         model_type_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                       Qt.AlignmentFlag.AlignTop)
+        model_type_label.setMinimumHeight(20)
         vertical_layout.addWidget(model_type_label)
 
         # Display topic amount
@@ -272,6 +282,7 @@ class SelectedInformationView(QScrollArea, Observer):
         topic_amount_label.setStyleSheet("font-size: 16px;")
         topic_amount_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                         Qt.AlignmentFlag.AlignTop)
+        topic_amount_label.setMinimumHeight(20)
         vertical_layout.addWidget(topic_amount_label)
 
     def update_observer(self, publisher) -> None:
