@@ -3,15 +3,15 @@ from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
                                QLineEdit, QHBoxLayout, QPushButton)
 
 from tommy.controller.stopwords_controller import StopwordsController
+from tommy.model.stopwords_model import StopwordsModel
 from tommy.support.constant_variables import (
     text_font,
     hover_seco_col_blue,
     pressed_seco_col_blue,
     sec_col_purple)
-from tommy.view.observer.observer import Observer
 
 
-class StopwordsView(QScrollArea, Observer):
+class StopwordsView(QScrollArea):
     """The StopWordsDisplay area to view all stopwords."""
 
     def __init__(self, stopwords_controller: StopwordsController) -> None:
@@ -20,7 +20,8 @@ class StopwordsView(QScrollArea, Observer):
 
         # Set reference to the controller
         self._stopwords_controller = stopwords_controller
-        stopwords_controller.add(self)
+        stopwords_controller.stopwords_changed_event.subscribe(
+            self._on_stopwords_changed)
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -209,14 +210,15 @@ class StopwordsView(QScrollArea, Observer):
         # Display updated words in UI
         self.show_excluded_words(stopwords)
 
-    def update_observer(self, publisher) -> None:
+    def _on_stopwords_changed(self, stopwords_model: StopwordsModel) -> None:
         """
-        Update the observer.
+        Notify stopwords view of changed in stopwords list and update UI
 
-        :param publisher: The publisher that is being observed
+        :param stopwords_model: The stopwords model containing the new list of
+            stopwords
         :return: None
         """
-        self.update_word_vis(list(publisher.stopwords_model.extra_words))
+        self.update_word_vis(list(stopwords_model.extra_words))
 
 
 """

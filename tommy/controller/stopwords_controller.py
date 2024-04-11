@@ -1,18 +1,24 @@
-from tommy.controller.publisher.publisher import Publisher
+from tommy.controller.publisher.event_handler import EventHandler
 from tommy.model.stopwords_model import StopwordsModel
 
 
-class StopwordsController(Publisher):
+class StopwordsController:
     """A class that handles all stopword related functionality."""
     _stopwords_model: StopwordsModel = None
+    _stopwords_changed_event: EventHandler[StopwordsModel]
 
     @property
     def stopwords_model(self) -> StopwordsModel:
         return self._stopwords_model
 
+    @property
+    def stopwords_changed_event(self) -> EventHandler[StopwordsModel]:
+        return self._stopwords_changed_event
+
     def __init__(self) -> None:
         """Initializes the stopwords controller."""
         super().__init__()
+        self._stopwords_changed_event = EventHandler[StopwordsModel]()
 
     def set_model_refs(self, stopwords_model: StopwordsModel):
         """Sets the reference to the stopwords model."""
@@ -27,6 +33,7 @@ class StopwordsController(Publisher):
         """
 
         self._stopwords_model.replace(words)
+        self._stopwords_changed_event.publish(self._stopwords_model)
 
     # TODO: this method will be deprecated in the new UI redesign
     def add_stopword(self, word: str) -> None:
@@ -37,7 +44,7 @@ class StopwordsController(Publisher):
         :return: None
         """
         self._stopwords_model.add(word)
-        self.notify()
+        self._stopwords_changed_event.publish(self._stopwords_model)
 
     # TODO: this method will be deprecated in the new UI redesign
     def remove_stopword(self, word: str) -> None:
@@ -48,7 +55,7 @@ class StopwordsController(Publisher):
         :return: None
         """
         self._stopwords_model.remove(word)
-        self.notify()
+        self._stopwords_changed_event.publish(self._stopwords_model)
 
 
 """
