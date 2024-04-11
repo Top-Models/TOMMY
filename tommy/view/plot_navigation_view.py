@@ -2,7 +2,6 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QPushButton, QLabel
 
 from tommy.controller.graph_controller import GraphController
-from tommy.controller.publisher.publisher import Publisher
 from tommy.support.constant_variables import (
     seco_col_blue, hover_seco_col_blue, pressed_seco_col_blue)
 
