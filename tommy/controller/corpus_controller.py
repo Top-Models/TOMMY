@@ -11,12 +11,13 @@ from tommy.controller.file_import.raw_body import RawBody
 from tommy.controller.file_import.raw_file import RawFile
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
+from tommy.controller.publisher.event_handler import EventHandler
 from tommy.controller.publisher.publisher import Publisher
 from tommy.model.corpus_model import CorpusModel
 from tommy.view.observer.observer import Observer
 
 
-class CorpusController(Observer, Publisher):
+class CorpusController(Observer):
     """
     The corpus controller class is responsible for handling interactions with
     the corpus model.
@@ -33,10 +34,16 @@ class CorpusController(Observer, Publisher):
     _corpus_model: CorpusModel = None
     _project_settings_controller: ProjectSettingsController = None
     fileParsers: GenericFileImporter = GenericFileImporter()
+    _metadata_changed_event: EventHandler[[Metadata]] = None
+
+    @property
+    def metadata_changed_event(self) -> EventHandler[[Metadata]]:
+        return self._metadata_changed_event
 
     def __init__(self) -> None:
-        """Initialize corpus controller and publisher"""
+        """Initialize corpus controller and eventhandler for metadata"""
         super().__init__()
+        self._metadata_changed_event = EventHandler[[Metadata]]()
 
     def set_controller_refs(self,
                             project_settings_controller:
@@ -87,8 +94,8 @@ class CorpusController(Observer, Publisher):
     def extract_and_store_metadata(self) -> None:
         """
         Gets the metadata from all files in the directory specified by the
-        project settings and stores it in the corpus model and notifies its
-        subscribers of the change in metadata
+        project settings and stores it in the corpus model and triggers the
+        metadata-changed-event
 
         :return: None
         """
@@ -96,8 +103,7 @@ class CorpusController(Observer, Publisher):
         metadata = [file.metadata for file in files]
 
         self._corpus_model.metadata = metadata
-
-        self.notify()
+        self._metadata_changed_event.publish(metadata)
 
     def get_metadata(self) -> list[Metadata]:
         """
