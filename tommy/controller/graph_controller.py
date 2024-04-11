@@ -1,13 +1,10 @@
 from itertools import product
-from collections.abc import Iterable, Callable
 
 import matplotlib.figure
 
 from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.publisher.event_handler import EventHandler
-from tommy.view.observer.observer import Observer
 from tommy.datatypes.topics import TopicWithScores
-from tommy.controller.publisher.publisher import Publisher
 from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.file_import.metadata import Metadata
 
@@ -38,7 +35,7 @@ from tommy.controller.visualizations.visualization_input_datatypes import (
     ProcessedCorpus, MetadataCorpus)
 
 
-class GraphController(Observer):
+class GraphController:
     """
     The central interface for extracting results from topic modelling results
     and creating visualizations.
@@ -90,7 +87,8 @@ class GraphController(Observer):
                        ) -> None:
         """Set reference to the TM controller and add self to its publisher"""
         self._topic_modelling_controller = topic_modelling_controller
-        self._topic_modelling_controller.add(self)
+        self._topic_modelling_controller.model_trained_event.subscribe(
+            self.on_topic_runner_complete)
 
     def set_controller_refs(self,
                             corpus_controller: CorpusController):
@@ -273,27 +271,18 @@ class GraphController(Observer):
                 % self.get_visualization_count())
         self._plots_changed_event.publish(self.get_current_visualization())
 
-    def update_observer(self, publisher: Publisher) -> None:
+    def on_topic_runner_complete(self, topic_runner: TopicRunner) -> None:
         """
-        Signal the graph-controller to update
-        If the signal comes from a topic-modelling-controller:
-        update the graph-controller and notify its observers
-
-        :param publisher: the publisher of the signal; can only be a
-            TopicModellingController
-        :raises RuntimeWarning: if the signal comes from anything other than
-            a TopicModellingController
+        Signal the graph-controller that a topic runner has finished training
+        and is ready to provide results. Notify the subscribes of the plots
+        and topics
+        :param topic_runner: The newly trained topic runner object
         :return: None
         """
-        if isinstance(publisher, TopicModellingController):
-            self._current_topic_runner = (self._topic_modelling_controller
-                                          .get_topic_runner())
-            self._calculate_possible_visualizations()
-            self._topics_changed_event.publish(None)
-            self._plots_changed_event.publish(self.get_current_visualization())
-        else:
-            raise RuntimeWarning("GraphController observer got a signal from "
-                                 "an unexpected publisher")
+        self._current_topic_runner = topic_runner
+        self._calculate_possible_visualizations()
+        self._topics_changed_event.publish(None)
+        self._plots_changed_event.publish(self.get_current_visualization())
 
 
 """
