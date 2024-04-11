@@ -1,9 +1,10 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
+from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout, \
+    QWidget
 
 from tommy.controller.graph_controller import GraphController
-from tommy.controller.model_parameters_controller import \
-    ModelParametersController
+from tommy.controller.model_parameters_controller import (
+    ModelParametersController)
 from tommy.support.constant_variables import (
     heading_font,
     prim_col_red, hover_prim_col_red)
@@ -29,10 +30,27 @@ class SelectedInformationView(QScrollArea, Observer):
 
         # Initialize layout
         self.layout = QVBoxLayout()
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
+        self.layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                 Qt.AlignmentFlag.AlignLeft)
         self.setLayout(self.layout)
 
         # Add title widget
-        self.add_title_widget()
+        self.initialize_title_widget()
+
+        # Initialize scroll area and its layout
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_widget = QWidget()
+        self.scroll_layout = QVBoxLayout(self.scroll_widget)
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.scroll_area.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scroll_area.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroll_area.setWidget(self.scroll_widget)
+        self.layout.addWidget(self.scroll_area)
 
         # Initialize controllers
         self._graph_controller = graph_controller
@@ -41,7 +59,7 @@ class SelectedInformationView(QScrollArea, Observer):
         # Initialize widgets
         self.display_no_component_selected()
 
-    def add_title_widget(self) -> None:
+    def initialize_title_widget(self) -> None:
         """
         Add the title label widget
         """
@@ -70,28 +88,23 @@ class SelectedInformationView(QScrollArea, Observer):
         """
         # Prepare layout
         self.clear_layout()
-        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.scroll_layout.setContentsMargins(0, 0, 0, 0)
+
+        # Set scroll layout align center
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # Add label
         no_file_selected_label = QLabel("Geen component\ngeselecteerd")
         no_file_selected_label.setStyleSheet("font-size: 20px;")
         no_file_selected_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.layout.addWidget(no_file_selected_label)
+        self.scroll_layout.addWidget(no_file_selected_label)
 
     def clear_layout(self) -> None:
         """
         Clear the layout.
         :return: None
         """
-        while self.layout.count() > 1:
-            item = self.layout.takeAt(1)
-            if item:
-                layout = item.layout()
-                if layout:
-                    self.clear_sub_layout(layout)
-            widget = item.widget()
-            if widget:
-                widget.deleteLater()
+        self.clear_sub_layout(self.scroll_layout)
 
     def clear_sub_layout(self, layout: QLayout) -> None:
         """
@@ -125,15 +138,19 @@ class SelectedInformationView(QScrollArea, Observer):
         # Prepare layout
         self.clear_layout()
 
+        # Set scroll layout align top left
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                        Qt.AlignmentFlag.AlignLeft)
+
         # Use a vertical layout
         vertical_layout = QVBoxLayout()
         vertical_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
                                      Qt.AlignmentFlag.AlignLeft)
 
         # Adjust the left margin here
-        vertical_layout.setContentsMargins(20, 20, 0, 0)
+        vertical_layout.setContentsMargins(20, 20, 0, 10)
         vertical_layout.setSpacing(10)
-        self.layout.addLayout(vertical_layout)
+        self.scroll_layout.addLayout(vertical_layout)
 
         # Add file name
         file_name = file_metadata.name.split("/")[-1]
@@ -144,7 +161,7 @@ class SelectedInformationView(QScrollArea, Observer):
                                       f"text-transform: uppercase;")
         file_name_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignTop)
-        file_name_label.setMinimumHeight(20)
+        file_name_label.setMinimumHeight(30)
         vertical_layout.addWidget(file_name_label)
 
         # Add file path
@@ -195,15 +212,19 @@ class SelectedInformationView(QScrollArea, Observer):
         # Prepare layout
         self.clear_layout()
 
+        # Set scroll layout align top left
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                        Qt.AlignmentFlag.AlignLeft)
+
         # Use a vertical layout
         vertical_layout = QVBoxLayout()
         vertical_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
                                      Qt.AlignmentFlag.AlignLeft)
 
         # Adjust the left margin here
-        vertical_layout.setContentsMargins(20, 20, 0, 0)
+        vertical_layout.setContentsMargins(20, 20, 0, 10)
         vertical_layout.setSpacing(10)
-        self.layout.addLayout(vertical_layout)
+        self.scroll_layout.addLayout(vertical_layout)
 
         # Add topic name
         topic_name = topic_entity.topic_name
@@ -248,15 +269,19 @@ class SelectedInformationView(QScrollArea, Observer):
         # Prepare layout
         self.clear_layout()
 
+        # Set scroll layout align top left
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                        Qt.AlignmentFlag.AlignLeft)
+
         # Use a vertical layout
         vertical_layout = QVBoxLayout()
         vertical_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
                                      Qt.AlignmentFlag.AlignLeft)
 
         # Adjust the left margin here
-        vertical_layout.setContentsMargins(20, 20, 0, 0)
+        vertical_layout.setContentsMargins(20, 20, 0, 10)
         vertical_layout.setSpacing(10)
-        self.layout.addLayout(vertical_layout)
+        self.scroll_layout.addLayout(vertical_layout)
 
         # Add run name
         run_name_label = QLabel(f"{run_name}")
@@ -293,11 +318,3 @@ class SelectedInformationView(QScrollArea, Observer):
         :return: None
         """
         pass
-
-
-"""
-This program has been developed by students from the bachelor Computer Science
-at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
-(Department of Information and Computing Sciences)
-"""
