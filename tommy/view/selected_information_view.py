@@ -13,7 +13,7 @@ from tommy.view.observer.observer import Observer
 
 
 class SelectedInformationView(QScrollArea, Observer):
-    """Class to define the FileStatsDisplay UI component"""
+    """Class to define the SelectedInformationView UI component"""
 
     def __init__(self,
                  graph_controller: GraphController,
