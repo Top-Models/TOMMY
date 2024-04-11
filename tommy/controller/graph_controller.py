@@ -66,11 +66,11 @@ class GraphController(Observer):
 
     _current_topic_runner: TopicRunner = None
 
-    _plots_changed_event: EventHandler[None] = None
+    _plots_changed_event: EventHandler[matplotlib.figure.Figure] = None
     _topics_changed_event: EventHandler[None] = None
 
     @property
-    def plots_changed_event(self) -> EventHandler[None]:
+    def plots_changed_event(self) -> EventHandler[matplotlib.figure.Figure]:
         """Get publisher that notifies when (selected) plots are changed."""
         return self._plots_changed_event
 
@@ -82,7 +82,7 @@ class GraphController(Observer):
     def __init__(self) -> None:
         """Initialize the graph-controller and its two publishers"""
         super().__init__()
-        self._plots_changed_event = EventHandler[None]()
+        self._plots_changed_event = EventHandler[matplotlib.figure.Figure]()
         self._topics_changed_event = EventHandler[None]()
 
     def set_model_refs(self,
@@ -211,7 +211,7 @@ class GraphController(Observer):
         return vis_creator.get_figure(self._current_topic_runner)
 
     def _run_global_visualization_on_data(self,
-                                          vis_creator: AbstractVisualizationOnData):
+            vis_creator: AbstractVisualizationOnData):
         """
         Runs the global visualization on the additional data that it needs
         :param vis_creator: Index of the visualization to be requested
@@ -256,7 +256,7 @@ class GraphController(Observer):
         self._current_visualization_index = (
                 (self._current_visualization_index + 1)
                 % self.get_visualization_count())
-        self._plots_changed_event.publish(None)
+        self._plots_changed_event.publish(self.get_current_visualization())
 
     def on_previous_plot(self) -> None:
         """
@@ -271,7 +271,7 @@ class GraphController(Observer):
         self._current_visualization_index = (
                 (self._current_visualization_index - 1)
                 % self.get_visualization_count())
-        self._plots_changed_event.publish(None)
+        self._plots_changed_event.publish(self.get_current_visualization())
 
     def update_observer(self, publisher: Publisher) -> None:
         """
@@ -290,7 +290,7 @@ class GraphController(Observer):
                                           .get_topic_runner())
             self._calculate_possible_visualizations()
             self._topics_changed_event.publish(None)
-            self._plots_changed_event.publish(None)
+            self._plots_changed_event.publish(self.get_current_visualization())
         else:
             raise RuntimeWarning("GraphController observer got a signal from "
                                  "an unexpected publisher")
