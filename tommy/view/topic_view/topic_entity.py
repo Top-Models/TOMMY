@@ -1,10 +1,14 @@
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
+from PySide6.QtWidgets import (
+    QVBoxLayout, QLabel, QHBoxLayout, QFrame,
+    QLineEdit)
 
 from tommy.support.constant_variables import (
     heading_font,
     text_font,
-    sec_col_purple)
+    sec_col_purple,
+    pressed_seco_col_purple,
+    light_seco_col_purple)
 
 
 class TopicEntity(QFrame):
@@ -26,17 +30,23 @@ class TopicEntity(QFrame):
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         # Initialize widget properties
-        self.setStyleSheet(f"background-color: {sec_col_purple}; "
-                           f"color: white;")
+        self.setStyleSheet(f"background-color: {sec_col_purple};")
         self.setFixedWidth(200)
 
         # Initialize title widget
-        topic_label = QLabel(topic_name, self)
+        topic_label = QLineEdit(topic_name, self)
         topic_label.setStyleSheet(f"font-family: {heading_font}; "
+                                  f"color: white;"
                                   f"font-size: 15px; "
                                   f"font-weight: bold; "
-                                  f"text-transform: uppercase;")
+                                  f"background-color: "
+                                  f"{pressed_seco_col_purple};"
+                                  f"padding: 5px 5px;"
+                                  f"border-radius: 2px;"
+                                  f"border:"
+                                  f"2px solid {light_seco_col_purple};")
         topic_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        topic_label.setPlaceholderText(topic_name)
         main_layout.addWidget(topic_label)
 
         # Initialize word widgets
@@ -53,6 +63,16 @@ class TopicEntity(QFrame):
         # Add remaining widgets if any
         if horizontal_layout.count() > 0:
             self.word_layout.addLayout(horizontal_layout)
+
+        topic_label.textChanged.connect(self.get_topic_name)
+
+    def get_topic_name(self) -> None:
+        """
+        Get the topic name
+
+        :return: The topic name
+        """
+        return self.findChild(QLineEdit).text()
 
     def add_words(self,
                   horizontal_layout: QHBoxLayout,
