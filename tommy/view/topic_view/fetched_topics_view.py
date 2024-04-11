@@ -88,8 +88,7 @@ class FetchedTopicsView(QScrollArea, Observer):
         """
 
         # Clear current display
-        for i in reversed(range(self.layout.count())):
-            self.layout.itemAt(i).widget().deleteLater()
+        self._clear_topics()
 
         # Check if tab exists
         if tab_name not in self.topic_container:
@@ -115,8 +114,11 @@ class FetchedTopicsView(QScrollArea, Observer):
         Clear the topics from the display
         :return: None
         """
+        # Clear layout
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().deleteLater()
+
+        # Clear topic container
         self.topic_container = {}
 
     def _refresh_topics(self) -> None:
