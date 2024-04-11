@@ -2,10 +2,9 @@ from PySide6.QtWidgets import QWidget, QTabWidget
 
 from tommy.support.constant_variables import (
     hover_prim_col_red)
-from tommy.view.observer.observer import Observer
 
 
-class ModelSelectionView(QTabWidget, Observer):
+class ModelSelectionView(QTabWidget):
     """A class to display options for selecting a model."""
 
     def __init__(self) -> None:
@@ -68,15 +67,6 @@ class ModelSelectionView(QTabWidget, Observer):
         Handle a tab clicked event.
         """
         # TODO: Implement when Connector is implemented
-        pass
-
-    def update_observer(self, publisher) -> None:
-        """
-        Update the observer.
-
-        :param publisher: The publisher that is being observed
-        :return: None
-        """
         pass
 
 

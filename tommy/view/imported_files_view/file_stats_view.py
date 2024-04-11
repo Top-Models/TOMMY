@@ -5,10 +5,9 @@ from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
     heading_font,
     prim_col_red, hover_prim_col_red)
-from tommy.view.observer.observer import Observer
 
 
-class FileStatsView(QScrollArea, Observer):
+class FileStatsView(QScrollArea):
     """Class to define the FileStatsDisplay UI component"""
 
     def __init__(self) -> None:
@@ -156,15 +155,6 @@ class FileStatsView(QScrollArea, Observer):
         file_size_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignTop)
         vertical_layout.addWidget(file_size_label)
-
-    def update_observer(self, publisher) -> None:
-        """
-        Update the observer.
-
-        :param publisher: The publisher that is being observed
-        :return: None
-        """
-        pass
 
 
 """
