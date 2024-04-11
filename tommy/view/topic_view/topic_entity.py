@@ -1,9 +1,14 @@
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame, \
-    QLineEdit, QSizePolicy
+from PySide6.QtWidgets import (
+    QVBoxLayout, QLabel, QHBoxLayout, QFrame,
+    QLineEdit)
 
-from tommy.support.constant_variables import heading_font, \
-    text_font, sec_col_purple, pressed_seco_col_purple, light_seco_col_purple
+from tommy.support.constant_variables import (
+    heading_font,
+    text_font,
+    sec_col_purple,
+    pressed_seco_col_purple,
+    light_seco_col_purple)
 
 
 class TopicEntity(QFrame):
