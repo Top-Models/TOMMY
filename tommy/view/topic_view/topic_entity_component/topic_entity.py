@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
 from tommy.support.constant_variables import (
     heading_font, text_font, sec_col_purple, pressed_seco_col_purple,
     hover_seco_col_purple)
-from tommy.view.topic_view.topic_entity.word_entity import WordEntity
+from tommy.view.topic_view.topic_entity_component.word_entity import WordEntity
 
 
 class TopicEntity(QFrame):

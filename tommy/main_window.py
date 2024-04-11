@@ -23,7 +23,8 @@ from tommy.view.stopwords_view import (
     StopwordsView)
 from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
-from tommy.view.topic_view.topic_entity.topic_entity import TopicEntity
+from tommy.view.topic_view.topic_entity_component.topic_entity import \
+    TopicEntity
 
 
 class MainWindow(QMainWindow):
