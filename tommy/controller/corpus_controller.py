@@ -12,24 +12,14 @@ from tommy.controller.file_import.raw_file import RawFile
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.controller.publisher.event_handler import EventHandler
-from tommy.controller.publisher.publisher import Publisher
 from tommy.model.corpus_model import CorpusModel
-from tommy.view.observer.observer import Observer
 
 
-class CorpusController(Observer):
+class CorpusController:
     """
     The corpus controller class is responsible for handling interactions with
     the corpus model.
     """
-
-    def update_observer(self, publisher: Publisher) -> None:
-        """
-        Updates the metadata when the project settings change
-        :param publisher: unused, the project settings controller
-        :return: None
-        """
-        self.extract_and_store_metadata()
 
     _corpus_model: CorpusModel = None
     _project_settings_controller: ProjectSettingsController = None
@@ -55,7 +45,8 @@ class CorpusController(Observer):
         :return: None
         """
         self._project_settings_controller = project_settings_controller
-        self._project_settings_controller.add(self)
+        project_settings_controller.input_folder_path_changed_event.subscribe(
+            self.on_input_folder_path_changed)
 
     def set_model_refs(self, corpus_model: CorpusModel) -> None:
         """
@@ -91,15 +82,16 @@ class CorpusController(Observer):
         path = self._project_settings_controller.get_input_folder_path()
         return self._read_files(path)
 
-    def extract_and_store_metadata(self) -> None:
+    def on_input_folder_path_changed(self, input_folder_path: str) -> None:
         """
         Gets the metadata from all files in the directory specified by the
         project settings and stores it in the corpus model and triggers the
         metadata-changed-event
 
+        :param input_folder_path: The new path to the input folder
         :return: None
         """
-        files = self._read_files_from_input_folder()
+        files = self._read_files(input_folder_path)
         metadata = [file.metadata for file in files]
 
         self._corpus_model.metadata = metadata
