@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget, QTabWidget
 
-from tommy.support.constant_variables import \
-    hover_prim_col_red
+from tommy.support.constant_variables import (
+    hover_prim_col_red)
 from tommy.view.observer.observer import Observer
 
 
