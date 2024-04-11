@@ -83,7 +83,7 @@ class SelectedInformationView(QScrollArea, Observer):
 
     def display_no_component_selected(self) -> None:
         """
-        Display a message when no file is selected.
+        Display a message when no component is selected.
         :return: None
         """
         # Prepare layout
