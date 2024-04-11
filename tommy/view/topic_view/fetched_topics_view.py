@@ -12,6 +12,7 @@ from tommy.view.topic_view.topic_entity import (
 
 class FetchedTopicsView(QScrollArea, Observer):
     """A widget for displaying the found topics."""
+
     def __init__(self, graph_controller: GraphController) -> None:
         """Initialize the FetchedTopicDisplay widget."""
         super().__init__()
@@ -52,7 +53,8 @@ class FetchedTopicsView(QScrollArea, Observer):
         # Set reference to the controller where topics will be fetched from
         # and subscribe to its topic publisher
         self._graph_controller = graph_controller
-        self._graph_controller.topics_changed_publisher.add(self)
+        self._graph_controller.topics_changed_event.subscribe(
+            self.update_observer)
 
     def _add_topic(self,
                    tab_name: str,
@@ -143,11 +145,11 @@ class FetchedTopicsView(QScrollArea, Observer):
                                                sec_col_orange,
                                                "black")
 
-    def update_observer(self, publisher) -> None:
+    def update_observer(self, data: None) -> None:
         """
         Update the observer.
 
-        :param publisher: The publisher that is being observed
+        :param data: The publisher that is being observed
         :return: None
         """
         self._refresh_topics()

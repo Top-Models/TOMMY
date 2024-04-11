@@ -31,7 +31,8 @@ class GraphView(QWidget, Observer):
 
         # Set reference to the graph-controller and add self to its publisher
         self._graph_controller = graph_controller
-        self._graph_controller.plots_changed_publisher.add(self)
+        self._graph_controller.plots_changed_event.subscribe(
+            self.update_observer)
 
     def display_plot(self, canvas: matplotlib.figure.Figure) -> None:
         """
@@ -63,12 +64,12 @@ class GraphView(QWidget, Observer):
         # Add the canvas to the layout
         self.layout.addWidget(FigureCanvas(canvas.figure))
 
-    def update_observer(self, publisher: Publisher) -> None:
+    def update_observer(self, data: None) -> None:
         """
         Update the view by retrieving the new visualization from the
         graph-controller and displaying it.
 
-        :param publisher: The publisher to update the view from
+        :param data: The publisher to update the view from
         :return: None
         """
         new_graph = self._graph_controller.get_current_visualization()
