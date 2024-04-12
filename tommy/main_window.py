@@ -219,6 +219,10 @@ class MainWindow(QMainWindow):
         self.imported_files_view.fileClicked.connect(self.on_file_clicked)
         self.fetched_topics_view.topicClicked.connect(self.on_topic_clicked)
 
+    @property
+    def controller(self):
+        return self._controller
+
 
 """
 This program has been developed by students from the bachelor Computer Science

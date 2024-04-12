@@ -3,7 +3,8 @@ from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 from tommy.support.constant_variables import sec_col_purple, \
     pressed_seco_col_purple, hover_seco_col_purple
-from tommy.view.topic_view.topic_entity_component.topic_entity import TopicEntity
+from tommy.view.topic_view.topic_entity_component.topic_entity import (
+    TopicEntity)
 
 
 @pytest.fixture(scope='function')
