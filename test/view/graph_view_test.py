@@ -123,3 +123,11 @@ def test_update_observer(graph_view: GraphView, mocker):
 
     # Check if the layout was cleared
     assert graph_view.layout.count() == 1
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

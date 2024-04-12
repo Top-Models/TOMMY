@@ -184,3 +184,11 @@ def test_mouse_release_event_not_selected(file_label: FileLabel, qtbot: QtBot):
             f"padding: 10px;")
 
     assert file_label.selected is False
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

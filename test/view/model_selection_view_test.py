@@ -28,3 +28,10 @@ def test_get_active_tab_name(model_selection_view: ModelSelectionView):
     model_selection_view.setCurrentIndex(1)
     assert model_selection_view.get_active_tab_name() == "nmf_model"
 
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""
