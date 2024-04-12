@@ -4,7 +4,8 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 from tommy.controller.graph_controller import GraphController
 from tommy.support.constant_variables import sec_col_orange
 from tommy.view.observer.observer import Observer
-from tommy.view.topic_view.topic_entity.topic_entity import TopicEntity
+from tommy.view.topic_view.topic_entity_component.topic_entity import (
+    TopicEntity)
 
 
 class FetchedTopicsView(QScrollArea, Observer):
@@ -78,7 +79,6 @@ class FetchedTopicsView(QScrollArea, Observer):
         topic_entity = TopicEntity(topic_name, topic_words)
         topic_entity.clicked.connect(self._on_topic_clicked)
         topic_entity.wordClicked.connect(self._on_word_clicked)
-        self.layout.addWidget(topic_entity)
 
     def _display_topics(self, tab_name: str) -> None:
         """
@@ -88,7 +88,8 @@ class FetchedTopicsView(QScrollArea, Observer):
         """
 
         # Clear current display
-        self._clear_topics()
+        for i in reversed(range(self.layout.count())):
+            self.layout.itemAt(i).widget().deleteLater()
 
         # Check if tab exists
         if tab_name not in self.topic_container:
@@ -114,11 +115,8 @@ class FetchedTopicsView(QScrollArea, Observer):
         Clear the topics from the display
         :return: None
         """
-        # Clear layout
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().deleteLater()
-
-        # Clear topic container
         self.topic_container = {}
 
     def _refresh_topics(self) -> None:

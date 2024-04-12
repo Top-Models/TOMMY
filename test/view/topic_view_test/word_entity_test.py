@@ -3,7 +3,7 @@ from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 from tommy.support.constant_variables import text_font, \
     pressed_medium_light_gray
-from tommy.view.topic_view.topic_entity.word_entity import WordEntity
+from tommy.view.topic_view.topic_entity_component.word_entity import WordEntity
 
 
 @pytest.fixture(scope='function')

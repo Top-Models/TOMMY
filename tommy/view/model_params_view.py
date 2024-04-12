@@ -98,7 +98,7 @@ class ModelParamsView(QScrollArea, Observer):
                                        f"background-color: white;")
         self.topic_input.setAlignment(Qt.AlignLeft)
         self.container_layout.addWidget(self.topic_input)
-        self.topic_input.returnPressed.connect(
+        self.topic_input.editingFinished.connect(
             self.topic_input_return_pressed_event)
 
     def initialize_title_label(self) -> None:
@@ -135,11 +135,11 @@ class ModelParamsView(QScrollArea, Observer):
                     background-color: {seco_col_blue};
                     color: white;
                 }}
-    
+
                 QPushButton:hover {{
                     background-color: {hover_seco_col_blue};
                 }}
-    
+
                 QPushButton:pressed {{
                     background-color: {pressed_seco_col_blue};
                 }}
