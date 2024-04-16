@@ -1,6 +1,7 @@
 import os
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QScrollArea, QWidget
+from PySide6.QtWidgets import (QLabel, QVBoxLayout, QScrollArea, QWidget,
+                               QSizePolicy, QPushButton, QGridLayout)
 
 from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
@@ -39,8 +40,8 @@ class ImportedFilesView(QWidget, Observer):
         self.layout.setSpacing(0)
 
         # Initialize title label
-        self.title_label = None
-        self.initialize_title_label()
+        self.title_widget = None
+        self.initialize_title_widget()
 
         # Initialize scroll area and its layout
         self.scroll_area = QScrollArea()
@@ -54,6 +55,10 @@ class ImportedFilesView(QWidget, Observer):
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidget(self.scroll_widget)
         self.layout.addWidget(self.scroll_area)
+
+        self.scroll_area.setVisible(True)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding,
+                           QSizePolicy.Policy.Expanding)
 
         # Initialize widgets
         self.file_stats_view = FileStatsView()
@@ -70,26 +75,62 @@ class ImportedFilesView(QWidget, Observer):
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidgetResizable(True)
 
-    def initialize_title_label(self) -> None:
+    def initialize_title_widget(self) -> None:
         """
         Initialize the title label.
 
         :return: None
         """
-        self.title_label = QLabel("Geïmporteerde bestanden")
-        self.title_label.setStyleSheet(f"font-size: 13px;"
-                                       f"font-family: {heading_font};"
-                                       f"font-weight: bold;"
-                                       f"text-transform: uppercase;"
-                                       f"background-color: {prim_col_red};"
-                                       f"color: white;"
-                                       f"border-bottom: "
-                                       f"3px solid {hover_prim_col_red};")
-        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
-                                      Qt.AlignmentFlag.AlignTop)
-        self.title_label.setContentsMargins(0, 0, 0, 0)
-        self.title_label.setFixedHeight(50)
-        self.layout.addWidget(self.title_label)
+
+        # Make a widget to add the title label and collapse button
+        self.title_widget = QWidget()
+        self.title_widget.setFixedHeight(50)
+
+        # Initialize layout for the title widget
+        title_layout = QGridLayout(self.title_widget)
+        title_layout.setContentsMargins(0, 0, 0, 0)
+        title_layout.setSpacing(0)
+
+        # Create the title label
+        self.title_widget.title_label = QLabel("Geïmporteerde bestanden")
+        (self.title_widget.title_label.
+         setStyleSheet(f"font-size: 13px;"
+                       f"font-family: {heading_font};"
+                       f"font-weight: bold;"
+                       f"text-transform: uppercase;"
+                       f"background-color: {prim_col_red};"
+                       f"color: white;"
+                       f"border-bottom: "
+                       f"3px solid {hover_prim_col_red};"))
+
+        # Align the title label to the center
+        self.title_widget.title_label.setAlignment(
+                Qt.AlignmentFlag.AlignCenter)
+        self.title_widget.title_label.setContentsMargins(50, 0, 0, 0)
+
+        # Create the title button
+        self.title_widget.title_button = QPushButton("🡻")
+        (self.title_widget.title_button.
+         setStyleSheet(f"font-size: 13px;"
+                       f"font-family: {heading_font};"
+                       f"font-weight: bold;"
+                       f"text-transform: uppercase;"
+                       f"background-color: {prim_col_red};"
+                       f"color: white;"
+                       f"border-bottom: "
+                       f"3px solid {hover_prim_col_red};"
+                       "}"
+                       "QPushButton:hover {"
+                       f"background-color: {hover_prim_col_red};"))
+        self.title_widget.title_button.setFixedSize(50, 50)
+
+        # Add the title label and button to the layout
+        title_layout.addWidget(self.title_widget.title_label, 0, 1)
+        title_layout.addWidget(self.title_widget.title_button, 0, 2)
+        self.layout.addWidget(self.title_widget)
+
+        # Connect label click event to toggle_collapse method
+        self.title_widget.title_button.mousePressEvent = self.toggle_collapse
 
     def fetch_files(self, tab_name: str) -> None:
         """
@@ -149,6 +190,49 @@ class ImportedFilesView(QWidget, Observer):
         :return: None
         """
         self.file_container[tab_name] = files
+
+    def toggle_collapse(self, clicked_header) -> None:
+        """
+        Toggle visibility of the scroll area and adjust layout accordingly.
+        """
+        self.collapse_component()
+        self.change_button_appearance()
+
+    def change_button_appearance(self) -> None:
+        """
+        Change the appearance of the toggle button.
+        """
+
+        if self.scroll_area.isVisible():
+            self.title_widget.title_button.setText("🡻")
+        else:
+            self.title_widget.title_button.setText("🡹")
+
+    def collapse_component(self) -> None:
+        """
+        Collapse the imported files display.
+        """
+        if self.scroll_area.isVisible():
+            # Hide the scroll area
+            self.scroll_area.setVisible(False)
+            # Move the header to the bottom of the layout
+            self.layout.addStretch(0.1)
+            self.layout.addWidget(self.title_widget)
+            # Fix widget size to allow entire layout to be moved to
+            self.setFixedHeight(self.title_widget.height())
+        else:
+            # Show the scroll area
+            self.scroll_area.setVisible(True)
+
+            # Remove the stretch from the layout to move the header
+            # back to its original position
+            self.layout.removeWidget(self.title_widget)
+            self.layout.insertWidget(0, self.title_widget)
+            self.layout.removeItem(self.layout.itemAt(self.layout.count() - 1))
+
+            # Restore beginning height
+            self.setMinimumHeight(200)
+            self.setMaximumHeight(300)
 
     def update_observer(self, publisher) -> None:
         """
