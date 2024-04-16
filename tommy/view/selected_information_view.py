@@ -2,13 +2,12 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
 
 from tommy.controller.graph_controller import GraphController
-from tommy.controller.model_parameters_controller import \
-    ModelParametersController
+from tommy.controller.model_parameters_controller import (
+    ModelParametersController)
 from tommy.support.constant_variables import (
     heading_font,
     prim_col_red, hover_prim_col_red)
 from tommy.view.imported_files_view.file_label import FileLabel
-    prim_col_red, hover_prim_col_red)
 from tommy.view.observer.observer import Observer
 
 
