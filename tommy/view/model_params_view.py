@@ -98,7 +98,7 @@ class ModelParamsView(QScrollArea, Observer):
                                        f"background-color: white;")
         self.topic_input.setAlignment(Qt.AlignLeft)
         self.container_layout.addWidget(self.topic_input)
-        self.topic_input.returnPressed.connect(
+        self.topic_input.editingFinished.connect(
             self.topic_input_return_pressed_event)
 
     def initialize_title_label(self) -> None:

@@ -3,9 +3,8 @@ from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout
 
 from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
-    seco_col_blue,
     heading_font,
-    hover_seco_col_blue, prim_col_red, hover_prim_col_red)
+    prim_col_red, hover_prim_col_red)
 from tommy.view.observer.observer import Observer
 
 
