@@ -3,8 +3,8 @@ from PySide6 import QtCore
 from PySide6.QtCore import Qt
 from tommy.main_window import MainWindow
 from tommy.support.constant_variables import (text_font, heading_font,
-    seco_col_blue,
-    hover_seco_col_blue)
+                                              seco_col_blue,
+                                              hover_seco_col_blue)
 
 # @pytest.fixture
 # def mainwindow(qtbot):
@@ -27,7 +27,7 @@ from tommy.support.constant_variables import (text_font, heading_font,
 #    # Simulate correct input (e.g., topic_input between 1 and 1000)
 #    mainwindow.model_params_view.topic_input.setText("&&&")
 #    qtbot.mouseClick(mainwindow.apply_button, QtCore.Qt.LeftButton)
-#
+#   
 #    # Assert that the expected action was performed
 #    assert "Incorrect Input" in mainwindow.model_params_view.topic_input.placeholderText()
 #
