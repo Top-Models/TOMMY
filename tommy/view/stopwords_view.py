@@ -3,8 +3,11 @@ from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
                                QLineEdit, QHBoxLayout, QPushButton)
 
 from tommy.controller.stopwords_controller import StopwordsController
-from tommy.support.constant_variables import text_font, \
-    hover_seco_col_blue, pressed_seco_col_blue, sec_col_purple
+from tommy.support.constant_variables import (
+    text_font,
+    hover_seco_col_blue,
+    pressed_seco_col_blue,
+    sec_col_purple)
 from tommy.view.observer.observer import Observer
 
 
