@@ -28,8 +28,9 @@ def test_display_no_component_selected(
     Test displaying no component selected.
     """
     selected_information_view.display_no_component_selected()
-    assert selected_information_view.layout.count() == 2
-    assert (selected_information_view.layout.itemAt(1).widget().text() ==
+    assert selected_information_view.scroll_layout.count() == 1
+    assert (selected_information_view.scroll_layout.itemAt(0).
+            widget().text() ==
             "Geen component\ngeselecteerd")
 
 
@@ -44,7 +45,7 @@ def test_clear_layout(selected_information_view: SelectedInformationView):
     selected_information_view.clear_layout()
 
     # Assert
-    assert selected_information_view.layout.count() == 1
+    assert selected_information_view.layout.count() == 2
 
 
 def test_clear_sub_layout(selected_information_view: SelectedInformationView):
@@ -102,8 +103,9 @@ def test_display_topic_info_topic_not_selected(
     selected_information_view.display_topic_info(topic_entity)
 
     # Assert
-    assert selected_information_view.layout.count() == 2
-    assert (selected_information_view.layout.itemAt(1).widget().text() ==
+    assert selected_information_view.scroll_layout.count() == 1
+    assert (selected_information_view.scroll_layout.itemAt(0).
+            widget().text() ==
             "Geen component\ngeselecteerd")
 
 
