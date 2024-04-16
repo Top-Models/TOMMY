@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QLayout, \
-    QWidget
+from PySide6.QtWidgets import (QLabel, QScrollArea, QVBoxLayout, QLayout,
+                               QWidget)
 
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.model_parameters_controller import (
