@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QLabel, QSizePolicy
 
 from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
+    heading_font, label_height,
     text_font, medium_light_gray, hover_medium_light_gray,
     pressed_medium_light_gray)
 from tommy.view.observer.observer import Observer
@@ -24,12 +25,13 @@ class FileLabel(QLabel, Observer):
         else:
             self.setText(file_metadata.name)
 
+        self.setMaximumHeight(label_height)
         self.setStyleSheet(f"font-family: {text_font};"
-                           f"font-size: 15px;"
+                           f"font-size: 12px;"
                            f"background-color: {medium_light_gray};"
                            f"color: black;"
                            f"margin: 0px;"
-                           f"padding: 10px;")
+                           f"padding: 3px;")
         self.setAlignment(Qt.AlignmentFlag.AlignLeft |
                           Qt.AlignmentFlag.AlignTop)
         self.setSizePolicy(QSizePolicy.Policy.Expanding,
@@ -44,12 +46,12 @@ class FileLabel(QLabel, Observer):
         """
         if not self.selected:
             self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 15px;"
+                               f"font-size: 12px;"
                                f"background-color: "
                                f"{hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 10px;")
+                               f"padding: 3px;")
 
     def leaveEvent(self, event):
         """
@@ -59,11 +61,11 @@ class FileLabel(QLabel, Observer):
         """
         if not self.selected:
             self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 15px;"
+                               f"font-size: 12px;"
                                f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 10px;")
+                               f"padding: 3px;")
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         """
@@ -73,15 +75,13 @@ class FileLabel(QLabel, Observer):
         """
         if not self.selected:
             self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 15px;"
+                               f"font-size: 12px;"
                                f"background-color: "
                                f"{pressed_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 10px;")
-        else:
-            self.deselect()
-
+                               f"padding: 3px;")
+            self.clicked.emit(self)
         super().mousePressEvent(event)
 
     def deselect(self) -> None:
@@ -92,11 +92,11 @@ class FileLabel(QLabel, Observer):
         try:
             self.selected = False
             self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 15px;"
+                               f"font-size: 12px;"
                                f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 10px;")
+                               f"padding: 3px;")
         except RuntimeError:
             pass
 
@@ -124,13 +124,12 @@ class FileLabel(QLabel, Observer):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 15px;"
+            self.setStyleSheet(f"font-family: {heading_font};"
+                               f"font-size: 12px;"
                                f"background-color: {hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 10px;")
-        self.clicked.emit(self)
+                               f"padding: 3px;")
         super().mouseReleaseEvent(event)
 
     def update_observer(self, publisher) -> None:
