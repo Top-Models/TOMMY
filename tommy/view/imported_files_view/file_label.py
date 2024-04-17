@@ -81,7 +81,6 @@ class FileLabel(QLabel, Observer):
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 3px;")
-            self.clicked.emit(self)
         super().mousePressEvent(event)
 
     def deselect(self) -> None:
@@ -108,12 +107,12 @@ class FileLabel(QLabel, Observer):
         try:
             self.selected = True
             self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 15px;"
+                               f"font-size: 12px;"
                                f"background-color: "
                                f"{pressed_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 10px;")
+                               f"padding: 3px;")
         except RuntimeError:
             pass
 
@@ -130,6 +129,7 @@ class FileLabel(QLabel, Observer):
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 3px;")
+        self.clicked.emit(self)
         super().mouseReleaseEvent(event)
 
     def update_observer(self, publisher) -> None:
