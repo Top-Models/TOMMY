@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
-                               QLineEdit, QHBoxLayout, QPushButton)
+                               QLineEdit, QHBoxLayout, QPushButton,
+                               QSizePolicy)
 
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.model.stopwords_model import StopwordsModel
@@ -8,7 +9,8 @@ from tommy.support.constant_variables import (
     text_font,
     hover_seco_col_blue,
     pressed_seco_col_blue,
-    sec_col_purple)
+    sec_col_purple,
+    label_height)
 
 
 class StopwordsView(QScrollArea):
@@ -133,11 +135,14 @@ class StopwordsView(QScrollArea):
     def create_word_label(self, stopword: str) -> QLabel:
         """Create a label for every word"""
         stopword_label = QLabel(stopword, self)
+        stopword_label.setMaximumHeight(label_height)
+        stopword_label.setSizePolicy(QSizePolicy.Policy.Expanding,
+                                     QSizePolicy.Policy.Preferred)
         stopword_label.setStyleSheet(f"background-color: {sec_col_purple};"
                                      f"color: white;"
                                      f"font-family: {text_font};"
                                      f"font-size: 12px;"
-                                     f"padding: 15px;")
+                                     f"padding: 5px;")
         stopword_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         stopword_label.setScaledContents(True)
         stopword_label.setWordWrap(True)
@@ -156,20 +161,16 @@ class StopwordsView(QScrollArea):
         :param word_list: The list of words needed to be shown
         :return: None
         """
-        horizontal_layout = QHBoxLayout()
+        vertical_layout = QVBoxLayout()
 
         for i, word in enumerate(word_list):
             # Make and format word
             word_label = self.create_word_label(word)
-            horizontal_layout.addWidget(word_label)
-
-            if (i + 1) % 2 == 0 or len(word) >= 8:
-                self.word_layout.addLayout(horizontal_layout)
-                horizontal_layout = QHBoxLayout()
+            vertical_layout.addWidget(word_label)
 
         # Add remaining widgets if any
-        if horizontal_layout.count() > 0:
-            self.word_layout.addLayout(horizontal_layout)
+        if vertical_layout.count() > 0:
+            self.word_layout.addLayout(vertical_layout)
 
     def add_to_word_list(self) -> None:
         """

@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QLabel, QSizePolicy
 
 from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
-    heading_font,
+    heading_font, label_height,
     text_font, medium_light_gray, hover_medium_light_gray,
     pressed_medium_light_gray)
 
@@ -24,12 +24,13 @@ class FileLabel(QLabel):
         else:
             self.setText(file_metadata.name)
 
+        self.setMaximumHeight(label_height)
         self.setStyleSheet(f"font-family: {text_font};"
-                           f"font-size: 15px;"
+                           f"font-size: 12px;"
                            f"background-color: {medium_light_gray};"
                            f"color: black;"
                            f"margin: 0px;"
-                           f"padding: 10px;")
+                           f"padding: 3px;")
         self.setAlignment(Qt.AlignmentFlag.AlignLeft |
                           Qt.AlignmentFlag.AlignTop)
         self.setSizePolicy(QSizePolicy.Policy.Expanding,
@@ -44,12 +45,12 @@ class FileLabel(QLabel):
         """
         if not self.selected:
             self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 15px;"
+                               f"font-size: 12px;"
                                f"background-color: "
                                f"{hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 10px;")
+                               f"padding: 3px;")
 
     def leaveEvent(self, event):
         """
@@ -59,11 +60,11 @@ class FileLabel(QLabel):
         """
         if not self.selected:
             self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 15px;"
+                               f"font-size: 12px;"
                                f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 10px;")
+                               f"padding: 3px;")
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         """
@@ -74,12 +75,12 @@ class FileLabel(QLabel):
         if not self.selected:
             self.selected = True
             self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 15px;"
+                               f"font-size: 12px;"
                                f"background-color: "
                                f"{pressed_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 10px;")
+                               f"padding: 3px;")
             self.clicked.emit(self)
         super().mousePressEvent(event)
 
@@ -91,11 +92,11 @@ class FileLabel(QLabel):
         try:
             self.selected = False
             self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 15px;"
+                               f"font-size: 12px;"
                                f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 10px;")
+                               f"padding: 3px;")
         except RuntimeError:
             pass
 
@@ -107,11 +108,11 @@ class FileLabel(QLabel):
         """
         if not self.selected:
             self.setStyleSheet(f"font-family: {heading_font};"
-                               f"font-size: 15px;"
+                               f"font-size: 12px;"
                                f"background-color: {hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 10px;")
+                               f"padding: 3px;")
         super().mouseReleaseEvent(event)
 
 
