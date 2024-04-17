@@ -151,6 +151,7 @@ class FetchedTopicsView(QScrollArea, Observer):
         :return: None
         """
         self._refresh_topics()
+        # TODO: Update graph controller when clicked on topic
 
 
 """

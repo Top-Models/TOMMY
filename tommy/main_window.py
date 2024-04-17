@@ -70,7 +70,9 @@ class MainWindow(QMainWindow):
         # Create widgets
         self.stopwords_view = StopwordsView(
             self._controller.stopwords_controller)
-        self.model_selection_view = ModelSelectionView()
+        self.model_selection_view = ModelSelectionView(
+            self._controller.graph_controller
+        )
         self.imported_files_view = ImportedFilesView(
             self._controller.corpus_controller,
             self._controller.project_settings_controller)
@@ -78,8 +80,6 @@ class MainWindow(QMainWindow):
             self._controller.model_parameters_controller,
             self._controller)
         self.graph_view = GraphView(self._controller.graph_controller)
-        self.plot_navigation_view = PlotNavigationView(
-            self._controller.graph_controller)
         self.fetched_topics_view = FetchedTopicsView(
             self._controller.graph_controller)
 
@@ -88,7 +88,6 @@ class MainWindow(QMainWindow):
         self.left_container.addWidget(self.stopwords_view)
         self.center_container.addWidget(self.model_selection_view)
         self.center_container.addWidget(self.graph_view)
-        self.center_container.addWidget(self.plot_navigation_view)
         self.center_container.addWidget(self.imported_files_view)
         self.right_container.addWidget(self.fetched_topics_view)
         self.right_container.addWidget(
@@ -99,7 +98,6 @@ class MainWindow(QMainWindow):
                                        QSizePolicy.Policy.Expanding))
 
         self.display_correct_initial_files()
-        self.initialize_event_handlers()
 
     def initialize_widget(self, widget: QWidget,
                           x: int, y: int, w: int, h: int) -> None:
@@ -151,29 +149,6 @@ class MainWindow(QMainWindow):
                 .get_input_folder_path())
         self._controller.project_settings_controller.set_input_folder_path(
             path)
-
-    # TODO: Extract method when Connector is implemented
-    # Some of the event handlers can be used to update observers
-    def initialize_event_handlers(self) -> None:
-        """
-        Initialize event handlers for the main window.
-
-        :return: None
-        """
-
-        # Connecting the tabBarClicked signal to a method in
-        # ImportedFilesDisplay
-        self.model_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.imported_files_view.display_files(
-                self.model_selection_view.tabText(tab_index))
-        )
-
-        # Connecting the tabBarClicked signal to a method in
-        # ImportedFilesDisplay
-        self.model_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.imported_files_view.file_stats_view.
-            display_no_file_selected()
-        )
 
 
 """
