@@ -81,6 +81,9 @@ class FileLabel(QLabel, Observer):
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 3px;")
+        else:
+            self.deselect()
+
         super().mousePressEvent(event)
 
     def deselect(self) -> None:
@@ -123,7 +126,7 @@ class FileLabel(QLabel, Observer):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"font-family: {heading_font};"
+            self.setStyleSheet(f"font-family: {text_font};"
                                f"font-size: 12px;"
                                f"background-color: {hover_medium_light_gray};"
                                f"color: black;"
