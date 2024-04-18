@@ -11,6 +11,8 @@ TEST_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                              'test',
                                              'test_data',
                                              'test_csv_files'))
+
+
 @pytest.fixture
 def generic_file_importer():
     return GenericFileImporter()
