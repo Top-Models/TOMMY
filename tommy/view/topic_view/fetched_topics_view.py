@@ -171,18 +171,6 @@ class FetchedTopicsView(QScrollArea, Observer):
 
         self._graph_controller.set_selected_topic(None)
 
-    def event(self, event) -> bool:
-        """
-        Event handler for when the widget is clicked
-
-        :param event: The event that occurred
-        :return: True if the event was handled, False otherwise
-        """
-        if event.type() == QEvent.WindowActivate:
-            return True
-
-        return super().event(event)
-
     def deselect_all_topics(self) -> None:
         """
         Deselect all topics

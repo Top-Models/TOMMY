@@ -18,6 +18,30 @@ def topic_entity(qtbot: QtBot) -> TopicEntity:
     return topic_entity
 
 
+def test_get_topic_name_no_edit(topic_entity: TopicEntity):
+    """
+    Test getting the topic name.
+    """
+    assert topic_entity.get_topic_name() == "test_topic"
+
+
+def test_get_topic_name_edit(topic_entity: TopicEntity,
+                             qtbot: QtBot):
+    """
+    Test getting the topic name after editing.
+    """
+    # Arrange
+    new_name = "new_name"
+    topic_entity.topic_label.clear()
+    qtbot.keyClicks(topic_entity.topic_label, new_name)
+
+    # Act
+    topic_name = topic_entity.get_topic_name()
+
+    # Assert
+    assert topic_name == new_name
+
+
 def test_enter_event_selected(topic_entity: TopicEntity):
     """
     Test the enter event of the topic entity when it is selected.

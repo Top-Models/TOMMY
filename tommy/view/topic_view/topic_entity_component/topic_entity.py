@@ -43,20 +43,20 @@ class TopicEntity(QFrame):
         self.setFixedWidth(200)
 
         # Initialize title widget
-        topic_label = QLineEdit(topic_name, self)
-        topic_label.setStyleSheet(f"font-family: {heading_font}; "
-                                  f"color: white;"
-                                  f"font-size: 15px; "
-                                  f"font-weight: bold; "
-                                  f"background-color: "
-                                  f"{pressed_seco_col_purple};"
-                                  f"padding: 5px 5px;"
-                                  f"border-radius: 2px;"
-                                  f"border:"
-                                  f"2px solid {seco_purple_border_color};")
-        topic_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        topic_label.setPlaceholderText(topic_name)
-        main_layout.addWidget(topic_label)
+        self.topic_label = QLineEdit(topic_name, self)
+        self.topic_label.setStyleSheet(f"font-family: {heading_font}; "
+                                       f"color: white;"
+                                       f"font-size: 15px; "
+                                       f"font-weight: bold; "
+                                       f"background-color: "
+                                       f"{pressed_seco_col_purple};"
+                                       f"padding: 5px 5px;"
+                                       f"border-radius: 2px;"
+                                       f"border:"
+                                       f"2px solid {seco_purple_border_color};")
+        self.topic_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.topic_label.setPlaceholderText(topic_name)
+        main_layout.addWidget(self.topic_label)
 
         # Initialize word widgets
         self.word_layout = QVBoxLayout()
@@ -73,15 +73,15 @@ class TopicEntity(QFrame):
         if horizontal_layout.count() > 0:
             self.word_layout.addLayout(horizontal_layout)
 
-        topic_label.textChanged.connect(self.get_topic_name)
+        self.topic_label.textChanged.connect(self.get_topic_name)
 
-    def get_topic_name(self) -> None:
+    def get_topic_name(self) -> str:
         """
         Get the topic name
 
         :return: The topic name
         """
-        return self.findChild(QLineEdit).text()
+        return self.topic_label.text()
 
     def add_words(self,
                   layout: QHBoxLayout,

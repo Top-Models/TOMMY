@@ -24,6 +24,10 @@ def test_get_active_tab_name(plot_selection_view: PlotSelectionView, mocker):
     plot_selection_view.setTabVisible(4, True)
     plot_selection_view.setTabVisible(5, True)
 
+    # Mock update_current_visualization method of the graph controller
+    plot_selection_view._graph_controller.update_current_visualization = \
+        lambda x: True
+
     # Act & Assert
     assert plot_selection_view.get_active_tab_name() == "Correlatie"
     plot_selection_view.setCurrentIndex(1)
@@ -38,18 +42,16 @@ def test_get_active_tab_name(plot_selection_view: PlotSelectionView, mocker):
     assert plot_selection_view.get_active_tab_name() == "Woordgewichten"
 
 
-def test_tab_clicked_event(plot_selection_view: PlotSelectionView,
-                           qtbot: QtBot):
-    # Arrange
-    controller = Controller()
-    controller.graph_controller.set_tab_index = lambda x: x
-    plot_selection_view.update_observer = lambda x: x
+def test_tab_clicked_event(plot_selection_view: PlotSelectionView):
+    # Mock update_current_visualization method of the graph controller
+    plot_selection_view._graph_controller.update_current_visualization = \
+        lambda x: True
 
     # Act
     plot_selection_view.tab_clicked_event()
 
     # Assert
-    assert controller.graph_controller._current_tab_index == 0
+    assert plot_selection_view._graph_controller._current_tab_index == 0
 
 
 def test_toggle_topic_specific_tabs_visible(
@@ -84,15 +86,14 @@ def test_toggle_topic_specific_tabs_invisible(
     (False, 4, 0),
     (False, 5, 0)
 ])
-def test_toggle_topic_specific_tabs_visible_current_index(
+def test_toggle_topic_specific_tabs_current_index(
         plot_selection_view: PlotSelectionView,
         visible: bool,
         current_tab_index: int,
         expected_tab_index: int):
     # Arrange
+    plot_selection_view.tab_clicked_event = lambda: True
     plot_selection_view.setCurrentIndex(current_tab_index)
-
-    # Mock the
 
     # Act
     plot_selection_view.toggle_topic_specific_tabs(visible)
@@ -102,17 +103,14 @@ def test_toggle_topic_specific_tabs_visible_current_index(
 
 
 def test_update_observer(plot_selection_view: PlotSelectionView):
-    # Arrange
-    controller = Controller()
-
     # Mock the get topic amount method of the graph controller
-    controller.graph_controller.get_number_of_topics = lambda: 5
+    plot_selection_view._graph_controller.get_number_of_topics = lambda: 5
 
     # Act
     plot_selection_view.update_observer(None)
 
     # Assert
-    assert controller.graph_controller._current_tab_index == 0
+    assert plot_selection_view._graph_controller._current_tab_index == 0
 
 
 """
