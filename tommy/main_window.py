@@ -8,6 +8,7 @@ from tommy.controller.controller import Controller
 from tommy.support.constant_variables import (
     text_font)
 from tommy.view.graph_view import GraphView
+from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.imported_files_view import (
     ImportedFilesView)
 from tommy.view.menu_bar import MenuBar
@@ -17,10 +18,13 @@ from tommy.view.model_selection_view import (
     ModelSelectionView)
 from tommy.view.plot_navigation_view import (
     PlotNavigationView)
+from tommy.view.selected_information_view import SelectedInformationView
 from tommy.view.stopwords_view import (
     StopwordsView)
 from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
+from tommy.view.topic_view.topic_entity_component.topic_entity import (
+    TopicEntity)
 
 
 class MainWindow(QMainWindow):
@@ -82,6 +86,9 @@ class MainWindow(QMainWindow):
             self._controller.graph_controller)
         self.fetched_topics_view = FetchedTopicsView(
             self._controller.graph_controller)
+        self.selected_information_view = SelectedInformationView(
+            self._controller.graph_controller,
+            self._controller.model_parameters_controller)
 
         # Initialize widgets
         self.left_container.addWidget(self.model_params_view)
@@ -92,7 +99,7 @@ class MainWindow(QMainWindow):
         self.center_container.addWidget(self.imported_files_view)
         self.right_container.addWidget(self.fetched_topics_view)
         self.right_container.addWidget(
-            self.imported_files_view.file_stats_view)
+            self.selected_information_view)
 
         # Make graph view resize with screen
         self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Expanding,
@@ -131,7 +138,42 @@ class MainWindow(QMainWindow):
         initial_height = max(screen_geometry.height() / 1.5, 578)
         self.resize(initial_width, initial_height)
 
-    # TODO: Extract method when Connector is implemented
+    def on_file_clicked(self, file: FileLabel) -> None:
+        """
+        Event handler for when a file is clicked.
+
+        :param file: The file that was clicked
+        :return: None
+        """
+        self.fetched_topics_view.deselect_all_topics()
+        self.fetched_topics_view.selected_topic = None
+
+        # TODO: Hardcoded save name
+        # Show info about run if no file is selected
+        if not file.selected:
+            self.selected_information_view.display_run_info("lda_model")
+            return
+
+        self.selected_information_view.display_file_info(file)
+
+    def on_topic_clicked(self, topic_entity: TopicEntity) -> None:
+        """
+        Event handler for when a topic is clicked.
+
+        :param topic_entity: The topic that was clicked
+        :return: None
+        """
+        self.imported_files_view.deselect_all_files()
+        self.imported_files_view.selected_label = None
+
+        # TODO: Hardcoded save name
+        # Show info about run if no topic is selected
+        if not topic_entity.selected:
+            self.selected_information_view.display_run_info("lda_model")
+            return
+
+        self.selected_information_view.display_topic_info(topic_entity)
+
     def display_correct_initial_files(self) -> None:
         """
         Display the correct initial files in the main window.
@@ -152,7 +194,6 @@ class MainWindow(QMainWindow):
         self._controller.project_settings_controller.set_input_folder_path(
             path)
 
-    # TODO: Extract method when Connector is implemented
     # Some of the event handlers can be used to update observers
     def initialize_event_handlers(self) -> None:
         """
@@ -171,9 +212,17 @@ class MainWindow(QMainWindow):
         # Connecting the tabBarClicked signal to a method in
         # ImportedFilesDisplay
         self.model_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.imported_files_view.file_stats_view.
-            display_no_file_selected()
+            lambda tab_index: self.selected_information_view.
+            display_no_component_selected()
         )
+
+        # Initialize events for clickable information containers
+        self.imported_files_view.fileClicked.connect(self.on_file_clicked)
+        self.fetched_topics_view.topicClicked.connect(self.on_topic_clicked)
+
+    @property
+    def controller(self):
+        return self._controller
 
 
 """

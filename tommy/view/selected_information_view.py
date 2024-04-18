@@ -1,0 +1,320 @@
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (QLabel, QScrollArea, QVBoxLayout, QLayout,
+                               QWidget)
+
+from tommy.controller.graph_controller import GraphController
+from tommy.controller.model_parameters_controller import (
+    ModelParametersController)
+from tommy.support.constant_variables import (
+    heading_font,
+    prim_col_red, hover_prim_col_red)
+from tommy.view.imported_files_view.file_label import FileLabel
+from tommy.view.observer.observer import Observer
+
+
+class SelectedInformationView(QScrollArea, Observer):
+    """Class to define the FileStatsDisplay UI component"""
+
+    def __init__(self,
+                 graph_controller: GraphController,
+                 model_parameters_controller: ModelParametersController) \
+            -> None:
+        """Initialize the FileStatsDisplay."""
+        super().__init__()
+
+        # Initialize widget properties
+        self.setFixedWidth(250)
+        self.setStyleSheet(f"background-color: white;"
+                           f"color: black;")
+        self.setMinimumHeight(200)
+
+        # Initialize layout
+        self.layout = QVBoxLayout()
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
+        self.layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                 Qt.AlignmentFlag.AlignLeft)
+        self.setLayout(self.layout)
+
+        # Add title widget
+        self.initialize_title_widget()
+
+        # Initialize scroll area and its layout
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_widget = QWidget()
+        self.scroll_layout = QVBoxLayout(self.scroll_widget)
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.scroll_area.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scroll_area.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroll_area.setWidget(self.scroll_widget)
+        self.layout.addWidget(self.scroll_area)
+
+        # Initialize controllers
+        self._graph_controller = graph_controller
+        self._model_parameters_controller = model_parameters_controller
+
+        # Initialize widgets
+        self.display_no_component_selected()
+
+    def initialize_title_widget(self) -> None:
+        """
+        Add the title label widget
+        """
+        title_label = QLabel("Informatie")
+        title_label.setStyleSheet(f"font-size: 13px;"
+                                  f"font-family: {heading_font};"
+                                  f"font-weight: bold;"
+                                  f"text-transform: uppercase;"
+                                  f"background-color: {prim_col_red};"
+                                  f"color: white;"
+                                  f"border-bottom: "
+                                  f"3px solid {hover_prim_col_red};"
+                                  f"border-left: 2px solid "
+                                  f"{hover_prim_col_red};")
+
+        title_label.setContentsMargins(0, 0, 0, 0)
+        title_label.setFixedHeight(50)
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
+                                 Qt.AlignmentFlag.AlignTop)
+        self.layout.addWidget(title_label)
+
+    def display_no_component_selected(self) -> None:
+        """
+        Display a message when no file is selected.
+        :return: None
+        """
+        # Prepare layout
+        self.clear_layout()
+        self.scroll_layout.setContentsMargins(0, 0, 0, 0)
+
+        # Set scroll layout align center
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Add label
+        no_file_selected_label = QLabel("Geen component\ngeselecteerd")
+        no_file_selected_label.setStyleSheet("font-size: 20px;")
+        no_file_selected_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.scroll_layout.addWidget(no_file_selected_label)
+
+    def clear_layout(self) -> None:
+        """
+        Clear the layout.
+        :return: None
+        """
+        self.clear_sub_layout(self.scroll_layout)
+
+    def clear_sub_layout(self, layout: QLayout) -> None:
+        """
+        Clear a sub-layout
+        :param layout: The sub-layout to clear
+        :return: None
+        """
+        while layout.count() > 0:
+            item = layout.takeAt(0)
+            if item:
+                widget = item.widget()
+                if widget:
+                    widget.deleteLater()
+                else:
+                    self.clear_sub_layout(item.layout())
+
+    def display_file_info(self, file_label: FileLabel) -> None:
+        """
+        Display the file info
+        :param file_label: The file label to display
+        :return: None
+        """
+
+        if not file_label.selected:
+            # TODO: Display run info when available
+            self.display_no_component_selected()
+            return
+
+        file_metadata = file_label.file
+
+        # Prepare layout
+        self.clear_layout()
+
+        # Set scroll layout align top left
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                        Qt.AlignmentFlag.AlignLeft)
+
+        # Use a vertical layout
+        vertical_layout = QVBoxLayout()
+        vertical_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                     Qt.AlignmentFlag.AlignLeft)
+
+        # Adjust the left margin here
+        vertical_layout.setContentsMargins(20, 20, 0, 10)
+        vertical_layout.setSpacing(10)
+        self.scroll_layout.addLayout(vertical_layout)
+
+        # Add file name
+        file_name = file_metadata.name.split("/")[-1]
+        file_name_label = QLabel(f"{file_name}")
+        file_name_label.setStyleSheet(f"font-size: 18px;"
+                                      f"font-family: {heading_font};"
+                                      f"font-weight: bold;"
+                                      f"text-transform: uppercase;")
+        file_name_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                     Qt.AlignmentFlag.AlignTop)
+        file_name_label.setMinimumHeight(30)
+        vertical_layout.addWidget(file_name_label)
+
+        # Add file path
+        file_path_label = QLabel(f"Pad: {file_metadata.path}")
+        file_path_label.setStyleSheet("font-size: 16px;")
+        file_path_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                     Qt.AlignmentFlag.AlignTop)
+        file_path_label.setMinimumHeight(20)
+        vertical_layout.addWidget(file_path_label)
+
+        # Add file format
+        file_format_label = QLabel(f"Formaat: {file_metadata.format}")
+        file_format_label.setStyleSheet("font-size: 16px;")
+        file_format_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                       Qt.AlignmentFlag.AlignTop)
+        file_format_label.setMinimumHeight(20)
+        vertical_layout.addWidget(file_format_label)
+
+        # Add word amount
+        word_amount_label = QLabel(f"Aantal woorden: {file_metadata.length}")
+        word_amount_label.setStyleSheet("font-size: 16px;")
+        word_amount_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                       Qt.AlignmentFlag.AlignTop)
+        word_amount_label.setMinimumHeight(20)
+        vertical_layout.addWidget(word_amount_label)
+
+        # Add file size
+        file_size_label = QLabel(f"Grootte: {file_metadata.size}B")
+        file_size_label.setStyleSheet("font-size: 16px;")
+        file_size_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                     Qt.AlignmentFlag.AlignTop)
+        file_size_label.setMinimumHeight(20)
+        vertical_layout.addWidget(file_size_label)
+
+    # TODO: Displayed information not final
+    def display_topic_info(self, topic_entity) -> None:
+        """
+        Display the topic information
+        :param topic_entity: The topic entity to display
+        :return: None
+        """
+
+        if not topic_entity.selected:
+            # TODO: Display run info when available
+            self.display_no_component_selected()
+            return
+
+        # Prepare layout
+        self.clear_layout()
+
+        # Set scroll layout align top left
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                        Qt.AlignmentFlag.AlignLeft)
+
+        # Use a vertical layout
+        vertical_layout = QVBoxLayout()
+        vertical_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                     Qt.AlignmentFlag.AlignLeft)
+
+        # Adjust the left margin here
+        vertical_layout.setContentsMargins(20, 20, 0, 10)
+        vertical_layout.setSpacing(10)
+        self.scroll_layout.addLayout(vertical_layout)
+
+        # Add topic name
+        topic_name = topic_entity.topic_name
+        topic_name_label = QLabel(f"{topic_name}")
+        topic_name_label.setStyleSheet(f"font-size: 18px;"
+                                       f"font-family: {heading_font};"
+                                       f"font-weight: bold;"
+                                       f"text-transform: uppercase;")
+        topic_name_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                      Qt.AlignmentFlag.AlignTop)
+        topic_name_label.setMinimumHeight(20)
+        vertical_layout.addWidget(topic_name_label)
+
+        # Add words
+        for word_entity in topic_entity.word_entities:
+            word_label = QLabel(f"{word_entity.word}")
+            word_label.setStyleSheet(f"font-size: 16px;")
+            word_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                    Qt.AlignmentFlag.AlignTop)
+            # Make sure word_label is always big enough
+            word_label.setMinimumHeight(20)
+            vertical_layout.addWidget(word_label)
+
+    def display_run_info(self, run_name: str) -> None:
+        """
+        Display the run information
+
+        :param run_name: The name of the run
+        :return: None
+        """
+
+        # Display no component selected if no run is available
+        try:
+            topic_amount: int = (
+                self._graph_controller.get_number_of_topics())
+            model_type: str = (
+                self._model_parameters_controller.get_model_type().name)
+        except RuntimeError:
+            self.display_no_component_selected()
+            return
+
+        # Prepare layout
+        self.clear_layout()
+
+        # Set scroll layout align top left
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                        Qt.AlignmentFlag.AlignLeft)
+
+        # Use a vertical layout
+        vertical_layout = QVBoxLayout()
+        vertical_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                     Qt.AlignmentFlag.AlignLeft)
+
+        # Adjust the left margin here
+        vertical_layout.setContentsMargins(20, 20, 0, 10)
+        vertical_layout.setSpacing(10)
+        self.scroll_layout.addLayout(vertical_layout)
+
+        # Add run name
+        run_name_label = QLabel(f"{run_name}")
+        run_name_label.setStyleSheet(f"font-size: 18px;"
+                                     f"font-family: {heading_font};"
+                                     f"font-weight: bold;"
+                                     f"text-transform: uppercase;")
+        run_name_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                    Qt.AlignmentFlag.AlignTop)
+        run_name_label.setMinimumHeight(20)
+        vertical_layout.addWidget(run_name_label)
+
+        # Display model type
+        model_type_label = QLabel(f"Model type: {model_type}")
+        model_type_label.setStyleSheet("font-size: 16px;")
+        model_type_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                      Qt.AlignmentFlag.AlignTop)
+        model_type_label.setMinimumHeight(20)
+        vertical_layout.addWidget(model_type_label)
+
+        # Display topic amount
+        topic_amount_label = QLabel(f"Aantal topics: {topic_amount}")
+        topic_amount_label.setStyleSheet("font-size: 16px;")
+        topic_amount_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                        Qt.AlignmentFlag.AlignTop)
+        topic_amount_label.setMinimumHeight(20)
+        vertical_layout.addWidget(topic_amount_label)
+
+    def update_observer(self, publisher) -> None:
+        """
+        Update the observer.
+
+        :param publisher: The publisher that is being observed
+        :return: None
+        """
+        pass
