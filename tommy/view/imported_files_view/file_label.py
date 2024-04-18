@@ -81,6 +81,9 @@ class FileLabel(QLabel, Observer):
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 3px;")
+        else:
+            self.deselect()
+
         super().mousePressEvent(event)
 
     def deselect(self) -> None:

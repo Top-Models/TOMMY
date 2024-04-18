@@ -4,8 +4,8 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 from tommy.controller.graph_controller import GraphController
 from tommy.support.constant_variables import sec_col_orange
 from tommy.view.observer.observer import Observer
-from tommy.view.topic_view.topic_entity_component.topic_entity import \
-    TopicEntity
+from tommy.view.topic_view.topic_entity_component.topic_entity import (
+    TopicEntity)
 
 
 class FetchedTopicsView(QScrollArea, Observer):
@@ -75,6 +75,11 @@ class FetchedTopicsView(QScrollArea, Observer):
 
         # Add topic to tab
         self.topic_container[tab_name].append((topic_name, topic_words))
+
+        # Add topic to display
+        topic_entity = TopicEntity(topic_name, topic_words)
+        topic_entity.clicked.connect(self._on_topic_clicked)
+        topic_entity.wordClicked.connect(self._on_word_clicked)
 
     def _display_topics(self, tab_name: str) -> None:
         """

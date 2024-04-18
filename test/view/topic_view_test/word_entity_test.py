@@ -3,7 +3,7 @@ from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 from tommy.support.constant_variables import text_font, \
     pressed_medium_light_gray
-from tommy.view.topic_view.topic_entity.word_entity import WordEntity
+from tommy.view.topic_view.topic_entity_component.word_entity import WordEntity
 
 
 @pytest.fixture(scope='function')
@@ -106,3 +106,11 @@ def test_mouse_release_event_signal_emission(word_entity: WordEntity,
 
     qtbot.mouseRelease(word_entity, Qt.LeftButton)
     assert clicked_word == "test_word"
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""

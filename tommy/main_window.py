@@ -24,8 +24,8 @@ from tommy.view.stopwords_view import (
     StopwordsView)
 from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
-from tommy.view.topic_view.topic_entity_component.topic_entity import \
-    TopicEntity
+from tommy.view.topic_view.topic_entity_component.topic_entity import (
+    TopicEntity)
 
 
 class MainWindow(QMainWindow):
@@ -213,6 +213,10 @@ class MainWindow(QMainWindow):
         # Initialize events for clickable information containers
         self.imported_files_view.fileClicked.connect(self.on_file_clicked)
         self.fetched_topics_view.topicClicked.connect(self.on_topic_clicked)
+
+    @property
+    def controller(self):
+        return self._controller
 
 
 """
