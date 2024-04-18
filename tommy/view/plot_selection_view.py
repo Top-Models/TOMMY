@@ -78,8 +78,6 @@ class PlotSelectionView(QTabWidget, Observer):
         """
         self.update_observer(None)
 
-    # TODO: Instead of making tab invisible, consider changing its style
-    #   and disabling it.
     def toggle_topic_specific_tabs(self, visible: bool) -> None:
         """
         Toggle the visibility of the topic specific tabs.

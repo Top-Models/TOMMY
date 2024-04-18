@@ -12,7 +12,8 @@ from tommy.view.topic_view.topic_entity_component.topic_entity import (
 @pytest.fixture(scope='function')
 def topic_entity(qtbot: QtBot) -> TopicEntity:
     topic_entity = TopicEntity("test_topic",
-                               ["word1", "word2", "word3"])
+                               ["word1", "word2", "word3"],
+                               0)
     qtbot.addWidget(topic_entity)
     return topic_entity
 
@@ -24,7 +25,7 @@ def test_enter_event_selected(topic_entity: TopicEntity):
     topic_entity.selected = True
     topic_entity.enterEvent(None)
     assert (topic_entity.styleSheet() ==
-            f"background-color: {sec_col_purple}; color: white;")
+            f"background-color: {sec_col_purple};")
 
 
 def test_enter_event_not_selected(topic_entity: TopicEntity):
@@ -44,7 +45,7 @@ def test_leave_event_selected(topic_entity: TopicEntity):
     topic_entity.selected = True
     topic_entity.leaveEvent(None)
     assert (topic_entity.styleSheet() ==
-            f"background-color: {sec_col_purple}; color: white;")
+            f"background-color: {sec_col_purple};")
 
 
 def test_leave_event_not_selected(topic_entity: TopicEntity):

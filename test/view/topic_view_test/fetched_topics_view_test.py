@@ -28,7 +28,8 @@ def test_add_topic(fetched_topics_view: FetchedTopicsView):
     fetched_topics_view._add_topic(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"])
+        ["word1", "word2", "word3"],
+        0)
 
     # Assert
     assert (fetched_topics_view.topic_container ==
@@ -43,7 +44,8 @@ def test_display_topics(fetched_topics_view: FetchedTopicsView):
     fetched_topics_view._add_topic(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"])
+        ["word1", "word2", "word3"],
+        0)
 
     # Act
     fetched_topics_view._display_topics("lda_model")
@@ -60,7 +62,8 @@ def test_remove_tab_from_container(fetched_topics_view: FetchedTopicsView):
     fetched_topics_view._add_topic(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"])
+        ["word1", "word2", "word3"],
+        0)
 
     # Act
     fetched_topics_view.remove_tab_from_container("lda_model")
@@ -77,7 +80,8 @@ def test_clear_topics(fetched_topics_view: FetchedTopicsView, qtbot: QtBot):
     fetched_topics_view._add_topic(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"])
+        ["word1", "word2", "word3"],
+        0)
 
     # Act
     fetched_topics_view._display_topics("lda_model")
@@ -98,7 +102,8 @@ def test_refresh_topics_lda(fetched_topics_view: FetchedTopicsView,
     fetched_topics_view._add_topic(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"])
+        ["word1", "word2", "word3"],
+        0)
 
     # Mock TopicRunner in GraphController
     mock_topic_model = TopicModel()
@@ -145,7 +150,8 @@ def test_on_word_clicked(fetched_topics_view: FetchedTopicsView, qtbot: QtBot):
     fetched_topics_view._add_topic(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"])
+        ["word1", "word2", "word3"],
+        0)
     fetched_topics_view._display_topics("lda_model")
 
     # Find the TopicEntity widget
@@ -177,7 +183,8 @@ def test_on_topic_clicked(fetched_topics_view: FetchedTopicsView,
     fetched_topics_view._add_topic(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"])
+        ["word1", "word2", "word3"],
+        0)
     fetched_topics_view._display_topics("lda_model")
 
     # Find the TopicEntity widget
@@ -208,7 +215,8 @@ def test_deselect_all_topics(fetched_topics_view: FetchedTopicsView):
     fetched_topics_view._add_topic(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"])
+        ["word1", "word2", "word3"],
+        0)
     fetched_topics_view._display_topics("lda_model")
 
     # Find the TopicEntity widget
