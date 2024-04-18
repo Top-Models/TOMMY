@@ -1,3 +1,4 @@
+from PySide6.QtCore import QEvent
 from PySide6.QtGui import QIcon, QGuiApplication
 from PySide6.QtWidgets import (
     QMainWindow,
@@ -169,8 +170,10 @@ class MainWindow(QMainWindow):
         # Show info about run if no topic is selected
         if not topic_entity.selected:
             self.selected_information_view.display_run_info("lda_model")
+            self.model_selection_view.toggle_topic_specific_tabs(False)
             return
 
+        self.model_selection_view.toggle_topic_specific_tabs(True)
         self.selected_information_view.display_topic_info(topic_entity)
 
     def display_correct_initial_files(self) -> None:

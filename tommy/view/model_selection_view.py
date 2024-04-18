@@ -1,3 +1,4 @@
+from PySide6.QtCore import QEvent
 from PySide6.QtWidgets import QWidget, QTabWidget
 
 from tommy.controller.graph_controller import GraphController
@@ -58,6 +59,9 @@ class ModelSelectionView(QTabWidget, Observer):
         self.addTab(QWidget(), "Woordenwolk")
         self.addTab(QWidget(), "Woordgewichten")
 
+        # Initially hide topic specific tabs
+        self.toggle_topic_specific_tabs(False)
+
         # Add tabChanged event
         self.currentChanged.connect(self.tab_clicked_event)
 
@@ -75,6 +79,22 @@ class ModelSelectionView(QTabWidget, Observer):
         """
         self.update_observer(None)
 
+    # TODO: Instead of making tab invisible, consider changing its style
+    #   and disabling it.
+    def toggle_topic_specific_tabs(self, visible: bool) -> None:
+        """
+        Toggle the visibility of the topic specific tabs.
+
+        :param visible: Whether to make the tabs visible
+        """
+        if not visible and self.currentIndex() in [4, 5]:
+            self.setCurrentIndex(0)
+            self.tab_clicked_event()
+
+        # Hide or show the tabs
+        self.setTabVisible(4, visible)
+        self.setTabVisible(5, visible)
+
     def update_observer(self, publisher) -> None:
         """
         Update the observer.
@@ -83,7 +103,7 @@ class ModelSelectionView(QTabWidget, Observer):
         :return: None
         """
         tab_index = self.currentIndex()
-        self._graph_controller.update_current_visualization(tab_index)
+        self._graph_controller.set_tab_index(tab_index)
 
 
 """

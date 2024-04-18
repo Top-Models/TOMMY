@@ -56,7 +56,8 @@ class GraphController(Observer):
     _possible_topic_visualizations: list[int] = None
 
     _current_visualization_index: int = None
-    _current_topic_selected_index: int = 0
+    _current_tab_index: int = 0
+    _current_topic_selected_index: int = None
 
     _current_topic_runner: TopicRunner = None
 
@@ -98,7 +99,24 @@ class GraphController(Observer):
         :return: None
         """
         self._current_topic_selected_index = topic_index
-        self._plots_changed_publisher.notify()
+        self.update_current_visualization(self._current_tab_index)
+
+    def set_tab_index(self, tab_index: int) -> None:
+        """
+        Set the currently selected tab to the given index
+
+        :param tab_index: the index of the tab to select
+        :return: None
+        """
+        self._current_tab_index = tab_index
+        self.update_current_visualization(self._current_tab_index)
+
+    def get_selected_topic(self) -> int:
+        """
+        Get the currently selected topic index
+        :return: the index of the currently selected topic
+        """
+        return self._current_topic_selected_index
 
     def get_number_of_topics(self) -> int:
         """

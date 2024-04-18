@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
 from tommy.controller.graph_controller import GraphController
@@ -59,7 +59,8 @@ class FetchedTopicsView(QScrollArea, Observer):
     def _add_topic(self,
                    tab_name: str,
                    topic_name: str,
-                   topic_words: list[str]) -> None:
+                   topic_words: list[str],
+                   index: int) -> None:
         """
         Add a new topic to the display
         :param tab_name: Name of the tab to add the topic to
@@ -74,12 +75,6 @@ class FetchedTopicsView(QScrollArea, Observer):
 
         # Add topic to tab
         self.topic_container[tab_name].append((topic_name, topic_words))
-
-        # Add topic to display
-        topic_entity = TopicEntity(topic_name, topic_words)
-        topic_entity.clicked.connect(self._on_topic_clicked)
-        topic_entity.wordClicked.connect(self._on_word_clicked)
-        self.layout.addWidget(topic_entity)
 
     def _display_topics(self, tab_name: str) -> None:
         """
@@ -97,8 +92,9 @@ class FetchedTopicsView(QScrollArea, Observer):
             return
 
         # Add topics to view
-        for topic_name, topic_words in self.topic_container[tab_name]:
-            topic_entity = TopicEntity(topic_name, topic_words)
+        for index, (topic_name, topic_words) in (
+                enumerate(self.topic_container[tab_name])):
+            topic_entity = TopicEntity(topic_name, topic_words, index)
             topic_entity.wordClicked.connect(self._on_word_clicked)
             topic_entity.clicked.connect(self._on_topic_clicked)
             self.layout.addWidget(topic_entity)
@@ -128,7 +124,7 @@ class FetchedTopicsView(QScrollArea, Observer):
             topic_name = f"Topic {i + 1}"
             topic = self._graph_controller.get_topic_with_scores(i, 10)
             topic_words = topic.top_words
-            self._add_topic(self._current_tab_name, topic_name, topic_words)
+            self._add_topic(self._current_tab_name, topic_name, topic_words, i)
 
         self._display_topics(self._current_tab_name)
 
@@ -162,8 +158,25 @@ class FetchedTopicsView(QScrollArea, Observer):
         else:
             self.selected_topic = topic_entity
             topic_entity.select()
-
         self.topicClicked.emit(topic_entity)
+
+        if self.selected_topic is not None:
+            self._graph_controller.set_selected_topic(topic_entity.index)
+            return
+
+        self._graph_controller.set_selected_topic(None)
+
+    def event(self, event) -> bool:
+        """
+        Event handler for when the widget is clicked
+
+        :param event: The event that occurred
+        :return: True if the event was handled, False otherwise
+        """
+        if event.type() == QEvent.WindowActivate:
+            return True
+
+        return super().event(event)
 
     def deselect_all_topics(self) -> None:
         """
@@ -183,7 +196,6 @@ class FetchedTopicsView(QScrollArea, Observer):
         :return: None
         """
         self._refresh_topics()
-        # TODO: Update graph controller when clicked on topic
 
 
 """

@@ -15,10 +15,14 @@ class TopicEntity(QFrame):
     wordClicked = Signal(str)
     clicked = Signal(object)
 
-    def __init__(self, topic_name: str, topic_words: list[str]):
+    def __init__(self,
+                 topic_name: str,
+                 topic_words: list[str],
+                 index: int) -> None:
         super().__init__()
         self.topic_name = topic_name
         self.topic_words = topic_words
+        self.index = index
 
         # Initialize layout
         main_layout = QVBoxLayout(self)
