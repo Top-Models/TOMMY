@@ -103,7 +103,10 @@ class MainWindow(QMainWindow):
                                        QSizePolicy.Policy.Expanding))
 
         self.display_correct_initial_files()
-        self.initialize_event_handlers()
+
+        # Initialize event handlers
+        self.imported_files_view.fileClicked.connect(self.on_file_clicked)
+        self.fetched_topics_view.topicClicked.connect(self.on_topic_clicked)
 
     def initialize_widget(self, widget: QWidget,
                           x: int, y: int, w: int, h: int) -> None:
@@ -192,24 +195,6 @@ class MainWindow(QMainWindow):
                 .get_input_folder_path())
         self._controller.project_settings_controller.set_input_folder_path(
             path)
-
-    # Some of the event handlers can be used to update observers
-    def initialize_event_handlers(self) -> None:
-        """
-        Initialize event handlers for the main window.
-
-        :return: None
-        """
-        # Connecting the tabBarClicked signal to a method in
-        # ImportedFilesDisplay
-        self.plot_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.selected_information_view.
-            display_no_component_selected()
-        )
-
-        # Initialize events for clickable information containers
-        self.imported_files_view.fileClicked.connect(self.on_file_clicked)
-        self.fetched_topics_view.topicClicked.connect(self.on_topic_clicked)
 
     @property
     def controller(self):
