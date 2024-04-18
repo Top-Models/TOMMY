@@ -4,7 +4,6 @@ from tommy.controller.file_import.generic_file_importer import GenericFileImport
 from tommy.controller.file_import.raw_file import RawFile
 
 # Test data directory
-
 TEST_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                              '..',
                                              '..',
@@ -12,7 +11,6 @@ TEST_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                              'test',
                                              'test_data',
                                              'test_csv_files'))
-
 @pytest.fixture
 def generic_file_importer():
     return GenericFileImporter()
@@ -46,3 +44,12 @@ def test_import_file_unknown(generic_file_importer):
 
     # Clean up the test file after the test
     os.remove(unknown_path)
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University 
+(Department of Information and Computing Sciences)
+"""
+
