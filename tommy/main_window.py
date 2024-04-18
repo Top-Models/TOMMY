@@ -200,14 +200,6 @@ class MainWindow(QMainWindow):
 
         :return: None
         """
-
-        # Connecting the tabBarClicked signal to a method in
-        # ImportedFilesDisplay
-        self.model_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.imported_files_view.display_files(
-                self.model_selection_view.tabText(tab_index))
-        )
-
         # Connecting the tabBarClicked signal to a method in
         # ImportedFilesDisplay
         self.model_selection_view.tabBarClicked.connect(

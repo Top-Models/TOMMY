@@ -294,9 +294,10 @@ class GraphController(Observer):
                     plot_type_index - num_global_visualizations)
             selected_topic = self._current_topic_selected_index
             self._current_visualization_index = (
-                    num_global_visualizations +
-                    plot_type_past_global *
-                    self.get_number_of_topics() + selected_topic - 1)
+                    num_global_visualizations
+                    + (plot_type_past_global
+                       * self.get_number_of_topics()
+                       + selected_topic))
 
         self._plots_changed_publisher.notify()
 

@@ -18,7 +18,7 @@ class FetchedTopicsView(QScrollArea, Observer):
         super().__init__()
 
         # Initialize widget properties
-        self.setMinimumHeight(440)
+        self.setMinimumHeight(400)
         self.setFixedWidth(250)
         self.setObjectName("fetched_topics_display")
         self.setStyleSheet(
