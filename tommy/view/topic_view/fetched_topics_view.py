@@ -77,7 +77,7 @@ class FetchedTopicsView(QScrollArea, Observer):
         self.topic_container[tab_name].append((topic_name, topic_words))
 
         # Add topic to display
-        topic_entity = TopicEntity(topic_name, topic_words)
+        topic_entity = TopicEntity(topic_name, topic_words, index)
         topic_entity.clicked.connect(self._on_topic_clicked)
         topic_entity.wordClicked.connect(self._on_word_clicked)
 
