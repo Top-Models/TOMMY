@@ -72,7 +72,6 @@ class WordEntity(QLabel):
         :return: None
         """
         self.clicked.emit(self.word)
-        print(self.word)
 
 
 """

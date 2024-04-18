@@ -99,6 +99,10 @@ class GraphController(Observer):
         :return: None
         """
         self._current_topic_selected_index = topic_index
+
+        if topic_index is None:
+            return
+
         self.update_current_visualization(self._current_tab_index)
 
     def set_tab_index(self, tab_index: int) -> None:

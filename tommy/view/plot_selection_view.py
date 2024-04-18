@@ -1,4 +1,3 @@
-from PySide6.QtCore import QEvent
 from PySide6.QtWidgets import QWidget, QTabWidget
 
 from tommy.controller.graph_controller import GraphController
@@ -7,8 +6,8 @@ from tommy.support.constant_variables import (
 from tommy.view.observer.observer import Observer
 
 
-class ModelSelectionView(QTabWidget, Observer):
-    """A class to display options for selecting a model."""
+class PlotSelectionView(QTabWidget, Observer):
+    """A class to display options for selecting a plot."""
 
     def __init__(self, graph_controller: GraphController) -> None:
         """Initialize the GraphDisplay."""
@@ -89,7 +88,6 @@ class ModelSelectionView(QTabWidget, Observer):
         """
         if not visible and self.currentIndex() in [4, 5]:
             self.setCurrentIndex(0)
-            self.tab_clicked_event()
 
         # Hide or show the tabs
         self.setTabVisible(4, visible)

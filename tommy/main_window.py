@@ -1,4 +1,3 @@
-from PySide6.QtCore import QEvent
 from PySide6.QtGui import QIcon, QGuiApplication
 from PySide6.QtWidgets import (
     QMainWindow,
@@ -15,10 +14,8 @@ from tommy.view.imported_files_view.imported_files_view import (
 from tommy.view.menu_bar import MenuBar
 from tommy.view.model_params_view import (
     ModelParamsView)
-from tommy.view.model_selection_view import (
-    ModelSelectionView)
-from tommy.view.plot_navigation_view import (
-    PlotNavigationView)
+from tommy.view.plot_selection_view import (
+    PlotSelectionView)
 from tommy.view.selected_information_view import SelectedInformationView
 from tommy.view.stopwords_view import (
     StopwordsView)
@@ -75,7 +72,7 @@ class MainWindow(QMainWindow):
         # Create widgets
         self.stopwords_view = StopwordsView(
             self._controller.stopwords_controller)
-        self.model_selection_view = ModelSelectionView(
+        self.plot_selection_view = PlotSelectionView(
             self._controller.graph_controller
         )
         self.imported_files_view = ImportedFilesView(
@@ -94,7 +91,7 @@ class MainWindow(QMainWindow):
         # Initialize widgets
         self.left_container.addWidget(self.model_params_view)
         self.left_container.addWidget(self.stopwords_view)
-        self.center_container.addWidget(self.model_selection_view)
+        self.center_container.addWidget(self.plot_selection_view)
         self.center_container.addWidget(self.graph_view)
         self.center_container.addWidget(self.imported_files_view)
         self.right_container.addWidget(self.fetched_topics_view)
@@ -170,10 +167,10 @@ class MainWindow(QMainWindow):
         # Show info about run if no topic is selected
         if not topic_entity.selected:
             self.selected_information_view.display_run_info("lda_model")
-            self.model_selection_view.toggle_topic_specific_tabs(False)
+            self.plot_selection_view.toggle_topic_specific_tabs(False)
             return
 
-        self.model_selection_view.toggle_topic_specific_tabs(True)
+        self.plot_selection_view.toggle_topic_specific_tabs(True)
         self.selected_information_view.display_topic_info(topic_entity)
 
     def display_correct_initial_files(self) -> None:
@@ -205,7 +202,7 @@ class MainWindow(QMainWindow):
         """
         # Connecting the tabBarClicked signal to a method in
         # ImportedFilesDisplay
-        self.model_selection_view.tabBarClicked.connect(
+        self.plot_selection_view.tabBarClicked.connect(
             lambda tab_index: self.selected_information_view.
             display_no_component_selected()
         )
