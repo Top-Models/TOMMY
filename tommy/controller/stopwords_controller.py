@@ -1,4 +1,4 @@
-from tommy.controller.publisher.event_handler import EventHandler
+from tommy.support.event_handler import EventHandler
 from tommy.model.stopwords_model import StopwordsModel
 
 

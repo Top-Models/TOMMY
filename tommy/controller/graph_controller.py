@@ -3,10 +3,8 @@ from itertools import product
 import matplotlib.figure
 
 from tommy.controller.corpus_controller import CorpusController
-from tommy.controller.publisher.event_handler import EventHandler
+from tommy.support.event_handler import EventHandler
 from tommy.datatypes.topics import TopicWithScores
-from tommy.controller.file_import.processed_file import ProcessedFile
-from tommy.controller.file_import.metadata import Metadata
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
@@ -27,8 +25,6 @@ from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
 from tommy.controller.visualizations.document_topic_network_summary_creator \
     import DocumentTopicNetworkSummaryCreator
-from tommy.controller.visualizations.document_topic_network_creator import (
-    DocumentTopicNetworkCreator)
 from tommy.controller.visualizations.document_word_count_creator import (
     DocumentWordCountCreator)
 from tommy.controller.visualizations.visualization_input_datatypes import (

@@ -8,7 +8,7 @@ from tommy.model.topic_model import TopicModel
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
-from tommy.controller.publisher.event_handler import EventHandler
+from tommy.support.event_handler import EventHandler
 
 
 class TopicModellingController:

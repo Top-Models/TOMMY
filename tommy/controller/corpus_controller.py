@@ -11,7 +11,7 @@ from tommy.controller.file_import.raw_body import RawBody
 from tommy.controller.file_import.raw_file import RawFile
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
-from tommy.controller.publisher.event_handler import EventHandler
+from tommy.support.event_handler import EventHandler
 from tommy.model.corpus_model import CorpusModel
 
 
