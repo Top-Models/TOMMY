@@ -1,17 +1,18 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
 from tommy.controller.graph_controller import GraphController
 from tommy.support.constant_variables import sec_col_orange
-from tommy.datatypes.topics import TopicWithScores
 from tommy.view.observer.observer import Observer
-
-from tommy.view.topic_view.topic_entity import (
-    TopicEntity)
+from tommy.view.topic_view.topic_entity_component.topic_entity import \
+    TopicEntity
 
 
 class FetchedTopicsView(QScrollArea, Observer):
     """A widget for displaying the found topics."""
+
+    topicClicked = Signal(object)
+
     def __init__(self, graph_controller: GraphController) -> None:
         """Initialize the FetchedTopicDisplay widget."""
         super().__init__()
@@ -31,6 +32,7 @@ class FetchedTopicsView(QScrollArea, Observer):
 
         # { tab_name, [(topic_name, [words])] }
         self.topic_container = {}
+        self.selected_topic = None
 
         # Initialize layout for scroll area
         self.scroll_area = QWidget()
@@ -75,6 +77,7 @@ class FetchedTopicsView(QScrollArea, Observer):
 
         # Add topic to display
         topic_entity = TopicEntity(topic_name, topic_words)
+        topic_entity.clicked.connect(self._on_topic_clicked)
         topic_entity.wordClicked.connect(self._on_word_clicked)
         self.layout.addWidget(topic_entity)
 
@@ -97,7 +100,7 @@ class FetchedTopicsView(QScrollArea, Observer):
         for topic_name, topic_words in self.topic_container[tab_name]:
             topic_entity = TopicEntity(topic_name, topic_words)
             topic_entity.wordClicked.connect(self._on_word_clicked)
-
+            topic_entity.clicked.connect(self._on_topic_clicked)
             self.layout.addWidget(topic_entity)
 
     def remove_tab_from_container(self, tab_name: str) -> None:
@@ -142,6 +145,35 @@ class FetchedTopicsView(QScrollArea, Observer):
                 topic_entity.change_word_style(word,
                                                sec_col_orange,
                                                "black")
+
+    def _on_topic_clicked(self, topic_entity: TopicEntity) -> None:
+        """
+        Event handler for when a topic is clicked
+
+        :param topic_entity: The topic entity that was clicked
+        :return: None
+        """
+        self.deselect_all_topics()
+
+        # Deselect topic if it was already selected
+        if self.selected_topic == topic_entity:
+            self.selected_topic = None
+            topic_entity.enterEvent(None)
+        else:
+            self.selected_topic = topic_entity
+            topic_entity.select()
+
+        self.topicClicked.emit(topic_entity)
+
+    def deselect_all_topics(self) -> None:
+        """
+        Deselect all topics
+        :return: None
+        """
+        for i in range(self.layout.count()):
+            topic_entity = self.layout.itemAt(i).widget()
+            if isinstance(topic_entity, TopicEntity):
+                topic_entity.deselect()
 
     def update_observer(self, publisher) -> None:
         """

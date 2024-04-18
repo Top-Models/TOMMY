@@ -35,6 +35,8 @@ class MenuBar(QMenuBar):
         import_input_folder_action.triggered.connect(
             self.import_input_folder)
         export_to_gexf.triggered.connect(self.export_to_gexf)
+        import_input_folder_action.triggered.connect(self.import_input_folder)
+        export_to_gexf.triggered.connect(self.export_to_gexf)
 
         # Create menu bar
         file_menu = self.addMenu("Bestand")
