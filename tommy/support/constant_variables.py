@@ -20,6 +20,7 @@ sec_col_purple = "#3F2A56"
 hover_seco_col_purple = "#4A345F"
 pressed_seco_col_purple = "#5A3F6E"
 light_seco_col_purple = "#5A3F6E"
+seco_purple_border_color = "#A59BC3"
 sec_col_brown = "#94795D"
 
 # Gray color properties

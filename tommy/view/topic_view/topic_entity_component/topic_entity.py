@@ -1,9 +1,10 @@
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame, \
+    QLineEdit
 
 from tommy.support.constant_variables import (
     heading_font, text_font, sec_col_purple, pressed_seco_col_purple,
-    hover_seco_col_purple)
+    hover_seco_col_purple, light_seco_col_purple, seco_purple_border_color)
 from tommy.view.topic_view.topic_entity_component.word_entity import WordEntity
 
 
@@ -18,28 +19,43 @@ class TopicEntity(QFrame):
     def __init__(self,
                  topic_name: str,
                  topic_words: list[str],
-                 index: int) -> None:
+                 index: int):
+        """
+        Initialize a topic frame.
+
+        :param topic_name: The name of the topic.
+        :param topic_words: The words related to the topic.
+        :return: None.
+        """
         super().__init__()
         self.topic_name = topic_name
         self.topic_words = topic_words
         self.index = index
+        self.word_entities = []
+        self.selected = False
 
         # Initialize layout
         main_layout = QVBoxLayout(self)
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         # Initialize widget properties
-        self.setStyleSheet(f"background-color: {sec_col_purple}; "
-                           f"color: white;")
+        self.setStyleSheet(f"background-color: {sec_col_purple};")
         self.setFixedWidth(200)
 
         # Initialize title widget
-        topic_label = QLabel(topic_name, self)
+        topic_label = QLineEdit(topic_name, self)
         topic_label.setStyleSheet(f"font-family: {heading_font}; "
+                                  f"color: white;"
                                   f"font-size: 15px; "
                                   f"font-weight: bold; "
-                                  f"text-transform: uppercase;")
+                                  f"background-color: "
+                                  f"{pressed_seco_col_purple};"
+                                  f"padding: 5px 5px;"
+                                  f"border-radius: 2px;"
+                                  f"border:"
+                                  f"2px solid {seco_purple_border_color};")
         topic_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        topic_label.setPlaceholderText(topic_name)
         main_layout.addWidget(topic_label)
 
         # Initialize word widgets
@@ -47,17 +63,25 @@ class TopicEntity(QFrame):
         main_layout.addLayout(self.word_layout)
 
         # List to store word labels
-        self.word_entities = []
+        self.word_labels = []
 
-        # Adding words vertically
-        vertical_word_layout = QVBoxLayout()
-        self.add_words(vertical_word_layout, topic_words)
+        # Adding words horizontally
+        horizontal_layout = QVBoxLayout()
+        self.add_words(horizontal_layout, topic_words)
 
         # Add remaining widgets if any
-        if vertical_word_layout.count() > 0:
-            self.word_layout.addLayout(vertical_word_layout)
+        if horizontal_layout.count() > 0:
+            self.word_layout.addLayout(horizontal_layout)
 
-        self.selected = False
+        topic_label.textChanged.connect(self.get_topic_name)
+
+    def get_topic_name(self) -> None:
+        """
+        Get the topic name
+
+        :return: The topic name
+        """
+        return self.findChild(QLineEdit).text()
 
     def add_words(self,
                   layout: QHBoxLayout,
