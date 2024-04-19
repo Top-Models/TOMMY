@@ -151,11 +151,11 @@ class ModelParamsView(QScrollArea, Observer):
                     background-color: {seco_col_blue};
                     color: white;
                 }}
-    
+
                 QPushButton:hover {{
                     background-color: {hover_seco_col_blue};
                 }}
-    
+
                 QPushButton:pressed {{
                     background-color: {pressed_seco_col_blue};
                 }}

@@ -17,7 +17,8 @@ sec_col_orange = "#FFA300"
 hover_seco_col_orange = "#D88C00"
 pressed_seco_col_orange = "#B97A00"
 sec_col_purple = "#3F2A56"
-pressed_seco_col_purple = "#2F1A46"
+hover_seco_col_purple = "#4A345F"
+pressed_seco_col_purple = "#5A3F6E"
 light_seco_col_purple = "#5A3F6E"
 sec_col_brown = "#94795D"
 
@@ -36,6 +37,9 @@ darker_gray = "#222222"
 # Font properties
 text_font = "Corbel"
 heading_font = "Century Gothic"
+
+# Label properties
+label_height = 25
 
 
 """
