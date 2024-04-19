@@ -106,7 +106,7 @@ class ModelParamsView(QScrollArea, Observer):
         Initialize the title label.
         :return: None
         """
-        self.title_label = QLabel("Model parameters")
+        self.title_label = QLabel("Parameters")
         self.title_label.setStyleSheet(f"font-size: 13px;"
                                        f"font-family: {heading_font};"
                                        f"font-weight: bold;"
