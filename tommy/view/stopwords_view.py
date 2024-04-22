@@ -10,10 +10,9 @@ from tommy.support.constant_variables import (
     pressed_seco_col_blue,
     sec_col_purple,
     hover_prim_col_red)
-from tommy.view.observer.observer import Observer
 
 
-class StopwordsView(QScrollArea, Observer):
+class StopwordsView(QScrollArea):
     """The StopWordsDisplay area to view all stopwords."""
 
     def __init__(self, stopwords_controller: StopwordsController) -> None:
@@ -22,7 +21,6 @@ class StopwordsView(QScrollArea, Observer):
 
         # Set reference to the controller
         self._stopwords_controller = stopwords_controller
-        stopwords_controller.add(self)
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -61,34 +59,23 @@ class StopwordsView(QScrollArea, Observer):
         self.container = QTabWidget()
 
         # Initialize tabs
-        self.stopwords_tab = QWidget()
-        self.ngrams_tab = QTextEdit()
-        self.ngrams_tab.setStyleSheet(f"border-radius: 5px;"
-                                      f"font-size: 14px;"
-                                      f"font-family: {text_font};"
-                                      f"color: black;"
-                                      f"border: 2px solid #00968F;"
-                                      f"padding: 5px;"
-                                      f"background-color: white;"
-                                      f"margin: 5px;")
-        self.synoniemen_tab = QTextEdit()
-        self.synoniemen_tab.setStyleSheet(f"border-radius: 5px;"
-                                          f"font-size: 14px;"
-                                          f"font-family: {text_font};"
-                                          f"color: black;"
-                                          f"border: 2px solid #00968F;"
-                                          f"padding: 5px;"
-                                          f"background-color: white;"
-                                          f"margin: 5px;")
+        tab_style = (f"border-radius: 5px;"
+                     f"font-size: 14px;"
+                     f"font-family: {text_font};"
+                     f"color: black;"
+                     f"border: 2px solid #00968F;"
+                     f"padding: 5px;"
+                     f"background-color: white;"
+                     f"margin: 5px;")
+
+        #self.stopwords_tab = QWidget()
+        #self.stopwords_tab.setStyleSheet(tab_style)
         self.blacklist_tab = QTextEdit()
-        self.blacklist_tab.setStyleSheet(f"border-radius: 5px;"
-                                         f"font-size: 14px;"
-                                         f"font-family: {text_font};"
-                                         f"color: black;"
-                                         f"border: 2px solid #00968F;"
-                                         f"padding: 5px;"
-                                         f"background-color: white;"
-                                         f"margin: 5px;")
+        self.blacklist_tab.setStyleSheet(tab_style)
+        self.ngrams_tab = QTextEdit()
+        self.ngrams_tab.setStyleSheet(tab_style)
+        self.synonym_tab = QTextEdit()
+        self.synonym_tab.setStyleSheet(tab_style)
 
         # Set styles for QScrollArea and its scrollbar
         self.setStyleSheet(f"""
@@ -112,18 +99,11 @@ class StopwordsView(QScrollArea, Observer):
             }}
         """)
 
-        # Set container as the focal point
-        self.setWidget(self.container)
-
         # Set layouts for tabs
+        #self.container.addTab(self.stopwords_tab, "Stopwords")
         self.container.addTab(self.blacklist_tab, "Blacklist")
-        self.container.addTab(self.synoniemen_tab, "Synoniemen")
+        self.container.addTab(self.synonym_tab, "Synoniemen")
         self.container.addTab(self.ngrams_tab, "N-grams")
-        self.container.addTab(self.stopwords_tab, "Stopwords")
-        # Initialize the set of additional stopwords
-        self.additional_stopwords = set()
-        self.synoniemen = set()
-        self.ngrams = set()
 
         # Set container as the focal point
         self.setWidget(self.container)
@@ -134,26 +114,30 @@ class StopwordsView(QScrollArea, Observer):
         self.setWidgetResizable(True)
 
         # Connect text changed event to update additional_stopwords
-        self.blacklist_tab.textChanged.connect(self.update_additional_stopwords)
+        #self.stopwords_tab.textChanged.connect(self.update_stopwords)
+        self.blacklist_tab.textChanged.connect(self.update_blacklist)
+        self.synonym_tab.textChanged.connect(self.update_synonyms)
+        self.ngrams_tab.textChanged.connect(self.update_ngrams)
 
-    def update_additional_stopwords(self) -> None:
+    def update_blacklist(self) -> None:
         """
-        Update additional_stopwords set with the text from the Stopwords tab.
+        Update the set of blacklisted words with the text from the Blacklist
+        tab.
 
         :return: None
         """
-        text = self.blacklist_tab.toPlainText()
-        self.additional_stopwords = set(text.split())
-        self._stopwords_controller.update_stopwords(self.additional_stopwords)
+        input_text = self.blacklist_tab.toPlainText()
+        blacklist = set(input_text.split())
+        self._stopwords_controller.update_stopwords(blacklist)
 
     def update_synonyms(self) -> None:
         """
-        Update synoniems set with the text from the synoniems tab.
-        should be updated to handle the right parsing.
+        Updtate the set of synonyms with the text from the Synonyms tab.
+
         :return: None
         """
-        text = self.synoniemen_tab.toPlainText()
-        self.synoniemen = set(text.split())
+        input_text = self.synonym_tab.toPlainText()
+        # TODO: implement at a later point
 
     def update_ngrams(self) -> None:
         """
@@ -161,17 +145,8 @@ class StopwordsView(QScrollArea, Observer):
         should be updated to handle the right parsing.
         :return: None
         """
-        text = self.ngrams_tab.toPlainText()
-        self.ngrams = set(text.split())
-
-    def update_observer(self, publisher) -> None:
-        """
-        Update the observer.
-
-        :param publisher: The publisher that is being observed
-        :return: None
-        """
-
+        input_text = self.ngrams_tab.toPlainText()
+        # TODO: implement at a later point
 
 
 """
