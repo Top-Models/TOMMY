@@ -159,9 +159,10 @@ class FetchedTopicsView(QScrollArea, Observer):
         # Deselect topic if it was already selected
         if self.selected_topic == topic_entity:
             self.selected_topic = None
-            topic_entity.enterEvent(None)
+            topic_entity.deselect()
         else:
             self.selected_topic = topic_entity
+            topic_entity.select()
             topic_entity.select()
         self.topicClicked.emit(topic_entity)
 

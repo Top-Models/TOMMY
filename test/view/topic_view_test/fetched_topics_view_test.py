@@ -94,7 +94,7 @@ def test_clear_topics(fetched_topics_view: FetchedTopicsView, qtbot: QtBot):
 
 
 def test_refresh_topics_lda(fetched_topics_view: FetchedTopicsView,
-                             mocker: mocker):
+                            mocker: mocker):
     """
     Test refreshing the topics in the fetched topics view.
     """
@@ -174,8 +174,7 @@ def test_on_word_clicked(fetched_topics_view: FetchedTopicsView, qtbot: QtBot):
     assert word_clicked.args == ["word1"]
 
 
-def test_on_topic_clicked(fetched_topics_view: FetchedTopicsView,
-                          qtbot: QtBot):
+def test_on_topic_clicked(fetched_topics_view: FetchedTopicsView):
     """
     Test the topic clicked event of the fetched topics view.
     """
@@ -198,13 +197,17 @@ def test_on_topic_clicked(fetched_topics_view: FetchedTopicsView,
     # Ensure we found the TopicEntity widget
     assert topic_entity is not None
 
-    # Spy on the emit method of clicked signal
-    with qtbot.waitSignal(fetched_topics_view.topicClicked) as topic_clicked:
-        # Simulate topic click
-        qtbot.mouseClick(topic_entity, Qt.LeftButton)
+    # Simulate topic click
+    fetched_topics_view._on_topic_clicked(topic_entity)
 
-    # Ensure the topicClicked signal was emitted
-    assert topic_clicked
+    # Ensure the topic is selected
+    assert fetched_topics_view.selected_topic == topic_entity
+
+    # Simulate topic click again
+    fetched_topics_view._on_topic_clicked(topic_entity)
+
+    # Ensure the topic is deselected
+    assert fetched_topics_view.selected_topic is None
 
 
 def test_deselect_all_topics(fetched_topics_view: FetchedTopicsView):

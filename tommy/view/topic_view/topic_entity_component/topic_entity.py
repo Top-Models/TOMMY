@@ -1,10 +1,10 @@
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QFrame, \
-    QLineEdit
+from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QFrame, \
+    QLineEdit, QRadioButton
 
 from tommy.support.constant_variables import (
     heading_font, text_font, sec_col_purple, pressed_seco_col_purple,
-    hover_seco_col_purple, light_seco_col_purple, seco_purple_border_color)
+    seco_purple_border_color)
 from tommy.view.topic_view.topic_entity_component.word_entity import WordEntity
 
 
@@ -36,11 +36,24 @@ class TopicEntity(QFrame):
 
         # Initialize layout
         main_layout = QVBoxLayout(self)
-        main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        main_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                 Qt.AlignmentFlag.AlignHCenter)
 
         # Initialize widget properties
         self.setStyleSheet(f"background-color: {sec_col_purple};")
         self.setFixedWidth(200)
+
+        # Initialize radio button layout
+        radio_layout = QHBoxLayout()
+        radio_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        radio_layout.setContentsMargins(0, 0, 0, 0)
+
+        # Initialize radio button
+        self.radio_button = QRadioButton(self)
+        radio_layout.addWidget(self.radio_button)
+        main_layout.addLayout(radio_layout)
+        self.radio_button.clicked.connect(
+            lambda checked: self.clicked.emit(self))
 
         # Initialize title widget
         self.topic_label = QLineEdit(topic_name, self)
@@ -53,7 +66,8 @@ class TopicEntity(QFrame):
                                        f"padding: 5px 5px;"
                                        f"border-radius: 2px;"
                                        f"border:"
-                                       f"2px solid {seco_purple_border_color};")
+                                       f"2px solid {seco_purple_border_color};"
+                                       )
         self.topic_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.topic_label.setPlaceholderText(topic_name)
         main_layout.addWidget(self.topic_label)
@@ -104,28 +118,6 @@ class TopicEntity(QFrame):
             # Add word label to layout
             layout.addWidget(word_entity)
 
-    def enterEvent(self, event) -> None:
-        """
-        Change the style of the label when the mouse enters.
-
-        :param event: The mouse enter event
-        :return: None
-        """
-        if not self.selected:
-            self.setStyleSheet(f"background-color: {hover_seco_col_purple}; "
-                               f"color: white;")
-
-    def leaveEvent(self, event) -> None:
-        """
-        Change the style of the label when the mouse leaves.
-
-        :param event: The mouse leave event
-        :return: None
-        """
-        if not self.selected:
-            self.setStyleSheet(f"background-color: {sec_col_purple}; "
-                               f"color: white;")
-
     def select(self) -> None:
         """
         Select the label.
@@ -133,6 +125,7 @@ class TopicEntity(QFrame):
         :return: None
         """
         self.selected = True
+        self.radio_button.setChecked(True)
         self.setStyleSheet(f"background-color: {pressed_seco_col_purple}; "
                            f"color: white;")
 
@@ -143,26 +136,9 @@ class TopicEntity(QFrame):
         :return: None
         """
         self.selected = False
+        self.radio_button.setChecked(False)
         self.setStyleSheet(f"background-color: {sec_col_purple}; "
                            f"color: white;")
-
-    def mousePressEvent(self, event) -> None:
-        """
-        Change the style of the label when the mouse is pressed.
-
-        :param event: The mouse press event
-        :return: None
-        """
-        self.setStyleSheet(f"background-color: {pressed_seco_col_purple};")
-
-    def mouseReleaseEvent(self, event) -> None:
-        """
-        Change the style of the label when the mouse is released.
-
-        :param event: The mouse release event
-        :return: None
-        """
-        self.clicked.emit(self)
 
     def change_word_style(self,
                           word: str,
