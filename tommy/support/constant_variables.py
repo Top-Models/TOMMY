@@ -4,6 +4,7 @@ This file contains all constant variable, such as colour codes and fonts.
 
 # Primary colour properties
 prim_col_red = "#E40046"
+dark_prim_col_red = "#B3003C"
 hover_prim_col_red = "#C3003C"
 prim_col_black = "#000000"
 
@@ -16,6 +17,9 @@ sec_col_orange = "#FFA300"
 hover_seco_col_orange = "#D88C00"
 pressed_seco_col_orange = "#B97A00"
 sec_col_purple = "#3F2A56"
+hover_seco_col_purple = "#4A345F"
+pressed_seco_col_purple = "#5A3F6E"
+light_seco_col_purple = "#5A3F6E"
 sec_col_brown = "#94795D"
 
 # Gray color properties
@@ -33,6 +37,9 @@ darker_gray = "#222222"
 # Font properties
 text_font = "Corbel"
 heading_font = "Century Gothic"
+
+# Label properties
+label_height = 25
 
 # Plot colors
 plot_colors = [prim_col_red, sec_col_yellow, seco_col_blue, sec_col_purple,

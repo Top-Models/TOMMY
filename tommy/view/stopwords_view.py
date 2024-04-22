@@ -1,17 +1,28 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
-                               QLineEdit, QHBoxLayout, QPushButton)
+                               QLineEdit, QHBoxLayout, QPushButton,
+                               QSizePolicy)
 
-from tommy.support.constant_variables import text_font, \
-    hover_seco_col_blue, pressed_seco_col_blue, sec_col_purple
+from tommy.controller.stopwords_controller import StopwordsController
+from tommy.support.constant_variables import (
+    text_font,
+    hover_seco_col_blue,
+    pressed_seco_col_blue,
+    sec_col_purple,
+    label_height)
 from tommy.view.observer.observer import Observer
 
 
 class StopwordsView(QScrollArea, Observer):
     """The StopWordsDisplay area to view all stopwords."""
-    def __init__(self) -> None:
+
+    def __init__(self, stopwords_controller: StopwordsController) -> None:
         """The initialization of the StopwordsDisplay."""
         super().__init__()
+
+        # Set reference to the controller
+        self._stopwords_controller = stopwords_controller
+        stopwords_controller.add(self)
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -40,13 +51,12 @@ class StopwordsView(QScrollArea, Observer):
         self.scroll_layout = QHBoxLayout(self.scroll_area)
         self.scroll_layout.setAlignment(Qt.AlignCenter)
 
-        # Initialize the set of additional stopwords
-        self.additional_stopwords = set()
-
         # Initialize excluded words
         self.word_layout = QVBoxLayout()
         self.scroll_layout.addLayout(self.word_layout)
-        self.show_excluded_words(list(self.additional_stopwords))
+        # TODO: maybe this isn't good design,
+        #  and it should happen from the controller
+        self.show_excluded_words([])
 
         # Add scroll area to container
         self.container_layout.addWidget(self.scroll_area)
@@ -82,7 +92,7 @@ class StopwordsView(QScrollArea, Observer):
         self.input_layout.addWidget(self.input_field)
 
         # Add event for pressing enter
-        self.input_field.returnPressed.connect(self.add_to_word_list)
+        self.input_field.editingFinished.connect(self.add_to_word_list)
 
     def initialize_add_button(self) -> None:
         """
@@ -124,11 +134,14 @@ class StopwordsView(QScrollArea, Observer):
     def create_word_label(self, stopword: str) -> QLabel:
         """Create a label for every word"""
         stopword_label = QLabel(stopword, self)
+        stopword_label.setMaximumHeight(label_height)
+        stopword_label.setSizePolicy(QSizePolicy.Policy.Expanding,
+                                     QSizePolicy.Policy.Preferred)
         stopword_label.setStyleSheet(f"background-color: {sec_col_purple};"
                                      f"color: white;"
                                      f"font-family: {text_font};"
                                      f"font-size: 12px;"
-                                     f"padding: 15px;")
+                                     f"padding: 5px;")
         stopword_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         stopword_label.setScaledContents(True)
         stopword_label.setWordWrap(True)
@@ -147,20 +160,16 @@ class StopwordsView(QScrollArea, Observer):
         :param word_list: The list of words needed to be shown
         :return: None
         """
-        horizontal_layout = QHBoxLayout()
+        vertical_layout = QVBoxLayout()
 
         for i, word in enumerate(word_list):
             # Make and format word
             word_label = self.create_word_label(word)
-            horizontal_layout.addWidget(word_label)
-
-            if (i + 1) % 2 == 0 or len(word) >= 8:
-                self.word_layout.addLayout(horizontal_layout)
-                horizontal_layout = QHBoxLayout()
+            vertical_layout.addWidget(word_label)
 
         # Add remaining widgets if any
-        if horizontal_layout.count() > 0:
-            self.word_layout.addLayout(horizontal_layout)
+        if vertical_layout.count() > 0:
+            self.word_layout.addLayout(vertical_layout)
 
     def add_to_word_list(self) -> None:
         """
@@ -170,8 +179,7 @@ class StopwordsView(QScrollArea, Observer):
         """
         new_word = self.input_field.text()
         if new_word:
-            self.additional_stopwords.add(new_word)
-            self.update_word_vis()
+            self._stopwords_controller.add_stopword(new_word)
             self.input_field.clear()
 
     def remove_word(self, word) -> None:
@@ -181,10 +189,9 @@ class StopwordsView(QScrollArea, Observer):
         :param word: The word to be removed
         :return: None
         """
-        self.additional_stopwords.discard(word)
-        self.update_word_vis()
+        self._stopwords_controller.remove_stopword(word)
 
-    def update_word_vis(self):
+    def update_word_vis(self, stopwords: list[str]) -> None:
         """
         Remove current words from excluded word UI and show new ones.
 
@@ -201,7 +208,7 @@ class StopwordsView(QScrollArea, Observer):
                         current_item.setParent(None)
 
         # Display updated words in UI
-        self.show_excluded_words(list(self.additional_stopwords))
+        self.show_excluded_words(stopwords)
 
     def update_observer(self, publisher) -> None:
         """
@@ -210,7 +217,7 @@ class StopwordsView(QScrollArea, Observer):
         :param publisher: The publisher that is being observed
         :return: None
         """
-        pass
+        self.update_word_vis(list(publisher.stopwords_model.extra_words))
 
 
 """

@@ -2,19 +2,29 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
                                QWidget, QPushButton)
 
-from tommy.backend.observer.publisher import Publisher
+from tommy.controller.controller import Controller
+from tommy.controller.publisher.publisher import Publisher
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
     pressed_seco_col_blue, prim_col_red, hover_prim_col_red)
+from tommy.controller.model_parameters_controller import (
+    ModelParametersController)
+
 from tommy.view.observer.observer import Observer
 
 
 class ModelParamsView(QScrollArea, Observer):
     """The ModelParamsDisplay that displays the model settings"""
 
-    def __init__(self) -> None:
+    def __init__(self, model_parameters_controller: ModelParametersController,
+                 controller: Controller,
+                 ) -> None:
         """The initialization ot the ModelParamDisplay."""
         super().__init__()
+
+        # Set reference to the model parameters controller
+        self._model_parameters_controller = model_parameters_controller
+        self._controller = controller
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -77,7 +87,8 @@ class ModelParamsView(QScrollArea, Observer):
         # Add input field
         self.topic_input = QLineEdit()
         self.topic_input.setPlaceholderText("Voer aantal topics in")
-        self.topic_input.setText("5")
+        self.topic_input.setText(
+            str(self._model_parameters_controller.get_model_n_topics()))
         self.topic_input.setStyleSheet(f"border-radius: 5px;"
                                        f"font-size: 14px;"
                                        f"font-family: {text_font};"
@@ -87,7 +98,7 @@ class ModelParamsView(QScrollArea, Observer):
                                        f"background-color: white;")
         self.topic_input.setAlignment(Qt.AlignLeft)
         self.container_layout.addWidget(self.topic_input)
-        self.topic_input.returnPressed.connect(
+        self.topic_input.editingFinished.connect(
             self.topic_input_return_pressed_event)
 
     def initialize_title_label(self) -> None:
@@ -124,17 +135,19 @@ class ModelParamsView(QScrollArea, Observer):
                     background-color: {seco_col_blue};
                     color: white;
                 }}
-    
+
                 QPushButton:hover {{
                     background-color: {hover_seco_col_blue};
                 }}
-    
+
                 QPushButton:pressed {{
                     background-color: {pressed_seco_col_blue};
                 }}
             """)
         self.button_layout.addWidget(self.apply_button,
                                      alignment=Qt.AlignBottom)
+        self.apply_button.clicked.connect(
+            self.apply_button_clicked_event)
 
     def fetch_topic_num(self) -> int:
         """
@@ -143,19 +156,21 @@ class ModelParamsView(QScrollArea, Observer):
         """
         return int(self.topic_input.text())
 
-    def topic_input_return_pressed_event(self) -> int:
+    def topic_input_return_pressed_event(self) -> None:
         """
-        The event when the topic input field is pressed.
-        :return: The number of topics
+        The event when the topic input field is pressed. Updates topic
+        amount in model_parameters_controller
+        :return: None
         """
-        return self.fetch_topic_num()
+        self._model_parameters_controller.set_model_n_topics(
+            self.fetch_topic_num())
 
-    def apply_button_clicked_event(self) -> NotImplementedError:
+    def apply_button_clicked_event(self) -> None:
         """
         The event when the apply button is clicked.
         :return: None
         """
-        return NotImplementedError()
+        self._controller.on_run_topic_modelling()
 
     def update_observer(self, publisher: Publisher) -> None:
         """
@@ -164,7 +179,9 @@ class ModelParamsView(QScrollArea, Observer):
         :param publisher: The publisher that is being observed
         :return: None
         """
-        pass
+        # todo: look into whether this should still be an
+        #   observer. We should probably observe changes to
+        #   model parameters here.
 
 
 """
