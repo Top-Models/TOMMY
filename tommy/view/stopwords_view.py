@@ -144,6 +144,7 @@ class StopwordsView(QScrollArea, Observer):
         """
         text = self.blacklist_tab.toPlainText()
         self.additional_stopwords = set(text.split())
+        self._stopwords_controller.update_stopwords(self.additional_stopwords)
 
     def update_synonyms(self) -> None:
         """
@@ -170,7 +171,7 @@ class StopwordsView(QScrollArea, Observer):
         :param publisher: The publisher that is being observed
         :return: None
         """
-        self.update_word_vis(list(publisher.stopwords_model.extra_words))
+
 
 
 """

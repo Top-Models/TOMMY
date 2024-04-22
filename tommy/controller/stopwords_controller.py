@@ -18,7 +18,7 @@ class StopwordsController(Publisher):
         """Sets the reference to the stopwords model."""
         self._stopwords_model = stopwords_model
 
-    def update_stopwords(self, words: list[str]) -> None:
+    def update_stopwords(self, words: set[str]) -> None:
         """
         Update the stopwords model with a new list of extra stopwords.
 
@@ -27,6 +27,7 @@ class StopwordsController(Publisher):
         """
 
         self._stopwords_model.replace(words)
+        self.notify()
 
     # TODO: this method will be deprecated in the new UI redesign
     def add_stopword(self, word: str) -> None:
