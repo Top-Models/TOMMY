@@ -99,12 +99,6 @@ class StopwordsView(QScrollArea):
             }}
         """)
 
-        # Set layouts for tabs
-        #self.container.addTab(self.stopwords_tab, "Stopwords")
-        self.container.addTab(self.blacklist_tab, "Blacklist")
-        self.container.addTab(self.synonym_tab, "Synoniemen")
-        self.container.addTab(self.ngrams_tab, "N-grams")
-
         # Set container as the focal point
         self.setWidget(self.container)
 
@@ -113,11 +107,23 @@ class StopwordsView(QScrollArea):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setWidgetResizable(True)
 
+        # Set layouts for tabs
+        #self.container.addTab(self.stopwords_tab, "Stopwords")
+        self.container.addTab(self.blacklist_tab, "Blacklist")
+        self.container.addTab(self.synonym_tab, "Synoniemen")
+        self.container.addTab(self.ngrams_tab, "N-grams")
+
         # Connect text changed event to update additional_stopwords
         #self.stopwords_tab.textChanged.connect(self.update_stopwords)
         self.blacklist_tab.textChanged.connect(self.update_blacklist)
         self.synonym_tab.textChanged.connect(self.update_synonyms)
         self.ngrams_tab.textChanged.connect(self.update_ngrams)
+
+        # Disable rich text
+        #self.stopwords_tab.setAcceptRichText(False)
+        self.blacklist_tab.setAcceptRichText(False)
+        self.synonym_tab.setAcceptRichText(False)
+        self.ngrams_tab.setAcceptRichText(False)
 
     def update_blacklist(self) -> None:
         """
