@@ -159,7 +159,6 @@ class TopicEntity(QFrame):
                     f"font-family: {text_font}; "
                     f"font-size: 12px; "
                     f"background-color: {background_color}; "
-                    f"padding: 10px; "
                     f"color: {text_color}")
             else:
                 word_entity.selected = False
@@ -167,7 +166,6 @@ class TopicEntity(QFrame):
                     f"font-family: {text_font}; "
                     f"font-size: 12px; "
                     f"background-color: white; "
-                    f"padding: 10px; "
                     f"color: black")
 
 
