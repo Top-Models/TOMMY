@@ -1,10 +1,10 @@
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QFrame, \
-    QLineEdit, QRadioButton
+from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QFrame,
+                               QLineEdit, QRadioButton)
 
 from tommy.support.constant_variables import (
     heading_font, text_font, sec_col_purple, pressed_seco_col_purple,
-    seco_purple_border_color)
+    seco_purple_border_color, hover_seco_col_purple)
 from tommy.view.topic_view.topic_entity_component.word_entity import WordEntity
 
 
@@ -118,6 +118,14 @@ class TopicEntity(QFrame):
             # Add word label to layout
             layout.addWidget(word_entity)
 
+    def mousePressEvent(self, event):
+        """
+        Emit signal when topic is clicked.
+        :param event: The mouse press event
+        :return: None
+        """
+        self.clicked.emit(self)
+
     def select(self) -> None:
         """
         Select the label.
@@ -139,6 +147,28 @@ class TopicEntity(QFrame):
         self.radio_button.setChecked(False)
         self.setStyleSheet(f"background-color: {sec_col_purple}; "
                            f"color: white;")
+
+    def enterEvent(self, event) -> None:
+        """
+        Change the style of the label when the mouse enters.
+
+        :param event: The mouse enter event
+        :return: None
+        """
+        if not self.selected:
+            self.setStyleSheet(f"background-color: {hover_seco_col_purple}; "
+                               f"color: white;")
+
+    def leaveEvent(self, event) -> None:
+        """
+        Change the style of the label when the mouse leaves.
+
+        :param event: The mouse leave event
+        :return: None
+        """
+        if not self.selected:
+            self.setStyleSheet(f"background-color: {sec_col_purple}; "
+                               f"color: white;")
 
     def change_word_style(self,
                           word: str,
