@@ -41,6 +41,10 @@ heading_font = "Century Gothic"
 # Label properties
 label_height = 25
 
+# Plot colors
+plot_colors = [prim_col_red, sec_col_yellow, seco_col_blue, sec_col_purple,
+               '#E16402', '#80E49E', '#B90CA4', '#409AED', '#475E3E', '#8072BD'
+               ]
 
 """
 This program has been developed by students from the bachelor Computer Science

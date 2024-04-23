@@ -17,6 +17,7 @@ from tommy.controller.visualizations.visualization_input_datatypes import (
 from tommy.controller.visualizations.abstract_visualization_on_data import (
         AbstractVisualizationOnData)
 
+from tommy.support.constant_variables import plot_colors
 
 class DocumentTopicNetworkSummaryCreator(
         AbstractVisualizationOnData[ProcessedCorpus]):
@@ -129,12 +130,6 @@ class DocumentTopicNetworkSummaryCreator(
             all files as bags of words after preprocessing.
         :return: matplotlib figure showing a document-topic network plot
         """
-        # List of simple, distinct colors from
-        # https://sashamaps.net/docs/resources/20-colors/
-        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
-                  '#9a6324', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
-                  '#008080', '#e6beff', '#000075', '#fffac8', '#800000',
-                  '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
 
         # Construct a graph with topic nodes
         init_graph = nx.Graph()
@@ -156,13 +151,14 @@ class DocumentTopicNetworkSummaryCreator(
         # Add topic nodes and nodes with degree one to graph
         num_topics: int = topic_runner.get_n_topics()
         for topic_id in range(num_topics):
-            graph.add_node(topic_id, color=colors[topic_id % 20])
+            graph.add_node(topic_id,
+                           color=plot_colors[topic_id % len(plot_colors)])
             lonely_nodes = [node for node in init_graph.neighbors(topic_id)
                             if init_graph.degree(node) == 1]
             if len(lonely_nodes) > 0:
                 graph.add_edge(topic_id,
                                'doc_set_' + str(topic_id),
-                               color=colors[topic_id % 20],
+                               color=plot_colors[topic_id % len(plot_colors)],
                                weight=len(lonely_nodes))
 
         # Add nodes shared by multiple topics
@@ -184,11 +180,13 @@ class DocumentTopicNetworkSummaryCreator(
                 if len(intersection) != 0:
                     graph.add_edge(topic_id,
                                    "doc_set_" + str(doc_set_id),
-                                   color=colors[topic_id % 20],
+                                   color=plot_colors[topic_id
+                                                     % len(plot_colors)],
                                    weight=len(intersection))
                     graph.add_edge(j,
                                    "doc_set_" + str(doc_set_id),
-                                   color=colors[j % 20],
+                                   color=plot_colors[j
+                                                     % len(plot_colors)],
                                    weight=len(intersection))
 
         return graph

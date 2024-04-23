@@ -9,6 +9,7 @@ from tommy.datatypes.topics import Topic, TopicWithScores
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
 
+from tommy.support.constant_variables import plot_colors
 
 class WordTopicNetworkCreator(AbstractVisualization):
     """
@@ -68,13 +69,6 @@ class WordTopicNetworkCreator(AbstractVisualization):
         """
         graph = nx.Graph()
 
-        # List of simple, distinct colors from
-        # https://sashamaps.net/docs/resources/20-colors/
-        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
-                  '#9a6324', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
-                  '#008080', '#e6beff', '#000075', '#fffac8', '#800000',
-                  '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
-
         # Amount of words displayed for each topic
         node_amount = 15
 
@@ -82,14 +76,15 @@ class WordTopicNetworkCreator(AbstractVisualization):
                 n_words=node_amount):
             # Add topic node to graph
             graph.add_node(topic.topic_id + 1,
-                           color=colors[topic.topic_id % 20])
+                           color=plot_colors[topic.topic_id
+                                             % len(plot_colors)])
 
             # Add edge from topic node to its words
             for word, score in topic.top_words_with_scores:
                 graph.add_edge(
                     topic.topic_id + 1,
                     word,
-                    color=colors[topic.topic_id % 20],
+                    color=plot_colors[topic.topic_id % len(plot_colors)],
                     weight=score)
 
         return graph
