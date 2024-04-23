@@ -185,7 +185,7 @@ class DocumentTopicNetworkSummaryCreator(
                                    weight=len(intersection))
                     graph.add_edge(j,
                                    "doc_set_" + str(doc_set_id),
-                                   color=plot_colors[topic_id
+                                   color=plot_colors[j
                                                      % len(plot_colors)],
                                    weight=len(intersection))
 
