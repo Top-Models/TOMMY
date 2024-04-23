@@ -5,26 +5,26 @@ import matplotlib.figure
 import networkx as nx
 from matplotlib import pyplot as plt
 
+from tommy.support.constant_variables import plot_colors
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.datatypes.topics import Topic, TopicWithScores
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
+
 from tommy.controller.visualizations.visualization_input_datatypes import (
     ProcessedCorpus)
+from tommy.controller.visualizations.nx_exporter_on_data import (
+    NxExporterOnData)
 
-from tommy.controller.visualizations.abstract_visualization_on_data import (
-        AbstractVisualizationOnData)
 
-from tommy.support.constant_variables import plot_colors
-
-class DocumentTopicNetworkCreator(
-        AbstractVisualizationOnData[ProcessedCorpus]):
+class DocumentTopicNxExporter(
+        NxExporterOnData[ProcessedCorpus]):
     """
     A class for constructing a network showing the topics and the
     number of documents that contain that topic for the topics in the given
-    topic runner and the given preprocessed documents; and returning it as a
-    matplotlib figure.
+    topic runner and the given preprocessed documents; and returning it as an
+    nx.Graph.
     Note: this visualization is only to be used for exporting purposes
     """
     _required_interfaces = [DocumentTopicsInterface]
@@ -32,52 +32,30 @@ class DocumentTopicNetworkCreator(
 
     @property
     def input_data_type(self) -> TypeAliasType:
-        """Returns the type of the additional data needed in get_figure"""
+        """Returns the type of the additional data needed in get_nx_graph"""
         return ProcessedCorpus
 
-    def get_figure(self,
-                   topic_runner: TopicRunner | DocumentTopicsInterface,
-                   data: ProcessedCorpus
-                   ) -> matplotlib.figure.Figure:
+    def get_nx_graph(self,
+                     topic_runner: TopicRunner | DocumentTopicsInterface,
+                     data: ProcessedCorpus
+                     ) -> nx.Graph:
         """
-        Construct a document-topic network plot showing the
+        Construct a document-topic nx graph representing plot of the
         relations between documents and topics
         :param topic_runner: The topic runner (implementing
             DocumentTopicsInterface) to extract topic data from
         :param data: The preprocessed corpus containing
             all files as bags of words after preprocessing.
-        :return: matplotlib figure showing a document-topic network plot
+        :return: nx graph representing a document-topic network plot
         """
-        # Construct a plot and graph
-        fig = plt.figure(dpi=20)
-        graph = self.construct_doc_topic_network(topic_runner, data)
+        return self.construct_doc_topic_network(topic_runner, data, 0.05)
 
-        # Get graph elements
-        edges = graph.edges()
-        nodes = graph.nodes(data="color")
-
-        # Get drawing function arguments
-        node_sizes = [150 if node[1] is not None else 0 for node in nodes]
-        node_colors = [node[1] if node[1] is not None else "black"
-                       for node in nodes]
-
-        edge_colors = [graph[u][v]["color"] for (u, v) in edges]
-        edge_width = [(graph[u][v]["weight"]) for u, v in edges]
-
-        # Draw the network using the kamada-kawai algorithm to position the
-        # nodes in an aesthetically pleasing way
-        nx.draw_kamada_kawai(graph,
-                             width=edge_width,
-                             node_size=node_sizes,
-                             edge_color=edge_colors,
-                             node_color=node_colors)
-
-        return fig
 
     @staticmethod
     def construct_doc_topic_network(topic_runner:
                                     TopicRunner | DocumentTopicsInterface,
-                                    processed_files: ProcessedCorpus
+                                    processed_files: ProcessedCorpus,
+                                    minimum_probability: float
                                     ) -> nx.Graph:
         """
         Construct a document-topic network plot which is used to plot the
@@ -86,6 +64,8 @@ class DocumentTopicNetworkCreator(
             DocumentTopicsInterface) to extract topic data from
         :param processed_files: The preprocessed corpus containing
             all files as bags of words after preprocessing.
+        :param minimum_probability: the minimum probability of a document 
+            belonging to a topic for it to be included.
         :return: matplotlib figure showing a document-topic network plot
         """
         graph = nx.Graph()
@@ -97,7 +77,8 @@ class DocumentTopicNetworkCreator(
         # Generate initial document topic network
         for document_id, document in enumerate(processed_files):
             document_topic = (
-                topic_runner.get_document_topics(document.body.body, 0.05))
+                topic_runner.get_document_topics(document.body.body,
+                                                 minimum_probability))
 
             # Add edges from each document to all associated topics
             for (topic_id, topic_probability) in document_topic:

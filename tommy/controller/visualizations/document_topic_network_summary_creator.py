@@ -13,11 +13,13 @@ from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
 from tommy.controller.visualizations.visualization_input_datatypes import (
     ProcessedCorpus)
-
 from tommy.controller.visualizations.abstract_visualization_on_data import (
         AbstractVisualizationOnData)
+from tommy.controller.visualizations.document_topic_nx_exporter import (
+        DocumentTopicNxExporter)
 
 from tommy.support.constant_variables import plot_colors
+
 
 class DocumentTopicNetworkSummaryCreator(
         AbstractVisualizationOnData[ProcessedCorpus]):
@@ -132,18 +134,8 @@ class DocumentTopicNetworkSummaryCreator(
         """
 
         # Construct a graph with topic nodes
-        init_graph = nx.Graph()
-        for topic in topic_runner.get_topics_with_scores(0):
-            init_graph.add_node(topic.topic_id)
-
-        # Generate initial document topic network
-        for document_id, file in enumerate(processed_files):
-            document_topic = topic_runner.get_document_topics(file.body.body,
-                                                              0.05)
-
-            # Add edges from each document to all associated topics
-            for topic_id, topic_probability in document_topic:
-                init_graph.add_edge(topic_id, 'd' + str(document_id))
+        init_graph = DocumentTopicNxExporter.construct_doc_topic_network(
+            topic_runner, processed_files, 0.05)
 
         # Construct simplified document topic network
         graph = nx.Graph()
