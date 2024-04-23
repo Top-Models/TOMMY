@@ -272,6 +272,19 @@ class GraphController(Observer):
                 % self.get_visualization_count())
         self._plots_changed_publisher.notify()
 
+    def get_all_visualizations(self) -> list[matplotlib.figure.Figure]:
+        """
+        Get all the possible visualization for the current run
+        :return: A list of  matplotlib Figures of all possible visualizations
+        """
+        if self._current_topic_runner is None:
+            raise RuntimeError("Plots cannot be requested when topic model "
+                                 "has not been run.")
+
+        return [self._get_visualization(vis) for vis
+                in self._possible_global_visualizations
+                + self._possible_topic_visualizations]
+
     def update_observer(self, publisher: Publisher) -> None:
         """
         Signal the graph-controller to update
