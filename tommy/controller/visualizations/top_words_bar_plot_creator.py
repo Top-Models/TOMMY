@@ -7,6 +7,8 @@ from tommy.controller.visualizations.abstract_visualizations_per_topic import (
     AbstractVisualizationPerTopic)
 from tommy.datatypes.topics import TopicWithScores
 
+from tommy.support.constant_variables import plot_colors
+
 
 class TopWordsBarPlotCreator(AbstractVisualizationPerTopic):
     """
@@ -32,7 +34,9 @@ class TopWordsBarPlotCreator(AbstractVisualizationPerTopic):
 
         # Construct a horizontal bar plot
         fig = plt.figure()
-        plt.barh(topic.top_words, topic.word_scores, color="darkblue")
+        plt.barh(topic.top_words,
+                 topic.word_scores,
+                 color=plot_colors[topic_id % len(plot_colors)])
         plt.gca().invert_yaxis()
 
         # Add margins and labels to the plot

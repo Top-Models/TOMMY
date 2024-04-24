@@ -1,4 +1,5 @@
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIntValidator, QValidator
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
                                QWidget, QPushButton)
 
@@ -47,6 +48,8 @@ class ModelParamsView(QScrollArea):
 
         # Initialize topic widgets
         self.topic_input = None
+        self.topic_input_layout_valid = None
+        self.topic_input_layout_invalid = None
         self.initialize_parameter_widgets()
 
         # Initialize button layout
@@ -81,22 +84,35 @@ class ModelParamsView(QScrollArea):
         topic_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.container_layout.addWidget(topic_label)
 
+        # Define layout for whether topic input is valid or invalid
+        self.topic_input_layout_valid = (f"border-radius: 5px;"
+                                         f"font-size: 14px;"
+                                         f"font-family: {text_font};"
+                                         f"color: black;"
+                                         f"border: 2px solid {seco_col_blue};"
+                                         f"padding: 5px;"
+                                         f"background-color: white;")
+        self.topic_input_layout_invalid = (f"border-radius: 5px;"
+                                           f"font-size: 14px;"
+                                           f"font-family: {text_font};"
+                                           f"color: black;"
+                                           f"border: 2px solid red;"
+                                           f"padding: 5px;"
+                                           f"background-color: white;")
+
         # Add input field
         self.topic_input = QLineEdit()
+        # QIntValidator prevents user from typing
+        # anything that isn't an integer
+        self.topic_input.setValidator(QIntValidator(1, 999))
         self.topic_input.setPlaceholderText("Voer aantal topics in")
         self.topic_input.setText(
             str(self._model_parameters_controller.get_model_n_topics()))
-        self.topic_input.setStyleSheet(f"border-radius: 5px;"
-                                       f"font-size: 14px;"
-                                       f"font-family: {text_font};"
-                                       f"color: black;"
-                                       f"border: 2px solid #00968F;"
-                                       f"padding: 5px;"
-                                       f"background-color: white;")
+        self.topic_input.setStyleSheet(self.topic_input_layout_valid)
         self.topic_input.setAlignment(Qt.AlignLeft)
         self.container_layout.addWidget(self.topic_input)
         self.topic_input.editingFinished.connect(
-            self.topic_input_return_pressed_event)
+            self.topic_input_editing_finished_event)
 
     def initialize_title_label(self) -> None:
         """
@@ -132,11 +148,11 @@ class ModelParamsView(QScrollArea):
                     background-color: {seco_col_blue};
                     color: white;
                 }}
-    
+
                 QPushButton:hover {{
                     background-color: {hover_seco_col_blue};
                 }}
-    
+
                 QPushButton:pressed {{
                     background-color: {pressed_seco_col_blue};
                 }}
@@ -149,11 +165,42 @@ class ModelParamsView(QScrollArea):
     def fetch_topic_num(self) -> int:
         """
         Fetch the number of topics from the input field.
-        :return: None
+        :return: The number of topics from the input field, or 0 if the
+        input is invalid
         """
-        return int(self.topic_input.text())
+        text = self.topic_input.text()
+        input_valid = self.validate_input()
+        if input_valid:
+            return int(text)
+        return 0
 
-    def topic_input_return_pressed_event(self) -> None:
+    def validate_input(self) -> bool:
+        """
+        Check whether each topic modelling parameter is a valid string and
+        notify the user if it isn't. It is called during an EditingFinished
+        event of the input field and when the apply button is pressed.
+        :return: Whether the parameters are valid
+        """
+        topic_input_text = self.topic_input.text()
+        valid_input = True
+        try:
+            num_topics = int(topic_input_text)
+            if num_topics < 1 or num_topics > 999:
+                valid_input = False
+        except ValueError:
+            valid_input = False
+
+        if valid_input:
+            self.topic_input.setStyleSheet(self.topic_input_layout_valid)
+            self.topic_input.setPlaceholderText("")
+        else:
+            self.topic_input.setStyleSheet(self.topic_input_layout_invalid)
+            self.topic_input.setText("")
+            self.topic_input.setPlaceholderText(
+                "Moet tussen 1 en 999 liggen")
+        return valid_input
+
+    def topic_input_editing_finished_event(self) -> None:
         """
         The event when the topic input field is pressed. Updates topic
         amount in model_parameters_controller
@@ -167,7 +214,8 @@ class ModelParamsView(QScrollArea):
         The event when the apply button is clicked.
         :return: None
         """
-        self._controller.on_run_topic_modelling()
+        if self.validate_input():
+            self._controller.on_run_topic_modelling()
 
 
 """

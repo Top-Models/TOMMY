@@ -93,7 +93,7 @@ class StopwordsView(QScrollArea):
         self.input_layout.addWidget(self.input_field)
 
         # Add event for pressing enter
-        self.input_field.returnPressed.connect(self.add_to_word_list)
+        self.input_field.editingFinished.connect(self.add_to_word_list)
 
     def initialize_add_button(self) -> None:
         """

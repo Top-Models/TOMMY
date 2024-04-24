@@ -32,8 +32,7 @@ class MenuBar(QMenuBar):
         export_action.setMenu(export_to_gexf)
 
         # Connect actions to event handlers
-        import_input_folder_action.triggered.connect(
-            self.import_input_folder)
+        import_input_folder_action.triggered.connect(self.import_input_folder)
         export_to_gexf.triggered.connect(self.export_to_gexf)
 
         # Create menu bar

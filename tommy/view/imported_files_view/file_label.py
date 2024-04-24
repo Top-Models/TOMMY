@@ -73,7 +73,6 @@ class FileLabel(QLabel):
         :return: None
         """
         if not self.selected:
-            self.selected = True
             self.setStyleSheet(f"font-family: {text_font};"
                                f"font-size: 12px;"
                                f"background-color: "
@@ -81,7 +80,9 @@ class FileLabel(QLabel):
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 3px;")
-            self.clicked.emit(self)
+        else:
+            self.deselect()
+
         super().mousePressEvent(event)
 
     def deselect(self) -> None:
@@ -100,6 +101,23 @@ class FileLabel(QLabel):
         except RuntimeError:
             pass
 
+    def select(self) -> None:
+        """
+        Select the label
+        :return: None
+        """
+        try:
+            self.selected = True
+            self.setStyleSheet(f"font-family: {text_font};"
+                               f"font-size: 12px;"
+                               f"background-color: "
+                               f"{pressed_medium_light_gray};"
+                               f"color: black;"
+                               f"margin: 0px;"
+                               f"padding: 3px;")
+        except RuntimeError:
+            pass
+
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:
         """
         Change the style of the label when the mouse is released
@@ -107,12 +125,13 @@ class FileLabel(QLabel):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"font-family: {heading_font};"
+            self.setStyleSheet(f"font-family: {text_font};"
                                f"font-size: 12px;"
                                f"background-color: {hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 3px;")
+        self.clicked.emit(self)
         super().mouseReleaseEvent(event)
 
 
