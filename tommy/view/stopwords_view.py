@@ -95,7 +95,7 @@ class StopwordsView(QScrollArea):
                 border-radius: 10px;
             }}
             QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
-                height: 0px;
+                height: 0px; 
             }}
         """)
 
@@ -133,7 +133,7 @@ class StopwordsView(QScrollArea):
         :return: None
         """
         input_text = self.blacklist_tab.toPlainText()
-        blacklist = set(input_text.split())
+        blacklist = set([word.lower() for word in input_text.split()])
         self._stopwords_controller.update_stopwords(blacklist)
 
     def update_synonyms(self) -> None:
