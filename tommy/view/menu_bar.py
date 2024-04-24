@@ -3,10 +3,12 @@ import os
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMenuBar, QMenu, QWidget, QFileDialog
 
+from tommy.controller.export_controller import ExportController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.support.constant_variables import (
     prim_col_red, dark_prim_col_red, extra_light_gray, text_font)
+from tommy.controller import export_controller
 
 
 class MenuBar(QMenuBar):
@@ -14,13 +16,16 @@ class MenuBar(QMenuBar):
 
     def __init__(self,
                  parent: QWidget,
-                 project_settings_controller: ProjectSettingsController
+                 project_settings_controller: ProjectSettingsController,
+                 export_controller: ExportController
                  ) -> None:
         """Initialize the menu bar."""
         super().__init__(parent)
 
         # Set reference to project settings controller for input folder button
         self._project_settings_controller = project_settings_controller
+
+        self._export_controller = export_controller
 
         # Create actions
         import_input_folder_action = QAction("Selecteer input folder", self)
@@ -32,9 +37,6 @@ class MenuBar(QMenuBar):
         export_action.setMenu(export_to_gexf)
 
         # Connect actions to event handlers
-        import_input_folder_action.triggered.connect(
-            self.import_input_folder)
-        export_to_gexf.triggered.connect(self.export_to_gexf)
         import_input_folder_action.triggered.connect(self.import_input_folder)
         export_to_gexf.triggered.connect(self.export_to_gexf)
 
@@ -88,10 +90,15 @@ class MenuBar(QMenuBar):
     def export_to_gexf(self) -> None:
         """
         Export the current graph to a GEXF file.
-
         :return: None
         """
-        pass
+        dialog = QFileDialog.getExistingDirectory(self,
+                                                  "Selecteer export folder")
+
+        if dialog:
+            self._export_controller.export_networks(dialog)
+
+
 
 
 """
