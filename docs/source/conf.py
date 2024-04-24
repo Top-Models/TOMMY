@@ -22,15 +22,29 @@ release = '0.1'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
+    "sphinx.ext.napoleon",
+    'sphinx.ext.viewcode',
+    'sphinx_rtd_theme',
+    'sphinx.ext.intersphinx',
+    'myst_parser',
 ]
 
+source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
+
 autosummary_generate = True
+napoleon_include_init_with_doc = True
 
 templates_path = ['_templates']
 exclude_patterns = []
 
+pygments_style = 'sphinx'
+
+# Removes, from all docs, the copyright footer.
+html_show_copyright = False
+html_show_sphinx = False
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'classic'
+html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']

@@ -1,28 +1,34 @@
-.. Tommy documentation master file, created by
-sphinx-quickstart on Thu Apr  4 13:11:00 2024.
-You can adapt this file completely to your liking, but it should at least
-contain the root `toctree` directive.
+Welcome to Tommy's wiki!
+=================================
+
+.. toctree::
+    :maxdepth: 2
+    :caption: Wiki
+
+    wiki/Style-guide.md
+    wiki/Style-guide-source-control.md
+    wiki/Generating-Portable-Executable.md
+    wiki/How-to-run-tests-from-PyCharm.md
+    wiki/Writing-unit-tests-with-PyTest.md
 
 Welcome to Tommy's documentation!
 =================================
+
 **Tommy** is an application for performing topic modelling.
 
 .. autosummary::
     :toctree: _autosummary
+    :caption: Contents
+    :template: autosummary/module.rst
     :recursive:
 
     tommy
-    tommy.backend
+    tommy.view
     tommy.controller
     tommy.model
-    tommy.view
-    tommy.support
-
 
 
 Indices and tables
 ==================
 
-* :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
