@@ -1,35 +1,24 @@
 from itertools import product
-from collections.abc import Iterable
 import networkx as nx
 import matplotlib.figure
 
+# Import controllers
 from tommy.controller.corpus_controller import CorpusController
-from tommy.view.observer.observer import Observer
-from tommy.datatypes.topics import TopicWithScores
 from tommy.controller.publisher.publisher import Publisher
-from tommy.controller.topic_modelling_controller import (
-    TopicModellingController)
-from tommy.controller.file_import.processed_file import ProcessedFile
-from tommy.controller.file_import.metadata import Metadata
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.controller.topic_modelling_controller import (
     TopicModellingController)
+
+# Import visualizations
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
-from tommy.controller.visualizations.abstract_visualizations_per_topic import (
-    AbstractVisualizationPerTopic)
 from tommy.controller.visualizations.abstract_visualization_on_data import (
     AbstractVisualizationOnData)
 from tommy.controller.visualizations.abstract_visualizations_per_topic import (
     AbstractVisualizationPerTopic)
 from tommy.controller.visualizations.correlation_matrix_creator import (
     CorrelationMatrixCreator)
-from tommy.controller.visualizations.top_words_bar_plot_creator import (
-    TopWordsBarPlotCreator)
-from tommy.controller.visualizations.word_cloud_creator import WordCloudCreator
-from tommy.controller.visualizations.word_topic_network_creator import (
-    WordTopicNetworkCreator)
 from tommy.controller.visualizations.document_topic_network_summary_creator \
     import DocumentTopicNetworkSummaryCreator
 from tommy.controller.visualizations.document_topic_nx_exporter import (
@@ -45,6 +34,7 @@ from tommy.controller.visualizations.nx_exporter_on_data import (
 from tommy.controller.visualizations.word_cloud_creator import WordCloudCreator
 from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
+
 from tommy.datatypes.topics import TopicWithScores
 from tommy.view.observer.observer import Observer
 
