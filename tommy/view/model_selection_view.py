@@ -21,7 +21,7 @@ class ModelSelectionView(QTabWidget, Observer):
                 }}
 
                 QTabBar::tab {{ 
-                    background-color: #FFFFFF; 
+                    background-color: rgba(230, 230, 230, 1);
                     color: gray;
                     font-size: 15px;
                     padding-left: 10px;
@@ -32,17 +32,17 @@ class ModelSelectionView(QTabWidget, Observer):
                 }}
 
                 QTabBar::tab:selected {{
-                    border-bottom: 3px solid {hover_prim_col_red};
                     color: #000000;
-                    background-color: rgba(240, 240, 240, 1);
+                    background-color: white;
                 }}
 
                 QTabBar::tab:hover {{
-                    color: #000000;
+                    background-color: white;
                 }}
                 
                 QTabWidget::tab-bar {{
                     alignment: left;
+                    background-color: gray;
                 }}
             """)
 

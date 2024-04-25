@@ -1,14 +1,10 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
-                               QLineEdit, QHBoxLayout, QPushButton, QTabWidget,
+from PySide6.QtWidgets import (QScrollArea, QTabWidget,
                                QTextEdit)
 
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.support.constant_variables import (
     text_font,
-    hover_seco_col_blue,
-    pressed_seco_col_blue,
-    sec_col_purple,
     hover_prim_col_red)
 
 
@@ -24,36 +20,56 @@ class StopwordsView(QScrollArea):
 
         # Initialize widget properties
         self.setFixedWidth(250)
+        self.setContentsMargins(0, 0, 0, 0)
         self.setStyleSheet(f"""        
-                       QTabWidget {{
-                           color: black;
-                           border: none;
-                       }}
+                QTabWidget {{
+                    color: black;
+                    border: none;
+                }}
 
-                       QTabBar::tab {{ 
-                           background-color: #FFFFFF; 
-                           color: gray;
-                           font-size: 15px;
-                           padding-left: 10px;
-                           padding-right: 10px;
-                           padding-top: 15px;
-                           padding-bottom: 15px;
-                           font-weight: bold;
-                       }}
+                QTabBar::tab {{ 
+                    color: black;
+                    background-color: rgba(230, 230, 230, 1);
+                    font-size: 15px;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                    font-weight: bold;
+                }}
 
-                       QTabBar::tab:selected {{
-                           border-bottom: 3px solid {hover_prim_col_red};
-                           color: #000000;
-                           background-color: rgba(240, 240, 240, 1);
-                       }}
+                QTabBar::tab:selected {{
+                    color: #000000;
+                    background-color: white;
+                }}
 
-                       QTabBar::tab:hover {{
-                           color: #000000;
-                       }}
-
-                       QTabWidget::tab-bar {{
-                           alignment: left;
-                       }}
+                QTabBar::tab:hover {{
+                    background-color: white;
+                }}
+                
+                QTabWidget::tab-bar {{
+                    alignment: left;
+                    width: 250px;
+                }}
+                
+                QScrollArea {{
+                    border: 0px solid #00968F;
+                    border-radius: 10px;
+                }}
+                QScrollBar:vertical {{
+                    border: none;
+                    background: #F0F0F0;
+                    width: 30px;
+                    margin: 0px;
+                }}
+                QScrollBar::handle:vertical {{
+                    background: #CCCCCC;
+                    min-height: 20px;
+                    border-radius: 10px;
+                }}
+                QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
+                    height: 0px; 
+                }}
                    """)
         # Initialize container for all elements
         self.container = QTabWidget()
@@ -68,36 +84,14 @@ class StopwordsView(QScrollArea):
                      f"background-color: white;"
                      f"margin: 5px;")
 
-        #self.stopwords_tab = QWidget()
-        #self.stopwords_tab.setStyleSheet(tab_style)
+        # self.stopwords_tab = QWidget()
+        # self.stopwords_tab.setStyleSheet(tab_style)
         self.blacklist_tab = QTextEdit()
         self.blacklist_tab.setStyleSheet(tab_style)
         self.ngrams_tab = QTextEdit()
         self.ngrams_tab.setStyleSheet(tab_style)
         self.synonym_tab = QTextEdit()
         self.synonym_tab.setStyleSheet(tab_style)
-
-        # Set styles for QScrollArea and its scrollbar
-        self.setStyleSheet(f"""
-            QScrollArea {{
-                border: 0px solid #00968F;
-                border-radius: 10px;
-            }}
-            QScrollBar:vertical {{
-                border: none;
-                background: #F0F0F0;
-                width: 30px;
-                margin: 0px;
-            }}
-            QScrollBar::handle:vertical {{
-                background: #CCCCCC;
-                min-height: 20px;
-                border-radius: 10px;
-            }}
-            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
-                height: 0px; 
-            }}
-        """)
 
         # Set container as the focal point
         self.setWidget(self.container)
@@ -108,19 +102,19 @@ class StopwordsView(QScrollArea):
         self.setWidgetResizable(True)
 
         # Set layouts for tabs
-        #self.container.addTab(self.stopwords_tab, "Stopwords")
+        # self.container.addTab(self.stopwords_tab, "Stopwords")
         self.container.addTab(self.blacklist_tab, "Blacklist")
         self.container.addTab(self.synonym_tab, "Synoniemen")
         self.container.addTab(self.ngrams_tab, "N-grams")
 
         # Connect text changed event to update additional_stopwords
-        #self.stopwords_tab.textChanged.connect(self.update_stopwords)
+        # self.stopwords_tab.textChanged.connect(self.update_stopwords)
         self.blacklist_tab.textChanged.connect(self.update_blacklist)
         self.synonym_tab.textChanged.connect(self.update_synonyms)
         self.ngrams_tab.textChanged.connect(self.update_ngrams)
 
         # Disable rich text
-        #self.stopwords_tab.setAcceptRichText(False)
+        # self.stopwords_tab.setAcceptRichText(False)
         self.blacklist_tab.setAcceptRichText(False)
         self.synonym_tab.setAcceptRichText(False)
         self.ngrams_tab.setAcceptRichText(False)
