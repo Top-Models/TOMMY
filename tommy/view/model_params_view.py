@@ -1,16 +1,15 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIntValidator, QValidator
+from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
                                QWidget, QPushButton)
 
 from tommy.controller.controller import Controller
+from tommy.controller.model_parameters_controller import (
+    ModelParametersController)
 from tommy.controller.publisher.publisher import Publisher
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
     pressed_seco_col_blue, prim_col_red, hover_prim_col_red)
-from tommy.controller.model_parameters_controller import (
-    ModelParametersController)
-
 from tommy.view.observer.observer import Observer
 
 
@@ -122,7 +121,7 @@ class ModelParamsView(QScrollArea, Observer):
         Initialize the title label.
         :return: None
         """
-        self.title_label = QLabel("Parameters")
+        self.title_label = QLabel("Instellingen")
         self.title_label.setStyleSheet(f"font-size: 13px;"
                                        f"font-family: {heading_font};"
                                        f"font-weight: bold;"

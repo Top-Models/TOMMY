@@ -21,24 +21,24 @@ def test_get_active_tab_name(plot_selection_view: PlotSelectionView, mocker):
     """
     # Arrange
     plot_selection_view.setCurrentIndex(0)
-    plot_selection_view.setTabVisible(4, True)
-    plot_selection_view.setTabVisible(5, True)
+    plot_selection_view.setTabVisible(6, True)
+    plot_selection_view.setTabVisible(7, True)
 
     # Mock update_current_visualization method of the graph controller
     plot_selection_view._graph_controller.update_current_visualization = \
         lambda x: True
 
     # Act & Assert
-    assert plot_selection_view.get_active_tab_name() == "Correlatie"
-    plot_selection_view.setCurrentIndex(1)
-    assert plot_selection_view.get_active_tab_name() == "Topic Netwerk"
-    plot_selection_view.setCurrentIndex(2)
-    assert plot_selection_view.get_active_tab_name() == "Doc. Netwerk"
-    plot_selection_view.setCurrentIndex(3)
     assert plot_selection_view.get_active_tab_name() == "Woordaantal"
+    plot_selection_view.setCurrentIndex(2)
+    assert plot_selection_view.get_active_tab_name() == "Correlatie"
+    plot_selection_view.setCurrentIndex(3)
+    assert plot_selection_view.get_active_tab_name() == "Topic Netwerk"
     plot_selection_view.setCurrentIndex(4)
+    assert plot_selection_view.get_active_tab_name() == "Doc. Netwerk"
+    plot_selection_view.setCurrentIndex(6)
     assert plot_selection_view.get_active_tab_name() == "Woordenwolk"
-    plot_selection_view.setCurrentIndex(5)
+    plot_selection_view.setCurrentIndex(7)
     assert plot_selection_view.get_active_tab_name() == "Woordgewichten"
 
 
@@ -70,21 +70,21 @@ def test_toggle_topic_specific_tabs_invisible(
     plot_selection_view.toggle_topic_specific_tabs(False)
 
     # Assert
-    assert not plot_selection_view.isTabVisible(4)
-    assert not plot_selection_view.isTabVisible(5)
+    assert not plot_selection_view.isTabVisible(6)
+    assert not plot_selection_view.isTabVisible(7)
 
 
 @pytest.mark.parametrize("visible, current_tab_index, expected_tab_index", [
     (True, 0, 0),
     (False, 0, 0),
-    (True, 1, 1),
-    (False, 1, 1),
     (True, 2, 2),
     (False, 2, 2),
     (True, 3, 3),
     (False, 3, 3),
-    (False, 4, 0),
-    (False, 5, 0)
+    (True, 4, 4),
+    (False, 4, 4),
+    (False, 6, 0),
+    (False, 7, 0)
 ])
 def test_toggle_topic_specific_tabs_current_index(
         plot_selection_view: PlotSelectionView,
