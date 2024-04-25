@@ -80,7 +80,7 @@ class MainWindow(QMainWindow):
             self._controller.project_settings_controller)
         self.model_params_view = ModelParamsView(
             self._controller.model_parameters_controller,
-            self._controller)
+            self._controller, self._controller.config_controller)
         self.graph_view = GraphView(self._controller.graph_controller)
         self.fetched_topics_view = FetchedTopicsView(
             self._controller.graph_controller)

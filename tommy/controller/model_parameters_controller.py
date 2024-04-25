@@ -1,8 +1,10 @@
+from tommy.controller.publisher.publisher import Publisher
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.model_type import ModelType
+from tommy.view.observer.observer import Observer
 
 
-class ModelParametersController:
+class ModelParametersController(Observer, Publisher):
     """
     Controls the access to and changes to the parameters to be used in topic
     modelling
@@ -20,6 +22,7 @@ class ModelParametersController:
         :param n_topics: the desired number of topics
         """
         self._parameters_model.n_topics = n_topics
+        self.notify()
 
     def get_model_n_topics(self) -> int:
         """Return the number of topics the topic modelling will find"""
@@ -31,6 +34,7 @@ class ModelParametersController:
         :param model_type: the algorithm type to be run
         """
         self._parameters_model.model_type = model_type
+        self.notify()
 
     def get_model_type(self) -> ModelType:
         """Return the type of topic modelling algorithm to be run"""

@@ -1,8 +1,9 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
-                               QWidget, QPushButton)
+                               QWidget, QPushButton, QSizePolicy)
 
+from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
@@ -10,6 +11,7 @@ from tommy.controller.publisher.publisher import Publisher
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
     pressed_seco_col_blue, prim_col_red, hover_prim_col_red)
+from tommy.view.config_view import ConfigView
 from tommy.view.observer.observer import Observer
 
 
@@ -17,14 +19,13 @@ class ModelParamsView(QScrollArea, Observer):
     """The ModelParamsDisplay that displays the model settings"""
 
     def __init__(self, model_parameters_controller: ModelParametersController,
-                 controller: Controller,
-                 ) -> None:
-        """The initialization ot the ModelParamDisplay."""
+                 controller: Controller, config_controller: ConfigController) -> None:
         super().__init__()
 
         # Set reference to the model parameters controller
         self._model_parameters_controller = model_parameters_controller
         self._controller = controller
+        self._config_controller = config_controller
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -48,6 +49,34 @@ class ModelParamsView(QScrollArea, Observer):
         self.title_label = None
         self.initialize_title_label()
 
+        # Initialize configuration management button
+        self.config_management_button = QPushButton("Beheer Configuraties")
+        self.config_management_button.setStyleSheet(
+            f"""
+                    QPushButton {{
+                        background-color: {seco_col_blue};
+                        color: white;
+                        border-radius: 5px;
+                        padding: 10px 20px;
+                        font-size: 14px;
+                        font-family: {text_font};
+                    }}
+
+                    QPushButton:hover {{
+                        background-color: {hover_seco_col_blue};
+                    }}
+
+                    QPushButton:pressed {{
+                        background-color: {pressed_seco_col_blue};
+                    }}
+                    """
+        )
+        self.config_management_button.setSizePolicy(
+            QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.config_management_button.clicked.connect(
+            self.open_config_management_widget)
+        self.container_layout.addWidget(self.config_management_button,
+                                        alignment=Qt.AlignTop)
         # Initialize topic widgets
         self.topic_input = None
         self.topic_input_layout_valid = None
@@ -72,6 +101,12 @@ class ModelParamsView(QScrollArea, Observer):
         :return: None
         """
         self.initialize_topic_amount_field()
+
+    def open_config_management_widget(self):
+        """Method to open the configuration management widget"""
+        config_management_widget = ConfigView(
+            self._config_controller, self._model_parameters_controller)
+        config_management_widget.exec()
 
     def initialize_topic_amount_field(self) -> None:
         """
@@ -226,9 +261,10 @@ class ModelParamsView(QScrollArea, Observer):
         :param publisher: The publisher that is being observed
         :return: None
         """
-        # todo: look into whether this should still be an
-        #   observer. We should probably observe changes to
-        #   model parameters here.
+        if isinstance(publisher, ModelParametersController):
+            # Update the view based on changes in the model parameters
+            num_topics = self._model_parameters_controller.get_model_n_topics()
+            self.topic_input.setText(str(num_topics))
 
 
 """

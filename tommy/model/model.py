@@ -1,3 +1,4 @@
+from tommy.model.config_model import ConfigModel
 from tommy.model.corpus_model import CorpusModel
 from tommy.model.project_settings_model import ProjectSettingsModel
 from tommy.model.stopwords_model import StopwordsModel
@@ -13,6 +14,7 @@ class Model:
     topic_model: TopicModel
 
     def __init__(self):
+        self.config_model = ConfigModel("temp")
         self.stopwords_model = StopwordsModel()
         self.model_parameters_model = ModelParametersModel()
         self.project_settings_model = ProjectSettingsModel()

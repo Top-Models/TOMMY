@@ -14,6 +14,7 @@ from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.controller.save_controller import SaveController
+from tommy.controller.config_controller import ConfigController
 
 
 class Controller:
@@ -54,6 +55,10 @@ class Controller:
     _project_settings_controller: ProjectSettingsController
     _save_controller: SaveController
 
+    @property
+    def config_controller(self) -> ConfigController:
+        return self._config_controller
+
     def __init__(self) -> None:
         """Initialize the main controller and its sub-controllers."""
         self._initialize_components()
@@ -71,6 +76,8 @@ class Controller:
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
         self._save_controller = SaveController()
+        self._config_controller = ConfigController(
+            self._project_settings_controller)
 
         self._corpus_controller.set_controller_refs(
             self._project_settings_controller)
@@ -106,6 +113,9 @@ class Controller:
 
         self._project_settings_controller.set_model_refs(
             self._models[model_index].project_settings_model)
+
+        self._config_controller.set_model_refs(
+            self._models[model_index].config_model)
 
     def on_run_topic_modelling(self) -> None:
         """

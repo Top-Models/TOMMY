@@ -1,4 +1,7 @@
+from typing import Dict
+
 from tommy.controller.publisher.publisher import Publisher
+from tommy.model.config_model import ConfigModel
 from tommy.model.project_settings_model import ProjectSettingsModel
 
 
@@ -25,6 +28,47 @@ class ProjectSettingsController(Publisher):
         :return: The path to the input folder
         """
         return self._project_settings_model.input_folder_path
+
+    def add_configuration(self, name: str, config: ConfigModel) -> None:
+        """
+        Add a new configuration to the project settings model.
+        :param name: Name of the configuration
+        :param config: Configuration settings
+        """
+        # Add the configuration to the project settings model
+        self._project_settings_model.configs.append(config)
+        # Notify observers of the change
+        self.notify()
+
+    def delete_configuration(self, name: str, config: ConfigModel) -> None:
+        """
+        delete a configuration to the project settings model.
+        :param name: Name of the configuration
+        :param config: Configuration settings
+        """
+        # Add the configuration to the project settings model
+        self._project_settings_model.configs.remove(config)
+        # Notify observers of the change
+        self.notify()
+
+    def get_configurations(self) -> Dict[str, ConfigModel]:
+        """
+        Get all configurations from the project settings model.
+        :return: A dictionary of configurations
+        """
+        return {config.name: config for config in
+                self._project_settings_model.configs}
+
+    def get_configuration(self, name: str) -> ConfigModel:
+        """
+        Get a configuration by name from the project settings model.
+        :param name: Name of the configuration to retrieve
+        :return: The configuration model
+        """
+        for config in self._project_settings_model.configs:
+            if config.name == name:
+                return config
+        return None
 
     def __init__(self) -> None:
         """
