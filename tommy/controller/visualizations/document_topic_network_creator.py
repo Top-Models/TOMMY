@@ -16,6 +16,7 @@ from tommy.controller.visualizations.visualization_input_datatypes import (
 from tommy.controller.visualizations.abstract_visualization_on_data import (
         AbstractVisualizationOnData)
 
+from tommy.support.constant_variables import plot_colors
 
 class DocumentTopicNetworkCreator(
         AbstractVisualizationOnData[ProcessedCorpus]):
@@ -89,15 +90,9 @@ class DocumentTopicNetworkCreator(
         """
         graph = nx.Graph()
 
-        # List of simple, distinct colors from
-        # https://sashamaps.net/docs/resources/20-colors/
-        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
-                  '#9a6324', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
-                  '#008080', '#e6beff', '#000075', '#fffac8', '#800000',
-                  '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
-
         for topic_id in range(topic_runner.get_n_topics()):
-            graph.add_node(topic_id, color=colors[topic_id % 20])
+            graph.add_node(topic_id,
+                           color=plot_colors[topic_id % len(plot_colors)])
 
         # Generate initial document topic network
         for document_id, document in enumerate(processed_files):
@@ -108,7 +103,7 @@ class DocumentTopicNetworkCreator(
             for (topic_id, topic_probability) in document_topic:
                 graph.add_edge(topic_id,
                                'document:' + str(document_id),
-                               color=colors[topic_id % 20],
+                               color=plot_colors[topic_id % len(plot_colors)],
                                weight=topic_probability)
         return graph
 
