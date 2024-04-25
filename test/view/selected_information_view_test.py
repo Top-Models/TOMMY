@@ -1,7 +1,6 @@
 from datetime import datetime
 
 import pytest
-from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.controller import Controller
@@ -96,7 +95,8 @@ def test_display_topic_info_topic_not_selected(
     """
     # Arrange
     topic_entity = TopicEntity("Test Topic",
-                               ["word1", "word2", "word3"])
+                               ["word1", "word2", "word3"],
+                               0)
     topic_entity.selected = False
 
     # Act
@@ -116,7 +116,8 @@ def test_display_topic_info_topic_selected(
     """
     # Arrange
     topic_entity = TopicEntity("Test Topic",
-                               ["word1", "word2", "word3"])
+                               ["word1", "word2", "word3"],
+                               0)
     topic_entity.selected = True
 
     # Act

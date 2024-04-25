@@ -22,7 +22,6 @@ def test_enter_event_selected(word_entity: WordEntity):
     assert word_entity.styleSheet() == f"font-family: {text_font}; " \
                                        f"font-size: 12px; " \
                                        f"background-color: white; " \
-                                       f"padding: 10px; " \
                                        f"color: black"
 
 
@@ -35,7 +34,6 @@ def test_enter_event_not_selected(word_entity: WordEntity):
     assert word_entity.styleSheet() == f"font-family: {text_font}; " \
                                        f"font-size: 12px; " \
                                        f"background-color: lightgray; " \
-                                       f"padding: 10px; " \
                                        f"color: black"
 
 
@@ -48,7 +46,6 @@ def test_leave_event_selected(word_entity: WordEntity):
     assert word_entity.styleSheet() == f"font-family: {text_font}; " \
                                        f"font-size: 12px; " \
                                        f"background-color: white; " \
-                                       f"padding: 10px; " \
                                        f"color: black"
 
 
@@ -61,7 +58,6 @@ def test_leave_event_not_selected(word_entity: WordEntity):
     assert word_entity.styleSheet() == f"font-family: {text_font}; " \
                                        f"font-size: 12px; " \
                                        f"background-color: white; " \
-                                       f"padding: 10px; " \
                                        f"color: black"
 
 
@@ -74,7 +70,6 @@ def test_mouse_press_event(word_entity: WordEntity, qtbot: QtBot):
             f"font-family: {text_font}; "
             f"font-size: 12px; "
             f"background-color: {pressed_medium_light_gray}; "
-            f"padding: 10px; "
             f"color: black")
 
 
@@ -86,7 +81,6 @@ def test_mouse_release_event(word_entity: WordEntity, qtbot: QtBot):
     assert word_entity.styleSheet() == f"font-family: {text_font}; " \
                                        f"font-size: 12px; " \
                                        f"background-color: white; " \
-                                       f"padding: 10px; " \
                                        f"color: black"
 
 

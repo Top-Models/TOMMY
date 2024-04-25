@@ -14,10 +14,8 @@ from tommy.view.imported_files_view.imported_files_view import (
 from tommy.view.menu_bar import MenuBar
 from tommy.view.model_params_view import (
     ModelParamsView)
-from tommy.view.model_selection_view import (
-    ModelSelectionView)
-from tommy.view.plot_navigation_view import (
-    PlotNavigationView)
+from tommy.view.plot_selection_view import (
+    PlotSelectionView)
 from tommy.view.selected_information_view import SelectedInformationView
 from tommy.view.stopwords_view import (
     StopwordsView)
@@ -75,7 +73,9 @@ class MainWindow(QMainWindow):
         # Create widgets
         self.stopwords_view = StopwordsView(
             self._controller.stopwords_controller)
-        self.model_selection_view = ModelSelectionView()
+        self.plot_selection_view = PlotSelectionView(
+            self._controller.graph_controller
+        )
         self.imported_files_view = ImportedFilesView(
             self._controller.corpus_controller,
             self._controller.project_settings_controller)
@@ -83,8 +83,6 @@ class MainWindow(QMainWindow):
             self._controller.model_parameters_controller,
             self._controller)
         self.graph_view = GraphView(self._controller.graph_controller)
-        self.plot_navigation_view = PlotNavigationView(
-            self._controller.graph_controller)
         self.fetched_topics_view = FetchedTopicsView(
             self._controller.graph_controller)
         self.selected_information_view = SelectedInformationView(
@@ -94,9 +92,8 @@ class MainWindow(QMainWindow):
         # Initialize widgets
         self.left_container.addWidget(self.model_params_view)
         self.left_container.addWidget(self.stopwords_view)
-        self.center_container.addWidget(self.model_selection_view)
+        self.center_container.addWidget(self.plot_selection_view)
         self.center_container.addWidget(self.graph_view)
-        self.center_container.addWidget(self.plot_navigation_view)
         self.center_container.addWidget(self.imported_files_view)
         self.right_container.addWidget(self.fetched_topics_view)
         self.right_container.addWidget(
@@ -107,7 +104,10 @@ class MainWindow(QMainWindow):
                                        QSizePolicy.Policy.Expanding))
 
         self.display_correct_initial_files()
-        self.initialize_event_handlers()
+
+        # Initialize event handlers
+        self.imported_files_view.fileClicked.connect(self.on_file_clicked)
+        self.fetched_topics_view.topicClicked.connect(self.on_topic_clicked)
 
     def initialize_widget(self, widget: QWidget,
                           x: int, y: int, w: int, h: int) -> None:
@@ -171,8 +171,10 @@ class MainWindow(QMainWindow):
         # Show info about run if no topic is selected
         if not topic_entity.selected:
             self.selected_information_view.display_run_info("lda_model")
+            self.plot_selection_view.toggle_topic_specific_tabs(False)
             return
 
+        self.plot_selection_view.toggle_topic_specific_tabs(True)
         self.selected_information_view.display_topic_info(topic_entity)
 
     def display_correct_initial_files(self) -> None:
@@ -194,32 +196,6 @@ class MainWindow(QMainWindow):
                 .get_input_folder_path())
         self._controller.project_settings_controller.set_input_folder_path(
             path)
-
-    # Some of the event handlers can be used to update observers
-    def initialize_event_handlers(self) -> None:
-        """
-        Initialize event handlers for the main window.
-
-        :return: None
-        """
-
-        # Connecting the tabBarClicked signal to a method in
-        # ImportedFilesDisplay
-        self.model_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.imported_files_view.display_files(
-                self.model_selection_view.tabText(tab_index))
-        )
-
-        # Connecting the tabBarClicked signal to a method in
-        # ImportedFilesDisplay
-        self.model_selection_view.tabBarClicked.connect(
-            lambda tab_index: self.selected_information_view.
-            display_no_component_selected()
-        )
-
-        # Initialize events for clickable information containers
-        self.imported_files_view.fileClicked.connect(self.on_file_clicked)
-        self.fetched_topics_view.topicClicked.connect(self.on_topic_clicked)
 
     @property
     def controller(self):
