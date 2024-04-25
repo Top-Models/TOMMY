@@ -22,8 +22,8 @@ class PlotSelectionView(QTabWidget, Observer):
                 }}
 
                 QTabBar::tab {{ 
-                    background-color: #FFFFFF; 
-                    color: gray;
+                    background-color: rgba(210, 210, 210, 1);
+                    color: rgba(120, 120, 120, 1);
                     font-size: 15px;
                     padding-left: 10px;
                     padding-right: 10px;
@@ -32,14 +32,18 @@ class PlotSelectionView(QTabWidget, Observer):
                     font-weight: bold;
                 }}
 
+                QTabBar::tab:disabled {{
+                    background-color: white;
+                    color: white;
+                }}
+
                 QTabBar::tab:selected {{
-                    border-bottom: 3px solid {hover_prim_col_red};
                     color: #000000;
-                    background-color: rgba(240, 240, 240, 1);
+                    background-color: rgba(230, 230, 230, 1);
                 }}
 
                 QTabBar::tab:hover {{
-                    color: #000000;
+                    background-color: rgba(230, 230, 230, 1);
                 }}
                 
                 QTabWidget::tab-bar {{
