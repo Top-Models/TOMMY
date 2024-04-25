@@ -1,22 +1,22 @@
-import os
 from PySide6.QtCore import Qt
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (QLabel, QVBoxLayout, QScrollArea, QWidget,
                                QSizePolicy, QPushButton, QGridLayout)
 
 from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
-
-from tommy.view.imported_files_view.file_label import FileLabel
-from tommy.view.imported_files_view.file_stats_view import FileStatsView
-from tommy.view.observer.observer import Observer
 from tommy.support.constant_variables import (
     heading_font, prim_col_red,
     hover_prim_col_red)
+from tommy.view.imported_files_view.file_label import FileLabel
+from tommy.view.observer.observer import Observer
 
 
 class ImportedFilesView(QWidget, Observer):
     """The ImportedFileDisplay class that shows the imported files."""
+
+    fileClicked = Signal(object)
 
     def __init__(self, corpus_controller: CorpusController,
                  project_settings_controller: ProjectSettingsController) -> \
@@ -59,9 +59,6 @@ class ImportedFilesView(QWidget, Observer):
         self.scroll_area.setVisible(True)
         self.setSizePolicy(QSizePolicy.Policy.Expanding,
                            QSizePolicy.Policy.Expanding)
-
-        # Initialize widgets
-        self.file_stats_view = FileStatsView()
 
         # { tab_name, files }
         self.file_container = {}
@@ -109,7 +106,7 @@ class ImportedFilesView(QWidget, Observer):
         self.title_widget.title_label.setContentsMargins(50, 0, 0, 0)
 
         # Create the title button
-        self.title_widget.title_button = QPushButton("🡻")
+        self.title_widget.title_button = QPushButton("▽")
         (self.title_widget.title_button.
          setStyleSheet(f"font-size: 13px;"
                        f"font-family: {heading_font};"
@@ -161,7 +158,16 @@ class ImportedFilesView(QWidget, Observer):
             file_label.clicked.connect(self.label_clicked)
             self.scroll_layout.addWidget(file_label)
 
-    def label_clicked(self, clicked_label) -> None:
+    def deselect_all_files(self) -> None:
+        """
+        Deselect all the files
+        :return: None
+        """
+        for i in range(self.scroll_layout.count()):
+            file_label = self.scroll_layout.itemAt(i).widget()
+            file_label.deselect()
+
+    def label_clicked(self, clicked_label: FileLabel) -> None:
         """
         Handle the click event on a file label
         :param clicked_label: The label that was clicked
@@ -169,18 +175,18 @@ class ImportedFilesView(QWidget, Observer):
         """
 
         # Deselect the previously selected label
-        if (self.selected_label is not None
-                and self.selected_label is not clicked_label):
-            self.selected_label.deselect()
+        self.deselect_all_files()
 
-        # Set the selected file
-        self.selected_file = clicked_label.file
-
-        # Set the selected label
-        self.selected_label = clicked_label
+        # Select the clicked label
+        if self.selected_label == clicked_label:
+            self.selected_label = None
+            clicked_label.enterEvent(None)
+        else:
+            self.selected_label = clicked_label
+            clicked_label.select()
 
         # Display the file stats
-        self.file_stats_view.display_file_info(clicked_label.file)
+        self.fileClicked.emit(clicked_label)
 
     def initialize_files_for_label(self, tab_name: str, files: list) -> None:
         """
@@ -202,11 +208,10 @@ class ImportedFilesView(QWidget, Observer):
         """
         Change the appearance of the toggle button.
         """
-
         if self.scroll_area.isVisible():
-            self.title_widget.title_button.setText("🡻")
+            self.title_widget.title_button.setText("▽")
         else:
-            self.title_widget.title_button.setText("🡹")
+            self.title_widget.title_button.setText("△")
 
     def collapse_component(self) -> None:
         """
@@ -241,8 +246,8 @@ class ImportedFilesView(QWidget, Observer):
         :param publisher: The publisher that is being observed
         :return: None
         """
-        # TODO: when the implementation of tabs is updated, it should no longer
-        #  hard-code the tab name
+        # TODO: when the implementation of tabs is updated, it
+        #  should no longer hard-code the tab name
         self.fetch_files("lda_model")
         self.display_files("lda_model")
 

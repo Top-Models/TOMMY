@@ -4,8 +4,7 @@ from PySide6.QtWidgets import (QScrollArea, QTabWidget,
 
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.support.constant_variables import (
-    text_font,
-    hover_prim_col_red)
+    text_font)
 
 
 class StopwordsView(QScrollArea):
