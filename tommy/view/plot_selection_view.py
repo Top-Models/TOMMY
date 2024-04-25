@@ -50,13 +50,23 @@ class PlotSelectionView(QTabWidget, Observer):
         # Set reference to the graph-controller
         self._graph_controller = graph_controller
 
-        # Add first tab
+        # Non-topic modelling tabs
+        self.addTab(QWidget(), "Woordaantal")
+        self.addTab(QWidget(), "     ")
+
+        # General tabs
         self.addTab(QWidget(), "Correlatie")
         self.addTab(QWidget(), "Topic Netwerk")
         self.addTab(QWidget(), "Doc. Netwerk")
-        self.addTab(QWidget(), "Woordaantal")
+        self.addTab(QWidget(), "     ")
+
+        # Topic specific tabs
         self.addTab(QWidget(), "Woordenwolk")
         self.addTab(QWidget(), "Woordgewichten")
+
+        # Disable the empty space tabs
+        self.setTabEnabled(1, False)
+        self.setTabEnabled(5, False)
 
         # Initially hide topic specific tabs
         self.toggle_topic_specific_tabs(False)
@@ -84,12 +94,12 @@ class PlotSelectionView(QTabWidget, Observer):
 
         :param visible: Whether to make the tabs visible
         """
-        if not visible and self.currentIndex() in [4, 5]:
+        if not visible and self.currentIndex() in [6, 7]:
             self.setCurrentIndex(0)
 
         # Hide or show the tabs
-        self.setTabVisible(4, visible)
-        self.setTabVisible(5, visible)
+        self.setTabVisible(6, visible)
+        self.setTabVisible(7, visible)
 
     def update_observer(self, publisher) -> None:
         """
@@ -99,7 +109,12 @@ class PlotSelectionView(QTabWidget, Observer):
         :return: None
         """
         tab_index = self.currentIndex()
-        self._graph_controller.set_tab_index(tab_index)
+        if tab_index in [2, 3, 4]:
+            self._graph_controller.set_tab_index(tab_index - 1)
+        elif tab_index in [6, 7]:
+            self._graph_controller.set_tab_index(tab_index - 2)
+        else:
+            self._graph_controller.set_tab_index(tab_index)
 
 
 """
