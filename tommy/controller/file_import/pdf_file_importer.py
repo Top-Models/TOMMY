@@ -41,8 +41,10 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         """
         with open(path, 'rb') as file:
             pdf = PdfReader(file)
-            for page in range(len(pdf.pages)):
-                yield self.generate_file(pdf.pages[page].extract_text(), path)
+            for page_number in range(len(pdf.pages)):
+                page = pdf.pages[page_number]
+                text = page.extract_text()
+                yield self.generate_file(text, path)
 
     def generate_file(self, file: str, path) -> RawFile:
         """

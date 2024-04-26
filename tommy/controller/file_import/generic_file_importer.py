@@ -18,8 +18,8 @@ class GenericFileImporter:
         """
         self.importers: (
             List)[file_importer_base.FileImporterBase] = [
-            
-            pdf_file_importer.PdfFileImporter()]
+            pdf_file_importer.PdfFileImporter(),
+            csv_file_importer.CsvFileImporter()]
 
     def import_file(self, path: str) -> Generator[RawFile, None, None]:
         """
