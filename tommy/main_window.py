@@ -83,7 +83,8 @@ class MainWindow(QMainWindow):
             self._controller)
         self.graph_view = GraphView(self._controller.graph_controller)
         self.fetched_topics_view = FetchedTopicsView(
-            self._controller.graph_controller)
+            self._controller.graph_controller,
+            self._controller.model_parameters_controller)
         self.selected_information_view = SelectedInformationView(
             self._controller.graph_controller,
             self._controller.model_parameters_controller)

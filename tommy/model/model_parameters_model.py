@@ -7,6 +7,10 @@ class ModelParametersModel:
     """A class representing the topic modelling parameters."""
     n_topics: int = 3
     model_type: ModelType = ModelType.LDA
+    word_amount: int = 10
+    alpha: float = 1.0
+    beta: float = 0.1
+    alpha_beta_custom_enabled: bool = False
 
 
 """

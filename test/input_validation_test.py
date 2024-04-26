@@ -21,7 +21,7 @@ def model_params_view(qtbot: QtBot):
                           ("1000", False)])
 def test_validate_input(model_params_view: ModelParamsView, test_input: str,
                         expected: bool):
-    model_params_view.topic_input.setText(test_input)
+    model_params_view.topic_amount.setText(test_input)
     assert model_params_view.validate_k_value_input() == expected
 
 
@@ -31,7 +31,7 @@ def test_validate_input(model_params_view: ModelParamsView, test_input: str,
                           ("1000", 0)])
 def test_fetch_topic_num(model_params_view: ModelParamsView, test_input: str,
                          expected: int):
-    model_params_view.topic_input.setText(test_input)
+    model_params_view.topic_amount.setText(test_input)
     assert model_params_view.fetch_topic_num() == expected
 
 
@@ -47,7 +47,7 @@ def test_editing_finished_validates_input(model_params_view: ModelParamsView,
                                           mocker: mock):
     # test if validate_input is called by topic_input_editing_finished_event
     method_spy = mocker.patch.object(model_params_view, "validate_input")
-    model_params_view.topic_input_editing_finished_event()
+    model_params_view.topic_k_input_editing_finished_event()
     method_spy.assert_called_once()
 
 

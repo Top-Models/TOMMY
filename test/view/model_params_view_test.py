@@ -29,7 +29,7 @@ def test_fetch_topic_num_changed(model_params_view: ModelParamsView,
 
     # Act
     new_value = 5
-    qtbot.keyClicks(model_params_view.topic_input, str(new_value))
+    qtbot.keyClicks(model_params_view.topic_amount, str(new_value))
 
     # Assert
     assert (model_params_view.fetch_topic_num() ==
@@ -43,8 +43,8 @@ def test_topic_input_return_pressed(model_params_view: ModelParamsView,
 
     # Act
     new_value = 5
-    qtbot.keyClicks(model_params_view.topic_input, str(new_value))
-    model_params_view.topic_input.returnPressed.emit()
+    qtbot.keyClicks(model_params_view.topic_amount, str(new_value))
+    model_params_view.topic_amount.returnPressed.emit()
 
     # Assert
     assert (model_params_view.fetch_topic_num() ==
@@ -59,7 +59,7 @@ def test_apply_button_clicked_changed_topic_num(
 
     # Act
     new_value = 5
-    qtbot.keyClicks(model_params_view.topic_input, str(new_value))
+    qtbot.keyClicks(model_params_view.topic_amount, str(new_value))
     model_params_view.apply_button.clicked.emit()
 
     # Assert

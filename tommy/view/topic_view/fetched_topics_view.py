@@ -2,6 +2,8 @@ from PySide6.QtCore import Qt, Signal, QEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
 from tommy.controller.graph_controller import GraphController
+from tommy.controller.model_parameters_controller import \
+    ModelParametersController
 from tommy.support.constant_variables import sec_col_orange
 from tommy.view.observer.observer import Observer
 from tommy.view.topic_view.topic_entity_component.topic_entity import (
@@ -13,7 +15,10 @@ class FetchedTopicsView(QScrollArea, Observer):
 
     topicClicked = Signal(object)
 
-    def __init__(self, graph_controller: GraphController) -> None:
+    def __init__(self,
+                 graph_controller: GraphController,
+                 model_parameters_controller: ModelParametersController) \
+            -> None:
         """Initialize the FetchedTopicDisplay widget."""
         super().__init__()
 
@@ -55,6 +60,9 @@ class FetchedTopicsView(QScrollArea, Observer):
         # and subscribe to its topic publisher
         self._graph_controller = graph_controller
         self._graph_controller.topics_changed_publisher.add(self)
+
+        # Set reference to the model parameters controller
+        self._model_parameters_controller = model_parameters_controller
 
     def _add_topic(self,
                    tab_name: str,
@@ -127,7 +135,8 @@ class FetchedTopicsView(QScrollArea, Observer):
 
         for i in range(self._graph_controller.get_number_of_topics()):
             topic_name = f"Topic {i + 1}"
-            topic = self._graph_controller.get_topic_with_scores(i, 10)
+            topic = self._graph_controller.get_topic_with_scores(
+                i, self._model_parameters_controller.get_model_word_amount())
             topic_words = topic.top_words
             self._add_topic(self._current_tab_name, topic_name, topic_words, i)
 

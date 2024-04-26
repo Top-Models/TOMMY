@@ -1,3 +1,5 @@
+from typing import Type
+
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
@@ -64,7 +66,8 @@ class ModelParamsView(QScrollArea, Observer):
         self.initialize_title_label()
 
         # Initialize topic widgets
-        self.topic_input = None
+        self.topic_amount = None
+        self.topic_words_amount_input = None
         self.topic_input_layout_valid = None
         self.topic_input_layout_invalid = None
         self.alpha_value_input = None
@@ -89,7 +92,13 @@ class ModelParamsView(QScrollArea, Observer):
         Initialize the parameter widgets.
         :return: None
         """
+        # TODO: Add headers to the different sections
+
+        # General settings
         self.initialize_topic_amount_field()
+        self.initialize_amount_of_topic_words_field()
+
+        # Hyperparameters LDA
         self.initialize_alpha_and_beta_fields()
 
     def initialize_topic_amount_field(self) -> None:
@@ -125,24 +134,58 @@ class ModelParamsView(QScrollArea, Observer):
                                            f"background-color: white;")
 
         # Add input field
-        self.topic_input = QLineEdit()
-        self.topic_input.setFixedWidth(125)
-        self.topic_input.setStyleSheet(self.topic_input_layout_valid)
+        self.topic_amount = QLineEdit()
+        self.topic_amount.setFixedWidth(100)
+        self.topic_amount.setStyleSheet(self.topic_input_layout_valid)
         # QIntValidator prevents user from typing
         # anything that isn't an integer
-        self.topic_input.setValidator(QIntValidator(1, 999))
-        self.topic_input.setPlaceholderText("Voer aantal topics in")
-        self.topic_input.setText(
+        self.topic_amount.setValidator(QIntValidator(1, 999))
+        self.topic_amount.setPlaceholderText("Voer aantal topics in")
+        self.topic_amount.setText(
             str(self._model_parameters_controller.get_model_n_topics()))
-        self.topic_input.setStyleSheet(self.topic_input_layout_valid)
-        self.topic_input.setAlignment(Qt.AlignLeft)
-        topic_amount_layout.addWidget(self.topic_input)
-        self.topic_input.editingFinished.connect(
-            self.topic_input_editing_finished_event)
+        self.topic_amount.setStyleSheet(self.topic_input_layout_valid)
+        self.topic_amount.setAlignment(Qt.AlignLeft)
+        topic_amount_layout.addWidget(self.topic_amount)
+        self.topic_amount.editingFinished.connect(
+            self.topic_k_input_editing_finished_event)
 
         # Add topic amount layout to container layout
         self.container_layout.addLayout(topic_amount_layout)
 
+    def initialize_amount_of_topic_words_field(self) -> None:
+        """
+        Initialize the amount of topic words field.
+        :return: None
+        """
+        topic_words_layout = QHBoxLayout()
+
+        # Add label
+        topic_words_label = QLabel("Aantal woorden:")
+        topic_words_label.setStyleSheet(f"font-size: 16px;"
+                                        f"color: black;"
+                                        f"font-family: {text_font};")
+        topic_words_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                       Qt.AlignmentFlag.AlignVCenter)
+        topic_words_layout.addWidget(topic_words_label)
+
+        # Add input field
+        self.topic_words_amount_input = QLineEdit()
+        self.topic_words_amount_input.setFixedWidth(100)
+        self.topic_words_amount_input.setPlaceholderText("Voer aantal "
+                                                         "woorden in")
+        self.topic_words_amount_input.setText("10")
+        self.topic_words_amount_input.setStyleSheet(
+            self.enabled_input_stylesheet)
+        self.topic_words_amount_input.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.topic_words_amount_input.setValidator(QIntValidator(1, 999))
+        self.topic_words_amount_input.editingFinished.connect(
+            self.topic_word_input_editing_finished_event)
+        topic_words_layout.addWidget(self.topic_words_amount_input)
+
+        # Add topic words layout to container layout
+        self.container_layout.addLayout(topic_words_layout)
+
+    # TODO: Apply input validation to alpha and beta fields
     def initialize_alpha_and_beta_fields(self) -> None:
         """
         Initialize the alpha and beta fields.
@@ -171,11 +214,13 @@ class ModelParamsView(QScrollArea, Observer):
         # Add alpha input field
         self.alpha_value_input = QLineEdit()
         self.alpha_value_input.setReadOnly(True)
-        self.alpha_value_input.setFixedWidth(125)
+        self.alpha_value_input.setFixedWidth(100)
         self.alpha_value_input.setPlaceholderText("Voer alpha in")
         self.alpha_value_input.setText("1.0")
         self.alpha_value_input.setStyleSheet(self.disabled_input_stylesheet)
         self.alpha_value_input.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.alpha_value_input.editingFinished.connect(
+            self.alpha_input_editing_finished_event)
         alpha_layout.addWidget(self.alpha_value_input)
 
         # Add alpha layout to container layout
@@ -200,11 +245,13 @@ class ModelParamsView(QScrollArea, Observer):
         # Add beta input field
         self.beta_value_input = QLineEdit()
         self.beta_value_input.setReadOnly(True)
-        self.beta_value_input.setFixedWidth(125)
+        self.beta_value_input.setFixedWidth(100)
         self.beta_value_input.setPlaceholderText("Voer beta in")
         self.beta_value_input.setText("0.01")
         self.beta_value_input.setStyleSheet(self.disabled_input_stylesheet)
         self.beta_value_input.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.beta_value_input.editingFinished.connect(
+            self.beta_input_editing_finished_event)
         beta_layout.addWidget(self.beta_value_input)
 
         # Add beta layout to container layout
@@ -270,13 +317,17 @@ class ModelParamsView(QScrollArea, Observer):
         Change the alpha and beta fields to be editable or not.
         :return: None
         """
-        if self.auto_calculate_checkbox.isChecked():
+        auto_calculate = self.auto_calculate_checkbox.isChecked()
+        if auto_calculate:
             self.alpha_value_input.setReadOnly(True)
             self.beta_value_input.setReadOnly(True)
         else:
             self.alpha_value_input.setReadOnly(False)
             self.beta_value_input.setReadOnly(False)
+
         self.change_style_of_alpha_beta_fields()
+        self._model_parameters_controller.set_model_alpha_beta_custom_enabled(
+            not auto_calculate)
 
     def change_style_of_alpha_beta_fields(self) -> None:
         """
@@ -350,7 +401,7 @@ class ModelParamsView(QScrollArea, Observer):
         :return: The number of topics from the input field, or 0 if the
         input is invalid
         """
-        text = self.topic_input.text()
+        text = self.topic_amount.text()
         input_valid = self.validate_k_value_input()
         if input_valid:
             return int(text)
@@ -363,7 +414,7 @@ class ModelParamsView(QScrollArea, Observer):
         event of the input field and when the apply button is pressed.
         :return: Whether the parameters are valid
         """
-        topic_input_text = self.topic_input.text()
+        topic_input_text = self.topic_amount.text()
         valid_input = True
         try:
             num_topics = int(topic_input_text)
@@ -373,16 +424,47 @@ class ModelParamsView(QScrollArea, Observer):
             valid_input = False
 
         if valid_input:
-            self.topic_input.setStyleSheet(self.topic_input_layout_valid)
-            self.topic_input.setPlaceholderText("")
+            self.topic_amount.setStyleSheet(self.topic_input_layout_valid)
+            self.topic_amount.setPlaceholderText("")
         else:
-            self.topic_input.setStyleSheet(self.topic_input_layout_invalid)
-            self.topic_input.setText("")
-            self.topic_input.setPlaceholderText(
+            self.topic_amount.setStyleSheet(self.topic_input_layout_invalid)
+            self.topic_amount.setText("")
+            self.topic_amount.setPlaceholderText(
                 "Moet tussen 1 en 999 liggen")
         return valid_input
 
-    def topic_input_editing_finished_event(self) -> None:
+    def validate_topic_words_input(self) -> bool:
+        """
+        Check whether the topic words input is a valid string and notify the
+        user if it isn't. It is called during an EditingFinished event of the
+        input field and when the apply button is pressed.
+        :return: Whether the parameters are valid
+        """
+        topic_words_input_text = self.topic_words_amount_input.text()
+        valid_input = True
+        try:
+            num_words = int(topic_words_input_text)
+            if num_words < 1 or num_words > 999:
+                valid_input = False
+        except ValueError:
+            valid_input = False
+
+        if valid_input:
+            self.topic_words_amount_input.setStyleSheet(
+                self.enabled_input_stylesheet)
+            self.topic_words_amount_input.setPlaceholderText("")
+        else:
+            self.topic_words_amount_input.setStyleSheet(
+                self.disabled_input_stylesheet)
+            self.topic_words_amount_input.setText("")
+            self.topic_words_amount_input.setPlaceholderText(
+                "Moet tussen 1 en 999 liggen")
+        return valid_input
+
+    def validate_alpha_beta_input(self) -> Type[NotImplementedError]:
+        return NotImplementedError
+
+    def topic_k_input_editing_finished_event(self) -> None:
         """
         The event when the topic input field is pressed. Updates topic
         amount in model_parameters_controller
@@ -391,12 +473,40 @@ class ModelParamsView(QScrollArea, Observer):
         self._model_parameters_controller.set_model_n_topics(
             self.fetch_topic_num())
 
+    def topic_word_input_editing_finished_event(self) -> None:
+        """
+        The event when the topic word input field is pressed. Updates topic
+        word amount in model_parameters_controller
+        :return: None
+        """
+        self._model_parameters_controller.set_model_word_amount(
+            int(self.topic_words_amount_input.text()))
+
+    def alpha_input_editing_finished_event(self) -> None:
+        """
+        The event when the alpha input field is pressed. Updates alpha
+        value in model_parameters_controller
+        :return: None
+        """
+        self._model_parameters_controller.set_model_alpha(
+            float(self.alpha_value_input.text()))
+
+    def beta_input_editing_finished_event(self) -> None:
+        """
+        The event when the beta input field is pressed. Updates beta
+        value in model_parameters_controller
+        :return: None
+        """
+        self._model_parameters_controller.set_model_beta(
+            float(self.beta_value_input.text()))
+
     def apply_button_clicked_event(self) -> None:
         """
         The event when the apply button is clicked.
         :return: None
         """
-        if self.validate_k_value_input():
+        if self.validate_k_value_input() and \
+           self.validate_topic_words_input():
             self._controller.on_run_topic_modelling()
 
     def update_observer(self, publisher: Publisher) -> None:
