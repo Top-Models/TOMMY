@@ -30,7 +30,7 @@ class WordTopicNetworkCreator(AbstractVisualization):
         """
         # Construct a plot and graph
         fig = plt.figure()
-        graph = self._construct_word_topic_network(topic_runner)
+        graph = self.construct_word_topic_network(topic_runner)
 
         # Get the scale factor used for the displayed edge weight (width)
         edge_scale_factor = self._get_edge_scale_factor(topic_runner)
@@ -60,7 +60,7 @@ class WordTopicNetworkCreator(AbstractVisualization):
         return fig
 
     @staticmethod
-    def _construct_word_topic_network(topic_runner: TopicRunner) -> nx.Graph:
+    def construct_word_topic_network(topic_runner: TopicRunner) -> nx.Graph:
         """
         Construct a word-topic network which is used to plot the relations
         between topics and probable words

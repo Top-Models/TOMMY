@@ -61,8 +61,7 @@ class GraphController(Observer):
         TopWordsBarPlotCreator()
     ]
     NX_EXPORTS: list[NxExporterOnData] = [
-        DocumentTopicNxExporter()
-    ]
+        DocumentTopicNxExporter()]
     _possible_global_visualizations: list[int] = None
     _possible_topic_visualizations: list[int] = None
     _possible_nx_exports: list[int] = None
@@ -225,6 +224,7 @@ class GraphController(Observer):
                              'in _get_visualization')
 
         # checks if the index of the visualization corresponds to a global vis.
+        print(vis_index, " < ", len(self._possible_nx_exports))
         if vis_index < len(self._possible_global_visualizations):
             return self._get_global_visualization(vis_index)
 

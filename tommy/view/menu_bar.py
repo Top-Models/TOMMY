@@ -8,7 +8,6 @@ from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.support.constant_variables import (
     prim_col_red, dark_prim_col_red, extra_light_gray, text_font)
-from tommy.controller import export_controller
 
 
 class MenuBar(QMenuBar):
@@ -29,21 +28,19 @@ class MenuBar(QMenuBar):
 
         # Create actions
         import_input_folder_action = QAction("Selecteer input folder", self)
-        export_action = QAction("Exporteren", self)
-
-        # Create submenu for export
-        export_to_gexf = QMenu(self)
-        export_to_gexf.addAction("Graph Exchange XML Format (.gexf)")
-        export_action.setMenu(export_to_gexf)
+        export_to_gexf_action = QAction("Exporteer naar Graph Exchange XML Format (.gexf)", self)
+        export_to_png_action = QAction("Exporteer grafieken (.png)", self)
 
         # Connect actions to event handlers
         import_input_folder_action.triggered.connect(self.import_input_folder)
-        export_to_gexf.triggered.connect(self.export_to_gexf)
+        export_to_gexf_action.triggered.connect(self.export_to_gexf)
+        export_to_png_action.triggered.connect(self.export_to_png)
 
         # Create menu bar
         file_menu = self.addMenu("Bestand")
         file_menu.addAction(import_input_folder_action)
-        file_menu.addAction(export_action)
+        file_menu.addAction(export_to_gexf_action)
+        file_menu.addAction(export_to_png_action)
 
         # Set style
         self.setStyleSheet(f"""
@@ -89,7 +86,7 @@ class MenuBar(QMenuBar):
 
     def export_to_gexf(self) -> None:
         """
-        Export the current graph to a GEXF file.
+        Export the networks to GEXF files.
         :return: None
         """
         dialog = QFileDialog.getExistingDirectory(self,
@@ -97,6 +94,17 @@ class MenuBar(QMenuBar):
 
         if dialog:
             self._export_controller.export_networks(dialog)
+
+    def export_to_png(self) -> None:
+        """
+        Export the plots to PNG files.
+        :return: None
+        """
+        dialog = QFileDialog.getExistingDirectory(self,
+                                                  "Selecteer export folder")
+
+        if dialog:
+            self._export_controller.export_graphs(dialog)
 
 
 

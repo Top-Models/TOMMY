@@ -17,14 +17,10 @@ class ExportController:
         for i in range(len(nx_exports)):
             new_path = os.path.join(path, f"{i}.gexf")
             nx.write_gexf(nx_exports[i], new_path)
-        # TODO maak een pad met OS
-        # path_file = os.sep.join([path_dir, filename])
-        # os.path.join
-# FileNotFoundError: [Errno 2] No such file or directory: 'C:/dev/interactive-topic-modeling/tommy/jfsdk\\0.gexf'
 
-    def export_graphs(self):
-        pass
+    def export_graphs(self, path: str) -> None:
+        graph_exports = self._graph_controller.get_all_visualizations()
 
-    # def set_controller_refs(self, graph_controller: GraphController) -> None:
-    #     print("help me")
-    #     self._graph_controller = graph_controller
+        for i in range(len(graph_exports)):
+            new_path = os.path.join(path, f"{i}.png")
+            graph_exports[i].savefig(new_path)
