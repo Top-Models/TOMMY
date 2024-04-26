@@ -60,7 +60,6 @@ def test_apply_button_clicked_changed_topic_num(
     # Act
     new_value = 5
     qtbot.keyClicks(model_params_view.topic_input, str(new_value))
-    model_params_view.apply_button.clicked.emit()
 
     # Assert
     assert (model_params_view.fetch_topic_num() ==

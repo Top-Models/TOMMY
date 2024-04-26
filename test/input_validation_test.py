@@ -10,8 +10,10 @@ from tommy.view.model_params_view import ModelParamsView
 @pytest.fixture
 def model_params_view(qtbot: QtBot):
     controller = Controller()
+
     mpv = ModelParamsView(controller.model_parameters_controller, controller)
-    # qtbot.addWidget(mpv)
+
+    qtbot.addWidget(mpv)
     return mpv
 
 
@@ -38,8 +40,11 @@ def test_fetch_topic_num(model_params_view: ModelParamsView, test_input: str,
 def test_apply_validates_input(model_params_view: ModelParamsView,
                                mocker: mock):
     # test if validate_input is called by apply_button_clicked_event
+    mocker.patch.object(model_params_view._controller,
+                        "on_run_topic_modelling")
     method_spy = mocker.spy(model_params_view, "validate_input")
-    model_params_view.apply_button_clicked_event()
+
+    model_params_view.apply_button.clicked.emit()
     method_spy.assert_called_once()
 
 
