@@ -22,7 +22,7 @@ def model_params_view(qtbot: QtBot):
 def test_validate_input(model_params_view: ModelParamsView, test_input: str,
                         expected: bool):
     model_params_view.topic_input.setText(test_input)
-    assert model_params_view.validate_input() == expected
+    assert model_params_view.validate_k_value_input() == expected
 
 
 @pytest.mark.parametrize("test_input,expected",

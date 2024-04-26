@@ -1,7 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
-                               QWidget, QPushButton)
+                               QWidget, QPushButton, QHBoxLayout, QCheckBox)
 
 from tommy.controller.controller import Controller
 from tommy.controller.model_parameters_controller import (
@@ -9,7 +9,7 @@ from tommy.controller.model_parameters_controller import (
 from tommy.controller.publisher.publisher import Publisher
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
-    pressed_seco_col_blue, prim_col_red, hover_prim_col_red)
+    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray)
 from tommy.view.observer.observer import Observer
 
 
@@ -33,6 +33,21 @@ class ModelParamsView(QScrollArea, Observer):
                            "padding: 0px;"
                            "border-bottom: 3px solid lightgrey;")
 
+        self.enabled_input_stylesheet = (f"background-color: white;"
+                                         f"border-radius: 5px;"
+                                         f"font-size: 14px;"
+                                         f"font-family: {text_font};"
+                                         f"color: black;"
+                                         f"border: 2px solid {seco_col_blue};"
+                                         f"padding: 5px;")
+        self.disabled_input_stylesheet = (f"background-color: {disabled_gray};"
+                                          f"border-radius: 5px;"
+                                          f"font-size: 14px;"
+                                          f"font-family: {text_font};"
+                                          f"color: black;"
+                                          f"border: 2px solid {seco_col_blue};"
+                                          f"padding: 5px;")
+
         # Initialize layout
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
@@ -52,6 +67,9 @@ class ModelParamsView(QScrollArea, Observer):
         self.topic_input = None
         self.topic_input_layout_valid = None
         self.topic_input_layout_invalid = None
+        self.alpha_value_input = None
+        self.beta_value_input = None
+        self.auto_calculate_checkbox = None
         self.initialize_parameter_widgets()
 
         # Initialize button layout
@@ -72,19 +90,23 @@ class ModelParamsView(QScrollArea, Observer):
         :return: None
         """
         self.initialize_topic_amount_field()
+        self.initialize_alpha_and_beta_fields()
 
     def initialize_topic_amount_field(self) -> None:
         """
         Initialize the topic amount field.
         :return: None
         """
+        topic_amount_layout = QHBoxLayout()
+
         # Add label
         topic_label = QLabel("Aantal topics:")
         topic_label.setStyleSheet(f"font-size: 16px;"
                                   f"color: black;"
-                                  f"font-family: {text_font}")
-        topic_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        self.container_layout.addWidget(topic_label)
+                                  f"font-family: {text_font};")
+        topic_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                 Qt.AlignmentFlag.AlignVCenter)
+        topic_amount_layout.addWidget(topic_label)
 
         # Define layout for whether topic input is valid or invalid
         self.topic_input_layout_valid = (f"border-radius: 5px;"
@@ -104,6 +126,8 @@ class ModelParamsView(QScrollArea, Observer):
 
         # Add input field
         self.topic_input = QLineEdit()
+        self.topic_input.setFixedWidth(125)
+        self.topic_input.setStyleSheet(self.topic_input_layout_valid)
         # QIntValidator prevents user from typing
         # anything that isn't an integer
         self.topic_input.setValidator(QIntValidator(1, 999))
@@ -112,9 +136,165 @@ class ModelParamsView(QScrollArea, Observer):
             str(self._model_parameters_controller.get_model_n_topics()))
         self.topic_input.setStyleSheet(self.topic_input_layout_valid)
         self.topic_input.setAlignment(Qt.AlignLeft)
-        self.container_layout.addWidget(self.topic_input)
+        topic_amount_layout.addWidget(self.topic_input)
         self.topic_input.editingFinished.connect(
             self.topic_input_editing_finished_event)
+
+        # Add topic amount layout to container layout
+        self.container_layout.addLayout(topic_amount_layout)
+
+    def initialize_alpha_and_beta_fields(self) -> None:
+        """
+        Initialize the alpha and beta fields.
+        :return: None
+        """
+        self.initialize_alpha_field()
+        self.initialize_beta_field()
+        self.initialize_auto_calculate_alpha_beta_checkbox()
+
+    def initialize_alpha_field(self) -> None:
+        """
+        Initialize the alpha field.
+        :return: None
+        """
+        alpha_layout = QHBoxLayout()
+
+        # Add alpha label
+        alpha_label = QLabel("Alpha:")
+        alpha_label.setStyleSheet(f"font-size: 16px;"
+                                  f"color: black;"
+                                  f"font-family: {text_font};")
+        alpha_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                 Qt.AlignmentFlag.AlignVCenter)
+        alpha_layout.addWidget(alpha_label)
+
+        # Add alpha input field
+        self.alpha_value_input = QLineEdit()
+        self.alpha_value_input.setReadOnly(True)
+        self.alpha_value_input.setFixedWidth(125)
+        self.alpha_value_input.setPlaceholderText("Voer alpha in")
+        self.alpha_value_input.setText("1.0")
+        self.alpha_value_input.setStyleSheet(self.disabled_input_stylesheet)
+        self.alpha_value_input.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        alpha_layout.addWidget(self.alpha_value_input)
+
+        # Add alpha layout to container layout
+        self.container_layout.addLayout(alpha_layout)
+
+    def initialize_beta_field(self) -> None:
+        """
+        Initialize the beta field.
+        :return: None
+        """
+        beta_layout = QHBoxLayout()
+
+        # Add beta label
+        beta_label = QLabel("Beta:")
+        beta_label.setStyleSheet(f"font-size: 16px;"
+                                 f"color: black;"
+                                 f"font-family: {text_font};")
+        beta_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                Qt.AlignmentFlag.AlignVCenter)
+        beta_layout.addWidget(beta_label)
+
+        # Add beta input field
+        self.beta_value_input = QLineEdit()
+        self.beta_value_input.setReadOnly(True)
+        self.beta_value_input.setFixedWidth(125)
+        self.beta_value_input.setPlaceholderText("Voer beta in")
+        self.beta_value_input.setText("0.01")
+        self.beta_value_input.setStyleSheet(self.disabled_input_stylesheet)
+        self.beta_value_input.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        beta_layout.addWidget(self.beta_value_input)
+
+        # Add beta layout to container layout
+        self.container_layout.addLayout(beta_layout)
+
+    def initialize_auto_calculate_alpha_beta_checkbox(self) -> None:
+        """
+        Initialize the auto calculate alpha beta checkbox.
+        :return: None
+        """
+        # Add auto calculate widgets
+        auto_calculate_layout = QHBoxLayout()
+
+        # Add auto calculate label
+        auto_calculate_label = QLabel("Automatisch (aanbevolen):")
+        auto_calculate_label.setStyleSheet(f"font-size: 16px;"
+                                           f"color: black;"
+                                           f"font-family: {text_font};")
+        auto_calculate_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                          Qt.AlignmentFlag.AlignVCenter)
+        auto_calculate_layout.addWidget(auto_calculate_label)
+
+        # Add auto calculate checkbox
+        self.auto_calculate_checkbox = QCheckBox()
+        self.auto_calculate_checkbox.setFixedWidth(20)
+        self.auto_calculate_checkbox.setFixedHeight(20)
+        self.auto_calculate_checkbox.setStyleSheet(f"""
+                    QCheckBox {{
+                        font-family: {text_font};
+                        color: black;
+                        border: 2px solid {seco_col_blue};
+                        padding: 5px;
+                        background-color: white;
+                        border-radius: 5px;
+                        position: relative; 
+                    }}
+
+                    QCheckBox::indicator {{
+                        /* Hide checkbox */
+                        text-align: left;
+                        width: 20;
+                        height: 20;
+                        border: none;
+                        position: absolute;
+                        left: -5px;
+                    }}
+
+                    QCheckBox::checked {{
+                        background-color: {seco_col_blue};
+                    }}
+                """)
+        self.auto_calculate_checkbox.setChecked(True)
+        self.auto_calculate_checkbox.stateChanged.connect(
+            self.toggle_auto_calculate_alpha_beta
+        )
+        auto_calculate_layout.addWidget(self.auto_calculate_checkbox)
+
+        # Add auto calculate layout to container layout
+        self.container_layout.addLayout(auto_calculate_layout)
+
+    def toggle_auto_calculate_alpha_beta(self) -> None:
+        """
+        Change the alpha and beta fields to be editable or not.
+        :return: None
+        """
+        if self.auto_calculate_checkbox.isChecked():
+            self.alpha_value_input.setReadOnly(True)
+            self.beta_value_input.setReadOnly(True)
+        else:
+            self.alpha_value_input.setReadOnly(False)
+            self.beta_value_input.setReadOnly(False)
+        self.change_style_of_alpha_beta_fields()
+
+    def change_style_of_alpha_beta_fields(self) -> None:
+        """
+        Change the style of the alpha and beta fields based on whether they
+        are auto calculated or not.
+        :return: None
+        """
+        auto_calculate = self.auto_calculate_checkbox.isChecked()
+        if auto_calculate:
+            self.alpha_value_input.setStyleSheet(
+                self.disabled_input_stylesheet)
+            self.beta_value_input.setStyleSheet(
+                self.disabled_input_stylesheet)
+        else:
+            self.alpha_value_input.setStyleSheet(
+                self.enabled_input_stylesheet)
+            self.beta_value_input.setStyleSheet(
+                self.enabled_input_stylesheet)
 
     def initialize_title_label(self) -> None:
         """
@@ -171,12 +351,12 @@ class ModelParamsView(QScrollArea, Observer):
         input is invalid
         """
         text = self.topic_input.text()
-        input_valid = self.validate_input()
+        input_valid = self.validate_k_value_input()
         if input_valid:
             return int(text)
         return 0
 
-    def validate_input(self) -> bool:
+    def validate_k_value_input(self) -> bool:
         """
         Check whether each topic modelling parameter is a valid string and
         notify the user if it isn't. It is called during an EditingFinished
@@ -216,7 +396,7 @@ class ModelParamsView(QScrollArea, Observer):
         The event when the apply button is clicked.
         :return: None
         """
-        if self.validate_input():
+        if self.validate_k_value_input():
             self._controller.on_run_topic_modelling()
 
     def update_observer(self, publisher: Publisher) -> None:
