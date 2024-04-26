@@ -1,40 +1,34 @@
 from itertools import product
-from collections.abc import Iterable, Callable
 
 import matplotlib.figure
 
 from tommy.controller.corpus_controller import CorpusController
-from tommy.view.observer.observer import Observer
-from tommy.datatypes.topics import TopicWithScores
 from tommy.controller.publisher.publisher import Publisher
-from tommy.controller.file_import.processed_file import ProcessedFile
-from tommy.controller.file_import.metadata import Metadata
-
-from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
-    TopicRunner)
 from tommy.controller.topic_modelling_controller import (
     TopicModellingController)
+from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
+    TopicRunner)
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
-from tommy.controller.visualizations.abstract_visualizations_per_topic import (
-    AbstractVisualizationPerTopic)
 from tommy.controller.visualizations.abstract_visualization_on_data import (
     AbstractVisualizationOnData)
+from tommy.controller.visualizations.abstract_visualizations_per_topic import (
+    AbstractVisualizationPerTopic)
 from tommy.controller.visualizations.correlation_matrix_creator import (
     CorrelationMatrixCreator)
+from tommy.controller.visualizations.document_topic_network_summary_creator \
+    import DocumentTopicNetworkSummaryCreator
+from tommy.controller.visualizations.document_word_count_creator import (
+    DocumentWordCountCreator)
 from tommy.controller.visualizations.top_words_bar_plot_creator import (
     TopWordsBarPlotCreator)
+from tommy.controller.visualizations.visualization_input_datatypes import (
+    ProcessedCorpus, MetadataCorpus)
 from tommy.controller.visualizations.word_cloud_creator import WordCloudCreator
 from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
-from tommy.controller.visualizations.document_topic_network_summary_creator \
-    import DocumentTopicNetworkSummaryCreator
-from tommy.controller.visualizations.document_topic_network_creator import (
-    DocumentTopicNetworkCreator)
-from tommy.controller.visualizations.document_word_count_creator import (
-    DocumentWordCountCreator)
-from tommy.controller.visualizations.visualization_input_datatypes import (
-    ProcessedCorpus, MetadataCorpus)
+from tommy.datatypes.topics import TopicWithScores
+from tommy.view.observer.observer import Observer
 
 
 class GraphController(Observer):
@@ -49,10 +43,10 @@ class GraphController(Observer):
 
     GLOBAL_VISUALIZATIONS: list[AbstractVisualization
                                 | AbstractVisualizationOnData] = [
+        DocumentWordCountCreator(),
         CorrelationMatrixCreator(),
         WordTopicNetworkCreator(),
-        DocumentTopicNetworkSummaryCreator(),
-        DocumentWordCountCreator()
+        DocumentTopicNetworkSummaryCreator()
     ]
     TOPIC_VISUALIZATIONS: list[AbstractVisualizationPerTopic] = [
         WordCloudCreator(),
@@ -62,6 +56,8 @@ class GraphController(Observer):
     _possible_topic_visualizations: list[int] = None
 
     _current_visualization_index: int = None
+    _current_tab_index: int = 0
+    _current_topic_selected_index: int = None
 
     _current_topic_runner: TopicRunner = None
 
@@ -95,6 +91,37 @@ class GraphController(Observer):
                             corpus_controller: CorpusController):
         self._corpus_controller = corpus_controller
 
+    def set_selected_topic(self, topic_index: int) -> None:
+        """
+        Set the currently selected topic to the given index
+
+        :param topic_index: the index of the topic to select
+        :return: None
+        """
+        self._current_topic_selected_index = topic_index
+
+        if topic_index is None:
+            return
+
+        self.update_current_visualization(self._current_tab_index)
+
+    def set_tab_index(self, tab_index: int) -> None:
+        """
+        Set the currently selected tab to the given index
+
+        :param tab_index: the index of the tab to select
+        :return: None
+        """
+        self._current_tab_index = tab_index
+        self.update_current_visualization(self._current_tab_index)
+
+    def get_selected_topic(self) -> int:
+        """
+        Get the currently selected topic index
+        :return: the index of the currently selected topic
+        """
+        return self._current_topic_selected_index
+
     def get_number_of_topics(self) -> int:
         """
         Get the number of topics in the topic modelling results
@@ -117,8 +144,8 @@ class GraphController(Observer):
             scores
         """
         return self._current_topic_runner.get_topic_with_scores(
-                    topic_id=topic_id,
-                    n_words=n_words)
+            topic_id=topic_id,
+            n_words=n_words)
 
     def _calculate_possible_visualizations(self) -> None:
         """(re-)calculates and saves the list of possible visualizations"""
@@ -209,7 +236,8 @@ class GraphController(Observer):
         # otherwise run the visualization without additional data
         return vis_creator.get_figure(self._current_topic_runner)
 
-    def _run_global_visualization_on_data(self,
+    def _run_global_visualization_on_data(
+            self,
             vis_creator: AbstractVisualizationOnData):
         """
         Runs the global visualization on the additional data that it needs
@@ -270,6 +298,29 @@ class GraphController(Observer):
         self._current_visualization_index = (
                 (self._current_visualization_index - 1)
                 % self.get_visualization_count())
+        self._plots_changed_publisher.notify()
+
+    def update_current_visualization(self, plot_type_index: int) -> None:
+        """
+        Update the current visualization to the given plot type
+
+        :param plot_type_index: the index of the plot type to update to
+        :return: None
+        """
+        num_global_visualizations = len(self.GLOBAL_VISUALIZATIONS)
+
+        if plot_type_index < num_global_visualizations:
+            self._current_visualization_index = plot_type_index
+        else:
+            plot_type_past_global = (
+                    plot_type_index - num_global_visualizations)
+            selected_topic = self._current_topic_selected_index
+            self._current_visualization_index = (
+                    num_global_visualizations
+                    + (plot_type_past_global
+                       * self.get_number_of_topics()
+                       + selected_topic))
+
         self._plots_changed_publisher.notify()
 
     def update_observer(self, publisher: Publisher) -> None:
