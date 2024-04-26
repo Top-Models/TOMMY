@@ -2,6 +2,7 @@ from typing import List, Generator
 
 from tommy.controller.file_import import file_importer_base
 from tommy.controller.file_import import csv_file_importer
+from tommy.controller.file_import import pdf_file_importer
 from tommy.controller.file_import.raw_file import RawFile
 
 
@@ -17,7 +18,8 @@ class GenericFileImporter:
         """
         self.importers: (
             List)[file_importer_base.FileImporterBase] = [
-            csv_file_importer.CsvFileImporter()]
+            
+            pdf_file_importer.PdfFileImporter()]
 
     def import_file(self, path: str) -> Generator[RawFile, None, None]:
         """

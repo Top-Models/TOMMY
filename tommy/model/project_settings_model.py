@@ -4,7 +4,7 @@ import os
 class ProjectSettingsModel:
     # temporarily set input_folder_path to "data" by default
     input_folder_path: str = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "data/csv_files")
+        os.path.dirname(os.path.dirname(__file__)), "data/pdf_files")
 
     def __init__(self) -> None:
         pass
