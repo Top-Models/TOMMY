@@ -8,8 +8,11 @@ from tommy.datatypes.topics import Topic, TopicWithScores
 
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
+from tommy.controller.visualizations.word_topic_nx_exporter import (
+    WordTopicNxExporter)
 
 from tommy.support.constant_variables import plot_colors
+
 
 class WordTopicNetworkCreator(AbstractVisualization):
     """
@@ -67,27 +70,8 @@ class WordTopicNetworkCreator(AbstractVisualization):
         :param topic_runner: The topic runner to extract topic data from
         :return: matplotlib figure showing a word-topic network plot
         """
-        graph = nx.Graph()
-
-        # Amount of words displayed for each topic
-        node_amount = 15
-
-        for topic in topic_runner.get_topics_with_scores(
-                n_words=node_amount):
-            # Add topic node to graph
-            graph.add_node(topic.topic_id + 1,
-                           color=plot_colors[topic.topic_id
-                                             % len(plot_colors)])
-
-            # Add edge from topic node to its words
-            for word, score in topic.top_words_with_scores:
-                graph.add_edge(
-                    topic.topic_id + 1,
-                    word,
-                    color=plot_colors[topic.topic_id % len(plot_colors)],
-                    weight=score)
-
-        return graph
+        return WordTopicNxExporter.construct_word_topic_network(topic_runner,
+                                                                15)
 
     @staticmethod
     def _get_edge_scale_factor(topic_runner: TopicRunner) -> float:

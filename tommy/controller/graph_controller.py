@@ -23,6 +23,8 @@ from tommy.controller.visualizations.document_topic_network_summary_creator \
     import DocumentTopicNetworkSummaryCreator
 from tommy.controller.visualizations.document_topic_nx_exporter import (
     DocumentTopicNxExporter)
+from tommy.controller.visualizations.word_topic_nx_exporter import (
+    WordTopicNxExporter)
 from tommy.controller.visualizations.document_word_count_creator import (
     DocumentWordCountCreator)
 from tommy.controller.visualizations.top_words_bar_plot_creator import (
@@ -31,6 +33,7 @@ from tommy.controller.visualizations.visualization_input_datatypes import (
     ProcessedCorpus, MetadataCorpus)
 from tommy.controller.visualizations.nx_exporter_on_data import (
     NxExporterOnData)
+from tommy.controller.visualizations.nx_exporter import NxExporter
 from tommy.controller.visualizations.word_cloud_creator import WordCloudCreator
 from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
@@ -60,8 +63,9 @@ class GraphController(Observer):
         WordCloudCreator(),
         TopWordsBarPlotCreator()
     ]
-    NX_EXPORTS: list[NxExporterOnData] = [
-        DocumentTopicNxExporter()]
+    NX_EXPORTS: list[NxExporterOnData | NxExporter] = [
+        DocumentTopicNxExporter(),
+        WordTopicNxExporter()]
     _possible_global_visualizations: list[int] = None
     _possible_topic_visualizations: list[int] = None
     _possible_nx_exports: list[int] = None
@@ -305,12 +309,16 @@ class GraphController(Observer):
 
         # checks if the index of the export is within bounds.
         if vis_index < len(self._possible_nx_exports):
-            return self._get_nx_export_on_data(self.NX_EXPORTS[vis_index])
+            if isinstance(self.NX_EXPORTS[vis_index], NxExporterOnData):
+                return self._get_nx_export_on_data(self.NX_EXPORTS[vis_index])
+            if isinstance(self.NX_EXPORTS[vis_index], NxExporter):
+                return self._get_nx_export_no_data(self.NX_EXPORTS[vis_index])
 
         # if not, the index is out of range
         raise IndexError(f'No exports with index {vis_index} available')
 
-    def _get_nx_export_on_data(self, nx_exporter_on_data: NxExporterOnData):
+    def _get_nx_export_on_data(self, nx_exporter_on_data: NxExporterOnData)\
+            -> nx.Graph:
         """
         Runs the networkx exporter on the additional data that it needs
         :param nx_exporter_on_data: Index of the visualization to be requested
@@ -329,6 +337,14 @@ class GraphController(Observer):
         raise Exception("The graph-controller is asked to supply data of type"
                         f" {nx_exporter_on_data.input_data_type}, which is not"
                         " supported")
+
+    def _get_nx_export_no_data(self, nx_exporter: NxExporter) -> nx.Graph:
+        """
+        Runs the networkx exporter
+        :param nx_exporter: Index of the visualization to be requested
+        :return: nx.graph of the exporter
+        """
+        return nx_exporter.get_nx_graph(self._current_topic_runner)
 
     def on_next_plot(self) -> None:
         """
