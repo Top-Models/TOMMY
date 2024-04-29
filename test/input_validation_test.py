@@ -37,6 +37,12 @@ def test_fetch_topic_num(model_params_view: ModelParamsView, test_input: str,
 
 def test_apply_validates_input(model_params_view: ModelParamsView,
                                mocker: mock):
+
+    # mock topic modelling to curb execution time
+    mock_on_run_topic_modelling = mocker.Mock()
+    model_params_view._controller.on_run_topic_modelling = (
+        mock_on_run_topic_modelling)
+
     # test if validate_input is called by apply_button_clicked_event
     method_spy = mocker.spy(model_params_view, "validate_input")
     model_params_view.apply_button_clicked_event()
