@@ -16,7 +16,7 @@ class ProjectSettingsModel:
 
     def _create_default_config(self) -> ConfigModel:
         """Create a default configuration."""
-        default_config = ConfigModel("Testconfig")
+        default_config = ConfigModel("Default Config")
         default_config.model_parameters = ModelParametersModel()
         return default_config
 

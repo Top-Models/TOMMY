@@ -36,8 +36,6 @@ class ConfigController(Publisher):
             self._project_settings_controller.delete_configuration(name)
             self.notify()
 
-
-
     def get_configuration(self, name: str) -> Optional[ConfigModel]:
         """
         Get the configuration settings by name.

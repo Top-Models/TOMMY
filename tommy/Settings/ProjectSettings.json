@@ -2,16 +2,16 @@
     "input_folder_path": "..\\data\\csv_files",
     "configs": [
         {
-            "name": "Testconfig",
+            "name": "Default Config",
             "model_parameters": {
                 "n_topics": 3,
                 "model_type": 1
             }
         },
         {
-            "name": "2",
+            "name": "3",
             "model_parameters": {
-                "n_topics": 2,
+                "n_topics": 3,
                 "model_type": 1
             }
         }

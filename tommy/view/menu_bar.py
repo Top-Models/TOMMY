@@ -101,22 +101,14 @@ class MenuBar(QMenuBar):
         Save project settings to a file.
         :return: None
         """
-        file_path, _ = QFileDialog.getSaveFileName(self,
-                                                   "Instellingen opslaan", "",
-                                                   "JSON Files (*.json)")
-        if file_path:
-            self._project_settings_controller.save_settings_to_file(file_path)
+        self._project_settings_controller.save_settings_to_file()
 
     def load_settings_from_file(self) -> None:
         """
         Load project settings from a file.
         :return: None
         """
-        file_path, _ = QFileDialog.getOpenFileName(self, "Instellingen laden",
-                                                   "", "JSON Files (*.json)")
-        if file_path:
-            self._project_settings_controller.load_settings_from_file(
-                file_path)
+        self._project_settings_controller.load_settings_from_file()
 
 """
 This program has been developed by students from the bachelor Computer Science

@@ -9,21 +9,7 @@
             }
         },
         {
-            "name": "3testest",
-            "model_parameters": {
-                "n_topics": 3,
-                "model_type": 1
-            }
-        },
-        {
-            "name": "2test",
-            "model_parameters": {
-                "n_topics": 3,
-                "model_type": 1
-            }
-        },
-        {
-            "name": "1",
+            "name": "3test",
             "model_parameters": {
                 "n_topics": 3,
                 "model_type": 1
