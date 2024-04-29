@@ -117,6 +117,11 @@ class ConfigView(QDialog):
             if config:
                 # Update the model parameters view with the loaded configuration
                 self.load_model_parameters(config)
+                QMessageBox.information(self, "Configuratie Geladen",
+                                        f"Configuratie '{config_name}' is succesvol geladen.")
+            else:
+                QMessageBox.warning(self, "Fout bij Laden",
+                                    "Er is een fout opgetreden bij het laden van de configuratie.")
 
     def load_model_parameters(self, config: ConfigModel):
         """Method to load model parameters from a configuration"""
