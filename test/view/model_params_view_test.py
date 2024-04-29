@@ -53,9 +53,15 @@ def test_topic_input_return_pressed(model_params_view: ModelParamsView,
 
 def test_apply_button_clicked_changed_topic_num(
         model_params_view: ModelParamsView,
-        qtbot: QtBot):
+        qtbot: QtBot,
+        mocker: mocker):
     # Arrange
     initial_value = model_params_view.fetch_topic_num()
+
+    # mock topic modelling to curb execution time
+    mock_on_run_topic_modelling = mocker.Mock()
+    model_params_view._controller.on_run_topic_modelling = (
+        mock_on_run_topic_modelling)
 
     # Act
     new_value = 5

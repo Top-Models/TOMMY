@@ -3,10 +3,9 @@ from PySide6.QtWidgets import QWidget, QTabWidget
 from tommy.controller.graph_controller import GraphController
 from tommy.support.constant_variables import (
     hover_prim_col_red)
-from tommy.view.observer.observer import Observer
 
 
-class PlotSelectionView(QTabWidget, Observer):
+class PlotSelectionView(QTabWidget):
     """A class to display options for selecting a plot."""
 
     def __init__(self, graph_controller: GraphController) -> None:
@@ -90,7 +89,7 @@ class PlotSelectionView(QTabWidget, Observer):
         """
         Handle a tab clicked event.
         """
-        self.update_observer(None)
+        self._tab_clicked_event()
 
     def toggle_topic_specific_tabs(self, visible: bool) -> None:
         """
@@ -105,13 +104,8 @@ class PlotSelectionView(QTabWidget, Observer):
         self.setTabVisible(6, visible)
         self.setTabVisible(7, visible)
 
-    def update_observer(self, publisher) -> None:
-        """
-        Update the observer.
-
-        :param publisher: The publisher that is being observed
-        :return: None
-        """
+    def _tab_clicked_event(self) -> None:
+        """Update the currently selected tab"""
         tab_index = self.currentIndex()
         if tab_index in [2, 3, 4]:
             self._graph_controller.set_tab_index(tab_index - 1)
