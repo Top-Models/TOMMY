@@ -56,6 +56,8 @@ class GraphController:
     _possible_topic_visualizations: list[int] = None
 
     _current_visualization_index: int = None
+    _current_tab_index: int = 0
+    _current_topic_selected_index: int = None
 
     _current_topic_runner: TopicRunner = None
 
@@ -89,6 +91,41 @@ class GraphController:
     def set_controller_refs(self,
                             corpus_controller: CorpusController):
         self._corpus_controller = corpus_controller
+
+    def set_selected_topic(self, topic_index: int) -> None:
+        """
+        Set the currently selected topic to the given index
+
+        :param topic_index: the index of the topic to select
+        :return: None
+        """
+        self._current_topic_selected_index = topic_index
+
+        if topic_index is None:
+            return
+        if self._current_topic_runner is None:
+            return
+
+        self.update_current_visualization(self._current_tab_index)
+
+    def set_tab_index(self, tab_index: int) -> None:
+        """
+        Set the currently selected tab to the given index
+
+        :param tab_index: the index of the tab to select
+        :return: None
+        """
+        self._current_tab_index = tab_index
+        if self._current_topic_runner is None:
+            return
+        self.update_current_visualization(self._current_tab_index)
+
+    def get_selected_topic(self) -> int:
+        """
+        Get the currently selected topic index
+        :return: the index of the currently selected topic
+        """
+        return self._current_topic_selected_index
 
     def get_number_of_topics(self) -> int:
         """
@@ -204,7 +241,8 @@ class GraphController:
         # otherwise run the visualization without additional data
         return vis_creator.get_figure(self._current_topic_runner)
 
-    def _run_global_visualization_on_data(self,
+    def _run_global_visualization_on_data(
+            self,
             vis_creator: AbstractVisualizationOnData):
         """
         Runs the global visualization on the additional data that it needs
@@ -265,6 +303,29 @@ class GraphController:
         self._current_visualization_index = (
                 (self._current_visualization_index - 1)
                 % self.get_visualization_count())
+        self._plots_changed_event.publish(self.get_current_visualization())
+
+    def update_current_visualization(self, plot_type_index: int) -> None:
+        """
+        Update the current visualization to the given plot type
+
+        :param plot_type_index: the index of the plot type to update to
+        :return: None
+        """
+        num_global_visualizations = len(self.GLOBAL_VISUALIZATIONS)
+
+        if plot_type_index < num_global_visualizations:
+            self._current_visualization_index = plot_type_index
+        else:
+            plot_type_past_global = (
+                    plot_type_index - num_global_visualizations)
+            selected_topic = self._current_topic_selected_index
+            self._current_visualization_index = (
+                    num_global_visualizations
+                    + (plot_type_past_global
+                       * self.get_number_of_topics()
+                       + selected_topic))
+
         self._plots_changed_event.publish(self.get_current_visualization())
 
     def on_topic_runner_complete(self, topic_runner: TopicRunner) -> None:

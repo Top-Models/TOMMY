@@ -67,6 +67,9 @@ class CorpusController:
         """
         for root, dirs, files in os.walk(path):
             for file in files:
+                if file.startswith('.'):
+                    continue
+
                 yield from self.fileParsers.import_file(
                     os.path.join(root,
                                  file))

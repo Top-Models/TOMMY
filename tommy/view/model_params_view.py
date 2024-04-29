@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIntValidator, QValidator
+from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
                                QWidget, QPushButton)
 
@@ -119,7 +119,7 @@ class ModelParamsView(QScrollArea):
         Initialize the title label.
         :return: None
         """
-        self.title_label = QLabel("Model parameters")
+        self.title_label = QLabel("Instellingen")
         self.title_label.setStyleSheet(f"font-size: 13px;"
                                        f"font-family: {heading_font};"
                                        f"font-weight: bold;"

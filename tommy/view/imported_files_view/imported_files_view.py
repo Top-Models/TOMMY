@@ -208,7 +208,6 @@ class ImportedFilesView(QWidget):
         """
         Change the appearance of the toggle button.
         """
-
         if self.scroll_area.isVisible():
             self.title_widget.title_button.setText("▽")
         else:

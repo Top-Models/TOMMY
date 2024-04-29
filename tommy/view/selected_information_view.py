@@ -26,6 +26,7 @@ class SelectedInformationView(QScrollArea):
         self.setStyleSheet(f"background-color: white;"
                            f"color: black;")
         self.setMinimumHeight(200)
+        self.setMaximumHeight(300)
 
         # Initialize layout
         self.layout = QVBoxLayout()
@@ -73,7 +74,6 @@ class SelectedInformationView(QScrollArea):
                                   f"3px solid {hover_prim_col_red};"
                                   f"border-left: 2px solid "
                                   f"{hover_prim_col_red};")
-
         title_label.setContentsMargins(0, 0, 0, 0)
         title_label.setFixedHeight(50)
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
