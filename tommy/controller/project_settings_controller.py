@@ -1,3 +1,5 @@
+import json
+import os
 from typing import Dict
 
 from tommy.controller.publisher.publisher import Publisher
@@ -69,6 +71,45 @@ class ProjectSettingsController(Publisher):
             if config.name == name:
                 return config
         return None
+
+    def save_settings_to_file(self, file_name: str) -> None:
+        """
+        Save the project settings to a new file in the data folder.
+        :param file_name: Name of the file to save the settings
+        :return: None
+        """
+        settings_data = {
+            "input_folder_path": self._project_settings_model.input_folder_path,
+            "configs": [config.to_dict() for config in
+                        self._project_settings_model.configs]
+        }
+        file_path = os.path.join(os.path.dirname(__file__), "..", "data",
+                                 file_name)
+        with open(file_path, "w") as file:
+            json.dump(settings_data, file, indent=4)
+
+    def load_settings_from_file(self, file_name: str) -> None:
+        """
+        Load the project settings from a file.
+        :param file_name: Name of the file containing the settings
+        :return: None
+        """
+        file_path = os.path.join(os.path.dirname(__file__), "..", "data",
+                                 file_name)
+        if os.path.exists(file_path):
+            with open(file_path, "r") as file:
+                settings_data = json.load(file)
+                input_folder_path = settings_data.get("input_folder_path")
+                if input_folder_path:
+                    self._project_settings_model.input_folder_path = input_folder_path
+                configs_data = settings_data.get("configs")
+                if configs_data:
+                    self._project_settings_model.configs.clear()
+                    for config_dict in configs_data:
+                        config = ConfigModel(config_dict["name"])
+                        config = ConfigModel.from_dict(config_dict)
+                        self._project_settings_model.configs.append(config)
+            self.notify()
 
     def __init__(self) -> None:
         """

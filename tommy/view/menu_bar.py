@@ -25,6 +25,8 @@ class MenuBar(QMenuBar):
         # Create actions
         import_input_folder_action = QAction("Selecteer input folder", self)
         export_action = QAction("Exporteren", self)
+        save_settings_action = QAction("Instellingen opslaan", self)
+        load_settings_action = QAction("Instellingen laden", self)  # New action for loading settings
 
         # Create submenu for export
         export_to_gexf = QMenu(self)
@@ -34,11 +36,15 @@ class MenuBar(QMenuBar):
         # Connect actions to event handlers
         import_input_folder_action.triggered.connect(self.import_input_folder)
         export_to_gexf.triggered.connect(self.export_to_gexf)
+        save_settings_action.triggered.connect(self.save_settings_to_file)
+        load_settings_action.triggered.connect(self.load_settings_from_file)  # Connect to new method
 
         # Create menu bar
         file_menu = self.addMenu("Bestand")
         file_menu.addAction(import_input_folder_action)
         file_menu.addAction(export_action)
+        file_menu.addAction(save_settings_action)
+        file_menu.addAction(load_settings_action)  # Add the new action to the menu
 
         # Set style
         self.setStyleSheet(f"""
@@ -90,6 +96,27 @@ class MenuBar(QMenuBar):
         """
         pass
 
+    def save_settings_to_file(self) -> None:
+        """
+        Save project settings to a file.
+        :return: None
+        """
+        file_path, _ = QFileDialog.getSaveFileName(self,
+                                                   "Instellingen opslaan", "",
+                                                   "JSON Files (*.json)")
+        if file_path:
+            self._project_settings_controller.save_settings_to_file(file_path)
+
+    def load_settings_from_file(self) -> None:
+        """
+        Load project settings from a file.
+        :return: None
+        """
+        file_path, _ = QFileDialog.getOpenFileName(self, "Instellingen laden",
+                                                   "", "JSON Files (*.json)")
+        if file_path:
+            self._project_settings_controller.load_settings_from_file(
+                file_path)
 
 """
 This program has been developed by students from the bachelor Computer Science
