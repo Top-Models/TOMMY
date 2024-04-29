@@ -43,10 +43,10 @@ class GraphController:
 
     GLOBAL_VISUALIZATIONS: list[AbstractVisualization
                                 | AbstractVisualizationOnData] = [
+        DocumentWordCountCreator(),
         CorrelationMatrixCreator(),
         WordTopicNetworkCreator(),
-        DocumentTopicNetworkSummaryCreator(),
-        DocumentWordCountCreator()
+        DocumentTopicNetworkSummaryCreator()
     ]
     TOPIC_VISUALIZATIONS: list[AbstractVisualizationPerTopic] = [
         WordCloudCreator(),
