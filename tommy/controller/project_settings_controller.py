@@ -79,7 +79,9 @@ class ProjectSettingsController(Publisher):
         :return: None
         """
         settings_data = {
-            "input_folder_path": self._project_settings_model.input_folder_path,
+            "input_folder_path": os.path.relpath(
+                self._project_settings_model.input_folder_path,
+                os.path.dirname(__file__)),
             "configs": [config.to_dict() for config in
                         self._project_settings_model.configs]
         }
@@ -101,7 +103,9 @@ class ProjectSettingsController(Publisher):
                 settings_data = json.load(file)
                 input_folder_path = settings_data.get("input_folder_path")
                 if input_folder_path:
-                    self._project_settings_model.input_folder_path = input_folder_path
+                    self._project_settings_model.input_folder_path = os.path.join(
+                        os.path.dirname(__file__), "..", "data",
+                        input_folder_path)
                 configs_data = settings_data.get("configs")
                 if configs_data:
                     self._project_settings_model.configs.clear()
