@@ -409,8 +409,8 @@ class GraphController(Observer):
                                  "has not been run.")
 
         return [self._get_visualization(vis) for vis
-                in self._possible_global_visualizations
-                + self._possible_topic_visualizations]
+                in range(len(self._possible_global_visualizations)
+                + len(self._possible_topic_visualizations))]
 
     def get_all_nx_exports(self) -> list[nx.graph]:
         """
@@ -423,7 +423,7 @@ class GraphController(Observer):
                                  "has not been run.")
 
         return [self._get_nx_export(vis) for vis
-                in self._possible_nx_exports]
+                in range(len(self._possible_nx_exports))]
 
     def update_observer(self, publisher: Publisher) -> None:
         """
