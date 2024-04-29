@@ -81,7 +81,14 @@ class ConfigView(QDialog):
         name, ok = QInputDialog.getText(self, "Voer Configuratie Naam In",
                                         "Naam:")
         if ok:
-            config = ConfigModel(name)  # Create a new ConfigModel instance
+            # Create a new ConfigModel instance
+            config = ConfigModel(name)
+            # Set the parameters from the ModelParametersController
+            config.model_parameters.n_topics = (
+                self.model_parameters_controller.get_model_n_topics())
+            config.model_parameters.model_type = (
+                self.model_parameters_controller.get_model_type())
+            # Add the configuration
             self.config_controller.add_configuration(name, config)
             self.update_config_list()
 
