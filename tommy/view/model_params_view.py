@@ -24,16 +24,28 @@ class ModelParamsView(QScrollArea, Observer):
         """The initialization ot the ModelParamDisplay."""
         super().__init__()
 
+        self.setObjectName("model_params_display")
+        self.setContentsMargins(0, 0, 0, 0)
+
         # Set reference to the model parameters controller
         self._model_parameters_controller = model_parameters_controller
         self._controller = controller
 
         # Initialize widget properties
         self.setFixedWidth(250)
-        self.setStyleSheet("background-color: rgba(230, 230, 230, 230);"
-                           "margin: 0px;"
-                           "padding: 0px;"
-                           "border-bottom: 3px solid lightgrey;")
+
+        # Apply stylesheet to model_params_display object
+        self.setStyleSheet(
+            """
+            QWidget#model_params_display {
+                border-bottom: 3px solid lightgrey;
+            }
+            
+            QWidget#model_params_display QWidget {
+                background-color: rgba(230, 230, 230, 230);
+            }
+            """
+        )
 
         self.enabled_input_stylesheet = (f"background-color: white;"
                                          f"border-radius: 5px;"
@@ -51,19 +63,27 @@ class ModelParamsView(QScrollArea, Observer):
                                           f"padding: 5px;")
 
         # Initialize layout
-        self.layout = QVBoxLayout()
+        self.layout = QVBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(self.layout)
-
-        # Initialize container that will hold settings
-        self.container = QWidget()
-        self.container.setStyleSheet("border: none;")
-        self.container_layout = QVBoxLayout(self.container)
-        self.container_layout.setAlignment(Qt.AlignTop)
+        self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.layout.setSpacing(0)
 
         # Initialize title label
         self.title_label = None
         self.initialize_title_label()
+
+        # Initialize scroll area and its layout
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_widget = QWidget()
+        self.scroll_layout = QVBoxLayout(self.scroll_widget)
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.scroll_area.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scroll_area.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroll_area.setWidget(self.scroll_widget)
+        self.layout.addWidget(self.scroll_area)
 
         # Initialize topic widgets
         self.topic_amount = None
@@ -78,14 +98,11 @@ class ModelParamsView(QScrollArea, Observer):
         # Initialize button layout
         self.button_layout = QVBoxLayout()
         self.button_layout.setAlignment(Qt.AlignRight)
-        self.container_layout.addLayout(self.button_layout, stretch=1)
+        self.scroll_layout.addLayout(self.button_layout, stretch=1)
 
         # Initialize apply button
         self.apply_button = None
         self.initialize_apply_button()
-
-        # Add container to layout
-        self.layout.addWidget(self.container)
 
     def initialize_parameter_widgets(self) -> None:
         """
@@ -150,7 +167,7 @@ class ModelParamsView(QScrollArea, Observer):
             self.topic_k_input_editing_finished_event)
 
         # Add topic amount layout to container layout
-        self.container_layout.addLayout(topic_amount_layout)
+        self.scroll_layout.addLayout(topic_amount_layout)
 
     def initialize_amount_of_topic_words_field(self) -> None:
         """
@@ -183,7 +200,7 @@ class ModelParamsView(QScrollArea, Observer):
         topic_words_layout.addWidget(self.topic_words_amount_input)
 
         # Add topic words layout to container layout
-        self.container_layout.addLayout(topic_words_layout)
+        self.scroll_layout.addLayout(topic_words_layout)
 
     # TODO: Apply input validation to alpha and beta fields
     def initialize_alpha_and_beta_fields(self) -> None:
@@ -224,7 +241,7 @@ class ModelParamsView(QScrollArea, Observer):
         alpha_layout.addWidget(self.alpha_value_input)
 
         # Add alpha layout to container layout
-        self.container_layout.addLayout(alpha_layout)
+        self.scroll_layout.addLayout(alpha_layout)
 
     def initialize_beta_field(self) -> None:
         """
@@ -255,7 +272,7 @@ class ModelParamsView(QScrollArea, Observer):
         beta_layout.addWidget(self.beta_value_input)
 
         # Add beta layout to container layout
-        self.container_layout.addLayout(beta_layout)
+        self.scroll_layout.addLayout(beta_layout)
 
     def initialize_auto_calculate_alpha_beta_checkbox(self) -> None:
         """
@@ -310,7 +327,7 @@ class ModelParamsView(QScrollArea, Observer):
         auto_calculate_layout.addWidget(self.auto_calculate_checkbox)
 
         # Add auto calculate layout to container layout
-        self.container_layout.addLayout(auto_calculate_layout)
+        self.scroll_layout.addLayout(auto_calculate_layout)
 
     def toggle_auto_calculate_alpha_beta(self) -> None:
         """
