@@ -8,7 +8,6 @@ class ModelParametersController:
     modelling
     """
     _parameters_model: ModelParametersModel = None
-    _SETTINGS_VIEWS = {}
 
     def set_model_refs(self,
                        parameters_model: ModelParametersModel) -> None:
@@ -74,22 +73,6 @@ class ModelParametersController:
     def get_model_type(self) -> ModelType:
         """Return the type of topic modelling algorithm to be run"""
         return self._parameters_model.model_type
-
-    def add_settings_view(self, model_type: ModelType,
-                          settings_view) -> None:
-        """
-        Add a settings view to the controller
-        :param model_type: the model type to be added
-        :param settings_view: the settings view to be added
-        """
-        self._SETTINGS_VIEWS[model_type.name] = settings_view
-
-    def get_current_settings_view(self):
-        """Return the current settings view"""
-        if self.get_model_type().name not in self._SETTINGS_VIEWS:
-            return Exception("No settings view found for model type")
-
-        return self._SETTINGS_VIEWS[self.get_model_type().name]
 
 
 """

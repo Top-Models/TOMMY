@@ -6,6 +6,8 @@ from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, \
 
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
+from tommy.controller.topic_modelling_controller import \
+    TopicModellingController
 from tommy.support.constant_variables import text_font, seco_col_blue, \
     disabled_gray, heading_font
 
@@ -15,12 +17,14 @@ class AbstractSettings(ABC):
     Abstract class for settings view
     """
     _model_parameters_controller: ModelParametersController
+    _topic_modelling_controller: TopicModellingController
     _scroll_layout: QVBoxLayout
     _topic_amount_field: QLineEdit
     _amount_of_words_field: QLineEdit
 
     def __init__(self,
-                 model_parameters_controller: ModelParametersController):
+                 model_parameters_controller: ModelParametersController,
+                 topic_modelling_controller: TopicModellingController):
         """
         Constructor for abstract settings
 
@@ -28,6 +32,7 @@ class AbstractSettings(ABC):
         """
         # Initialize controllers
         self._model_parameters_controller = model_parameters_controller
+        self._topic_modelling_controller = topic_modelling_controller
 
         # Initialize stylesheet
         self.enabled_input_stylesheet = (f"background-color: white;"

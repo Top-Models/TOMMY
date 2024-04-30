@@ -11,6 +11,8 @@ from tommy.support.constant_variables import (
     pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray)
 from tommy.support.model_type import ModelType
 from tommy.view.observer.observer import Observer
+from tommy.view.settings_view.abstract_settings.abstract_settings import \
+    AbstractSettings
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 
 
@@ -29,6 +31,11 @@ class ModelParamsView(QScrollArea, Observer):
         # Set reference to the model parameters controller
         self._model_parameters_controller = model_parameters_controller
         self._controller = controller
+
+        # Initialize model settings
+        self.SETTINGS_VIEWS = {
+            ModelType.LDA: LdaSettings(self._model_parameters_controller)
+        }
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -91,17 +98,13 @@ class ModelParamsView(QScrollArea, Observer):
         self.button_layout.setAlignment(Qt.AlignRight)
         self.layout.addWidget(self.scroll_area)
 
-        # Initialize settings views
-        self._model_parameters_controller.add_settings_view(
-            ModelType.LDA, LdaSettings(self._model_parameters_controller)
-        )
-
         # Initialize parameter widgets
         self.initialize_parameter_widgets()
 
     def initialize_title_label(self) -> None:
         """
         Initialize the title label.
+
         :return: None
         """
         self.title_label = QLabel("Instellingen")
@@ -119,20 +122,18 @@ class ModelParamsView(QScrollArea, Observer):
         self.title_label.setFixedHeight(50)
         self.layout.addWidget(self.title_label)
 
-    # TODO: Make this method more dynamic
     def initialize_parameter_widgets(self) -> None:
         """
         Initialize the parameter widgets.
         """
-        # TODO: Add headers to the different sections
-        current_view = (self._model_parameters_controller.
-                        get_current_settings_view())
+        current_view = self.get_current_settings_view()
         current_view.initialize_parameter_widgets(self.scroll_layout)
         self.initialize_apply_button()
 
     def clear_layouts_from_scroll_layout(self) -> None:
         """
         Clear the layouts from the scroll layout.
+
         :return: None
         """
         for i in reversed(range(self.scroll_layout.count())):
@@ -152,6 +153,7 @@ class ModelParamsView(QScrollArea, Observer):
     def initialize_apply_button(self) -> None:
         """
         Initialize the apply button.
+
         :return: None
         """
         self.apply_button = QPushButton("Toepassen")
@@ -177,15 +179,34 @@ class ModelParamsView(QScrollArea, Observer):
         self.apply_button.clicked.connect(self.apply_button_clicked_event)
         self.scroll_layout.addLayout(self.button_layout, stretch=1)
 
+    def get_current_settings_view(self) -> AbstractSettings:
+        """
+        Get the current settings view.
+
+        :return: AbstractSettings
+        """
+        current_model_type = self._model_parameters_controller.get_model_type()
+        return self.SETTINGS_VIEWS[current_model_type]
+
     def apply_button_clicked_event(self) -> None:
         """
         The event when the apply button is clicked.
+
         :return: None
         """
-        current_view = (self._model_parameters_controller.
-                        get_current_settings_view())
+        current_model_type = self._model_parameters_controller.get_model_type()
+        current_view = self.SETTINGS_VIEWS[current_model_type]
         if current_view.all_fields_valid():
             self._controller.on_run_topic_modelling()
+
+    def model_type_changed_event(self) -> None:
+        """
+        The event when the model type is changed.
+
+        :return: None
+        """
+        self.clear_layouts_from_scroll_layout()
+        self.initialize_parameter_widgets()
 
     def update_observer(self, publisher: Publisher) -> None:
         """
