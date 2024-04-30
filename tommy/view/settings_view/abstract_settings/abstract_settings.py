@@ -17,14 +17,12 @@ class AbstractSettings(ABC):
     Abstract class for settings view
     """
     _model_parameters_controller: ModelParametersController
-    _topic_modelling_controller: TopicModellingController
     _scroll_layout: QVBoxLayout
     _topic_amount_field: QLineEdit
     _amount_of_words_field: QLineEdit
 
     def __init__(self,
-                 model_parameters_controller: ModelParametersController,
-                 topic_modelling_controller: TopicModellingController):
+                 model_parameters_controller: ModelParametersController):
         """
         Constructor for abstract settings
 
@@ -32,7 +30,6 @@ class AbstractSettings(ABC):
         """
         # Initialize controllers
         self._model_parameters_controller = model_parameters_controller
-        self._topic_modelling_controller = topic_modelling_controller
 
         # Initialize stylesheet
         self.enabled_input_stylesheet = (f"background-color: white;"
