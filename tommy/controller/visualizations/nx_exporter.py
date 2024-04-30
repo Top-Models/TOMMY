@@ -1,18 +1,15 @@
-from abc import ABC, abstractmethod
-from collections.abc import Iterable
+from abc import abstractmethod
 
 import networkx as nx
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.controller.file_import.processed_file import ProcessedFile, Metadata
 
 
 class NxExporter:
     """
     Abstract class that defines the interface to create an nx graph of a
-    visualization about a given topic runner object using additional data
-    of a generic type supplied by the graph-controller.
+    visualization about a given topic runner object.
     """
     _required_interfaces: []
     name: str

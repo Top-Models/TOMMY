@@ -1,14 +1,10 @@
-from collections.abc import Iterable
 from typing import TypeAliasType
 
-import matplotlib.figure
 import networkx as nx
-from matplotlib import pyplot as plt
 
 from tommy.support.constant_variables import plot_colors
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.datatypes.topics import Topic, TopicWithScores
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
 

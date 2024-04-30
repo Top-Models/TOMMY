@@ -1,5 +1,4 @@
 import math
-from collections.abc import Iterable
 from typing import TypeAliasType
 
 import matplotlib.figure
@@ -8,7 +7,6 @@ from matplotlib import pyplot as plt
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.datatypes.topics import Topic, TopicWithScores
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
 from tommy.controller.visualizations.visualization_input_datatypes import (

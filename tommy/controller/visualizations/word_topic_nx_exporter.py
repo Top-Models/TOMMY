@@ -1,30 +1,19 @@
-from abc import ABC
-from collections.abc import Iterable
-from typing import TypeAliasType
-
-import matplotlib.figure
 import networkx as nx
-from matplotlib import pyplot as plt
 
 from tommy.support.constant_variables import plot_colors
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.datatypes.topics import Topic, TopicWithScores
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
 
-from tommy.controller.visualizations.visualization_input_datatypes import (
-    ProcessedCorpus)
 from tommy.controller.visualizations.nx_exporter import (NxExporter)
 
 
 class WordTopicNxExporter(
         NxExporter):
     """
-    A class for constructing a network showing the topics and the
-    number of documents that contain that topic for the topics in the given
-    topic runner and the given preprocessed documents; and returning it as an
-    nx.Graph.
+    A class for constructing a network showing the words and its relation to
+    the topics for the given topic runner, returning it as an nx.Graph.
     Note: this visualization is only to be used for exporting purposes
     """
     _required_interfaces = []
@@ -34,11 +23,10 @@ class WordTopicNxExporter(
                      topic_runner: TopicRunner | DocumentTopicsInterface
                      ) -> nx.Graph:
         """
-        Construct a document-topic nx graph representing plot of the
-        relations between documents and topics
-        :param topic_runner: The topic runner (implementing
-            DocumentTopicsInterface) to extract topic data from
-        :return: nx graph representing a document-topic network plot
+        Construct a word-topic nx graph representing plot of the
+        relations between words and topics
+        :param topic_runner: The topic runner to extract topic data from
+        :return: nx graph representing a word-topic network plot
         """
         return self.construct_word_topic_network(topic_runner, 50)
 

@@ -4,14 +4,11 @@ from matplotlib import pyplot as plt
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.datatypes.topics import Topic, TopicWithScores
 
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
 from tommy.controller.visualizations.word_topic_nx_exporter import (
     WordTopicNxExporter)
-
-from tommy.support.constant_variables import plot_colors
 
 
 class WordTopicNetworkCreator(AbstractVisualization):
@@ -33,7 +30,7 @@ class WordTopicNetworkCreator(AbstractVisualization):
         """
         # Construct a plot and graph
         fig = plt.figure()
-        graph = self.construct_word_topic_network(topic_runner)
+        graph = self.construct_word_topic_network(topic_runner, 15)
 
         # Get the scale factor used for the displayed edge weight (width)
         edge_scale_factor = self._get_edge_scale_factor(topic_runner)
@@ -63,7 +60,9 @@ class WordTopicNetworkCreator(AbstractVisualization):
         return fig
 
     @staticmethod
-    def construct_word_topic_network(topic_runner: TopicRunner) -> nx.Graph:
+    def construct_word_topic_network(topic_runner: TopicRunner,
+                                     node_amount: int
+                                     ) -> nx.Graph:
         """
         Construct a word-topic network which is used to plot the relations
         between topics and probable words
@@ -71,7 +70,7 @@ class WordTopicNetworkCreator(AbstractVisualization):
         :return: matplotlib figure showing a word-topic network plot
         """
         return WordTopicNxExporter.construct_word_topic_network(topic_runner,
-                                                                15)
+                                                                node_amount)
 
     @staticmethod
     def _get_edge_scale_factor(topic_runner: TopicRunner) -> float:

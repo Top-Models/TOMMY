@@ -9,7 +9,7 @@ from tommy.controller.file_import.processed_file import ProcessedFile, Metadata
 
 
 class AbstractVisualizationOnData[T: Iterable[ProcessedFile]
-                                     | list[Metadata]
+                                  | list[Metadata]
                                   ](ABC):
     """
     Abstract class that defines the interface to create a matplotlib figure
