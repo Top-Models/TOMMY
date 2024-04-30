@@ -8,8 +8,7 @@ from tommy.controller.controller import GraphController
 
 
 class ExportController:
-    def __init__(self, graph_controller):
-        self._graph_controller = graph_controller
+    _graph_controller: GraphController = None
 
     def export_networks(self, path: str) -> None:
         nx_exports = self._graph_controller.get_all_nx_exports()
@@ -24,3 +23,7 @@ class ExportController:
         for i in range(len(graph_exports)):
             new_path = os.path.join(path, f"{i}.png")
             graph_exports[i].savefig(new_path)
+
+    def set_controller_refs(self, graph_controller: GraphController) -> None:
+        self._graph_controller = graph_controller
+

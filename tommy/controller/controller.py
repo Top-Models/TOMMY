@@ -79,12 +79,12 @@ class Controller:
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
         self._save_controller = SaveController()
-        self._export_controller = ExportController(self._graph_controller)
+        self._export_controller = ExportController()
 
         self._corpus_controller.set_controller_refs(
             self._project_settings_controller)
         self._graph_controller.set_controller_refs(self._corpus_controller)
-        #self._export_controller.set_controller_refs(self._graph_controller)
+        self._export_controller.set_controller_refs(self._graph_controller)
 
     def select_model(self, model_index: int) -> None:
         """
