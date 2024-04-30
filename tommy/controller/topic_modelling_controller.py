@@ -32,16 +32,18 @@ class TopicModellingController:
         super().__init__()
         self._model_trained_event = EventHandler[TopicRunner]()
 
-    def set_model_refs(self, parameters_controller: ModelParametersController,
-                       topic_model: TopicModel,
-                       corpus_controller: CorpusController) -> None:
+    def set_model_refs(self, topic_model: TopicModel) -> None:
         """
         Set the references to the parameters controller, topic model and
         corpus controller.
         :return: None
         """
-        self._model_parameters_controller = parameters_controller
         self._topic_model = topic_model
+
+    def set_controller_refs(self,
+                            parameters_controller: ModelParametersController,
+                            corpus_controller: CorpusController):
+        self._model_parameters_controller = parameters_controller
         self._corpus_controller = corpus_controller
 
     def train_model(self) -> None:

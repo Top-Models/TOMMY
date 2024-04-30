@@ -1,25 +1,43 @@
 from tommy.model.config_model import ConfigModel
-from tommy.model.corpus_model import CorpusModel
 from tommy.model.project_settings_model import ProjectSettingsModel
-from tommy.model.stopwords_model import StopwordsModel
-from tommy.model.model_parameters_model import ModelParametersModel
-from tommy.model.topic_model import TopicModel
 
 
 class Model:
-    stopwords_model: StopwordsModel
-    model_parameters_model: ModelParametersModel
+    configs: dict[str, ConfigModel] = {}
+    selected_config_name: str
     project_settings_model: ProjectSettingsModel
-    corpus_model: CorpusModel
-    topic_model: TopicModel
 
     def __init__(self):
-        self.config_model = ConfigModel("temp")
-        self.stopwords_model = StopwordsModel()
-        self.model_parameters_model = ModelParametersModel()
+        first_config_name = "Config 1"
+        first_config = ConfigModel()
+
         self.project_settings_model = ProjectSettingsModel()
-        self.corpus_model = CorpusModel()
-        self.topic_model = TopicModel()
+        self.selected_config_name = first_config_name
+        self.configs[first_config_name] = first_config
+
+    @property
+    def config_model(self):
+        return self.configs[self.selected_config_name]
+
+    @property
+    def stopwords_model(self):
+        return self.config_model.stopwords_model
+
+    @property
+    def model_parameters_model(self):
+        return self.config_model.model_parameters_model
+
+    @property
+    def corpus_model(self):
+        return self.config_model.corpus_model
+
+    @property
+    def topic_model(self):
+        return self.config_model.topic_model
+
+    def create_configuration(self) -> ConfigModel:
+        # TODO: copy current configuration into new configmodel
+        return ConfigModel()
 
 
 """

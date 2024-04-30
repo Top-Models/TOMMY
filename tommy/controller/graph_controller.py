@@ -80,17 +80,18 @@ class GraphController:
         self._plots_changed_event = EventHandler[matplotlib.figure.Figure]()
         self._topics_changed_event = EventHandler[None]()
 
-    def set_model_refs(self,
-                       topic_modelling_controller: TopicModellingController,
-                       ) -> None:
-        """Set reference to the TM controller and add self to its publisher"""
+    def set_controller_refs(self,
+                            topic_modelling_controller:
+                            TopicModellingController,
+                            corpus_controller: CorpusController):
+        """
+        Set reference to the TM controller corpus controller and add self
+        to model trained event
+        """
+        self._corpus_controller = corpus_controller
         self._topic_modelling_controller = topic_modelling_controller
         self._topic_modelling_controller.model_trained_event.subscribe(
             self.on_topic_runner_complete)
-
-    def set_controller_refs(self,
-                            corpus_controller: CorpusController):
-        self._corpus_controller = corpus_controller
 
     def set_selected_topic(self, topic_index: int) -> None:
         """

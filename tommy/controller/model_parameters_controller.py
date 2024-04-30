@@ -1,15 +1,15 @@
-from tommy.controller.publisher.publisher import Publisher
 from tommy.model.model_parameters_model import ModelParametersModel
+from tommy.support.event_handler import EventHandler
 from tommy.support.model_type import ModelType
-from tommy.view.observer.observer import Observer
 
 
-class ModelParametersController(Observer, Publisher):
+class ModelParametersController:
     """
     Controls the access to and changes to the parameters to be used in topic
     modelling
     """
     _parameters_model: ModelParametersModel = None
+    _params_changed_event: EventHandler[tuple[int, ModelType]] = EventHandler()
 
     def set_model_refs(self,
                        parameters_model: ModelParametersModel) -> None:
@@ -22,7 +22,7 @@ class ModelParametersController(Observer, Publisher):
         :param n_topics: the desired number of topics
         """
         self._parameters_model.n_topics = n_topics
-        self.notify()
+        self._params_changed_event.publish((n_topics, self.get_model_type()))
 
     def get_model_n_topics(self) -> int:
         """Return the number of topics the topic modelling will find"""
@@ -34,7 +34,8 @@ class ModelParametersController(Observer, Publisher):
         :param model_type: the algorithm type to be run
         """
         self._parameters_model.model_type = model_type
-        self.notify()
+        self._params_changed_event.publish((self.get_model_n_topics(),
+                                            model_type))
 
     def get_model_type(self) -> ModelType:
         """Return the type of topic modelling algorithm to be run"""

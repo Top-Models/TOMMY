@@ -2,7 +2,6 @@ from tommy.model.model import Model
 
 from tommy.controller.file_import.processed_body import ProcessedBody
 from tommy.controller.file_import.processed_file import ProcessedFile
-from tommy.controller.file_import.metadata import Metadata
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 from tommy.controller.graph_controller import GraphController
@@ -19,8 +18,7 @@ from tommy.controller.config_controller import ConfigController
 
 class Controller:
     """The main controller for the tommy that creates all sub-controllers"""
-    _models: list[Model]
-    _selected_model: int
+    _model: Model
 
     _model_parameters_controller: ModelParametersController
 
@@ -63,8 +61,8 @@ class Controller:
         """Initialize the main controller and its sub-controllers."""
         self._initialize_components()
 
-        self._models = self._save_controller.get_models()
-        self.select_model(0)
+        self._model = Model()
+        self._set_model_references()
 
     def _initialize_components(self):
         """Initialize all sub-components"""
@@ -76,46 +74,50 @@ class Controller:
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
         self._save_controller = SaveController()
-        self._config_controller = ConfigController(
-            self._project_settings_controller)
+        self._config_controller = ConfigController()
 
-        self._corpus_controller.set_controller_refs(
-            self._project_settings_controller)
-        self._graph_controller.set_controller_refs(self._corpus_controller)
-
-    def select_model(self, model_index: int) -> None:
+    def _set_controller_references(self) -> None:
         """
-        Select a model corresponding to the given index
-        :param model_index: The index of the model to be selected
+        Some controllers need references to other controllers, for example
+        to subscribe to events. This method gives each controller a
+        reference to the other controllers which it needs
         :return: None
         """
-        # TODO: input validation
-        self._selected_model = model_index
+        self._corpus_controller.set_controller_refs(
+            self._project_settings_controller)
+
+        self._graph_controller.set_controller_refs(
+            self._topic_modelling_controller, self._corpus_controller)
+
+        self._topic_modelling_controller.set_controller_refs(
+            self._model_parameters_controller, self._corpus_controller)
+
+    def _set_model_references(self) -> None:
+        """
+        Give each controller the correct references to the model
+        :return: None
+        """
 
         self._model_parameters_controller.set_model_refs(
-            self._models[model_index].model_parameters_model)
-
-        self._graph_controller.set_model_refs(self._topic_modelling_controller)
+            self._model.model_parameters_model)
 
         self._topic_modelling_controller.set_model_refs(
-            self._model_parameters_controller,
-            self._models[model_index].topic_model,
-            self._corpus_controller)
+            self._model.topic_model)
 
         self._stopwords_controller.set_model_refs(
-            self._models[model_index].stopwords_model)
+            self._model.stopwords_model)
 
         self._preprocessing_controller.set_model_refs(
-            self._models[model_index].stopwords_model)
+            self._model.stopwords_model)
 
         self._corpus_controller.set_model_refs(
-            self._models[model_index].corpus_model)
+            self._model.corpus_model)
 
         self._project_settings_controller.set_model_refs(
-            self._models[model_index].project_settings_model)
+            self._model.project_settings_model)
 
         self._config_controller.set_model_refs(
-            self._models[model_index].config_model)
+            self._model)
 
     def on_run_topic_modelling(self) -> None:
         """

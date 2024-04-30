@@ -72,7 +72,7 @@ class ConfigView(QDialog):
     def update_config_list(self):
         """Update the list of configurations"""
         self.config_list_widget.clear()
-        configurations = self.config_controller.list_configurations()
+        configurations = self.config_controller.get_configuration_names()
         for name in configurations:
             self.config_list_widget.addItem(name)
 
@@ -132,6 +132,7 @@ class ConfigView(QDialog):
                 model_parameters.n_topics)
             self.model_parameters_controller.set_model_type(
                 model_parameters.model_type)
+
 
 """
 This program has been developed by students from the bachelor Computer Science
