@@ -4,7 +4,6 @@ import matplotlib.figure
 
 # Import controllers
 from tommy.controller.corpus_controller import CorpusController
-from tommy.controller.publisher.publisher import Publisher
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.controller.topic_modelling_controller import (
@@ -39,7 +38,7 @@ from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
 
 from tommy.datatypes.topics import TopicWithScores
-from tommy.view.observer.observer import Observer
+from tommy.support.event_handler import EventHandler
 
 
 class GraphController:
@@ -429,7 +428,7 @@ class GraphController:
         return [self._get_nx_export(vis) for vis
                 in range(len(self._possible_nx_exports))]
 
-    def on_topic_runner_complete(self, publisher: Publisher) -> None:
+    def on_topic_runner_complete(self, topic_runner: TopicRunner) -> None:
         """
         Signal the graph-controller that a topic runner has finished training
         and is ready to provide results. Notify the subscribes of the plots
