@@ -7,7 +7,7 @@ from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, \
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
 from tommy.support.constant_variables import text_font, seco_col_blue, \
-    disabled_gray
+    disabled_gray, heading_font
 
 
 class AbstractSettings(ABC):
@@ -20,8 +20,7 @@ class AbstractSettings(ABC):
     _amount_of_words_field: QLineEdit
 
     def __init__(self,
-                 model_parameters_controller: ModelParametersController,
-                 scroll_layout: QVBoxLayout):
+                 model_parameters_controller: ModelParametersController):
         """
         Constructor for abstract settings
 
@@ -29,7 +28,6 @@ class AbstractSettings(ABC):
         """
         # Initialize controllers
         self._model_parameters_controller = model_parameters_controller
-        self._scroll_layout = scroll_layout
 
         # Initialize stylesheet
         self.enabled_input_stylesheet = (f"background-color: white;"
@@ -51,14 +49,17 @@ class AbstractSettings(ABC):
         self.topic_input_layout_invalid = None
         self.topic_input_layout_valid = None
 
-    def initialize_parameter_widgets(self) -> None:
+    def initialize_parameter_widgets(self, scroll_layout: QVBoxLayout) -> None:
         """
         Initialize the parameter widgets
 
         :return: None
         """
+        self._scroll_layout = scroll_layout
+        self.add_header_label("Algemeen", 17)
         self.initialize_topic_amount_field()
         self.initialize_amount_of_words_field()
+        self.add_margin(10)
 
     def all_fields_valid(self) -> bool:
         """
@@ -67,7 +68,34 @@ class AbstractSettings(ABC):
         :return: bool
         """
         return self.validate_topic_amount_field() and \
-               self.validate_amount_of_words_field()
+            self.validate_amount_of_words_field()
+
+    def add_header_label(self, header_text: str, size: int) -> None:
+        """
+        Add a header label to the settings view
+
+        :param header_text: str
+        :param size: int
+        :return: None
+        """
+        header_label = QLabel(header_text)
+        header_label.setStyleSheet(f"font-weight: bold;"
+                                   f"font-size: {size}px;"
+                                   f"font-family: {heading_font};"
+                                   f"color: black;"
+                                   f"font-family: {text_font};")
+        self._scroll_layout.addWidget(header_label)
+
+    def add_margin(self, height: int) -> None:
+        """
+        Add a margin to the settings view
+
+        :param height: int
+        :return: None
+        """
+        margin_label = QLabel("")
+        margin_label.setFixedHeight(height)
+        self._scroll_layout.addWidget(margin_label)
 
     def initialize_topic_amount_field(self) -> None:
         """

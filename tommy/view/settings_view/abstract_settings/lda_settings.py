@@ -1,5 +1,6 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QCheckBox
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QCheckBox, \
+    QVBoxLayout
 
 from tommy.support.constant_variables import text_font, seco_col_blue
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
@@ -15,25 +16,27 @@ class LdaSettings(AbstractSettings):
     _auto_calc_alpha_beta_checkbox: QCheckBox
 
     def __init__(self,
-                 model_parameters_controller,
-                 scroll_layout):
+                 model_parameters_controller):
         """
         Constructor for LDA settings
 
         :param model_parameters_controller: ModelParametersController
         """
-        super().__init__(model_parameters_controller, scroll_layout)
+        super().__init__(model_parameters_controller)
 
-    def initialize_parameter_widgets(self) -> None:
+    def initialize_parameter_widgets(self,
+                                     scroll_layout: QVBoxLayout) -> None:
         """
         Initialize the parameter widgets
 
         :return: None
         """
-        super().initialize_parameter_widgets()
+        super().initialize_parameter_widgets(scroll_layout)
+        self.add_header_label("Hyperparameters", 17)
         self.initialize_alpha_field()
         self.initialize_beta_field()
         self.initialize_auto_calculate_alpha_beta_checkbox()
+        self.add_margin(10)
 
     def all_fields_valid(self) -> bool:
         """

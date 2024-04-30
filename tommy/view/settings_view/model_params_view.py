@@ -91,11 +91,10 @@ class ModelParamsView(QScrollArea, Observer):
         self.button_layout.setAlignment(Qt.AlignRight)
         self.layout.addWidget(self.scroll_area)
 
-        # Add settings to the model parameters controller
+        # Initialize settings views
         self._model_parameters_controller.add_settings_view(
-            ModelType.LDA,
-            LdaSettings(self._model_parameters_controller,
-                        self.scroll_layout))
+            ModelType.LDA, LdaSettings(self._model_parameters_controller)
+        )
 
         # Initialize parameter widgets
         self.initialize_parameter_widgets()
@@ -128,7 +127,7 @@ class ModelParamsView(QScrollArea, Observer):
         # TODO: Add headers to the different sections
         current_view = (self._model_parameters_controller.
                         get_current_settings_view())
-        current_view.initialize_parameter_widgets()
+        current_view.initialize_parameter_widgets(self.scroll_layout)
         self.initialize_apply_button()
 
     def clear_layouts_from_scroll_layout(self) -> None:
