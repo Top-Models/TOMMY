@@ -5,12 +5,9 @@ from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as
 import matplotlib.figure
 
 from tommy.controller.graph_controller import GraphController
-from tommy.controller.publisher.publisher import Publisher
-
-from tommy.view.observer.observer import Observer
 
 
-class GraphView(QWidget, Observer):
+class GraphView(QWidget):
     """A class for displaying the graphs made by the graph-controller"""
 
     def __init__(self, graph_controller: GraphController) -> None:
@@ -31,7 +28,8 @@ class GraphView(QWidget, Observer):
 
         # Set reference to the graph-controller and add self to its publisher
         self._graph_controller = graph_controller
-        self._graph_controller.plots_changed_publisher.add(self)
+        self._graph_controller.plots_changed_event.subscribe(
+            self.display_plot)
 
     def display_plot(self, canvas: matplotlib.figure.Figure) -> None:
         """
@@ -62,17 +60,6 @@ class GraphView(QWidget, Observer):
 
         # Add the canvas to the layout
         self.layout.addWidget(FigureCanvas(canvas.figure))
-
-    def update_observer(self, publisher: Publisher) -> None:
-        """
-        Update the view by retrieving the new visualization from the
-        graph-controller and displaying it.
-
-        :param publisher: The publisher to update the view from
-        :return: None
-        """
-        new_graph = self._graph_controller.get_current_visualization()
-        self.display_plot(new_graph)
 
 
 """

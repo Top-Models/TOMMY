@@ -42,7 +42,7 @@ from tommy.datatypes.topics import TopicWithScores
 from tommy.view.observer.observer import Observer
 
 
-class GraphController(Observer):
+class GraphController:
     """
     The central interface for extracting results from topic modelling results
     and creating visualizations.
@@ -76,31 +76,32 @@ class GraphController(Observer):
 
     _current_topic_runner: TopicRunner = None
 
-    _plots_changed_publisher: Publisher = None
-    _topics_changed_publisher: Publisher = None
+    _plots_changed_event: EventHandler[matplotlib.figure.Figure] = None
+    _topics_changed_event: EventHandler[None] = None
 
     @property
-    def plots_changed_publisher(self) -> Publisher:
+    def plots_changed_event(self) -> EventHandler[matplotlib.figure.Figure]:
         """Get publisher that notifies when (selected) plots are changed."""
-        return self._plots_changed_publisher
+        return self._plots_changed_event
 
     @property
-    def topics_changed_publisher(self) -> Publisher:
+    def topics_changed_event(self) -> EventHandler[None]:
         """Get the publisher that notifies when the topics are changed."""
-        return self._topics_changed_publisher
+        return self._topics_changed_event
 
     def __init__(self) -> None:
         """Initialize the graph-controller and its two publishers"""
         super().__init__()
-        self._plots_changed_publisher = Publisher()
-        self._topics_changed_publisher = Publisher()
+        self._plots_changed_event = EventHandler[matplotlib.figure.Figure]()
+        self._topics_changed_event = EventHandler[None]()
 
     def set_model_refs(self,
                        topic_modelling_controller: TopicModellingController,
                        ) -> None:
         """Set reference to the TM controller and add self to its publisher"""
         self._topic_modelling_controller = topic_modelling_controller
-        self._topic_modelling_controller.add(self)
+        self._topic_modelling_controller.model_trained_event.subscribe(
+            self.on_topic_runner_complete)
 
     def set_controller_refs(self,
                             corpus_controller: CorpusController):
@@ -117,6 +118,8 @@ class GraphController(Observer):
 
         if topic_index is None:
             return
+        if self._current_topic_runner is None:
+            return
 
         self.update_current_visualization(self._current_tab_index)
 
@@ -128,6 +131,8 @@ class GraphController(Observer):
         :return: None
         """
         self._current_tab_index = tab_index
+        if self._current_topic_runner is None:
+            return
         self.update_current_visualization(self._current_tab_index)
 
     def get_selected_topic(self) -> int:
@@ -358,7 +363,7 @@ class GraphController(Observer):
         self._current_visualization_index = (
                 (self._current_visualization_index + 1)
                 % self.get_visualization_count())
-        self._plots_changed_publisher.notify()
+        self._plots_changed_event.publish(self.get_current_visualization())
 
     def on_previous_plot(self) -> None:
         """
@@ -373,7 +378,7 @@ class GraphController(Observer):
         self._current_visualization_index = (
                 (self._current_visualization_index - 1)
                 % self.get_visualization_count())
-        self._plots_changed_publisher.notify()
+        self._plots_changed_event.publish(self.get_current_visualization())
 
     def update_current_visualization(self, plot_type_index: int) -> None:
         """
@@ -396,7 +401,7 @@ class GraphController(Observer):
                        * self.get_number_of_topics()
                        + selected_topic))
 
-        self._plots_changed_publisher.notify()
+        self._plots_changed_event.publish(self.get_current_visualization())
 
     def get_all_visualizations(self) -> list[matplotlib.figure.Figure]:
         """
@@ -424,27 +429,18 @@ class GraphController(Observer):
         return [self._get_nx_export(vis) for vis
                 in range(len(self._possible_nx_exports))]
 
-    def update_observer(self, publisher: Publisher) -> None:
+    def on_topic_runner_complete(self, publisher: Publisher) -> None:
         """
-        Signal the graph-controller to update
-        If the signal comes from a topic-modelling-controller:
-        update the graph-controller and notify its observers
-
-        :param publisher: the publisher of the signal; can only be a
-            TopicModellingController
-        :raises RuntimeWarning: if the signal comes from anything other than
-            a TopicModellingController
+        Signal the graph-controller that a topic runner has finished training
+        and is ready to provide results. Notify the subscribes of the plots
+        and topics
+        :param topic_runner: The newly trained topic runner object
         :return: None
         """
-        if isinstance(publisher, TopicModellingController):
-            self._current_topic_runner = (self._topic_modelling_controller
-                                          .get_topic_runner())
-            self._calculate_possible_visualizations()
-            self._topics_changed_publisher.notify()
-            self._plots_changed_publisher.notify()
-        else:
-            raise RuntimeWarning("GraphController observer got a signal from "
-                                 "an unexpected publisher")
+        self._current_topic_runner = topic_runner
+        self._calculate_possible_visualizations()
+        self._topics_changed_event.publish(None)
+        self._plots_changed_event.publish(self.get_current_visualization())
 
 
 """

@@ -121,7 +121,7 @@ def test_refresh_topics_lda(fetched_topics_view: FetchedTopicsView,
         return_value=[])
 
     # Act
-    fetched_topics_view._refresh_topics()
+    fetched_topics_view._refresh_topics(None)
 
     # Assert
     assert fetched_topics_view.topic_container == {
