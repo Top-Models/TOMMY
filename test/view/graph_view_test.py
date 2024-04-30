@@ -1,4 +1,3 @@
-import matplotlib.figure
 import pytest
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
@@ -7,7 +6,6 @@ from matplotlib.figure import Figure
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.graph_controller import GraphController
-from tommy.controller.publisher.publisher import Publisher
 from tommy.view.graph_view import GraphView
 
 
@@ -104,22 +102,16 @@ def test_display_plot_default(graph_view: GraphView):
     assert canvas.subplotpars.top == 0.9
 
 
-def test_update_observer(graph_view: GraphView, mocker):
+def test_update_from_event(graph_view: GraphView):
     """
-    Test updating the observer.
+    Test updating the graph_view from an update of the eventhandler.
     """
-    # Mock the get_current_visualization method
+    # create mock canvas
     canvas = Figure()
     canvas.add_subplot(111, title="gewicht")
-    mocker.patch.object(graph_view._graph_controller,
-                        "get_current_visualization",
-                        return_value=canvas)
 
-    # Create a mock publisher
-    mock_publisher = mocker.Mock(spec=Publisher)
-
-    # Update the observer
-    graph_view.update_observer(mock_publisher)
+    # simulate triggering of eventhandler
+    graph_view._graph_controller.plots_changed_event.publish(canvas)
 
     # Check if the layout was cleared
     assert graph_view.layout.count() == 1

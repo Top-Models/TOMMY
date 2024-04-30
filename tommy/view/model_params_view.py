@@ -5,21 +5,21 @@ from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QLineEdit,
 
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
-from tommy.controller.model_parameters_controller import (
-    ModelParametersController)
-from tommy.controller.publisher.publisher import Publisher
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
     pressed_seco_col_blue, prim_col_red, hover_prim_col_red)
+from tommy.support.model_type import ModelType
 from tommy.view.config_view import ConfigView
-from tommy.view.observer.observer import Observer
+from tommy.controller.model_parameters_controller import (
+    ModelParametersController)
 
 
-class ModelParamsView(QScrollArea, Observer):
+class ModelParamsView(QScrollArea):
     """The ModelParamsDisplay that displays the model settings"""
 
     def __init__(self, model_parameters_controller: ModelParametersController,
-                 controller: Controller, config_controller: ConfigController) -> None:
+                 controller: Controller,
+                 config_controller: ConfigController) -> None:
         super().__init__()
 
         # Set reference to the model parameters controller
@@ -28,7 +28,8 @@ class ModelParamsView(QScrollArea, Observer):
         self._config_controller = config_controller
 
         # Register as an observer
-        self._model_parameters_controller.add(self)
+        self._model_parameters_controller._params_changed_event.subscribe(
+            self._update_model_params)
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -257,17 +258,9 @@ class ModelParamsView(QScrollArea, Observer):
         if self.validate_input():
             self._controller.on_run_topic_modelling()
 
-    def update_observer(self, publisher: Publisher) -> None:
-        """
-        Update the observer.
-
-        :param publisher: The publisher that is being observed
-        :return: None
-        """
-        if isinstance(publisher, ModelParametersController):
-            # Update the view based on changes in the model parameters
-            num_topics = self._model_parameters_controller.get_model_n_topics()
-            self.topic_input.setText(str(num_topics))
+    def _update_model_params(self, data: tuple[int, ModelType]):
+        num_topics, model_type = data
+        self.topic_input.setText(str(num_topics))
 
 
 """

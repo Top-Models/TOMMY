@@ -3,12 +3,13 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
 from tommy.controller.graph_controller import GraphController
 from tommy.support.constant_variables import sec_col_orange
-from tommy.view.observer.observer import Observer
+from tommy.datatypes.topics import TopicWithScores
+
 from tommy.view.topic_view.topic_entity_component.topic_entity import (
     TopicEntity)
 
 
-class FetchedTopicsView(QScrollArea, Observer):
+class FetchedTopicsView(QScrollArea):
     """A widget for displaying the found topics."""
 
     topicClicked = Signal(object)
@@ -54,7 +55,8 @@ class FetchedTopicsView(QScrollArea, Observer):
         # Set reference to the controller where topics will be fetched from
         # and subscribe to its topic publisher
         self._graph_controller = graph_controller
-        self._graph_controller.topics_changed_publisher.add(self)
+        self._graph_controller.topics_changed_event.subscribe(
+            self._refresh_topics)
 
     def _add_topic(self,
                    tab_name: str,
@@ -121,7 +123,7 @@ class FetchedTopicsView(QScrollArea, Observer):
             self.layout.itemAt(i).widget().deleteLater()
         self.topic_container = {}
 
-    def _refresh_topics(self) -> None:
+    def _refresh_topics(self, data: None) -> None:
         """Retrieve the topics from the GraphController and update the view"""
         self._clear_topics()
 
@@ -181,15 +183,6 @@ class FetchedTopicsView(QScrollArea, Observer):
             topic_entity = self.layout.itemAt(i).widget()
             if isinstance(topic_entity, TopicEntity):
                 topic_entity.deselect()
-
-    def update_observer(self, publisher) -> None:
-        """
-        Update the observer.
-
-        :param publisher: The publisher that is being observed
-        :return: None
-        """
-        self._refresh_topics()
 
 
 """
