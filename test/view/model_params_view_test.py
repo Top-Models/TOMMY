@@ -2,9 +2,7 @@ import pytest
 from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 
-from tommy.view.model_params_view import ModelParamsView
-from tommy.controller.model_parameters_controller import (
-    ModelParametersController)
+from tommy.view.settings_view.model_params_view import ModelParamsView
 from pytest_mock import mocker
 from tommy.controller.controller import Controller
 

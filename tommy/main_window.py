@@ -12,7 +12,7 @@ from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.imported_files_view import (
     ImportedFilesView)
 from tommy.view.menu_bar import MenuBar
-from tommy.view.model_params_view import (
+from tommy.view.settings_view.model_params_view import (
     ModelParamsView)
 from tommy.view.plot_selection_view import (
     PlotSelectionView)

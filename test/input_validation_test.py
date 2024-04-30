@@ -4,7 +4,7 @@ import pytest
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.controller import Controller
-from tommy.view.model_params_view import ModelParamsView
+from tommy.view.settings_view.model_params_view import ModelParamsView
 
 
 @pytest.fixture

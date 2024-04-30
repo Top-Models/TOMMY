@@ -13,6 +13,9 @@ from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
     pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray)
 from tommy.view.observer.observer import Observer
+from tommy.view.settings_view.abstract_settings.abstract_settings import \
+    AbstractSettings
+from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 
 
 class ModelParamsView(QScrollArea, Observer):
@@ -93,7 +96,10 @@ class ModelParamsView(QScrollArea, Observer):
         self.alpha_value_input = None
         self.beta_value_input = None
         self.auto_calculate_checkbox = None
-        self.initialize_parameter_widgets()
+
+        self.lda_settings = LdaSettings(self._model_parameters_controller,
+                                        self.scroll_layout)
+        self.initialize_parameter_widgets(self.lda_settings)
 
         # Initialize button layout
         self.button_layout = QVBoxLayout()
@@ -104,19 +110,36 @@ class ModelParamsView(QScrollArea, Observer):
         self.apply_button = None
         self.initialize_apply_button()
 
-    def initialize_parameter_widgets(self) -> None:
+    # TODO: Make this method more dynamic
+    def initialize_parameter_widgets(self,
+                                     settings: AbstractSettings) -> None:
         """
         Initialize the parameter widgets.
+
+        :param settings:
         :return: None
         """
         # TODO: Add headers to the different sections
+        settings.initialize_parameter_widgets()
 
-        # General settings
-        self.initialize_topic_amount_field()
-        self.initialize_amount_of_topic_words_field()
+    def clear_layouts_from_scroll_layout(self) -> None:
+        """
+        Clear the layouts from the scroll layout.
+        :return: None
+        """
+        for i in reversed(range(self.scroll_layout.count())):
+            layout = self.scroll_layout.itemAt(i)
 
-        # Hyperparameters LDA
-        self.initialize_alpha_and_beta_fields()
+            # Skip button layout
+            if layout is self.button_layout:
+                continue
+
+            if layout is not None:
+                for j in reversed(range(layout.count())):
+                    widget = layout.itemAt(j).widget()
+                    if widget is not None:
+                        widget.deleteLater()
+                layout.deleteLater()
 
     def initialize_topic_amount_field(self) -> None:
         """
@@ -409,8 +432,9 @@ class ModelParamsView(QScrollArea, Observer):
             """)
         self.button_layout.addWidget(self.apply_button,
                                      alignment=Qt.AlignBottom)
-        self.apply_button.clicked.connect(
-            self.apply_button_clicked_event)
+        self.apply_button.clicked.connect(lambda:
+                                          self.apply_button_clicked_event(
+                                              self.lda_settings))
 
     def fetch_topic_num(self) -> int:
         """
@@ -517,13 +541,13 @@ class ModelParamsView(QScrollArea, Observer):
         self._model_parameters_controller.set_model_beta(
             float(self.beta_value_input.text()))
 
-    def apply_button_clicked_event(self) -> None:
+    def apply_button_clicked_event(self,
+                                   settings: AbstractSettings) -> None:
         """
         The event when the apply button is clicked.
         :return: None
         """
-        if self.validate_k_value_input() and \
-           self.validate_topic_words_input():
+        if settings.all_fields_valid():
             self._controller.on_run_topic_modelling()
 
     def update_observer(self, publisher: Publisher) -> None:
