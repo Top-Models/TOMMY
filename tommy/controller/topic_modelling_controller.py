@@ -82,7 +82,6 @@ class TopicModellingController(Publisher):
             get_model_alpha_beta_custom_enabled())
 
         if alpha_beta_custom_enabled:
-            print("Running LDA with custom alpha and beta values")
             self._topic_runner = LdaRunner(topic_model=self._topic_model,
                                            docs=corpus,
                                            num_topics=num_topics,
@@ -90,7 +89,6 @@ class TopicModellingController(Publisher):
                                            beta=beta_value)
             return
 
-        print("Running LDA with optimized alpha and beta values")
         self._topic_runner = LdaRunner(topic_model=self._topic_model,
                                        docs=corpus,
                                        num_topics=num_topics)

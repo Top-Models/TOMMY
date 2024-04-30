@@ -24,7 +24,7 @@ class LdaSettings(AbstractSettings):
         """
         super().__init__(model_parameters_controller, scroll_layout)
 
-    def initialize_parameter_widgets(self):
+    def initialize_parameter_widgets(self) -> None:
         """
         Initialize the parameter widgets
 
@@ -44,7 +44,12 @@ class LdaSettings(AbstractSettings):
         return super().all_fields_valid()
         # TODO: Implement validation for alpha and beta fields
 
-    def initialize_alpha_field(self):
+    def initialize_alpha_field(self) -> None:
+        """
+        Initialize the alpha field
+
+        :return: None
+        """
         alpha_layout = QHBoxLayout()
 
         # Add alpha label
@@ -61,7 +66,7 @@ class LdaSettings(AbstractSettings):
         self._alpha_value_input.setReadOnly(True)
         self._alpha_value_input.setFixedWidth(100)
         self._alpha_value_input.setPlaceholderText("Voer alpha in")
-        self._alpha_value_input.setText("1.0")
+        self._alpha_value_input.setText("-:-")
         self._alpha_value_input.setStyleSheet(self.disabled_input_stylesheet)
         self._alpha_value_input.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self._alpha_value_input.editingFinished.connect(
@@ -91,6 +96,7 @@ class LdaSettings(AbstractSettings):
     def initialize_beta_field(self):
         """
         Initialize the beta field.
+
         :return: None
         """
         beta_layout = QHBoxLayout()
@@ -109,7 +115,7 @@ class LdaSettings(AbstractSettings):
         self._beta_value_input.setReadOnly(True)
         self._beta_value_input.setFixedWidth(100)
         self._beta_value_input.setPlaceholderText("Voer beta in")
-        self._beta_value_input.setText("0.01")
+        self._beta_value_input.setText("-:-")
         self._beta_value_input.setStyleSheet(self.disabled_input_stylesheet)
         self._beta_value_input.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self._beta_value_input.editingFinished.connect(
@@ -137,6 +143,11 @@ class LdaSettings(AbstractSettings):
         pass
 
     def initialize_auto_calculate_alpha_beta_checkbox(self) -> None:
+        """
+        Initialize the auto calculate alpha beta checkbox
+
+        :return: None
+        """
         # Add auto calculate widgets
         auto_calculate_layout = QHBoxLayout()
 
@@ -187,7 +198,7 @@ class LdaSettings(AbstractSettings):
         # Add auto calculate layout to container layout
         self._scroll_layout.addLayout(auto_calculate_layout)
 
-    def toggle_auto_calculate_alpha_beta(self):
+    def toggle_auto_calculate_alpha_beta(self) -> None:
         """
         Toggle the auto calculate alpha beta checkbox
 
@@ -195,9 +206,15 @@ class LdaSettings(AbstractSettings):
         """
         auto_calculate = self._auto_calc_alpha_beta_checkbox.isChecked()
         if auto_calculate:
+            self._alpha_value_input.setText("-:-")
+            self._beta_value_input.setText("-:-")
             self._alpha_value_input.setReadOnly(True)
             self._beta_value_input.setReadOnly(True)
         else:
+            alpha_value = self._model_parameters_controller.get_model_alpha()
+            beta_value = self._model_parameters_controller.get_model_beta()
+            self._alpha_value_input.setText(str(alpha_value))
+            self._beta_value_input.setText(str(beta_value))
             self._alpha_value_input.setReadOnly(False)
             self._beta_value_input.setReadOnly(False)
 
@@ -209,6 +226,7 @@ class LdaSettings(AbstractSettings):
         """
         Change the style of the alpha and beta fields based on whether they
         are auto calculated or not.
+
         :return: None
         """
         auto_calculate = self._auto_calc_alpha_beta_checkbox.isChecked()

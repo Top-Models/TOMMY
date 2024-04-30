@@ -30,6 +30,8 @@ class AbstractSettings(ABC):
         # Initialize controllers
         self._model_parameters_controller = model_parameters_controller
         self._scroll_layout = scroll_layout
+
+        # Initialize stylesheet
         self.enabled_input_stylesheet = (f"background-color: white;"
                                          f"border-radius: 5px;"
                                          f"font-size: 14px;"
@@ -45,7 +47,11 @@ class AbstractSettings(ABC):
                                           f"border: 2px solid {seco_col_blue};"
                                           f"padding: 5px;")
 
-    def initialize_parameter_widgets(self):
+        # Initialize layout
+        self.topic_input_layout_invalid = None
+        self.topic_input_layout_valid = None
+
+    def initialize_parameter_widgets(self) -> None:
         """
         Initialize the parameter widgets
 
@@ -63,7 +69,7 @@ class AbstractSettings(ABC):
         return self.validate_topic_amount_field() and \
                self.validate_amount_of_words_field()
 
-    def initialize_topic_amount_field(self):
+    def initialize_topic_amount_field(self) -> None:
         """
         Initialize the topic amount field
 
@@ -115,7 +121,7 @@ class AbstractSettings(ABC):
         # Add topic amount layout to container layout
         self._scroll_layout.addLayout(topic_amount_layout)
 
-    def topic_amount_field_editing_finished_event(self):
+    def topic_amount_field_editing_finished_event(self) -> None:
         """
         Event handler for when the topic amount field is edited
 
@@ -233,7 +239,7 @@ class AbstractSettings(ABC):
                 "Moet tussen 1 en 999 liggen")
         return valid_input
 
-    def get_amount_of_words(self):
+    def get_amount_of_words(self) -> int:
         """
         Get the amount of words
 
