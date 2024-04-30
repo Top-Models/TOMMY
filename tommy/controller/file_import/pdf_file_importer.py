@@ -41,12 +41,13 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         """
         with open(path, 'rb') as file:
             pdf = PdfReader(file)
-            for page_number in range(len(pdf.pages)):
-                page = pdf.pages[page_number]
-                text = page.extract_text()
-                yield self.generate_file(text, path)
+            metadata = pdf.metadata
+            text = ''
+            for page in pdf.pages:
+                text += page.extract_text()
+            yield self.generate_file(text, path, metadata)
 
-    def generate_file(self, file: str, path) -> RawFile:
+    def generate_file(self, file: str, path, metadata) -> RawFile:
         """
         Generates a File object from a PDF page.
 
@@ -55,12 +56,16 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         :return: A RawFile object generated from the PDF page
         containing metadata and the raw text of the file.
         """
+
+        alt_title = os.path.basename(path).replace('.pdf', '')
+
         return RawFile(
-            metadata=Metadata(author=None,
-                              title=None, date=None,
-                              url=None, path=os.path.relpath(path),
-                              format="pdf",
-                              length=len(file.split(" ")),
-                              name=os.path.relpath(path).split(".")[0],
-                              size=stat(path).st_size),
-            body=RawBody(body=file))
+                metadata=Metadata(author=metadata.get('/Author', None),
+                                  title=str(metadata.get('/Title', alt_title)),
+                                  date=metadata.get('/ModDate', None),
+                                  path=os.path.relpath(path),
+                                  format="pdf",
+                                  length=len(file.split(" ")),
+                                  name=alt_title,
+                                  size=stat(path).st_size),
+                body=RawBody(body=file))
