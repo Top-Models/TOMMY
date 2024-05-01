@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 from collections.abc import Iterable
 
@@ -22,16 +24,20 @@ class StopwordsModel:
     def extra_words(self) -> set[str]:
         return self._extra_words
 
-    def __init__(self) -> None:
+    def __init__(self, derive_from: StopwordsModel = None) -> None:
         """Initializes the stopwords model."""
-        with open(os.path.join(
-                application_settings.preprocessing_data_folder,
-                "stopwords.txt"), 'r') as file:
-            file_content = file.read()
-        stopword_list = file_content.split()
-        self._default_words = set(stopword_list)
+        if derive_from is None:
+            with open(os.path.join(
+                    application_settings.preprocessing_data_folder,
+                    "stopwords.txt"), 'r') as file:
+                file_content = file.read()
+            stopword_list = file_content.split()
+            self._default_words = set(stopword_list)
 
-        self._extra_words = set()
+            self._extra_words = set()
+        else:
+            self._default_words = derive_from.default_words
+            self._extra_words = derive_from.extra_words
 
     def __len__(self) -> int:
         """Gets the number of stopwords."""

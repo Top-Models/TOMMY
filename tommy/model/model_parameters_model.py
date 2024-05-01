@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from tommy.support.model_type import ModelType
 
@@ -5,8 +7,14 @@ from tommy.support.model_type import ModelType
 @dataclass
 class ModelParametersModel:
     """A class representing the topic modelling parameters."""
-    n_topics: int = 3
-    model_type: ModelType = ModelType.LDA
+
+    def __init__(self, derive_from: ModelParametersModel = None):
+        if derive_from is None:
+            self.n_topics: int = 3
+            self.model_type: ModelType = ModelType.LDA
+        else:
+            self.n_topics = derive_from.n_topics
+            self.model_type = derive_from.model_type
 
 
 """

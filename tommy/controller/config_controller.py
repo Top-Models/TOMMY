@@ -1,8 +1,5 @@
-from typing import Dict, Optional
-
 from tommy.model.config_model import ConfigModel
 from tommy.model.model import Model
-from tommy.model.project_settings_model import ProjectSettingsModel
 from tommy.support.event_handler import EventHandler
 
 
@@ -10,8 +7,8 @@ class ConfigController:
     """
     Controls the access to and changes to the configuration settings.
     """
-    _config_switched_event: EventHandler[ConfigModel] = EventHandler()
-    _config_list_changed_event: EventHandler[list[str]] = EventHandler()
+    config_switched_event: EventHandler[ConfigModel] = EventHandler()
+    config_list_changed_event: EventHandler[list[str]] = EventHandler()
     _model: Model = None
 
     # TODO: add docstring to many methods
@@ -29,7 +26,7 @@ class ConfigController:
         config_exists = name in self.get_configuration_names()
         if config_exists:
             self._model.selected_config_name = name
-            self._config_switched_event.publish(self._model.config_model)
+            self.config_switched_event.publish(self._model.config_model)
         return config_exists
 
     def get_configuration_names(self) -> list[str]:
@@ -49,7 +46,7 @@ class ConfigController:
 
         config = self._model.create_configuration()
         self._model.configs[name] = config
-        self._config_list_changed_event.publish(
+        self.config_list_changed_event.publish(
             self.get_configuration_names())
         self.switch_configuration(name)
         return True
@@ -80,7 +77,7 @@ class ConfigController:
             self.switch_configuration(configs[new_index])
 
         self._model.configs.pop(name)
-        self._config_list_changed_event.publish(self.get_configuration_names())
+        self.config_list_changed_event.publish(self.get_configuration_names())
         return True
 
     def get_selected_configuration(self) -> str:

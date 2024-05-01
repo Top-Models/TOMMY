@@ -37,7 +37,7 @@ class Model:
 
     def create_configuration(self) -> ConfigModel:
         # TODO: copy current configuration into new configmodel
-        return ConfigModel()
+        return ConfigModel(self.config_model)
 
 
 """

@@ -1,3 +1,4 @@
+from tommy.model.config_model import ConfigModel
 from tommy.model.model import Model
 
 from tommy.controller.file_import.processed_body import ProcessedBody
@@ -92,32 +93,21 @@ class Controller:
         self._topic_modelling_controller.set_controller_refs(
             self._model_parameters_controller, self._corpus_controller)
 
+        self._config_controller.config_switched_event.subscribe(
+            self.update_config_model_references)
+
     def _set_model_references(self) -> None:
         """
         Give each controller the correct references to the model
         :return: None
         """
-
-        self._model_parameters_controller.set_model_refs(
-            self._model.model_parameters_model)
-
-        self._topic_modelling_controller.set_model_refs(
-            self._model.topic_model)
-
-        self._stopwords_controller.set_model_refs(
-            self._model.stopwords_model)
-
-        self._preprocessing_controller.set_model_refs(
-            self._model.stopwords_model)
-
-        self._corpus_controller.set_model_refs(
-            self._model.corpus_model)
-
         self._project_settings_controller.set_model_refs(
             self._model.project_settings_model)
 
         self._config_controller.set_model_refs(
             self._model)
+
+        self.update_config_model_references(self._model.config_model)
 
     def on_run_topic_modelling(self) -> None:
         """
@@ -134,6 +124,22 @@ class Controller:
 
         self._corpus_controller.set_processed_corpus(processed_files)
         self._topic_modelling_controller.train_model()
+
+    def update_config_model_references(self, config_model: ConfigModel):
+        self._model_parameters_controller.set_model_refs(
+            config_model.model_parameters_model)
+
+        self._topic_modelling_controller.set_model_refs(
+            config_model.topic_model)
+
+        self._stopwords_controller.set_model_refs(
+            config_model.stopwords_model)
+
+        self._preprocessing_controller.set_model_refs(
+            config_model.stopwords_model)
+
+        self._corpus_controller.set_model_refs(
+            config_model.corpus_model)
 
 
 """
