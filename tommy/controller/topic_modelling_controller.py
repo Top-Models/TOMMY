@@ -8,10 +8,10 @@ from tommy.model.topic_model import TopicModel
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
-from tommy.controller.publisher.publisher import Publisher
+from tommy.support.event_handler import EventHandler
 
 
-class TopicModellingController(Publisher):
+class TopicModellingController:
     """
     Controller that runs the selected topic modelling algorithm on a call of
     train_model and supplies a topic runner object from which results can be
@@ -21,10 +21,16 @@ class TopicModellingController(Publisher):
     _topic_model: TopicModel = None
     _corpus_controller: CorpusController = None
     _topic_runner: TopicRunner = None
+    _model_trained_event: EventHandler[TopicRunner] = None
+
+    @property
+    def model_trained_event(self) -> EventHandler[TopicRunner]:
+        return self._model_trained_event
 
     def __init__(self) -> None:
         """Initialize the publisher of the topic-modelling-controller"""
         super().__init__()
+        self._model_trained_event = EventHandler[TopicRunner]()
 
     def set_model_refs(self, parameters_controller: ModelParametersController,
                        topic_model: TopicModel,
@@ -37,14 +43,6 @@ class TopicModellingController(Publisher):
         self._model_parameters_controller = parameters_controller
         self._topic_model = topic_model
         self._corpus_controller = corpus_controller
-
-    def get_topic_runner(self) -> TopicRunner:
-        """
-        Returns a reference to the topic runner which can be used
-        to extract results from the run
-        :return: Reference to the topic runner
-        """
-        return self._topic_runner
 
     def train_model(self) -> None:
         """
@@ -63,7 +61,7 @@ class TopicModellingController(Publisher):
                     f"model type {new_model_type.name} is not supported by "
                     f"topic modelling controller")
 
-        self.notify()
+        self._model_trained_event.publish(self._topic_runner)
 
     def _train_lda(self) -> None:
         """

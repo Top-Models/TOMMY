@@ -107,7 +107,7 @@ def test_update_observer(plot_selection_view: PlotSelectionView):
     plot_selection_view._graph_controller.get_number_of_topics = lambda: 5
 
     # Act
-    plot_selection_view.update_observer(None)
+    plot_selection_view.tab_clicked_event()
 
     # Assert
     assert plot_selection_view._graph_controller._current_tab_index == 0
