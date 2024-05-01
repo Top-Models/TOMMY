@@ -1,4 +1,4 @@
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 import os.path
 from os import stat
 from typing import List, Generator
@@ -39,13 +39,18 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         :param path: The string path to the PDF file.
         :return: File: A File object generated from each page of the PDF.
         """
-        with open(path, 'rb') as file:
-            pdf = PdfReader(file)
-            metadata = pdf.metadata
-            text = ''
-            for page in pdf.pages:
-                text += page.extract_text()
-            yield self.generate_file(text, path, metadata)
+        try:
+            with open(path, 'rb') as file:
+                pdf = PdfReader(file)
+                metadata = pdf.metadata
+
+                # Bundle all pages together into one document
+                text = ''
+                for page in pdf.pages:
+                    text += page.extract_text()
+                yield self.generate_file(text, path, metadata)
+        except Exception as e:
+            print(f"Failed to load file {path} due to error: {e}")
 
     def generate_file(self, file: str, path, metadata) -> RawFile:
         """
@@ -61,7 +66,7 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
 
         return RawFile(
                 metadata=Metadata(author=metadata.get('/Author', None),
-                                  title=str(metadata.get('/Title', alt_title)),
+                                  title=alt_title,
                                   date=metadata.get('/ModDate', None),
                                   path=os.path.relpath(path),
                                   format="pdf",
@@ -69,3 +74,4 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
                                   name=alt_title,
                                   size=stat(path).st_size),
                 body=RawBody(body=file))
+
