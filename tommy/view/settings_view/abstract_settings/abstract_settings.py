@@ -12,7 +12,7 @@ from tommy.support.constant_variables import text_font, seco_col_blue, \
     disabled_gray, heading_font
 
 
-class AbstractSettings(ABC):
+class AbstractSettings:
     """
     Abstract class for settings view
     """

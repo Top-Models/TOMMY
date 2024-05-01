@@ -139,10 +139,6 @@ class ModelParamsView(QScrollArea, Observer):
         for i in reversed(range(self.scroll_layout.count())):
             layout = self.scroll_layout.itemAt(i)
 
-            # Skip button layout
-            if layout is self.button_layout:
-                continue
-
             if layout is not None:
                 for j in reversed(range(layout.count())):
                     widget = layout.itemAt(j).widget()
