@@ -36,8 +36,8 @@ class StopwordsModel:
 
             self._extra_words = set()
         else:
-            self._default_words = derive_from.default_words
-            self._extra_words = derive_from.extra_words
+            self._default_words = derive_from.default_words.copy()
+            self._extra_words = derive_from.extra_words.copy()
 
     def __len__(self) -> int:
         """Gets the number of stopwords."""

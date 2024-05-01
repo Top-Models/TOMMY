@@ -16,6 +16,8 @@ class StopwordsView(QScrollArea):
 
         # Set reference to the controller
         self._stopwords_controller = stopwords_controller
+        stopwords_controller.stopwords_model_changed_event.subscribe(
+            self._update_blacklist_textbox)
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -146,6 +148,10 @@ class StopwordsView(QScrollArea):
         """
         input_text = self.ngrams_tab.toPlainText()
         # TODO: implement at a later point
+
+    def _update_blacklist_textbox(self, words: set[str]):
+        text = "\n".join(words)
+        self.blacklist_tab.setText(text)
 
 
 """

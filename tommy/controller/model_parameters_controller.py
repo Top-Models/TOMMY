@@ -16,6 +16,16 @@ class ModelParametersController:
         """Set the reference to the model-parameters-model"""
         self._parameters_model = parameters_model
 
+    def change_config_model_refs(self, parameters_model:
+    ModelParametersModel) -> None:
+        """
+        Set the reference to the model-parameters-model and
+        update the frontend
+        """
+        self._parameters_model = parameters_model
+        self._params_changed_event.publish((self.get_model_n_topics(),
+                                            self.get_model_type()))
+
     def set_model_n_topics(self, n_topics: int) -> None:
         """
         Set the number of topics to use in the topic modelling
@@ -40,6 +50,10 @@ class ModelParametersController:
     def get_model_type(self) -> ModelType:
         """Return the type of topic modelling algorithm to be run"""
         return self._parameters_model.model_type
+
+    @property
+    def params_changed_event(self):
+        return self._params_changed_event
 
 
 """

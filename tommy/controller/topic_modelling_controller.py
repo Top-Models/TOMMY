@@ -34,8 +34,14 @@ class TopicModellingController:
 
     def set_model_refs(self, topic_model: TopicModel) -> None:
         """
-        Set the references to the parameters controller, topic model and
-        corpus controller.
+        Set the references to the topic model
+        :return: None
+        """
+        self._topic_model = topic_model
+
+    def change_config_model_refs(self, topic_model: TopicModel) -> None:
+        """
+        Set the references to the topic model when switching configs
         :return: None
         """
         self._topic_model = topic_model

@@ -28,7 +28,7 @@ class ModelParamsView(QScrollArea):
         self._config_controller = config_controller
 
         # Register as an observer
-        self._model_parameters_controller._params_changed_event.subscribe(
+        self._model_parameters_controller.params_changed_event.subscribe(
             self._update_model_params)
 
         # Initialize widget properties

@@ -1,9 +1,15 @@
 from tommy.model.stopwords_model import StopwordsModel
+from tommy.support.event_handler import EventHandler
 
 
 class StopwordsController:
     """A class that handles all stopword related functionality."""
     _stopwords_model: StopwordsModel = None
+    _stopwords_model_changed_event: EventHandler[set[str]] = EventHandler()
+
+    @property
+    def stopwords_model_changed_event(self) -> EventHandler[set[str]]:
+        return self._stopwords_model_changed_event
 
     @property
     def stopwords_model(self) -> StopwordsModel:
@@ -16,6 +22,13 @@ class StopwordsController:
     def set_model_refs(self, stopwords_model: StopwordsModel):
         """Sets the reference to the stopwords model."""
         self._stopwords_model = stopwords_model
+
+    def change_config_model_refs(self, stopwords_model: StopwordsModel):
+        """Sets the reference to the stopwords model and updates the
+        frontend"""
+        self._stopwords_model = stopwords_model
+        self._stopwords_model_changed_event.publish(
+            stopwords_model.extra_words)
 
     def update_stopwords(self, words: set[str]) -> None:
         """

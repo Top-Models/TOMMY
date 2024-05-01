@@ -108,7 +108,20 @@ class Controller:
         self._config_controller.set_model_refs(
             self._model)
 
-        self.update_config_model_references(self._model.config_model)
+        self._model_parameters_controller.set_model_refs(
+            self._model.model_parameters_model)
+
+        self._topic_modelling_controller.set_model_refs(
+            self._model.topic_model)
+
+        self._stopwords_controller.set_model_refs(
+            self._model.stopwords_model)
+
+        self._preprocessing_controller.set_model_refs(
+            self._model.stopwords_model)
+
+        self._corpus_controller.set_model_refs(
+            self._model.corpus_model)
 
     def on_run_topic_modelling(self) -> None:
         """
@@ -127,19 +140,19 @@ class Controller:
         self._topic_modelling_controller.train_model()
 
     def update_config_model_references(self, config_model: ConfigModel):
-        self._model_parameters_controller.set_model_refs(
+        self._model_parameters_controller.change_config_model_refs(
             config_model.model_parameters_model)
 
-        self._topic_modelling_controller.set_model_refs(
+        self._topic_modelling_controller.change_config_model_refs(
             config_model.topic_model)
 
-        self._stopwords_controller.set_model_refs(
+        self._stopwords_controller.change_config_model_refs(
             config_model.stopwords_model)
 
-        self._preprocessing_controller.set_model_refs(
+        self._preprocessing_controller.change_config_model_refs(
             config_model.stopwords_model)
 
-        self._corpus_controller.set_model_refs(
+        self._corpus_controller.change_config_model_refs(
             config_model.corpus_model)
 
 

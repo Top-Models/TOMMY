@@ -28,6 +28,9 @@ class PreprocessingController:
     def set_model_refs(self, stopwords_model: StopwordsModel):
         self._stopwords_model = stopwords_model
 
+    def change_config_model_refs(self, stopwords_model: StopwordsModel):
+        self._stopwords_model = stopwords_model
+
     def process_text(self, text: str) -> list[str]:
         """Preprocesses the given text to a list of tokens."""
         tokens = self._nlp(text)
