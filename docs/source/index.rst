@@ -41,9 +41,3 @@ Code documentation
     tommy.view
     tommy.controller
     tommy.model
-
-
-Indices and ables
-==================
-
-* :ref:`modindex`
