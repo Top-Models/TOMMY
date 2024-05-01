@@ -64,6 +64,7 @@ class Controller:
 
         self._model = Model()
         self._set_model_references()
+        self._set_controller_references()
 
     def _initialize_components(self):
         """Initialize all sub-components"""

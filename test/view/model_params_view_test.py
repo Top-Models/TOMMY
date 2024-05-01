@@ -13,7 +13,8 @@ from tommy.controller.controller import Controller
 def model_params_view(qtbot: QtBot) -> ModelParamsView:
     controller = Controller()
     model_params_view = ModelParamsView(controller.model_parameters_controller,
-                                        controller)
+                                        controller,
+                                        controller.config_controller)
     qtbot.addWidget(model_params_view)
     return model_params_view
 

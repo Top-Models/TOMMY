@@ -10,7 +10,8 @@ from tommy.view.model_params_view import ModelParamsView
 @pytest.fixture
 def model_params_view(qtbot: QtBot):
     controller = Controller()
-    mpv = ModelParamsView(controller.model_parameters_controller, controller)
+    mpv = ModelParamsView(controller.model_parameters_controller,
+                          controller, controller.config_controller)
     # qtbot.addWidget(mpv)
     return mpv
 
@@ -37,7 +38,6 @@ def test_fetch_topic_num(model_params_view: ModelParamsView, test_input: str,
 
 def test_apply_validates_input(model_params_view: ModelParamsView,
                                mocker: mock):
-
     # mock topic modelling to curb execution time
     mock_on_run_topic_modelling = mocker.Mock()
     model_params_view._controller.on_run_topic_modelling = (
