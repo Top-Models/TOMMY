@@ -1,20 +1,36 @@
-Welcome to Tommy's wiki!
-=================================
+Welcome to TOMMY's wiki!
+========================
+
+**Tommy** is an application that makes topic modelling easy and accessible, developed for EMMA by students from Utrecht University.
+
+.. image:: _static/tommy.png
+    :width: 100
+
+Download
+========
+
+- :download:`TOMMY for Mac <download/tommy-mac.dmg>`
+- :download:`TOMMY for Windows <download/tommy-windows.zip>`
+- :download:`TOMMY for Linux <download/tommy-linux.zip>`
 
 .. toctree::
-    :maxdepth: 2
-    :caption: Wiki
+    :maxdepth: 1
+    :caption: User wiki
 
-    wiki/Style-guide.md
-    wiki/Style-guide-source-control.md
-    wiki/Generating-Portable-Executable.md
-    wiki/How-to-run-tests-from-PyCharm.md
-    wiki/Writing-unit-tests-with-PyTest.md
+    wiki-user/User-guide.md
 
-Welcome to Tommy's documentation!
-=================================
+.. toctree::
+    :maxdepth: 1
+    :caption: Developer wiki
 
-**Tommy** is an application for performing topic modelling.
+    wiki-dev/Style-guide.md
+    wiki-dev/Style-guide-source-control.md
+    wiki-dev/Generating-Portable-Executable.md
+    wiki-dev/How-to-run-tests-from-PyCharm.md
+    wiki-dev/Writing-unit-tests-with-PyTest.md
+
+Code documentation
+==================
 
 .. autosummary::
     :toctree: code
@@ -27,7 +43,7 @@ Welcome to Tommy's documentation!
     tommy.model
 
 
-Indices and tables
+Indices and ables
 ==================
 
 * :ref:`modindex`
