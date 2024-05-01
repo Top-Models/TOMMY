@@ -4,13 +4,11 @@ from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as
                                                 FigureCanvas)
 import matplotlib.figure
 
-from tommy.controller.graph_controller import GraphController
-
 
 class GraphView(QWidget):
     """A class for displaying the graphs made by the graph-controller"""
 
-    def __init__(self, graph_controller: GraphController) -> None:
+    def __init__(self) -> None:
         """Initialize the GraphDisplay."""
         super().__init__()
 
@@ -25,11 +23,6 @@ class GraphView(QWidget):
         self.layout.setSpacing(0)
         self.setMinimumHeight(350)
         self.setLayout(self.layout)
-
-        # Set reference to the graph-controller and add self to its publisher
-        self._graph_controller = graph_controller
-        self._graph_controller.plots_changed_event.subscribe(
-            self.display_plot)
 
     def display_plot(self, canvas: matplotlib.figure.Figure) -> None:
         """

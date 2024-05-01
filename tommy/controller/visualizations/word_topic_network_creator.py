@@ -9,6 +9,7 @@ from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
 from tommy.controller.visualizations.word_topic_nx_exporter import (
     WordTopicNxExporter)
+from tommy.controller.visualizations.possible_visualization import VisGroup
 
 
 class WordTopicNetworkCreator(AbstractVisualization):
@@ -18,10 +19,12 @@ class WordTopicNetworkCreator(AbstractVisualization):
     """
     _required_interfaces = []
     name = 'Topics en 15 meest voorkomende woorden'
+    vis_group = VisGroup.MODEL
+    needed_input_data = []
 
     def get_figure(self,
-                   topic_runner: TopicRunner
-                   ) -> matplotlib.figure.Figure:
+                   topic_runner: TopicRunner,
+                   **kwargs) -> matplotlib.figure.Figure:
         """
         Construct a word-topic network which is used to plot the relations
         between topics and probable words

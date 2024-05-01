@@ -7,6 +7,9 @@ from tommy.controller.result_interfaces.correlation_matrix_interface import (
     CorrelationMatrixInterface)
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
+from tommy.controller.visualizations.possible_visualization import VisGroup
+from tommy.controller.visualizations.visualization_input_datatypes import (
+    VisInputData, ProcessedCorpus)
 
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
@@ -20,9 +23,12 @@ class CorrelationMatrixCreator(AbstractVisualization):
     """
     _required_interfaces = [CorrelationMatrixInterface]
     name = 'Correlatiematrix topics'
+    vis_group = VisGroup.MODEL
+    needed_input_data = [VisInputData.PROCESSED_CORPUS]
 
     def get_figure(self,
-                   topic_runner: TopicRunner | CorrelationMatrixInterface
+                   topic_runner: TopicRunner | CorrelationMatrixInterface,
+                   **kwargs
                    ) -> matplotlib.figure.Figure:
         """
         Construct a correlation matrix plot for the topics in the given

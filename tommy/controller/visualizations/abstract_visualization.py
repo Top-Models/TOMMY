@@ -4,6 +4,9 @@ import matplotlib.figure
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
+from tommy.controller.visualizations.possible_visualization import VisGroup
+from tommy.controller.visualizations.visualization_input_datatypes import (
+    VisInputData, TopicID, MetadataCorpus, ProcessedCorpus)
 
 
 class AbstractVisualization(ABC):
@@ -13,13 +16,24 @@ class AbstractVisualization(ABC):
     """
     _required_interfaces: []
     name: str
+    vis_group: VisGroup
+    needed_input_data: list[VisInputData]
 
     @abstractmethod
-    def get_figure(self, topic_runner: TopicRunner
+    def get_figure(self, topic_runner: TopicRunner,
+                   topic_id: TopicID = None,
+                   metadata_corpus: MetadataCorpus = None,
+                   processed_corpus: ProcessedCorpus = None
                    ) -> matplotlib.figure.Figure:
         """
         Get the matplotlib figure showing the requested visualization
         :param topic_runner: the topic runner to extract the result data from
+        :param topic_id: the index of the topic to create the visualization
+            about if applicable, defaults to None
+        :param metadata_corpus: the metadata of all documents in the corpus if
+            applicable, defaults to None
+        :param processed_corpus: the entire preprocessed corpus if applicable,
+            defaults to None
         :return: The matplotlib figure showing the requested visualization
         """
 
