@@ -37,7 +37,7 @@ napoleon_include_init_with_doc = True
 templates_path = ['_templates']
 exclude_patterns = []
 
-pygments_style = 'sphinx'
+pygments_style = 'default'
 
 # Removes, from all docs, the copyright footer.
 html_show_copyright = False
