@@ -1,5 +1,10 @@
 # Style guide
 
+<div align="center">
+  <img src="../_static/logo.png" width=135px alt="Top Models logo">
+  <h1> Top Models | Style Guide </h1>
+</div>
+
 *"A style guide is about consistency. Consistency with this style guide is
 important. Consistency within a project is
 more

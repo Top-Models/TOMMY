@@ -38,6 +38,7 @@ templates_path = ['_templates']
 exclude_patterns = []
 
 pygments_style = 'default'
+myst_heading_anchors = 3  # Needed for markdown header links
 
 # Removes, from all docs, the copyright footer.
 html_show_copyright = False

@@ -17,9 +17,8 @@ Welcome to Tommy's documentation!
 **Tommy** is an application for performing topic modelling.
 
 .. autosummary::
-    :toctree: _autosummary
+    :toctree: code
     :caption: Contents
-    :template: autosummary/module.rst
     :recursive:
 
     tommy
