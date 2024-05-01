@@ -1,4 +1,5 @@
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QDoubleValidator
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QCheckBox, \
     QVBoxLayout
 
@@ -11,9 +12,6 @@ class LdaSettings(AbstractSettings):
     """
     Class for LDA settings
     """
-    _alpha_value_input: QLineEdit
-    _beta_value_input: QLineEdit
-    _auto_calc_alpha_beta_checkbox: QCheckBox
 
     def __init__(self,
                  model_parameters_controller):
@@ -23,6 +21,10 @@ class LdaSettings(AbstractSettings):
         :param model_parameters_controller: ModelParametersController
         """
         super().__init__(model_parameters_controller)
+
+        self._alpha_value_input = QLineEdit()
+        self._beta_value_input = QLineEdit()
+        self._auto_calc_alpha_beta_checkbox = QCheckBox()
 
     def initialize_parameter_widgets(self,
                                      scroll_layout: QVBoxLayout) -> None:
@@ -44,8 +46,9 @@ class LdaSettings(AbstractSettings):
 
         :return: bool
         """
-        return super().all_fields_valid()
-        # TODO: Implement validation for alpha and beta fields
+        return (super().all_fields_valid() and
+                self.validate_alpha_field() and
+                self.validate_beta_field())
 
     def initialize_alpha_field(self) -> None:
         """
@@ -66,6 +69,7 @@ class LdaSettings(AbstractSettings):
 
         # Add alpha input field
         self._alpha_value_input = QLineEdit()
+        self._alpha_value_input.setValidator(QDoubleValidator())
         self._alpha_value_input.setReadOnly(True)
         self._alpha_value_input.setFixedWidth(100)
         self._alpha_value_input.setPlaceholderText("Voer alpha in")
@@ -94,7 +98,31 @@ class LdaSettings(AbstractSettings):
 
         :return: bool
         """
-        pass
+        is_valid = True
+
+        # Check if alpha is auto calculated
+        if self._auto_calc_alpha_beta_checkbox.isChecked():
+            is_valid = True
+
+        # Check if alpha is 0
+        if self._alpha_value_input.text() == "0":
+            is_valid = False
+
+        # Check if alpha is a valid float
+        try:
+            alpha = float(self._alpha_value_input.text())
+            if alpha < 0:
+                is_valid = False
+        except ValueError:
+            is_valid = False
+
+        if not is_valid:
+            self._alpha_value_input.setStyleSheet(
+                self.topic_input_layout_invalid)
+            return False
+
+        self._alpha_value_input.setStyleSheet(self.topic_input_layout_valid)
+        return True
 
     def initialize_beta_field(self):
         """
@@ -115,6 +143,7 @@ class LdaSettings(AbstractSettings):
 
         # Add beta input field
         self._beta_value_input = QLineEdit()
+        self._beta_value_input.setValidator(QDoubleValidator())
         self._beta_value_input.setReadOnly(True)
         self._beta_value_input.setFixedWidth(100)
         self._beta_value_input.setPlaceholderText("Voer beta in")
@@ -143,7 +172,31 @@ class LdaSettings(AbstractSettings):
 
         :return: bool
         """
-        pass
+        is_valid = True
+
+        # Check if beta is auto calculated
+        if self._auto_calc_alpha_beta_checkbox.isChecked():
+            is_valid = True
+
+        # Check if beta is 0
+        if self._beta_value_input.text() == "0":
+            is_valid = False
+
+        # Check if beta is a valid float
+        try:
+            beta = float(self._beta_value_input.text())
+            if beta < 0:
+                is_valid = False
+        except ValueError:
+            is_valid = False
+
+        if not is_valid:
+            self._beta_value_input.setStyleSheet(
+                self.topic_input_layout_invalid)
+            return False
+
+        self._beta_value_input.setStyleSheet(self.topic_input_layout_valid)
+        return True
 
     def initialize_auto_calculate_alpha_beta_checkbox(self) -> None:
         """

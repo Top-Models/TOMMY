@@ -9,7 +9,7 @@ class ModelParametersModel:
     model_type: ModelType = ModelType.LDA
     word_amount: int = 10
     alpha: float = 1.0
-    beta: float = 0.1
+    beta: float = 0.01
     alpha_beta_custom_enabled: bool = False
 
 

@@ -1,17 +1,15 @@
 import pytest
-from PySide6.QtWidgets import QLineEdit
-from pytestqt.qtbot import QtBot
 
-from tommy.controller.model_parameters_controller import \
-    ModelParametersController
+from tommy.controller.controller import Controller
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
 
 
 @pytest.fixture(scope='function')
 def abstract_settings() -> AbstractSettings:
-    model_parameters_controller = ModelParametersController()
-    abstract_settings = AbstractSettings(model_parameters_controller)
+    controller = Controller()
+    abstract_settings = AbstractSettings(
+        controller.model_parameters_controller)
     return abstract_settings
 
 
@@ -36,7 +34,77 @@ def test_all_fields_valid(abstract_settings: AbstractSettings,
                       validate_word_input)
 
 
-# TODO: Implement tests for the other methods in AbstractSettings
+@pytest.mark.parametrize("text, expected",
+                         [("0", False), ("abc", False), ("1", True),
+                          ("2.5", False), ("7", True), ("999", True),
+                          ("1000", False)])
+def test_validate_topic_amount_field(abstract_settings: AbstractSettings,
+                                     text: str, expected: bool,
+                                     mocker):
+    # Mock scroll_layout
+    scroll_layout = mocker.MagicMock()
+    abstract_settings.initialize_parameter_widgets(scroll_layout)
+
+    # Mock get_model_n_topics from ModelParametersController
+    mocker.patch.object(abstract_settings._model_parameters_controller,
+                        "get_model_n_topics", return_value=text)
+
+    # Act
+    abstract_settings._topic_amount_field.setText(text)
+    result = abstract_settings.validate_topic_amount_field()
+
+    # Assert
+    assert result == expected
+
+
+def test_get_topic_amount(abstract_settings: AbstractSettings, mocker):
+    # Mock scroll_layout
+    scroll_layout = mocker.MagicMock()
+    abstract_settings.initialize_parameter_widgets(scroll_layout)
+
+    # Act
+    abstract_settings._topic_amount_field.setText("7")
+    result = abstract_settings.get_topic_amount()
+
+    # Assert
+    assert result == 7
+
+
+@pytest.mark.parametrize("text, expected",
+                         [("0", False), ("abc", False), ("1", True),
+                          ("2.5", False), ("7", True), ("999", True),
+                          ("1000", False)])
+def test_validate_amount_of_words_field(abstract_settings: AbstractSettings,
+                                        text: str, expected: bool,
+                                        mocker):
+    # Mock scroll_layout
+    scroll_layout = mocker.MagicMock()
+    abstract_settings.initialize_parameter_widgets(scroll_layout)
+
+    # Act
+    abstract_settings._amount_of_words_field.setText(text)
+    result = abstract_settings.validate_amount_of_words_field()
+
+    # Assert
+    assert result == expected
+
+
+@pytest.mark.parametrize("text, expected",
+                         [("0", 0), ("abc", 0), ("1", 1),
+                          ("2.5", 0), ("7", 7), ("999", 999),
+                          ("1000", 0)])
+def test_get_amount_of_words(abstract_settings: AbstractSettings,
+                             text: str, expected: int, mocker):
+    # Mock scroll_layout
+    scroll_layout = mocker.MagicMock()
+    abstract_settings.initialize_parameter_widgets(scroll_layout)
+
+    # Act
+    abstract_settings._amount_of_words_field.setText(text)
+    result = abstract_settings.get_amount_of_words()
+
+    # Assert
+    assert result == expected
 
 
 """

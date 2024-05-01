@@ -1,13 +1,9 @@
-from abc import ABC
-
 from PySide6.QtGui import QIntValidator, Qt
 from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, \
     QVBoxLayout
 
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
-from tommy.controller.topic_modelling_controller import \
-    TopicModellingController
 from tommy.support.constant_variables import text_font, seco_col_blue, \
     disabled_gray, heading_font
 
@@ -18,8 +14,6 @@ class AbstractSettings:
     """
     _model_parameters_controller: ModelParametersController
     _scroll_layout: QVBoxLayout
-    _topic_amount_field: QLineEdit
-    _amount_of_words_field: QLineEdit
 
     def __init__(self,
                  model_parameters_controller: ModelParametersController):
@@ -46,6 +40,10 @@ class AbstractSettings:
                                           f"color: black;"
                                           f"border: 2px solid {seco_col_blue};"
                                           f"padding: 5px;")
+
+        # Initialize input fields
+        self._topic_amount_field = QLineEdit()
+        self._amount_of_words_field = QLineEdit()
 
         # Initialize layout
         self.topic_input_layout_invalid = None
