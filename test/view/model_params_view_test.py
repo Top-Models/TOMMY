@@ -56,6 +56,9 @@ def test_apply_button_clicked_changed_topic_num(
         qtbot: QtBot,
         mocker: mocker):
     # Arrange
+    mock_on_run_topic_modelling = mocker.Mock()
+    model_params_view._controller.on_run_topic_modelling = (
+        mock_on_run_topic_modelling)
     initial_value = model_params_view.fetch_topic_num()
 
     # mock topic modelling to curb execution time
@@ -66,11 +69,12 @@ def test_apply_button_clicked_changed_topic_num(
     # Act
     new_value = 5
     qtbot.keyClicks(model_params_view.topic_input, str(new_value))
-    model_params_view.apply_button.clicked.emit()
+    model_params_view.topic_input.editingFinished.emit()
+    qtbot.mouseClick(model_params_view.apply_button, Qt.LeftButton)
 
     # Assert
-    assert (model_params_view.fetch_topic_num() ==
-            int(str(initial_value) + str(new_value)))
+    assert (model_params_view._model_parameters_controller
+            .get_model_n_topics() == int(str(initial_value) + str(new_value)))
 
 
 def test_apply_button_clicked_calls_on_run_topic_modelling(
