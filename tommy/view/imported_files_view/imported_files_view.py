@@ -4,29 +4,27 @@ from PySide6.QtWidgets import (QLabel, QVBoxLayout, QScrollArea, QWidget,
                                QSizePolicy, QPushButton, QGridLayout)
 
 from tommy.controller.corpus_controller import CorpusController
-from tommy.controller.project_settings_controller import (
-    ProjectSettingsController)
+from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
     heading_font, prim_col_red,
     hover_prim_col_red)
+
 from tommy.view.imported_files_view.file_label import FileLabel
-from tommy.view.observer.observer import Observer
 
 
-class ImportedFilesView(QWidget, Observer):
+class ImportedFilesView(QWidget):
     """The ImportedFileDisplay class that shows the imported files."""
 
     fileClicked = Signal(object)
 
-    def __init__(self, corpus_controller: CorpusController,
-                 project_settings_controller: ProjectSettingsController) -> \
-            None:
+    def __init__(self, corpus_controller: CorpusController) -> None:
         """Initialize the ImportedFileDisplay"""
         super().__init__()
 
-        # Set reference to the corpus controller
+        # Set reference to the corpus controller and subscribe to the metadata
         self._corpus_controller = corpus_controller
-        corpus_controller.add(self)
+        corpus_controller.metadata_changed_event.subscribe(
+            self.on_metadata_changed)
 
         # Initialize widget properties
         self.setMinimumHeight(200)
@@ -125,13 +123,15 @@ class ImportedFilesView(QWidget, Observer):
         # Connect label click event to toggle_collapse method
         self.title_widget.title_button.mousePressEvent = self.toggle_collapse
 
-    def fetch_files(self, tab_name: str) -> None:
+    def update_files(self, tab_name: str, metadata: [Metadata]) -> None:
         """
         Fetch the metadata from the selected directory and store it in
         file_container
+        :param tab_name: Name of the tab to update the files in
+        :param metadata: List of metadata of the files in this tab
         :return: None
         """
-        self.file_container[tab_name] = self._corpus_controller.get_metadata()
+        self.file_container[tab_name] = metadata
 
     def display_files(self, tab_name: str) -> None:
         """
@@ -235,16 +235,16 @@ class ImportedFilesView(QWidget, Observer):
             self.setMinimumHeight(200)
             self.setMaximumHeight(300)
 
-    def update_observer(self, publisher) -> None:
+    def on_metadata_changed(self, metadata: [Metadata]) -> None:
         """
-        Update the observer. This fetches and displays the files when the
+        Update the files tab. This saves and displays the files when the
         metadata is updated.
-        :param publisher: The publisher that is being observed
+        :param metadata: The new list of metadata for the current tab
         :return: None
         """
-        # TODO: when the implementation of tabs is updated, it
-        #  should no longer hard-code the tab name
-        self.fetch_files("lda_model")
+        # TODO: when the implementation of tabs is updated, it should no longer
+        #  hard-code the tab name
+        self.update_files("lda_model", metadata)
         self.display_files("lda_model")
 
 

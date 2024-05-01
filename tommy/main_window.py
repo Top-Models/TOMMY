@@ -76,8 +76,7 @@ class MainWindow(QMainWindow):
             self._controller.graph_controller
         )
         self.imported_files_view = ImportedFilesView(
-            self._controller.corpus_controller,
-            self._controller.project_settings_controller)
+            self._controller.corpus_controller)
         self.model_params_view = ModelParamsView(
             self._controller.model_parameters_controller,
             self._controller)

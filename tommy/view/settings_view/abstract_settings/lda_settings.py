@@ -102,7 +102,9 @@ class LdaSettings(AbstractSettings):
 
         # Check if alpha is auto calculated
         if self._auto_calc_alpha_beta_checkbox.isChecked():
-            is_valid = True
+            self._alpha_value_input.setStyleSheet(
+                self.topic_input_layout_valid)
+            return True
 
         # Check if alpha is 0
         if self._alpha_value_input.text() == "0":
@@ -121,7 +123,6 @@ class LdaSettings(AbstractSettings):
                 self.topic_input_layout_invalid)
             return False
 
-        self._alpha_value_input.setStyleSheet(self.topic_input_layout_valid)
         return True
 
     def initialize_beta_field(self):
@@ -176,7 +177,8 @@ class LdaSettings(AbstractSettings):
 
         # Check if beta is auto calculated
         if self._auto_calc_alpha_beta_checkbox.isChecked():
-            is_valid = True
+            self._beta_value_input.setStyleSheet(self.topic_input_layout_valid)
+            return True
 
         # Check if beta is 0
         if self._beta_value_input.text() == "0":
@@ -195,7 +197,6 @@ class LdaSettings(AbstractSettings):
                 self.topic_input_layout_invalid)
             return False
 
-        self._beta_value_input.setStyleSheet(self.topic_input_layout_valid)
         return True
 
     def initialize_auto_calculate_alpha_beta_checkbox(self) -> None:
