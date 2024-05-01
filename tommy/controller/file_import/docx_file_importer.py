@@ -1,5 +1,7 @@
 import os
-from docx import Document
+from typing import Generator
+import mammoth
+
 from tommy.controller.file_import import file_importer_base
 from tommy.controller.file_import.metadata import Metadata
 from tommy.controller.file_import.raw_body import RawBody
@@ -26,24 +28,29 @@ class WordFileImporter(file_importer_base.FileImporterBase):
                      compatibility.
         :return: bool: True if the file is compatible, False otherwise.
         """
+
+        if not path.endswith('.docx'):
+            return False
+
         try:
-            Document(path)
+            with open(path, "rb") as docx_file:
+                mammoth.extract_raw_text(docx_file)
             return True
         except Exception as e:
             print(f"Error reading file '{path}': {e}")
             return False
 
-    def load_file(self, path: str) -> RawFile:
+    def load_file(self, path: str) -> Generator[RawFile, None, None]:
         """
-        Loads a Word file and returns a File object.
+        Loads a Word file and yields a File object.
 
         :param path: The string path to the Word file.
-        :return: File: A File object generated from the Word file.
+        :return: Generator[RawFile, None, None]: A generator yielding File objects.
         """
-        doc = Document(path)
-        text = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
-
-        return self.generate_file(text, path)
+        with open(path, "rb") as docx_file:
+            result = mammoth.extract_raw_text(docx_file)
+            text = result.value  # Extracted text
+            yield self.generate_file(text, path)
 
     def generate_file(self, text: str, path) -> RawFile:
         """
@@ -54,12 +61,15 @@ class WordFileImporter(file_importer_base.FileImporterBase):
         :return: A RawFile object generated from the Word file
         containing metadata and the raw text of the file.
         """
+
+        alt_title = os.path.basename(path).replace('.docx', '')
+
         return RawFile(
             metadata=Metadata(author=None,
                               title=None, date=None,
                               url=None, path=path,
                               format="docx",
                               length=len(text.split(" ")),
-                              name=os.path.relpath(path).split(".")[0],
-                              size=stat(path).st_size),
+                              name=alt_title,
+                              size=os.stat(path).st_size),
             body=RawBody(body=text))
