@@ -13,20 +13,19 @@ rm -r "${OUTPUT_FOLDER}"
 
 echo "> Creating an application bundle for Tommy"
 
+#--add-data "${DATA_FOLDER_PATH}/csv_files/*.csv:./data" \
 pyinstaller \
 --noconfirm \
 --windowed \
 --onedir \
 --name "${APP_NAME}" \
 --icon "assets/tommy.icns" \
---add-data "${DATA_FOLDER_PATH}/csv_files/*.csv:./data" \
 --add-data "${DATA_FOLDER_PATH}/stopwords.txt:./preprocessing_data" \
 --add-data "${DATA_FOLDER_PATH}/pipeline_download:./preprocessing_data/pipeline_download" \
 tommy/main.py
 
-# PyInstaller automatically does ad-hoc signing? (as need to --force)
-codesign --force --verbose --verify --sign - "${SOURCE_FOLDER_PATH}"
 echo "> Creating a DMG file for Tommy"
+
 create-dmg \
 --volname "${VOLUME_NAME}" \
 --volicon "assets/tommy.icns" \
@@ -41,10 +40,9 @@ create-dmg \
 "${DMG_FOLDER_PATH}" \
 "${SOURCE_FOLDER_PATH}"
 
-# Should be able to only sign the disk image?
 echo "> Signing the DMG file"
 
-#codesign --force --verify --verbose --sign "Developer ID Application: Tommy" "${DMG_FOLDER_PATH}"
-#codesign --verify --verbose=4 --deep --strict "${DMG_FOLDER_PATH}"
+# TODO: Fix the signing (maybe only necessary for the dmg file?)
+#codesign --force --verbose  --verify--timestamp --sign "Developer ID Application: TTT" "${DMG_FOLDER_PATH}"
 
 echo "> You can find the signed DMG file in the dist folder"
