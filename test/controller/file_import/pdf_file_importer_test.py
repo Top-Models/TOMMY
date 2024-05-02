@@ -38,19 +38,22 @@ def test_load_file(pdf_file_importer):
 
 
 def test_generate_file(pdf_file_importer):
+    filepath = os.path.join(TEST_DATA_DIR,
+                            'correct_files',
+                            'kattenverhaaltje 1.pdf')
     testfile_metadata = {
              '/Author': 'Test Author',
-             '/Title': 'Test Title',
+             '/Title': 'kattenverhaaltje 1',
              '/ModDate': 'D:20220101000000+00\'00\''}
 
-    file = pdf_file_importer.generate_file('test',
-                                               'test_pdf/'
-                                               'correct_files/'
-                                               'kattenverhaaltje 1.pdf',
+    file = pdf_file_importer.generate_file("Verhaaltje over een kat",
+                                                path=filepath,
                                                 metadata=testfile_metadata)
     assert file is not None
-    assert file.body == 'test'
-    assert file.path == 'test_pdf/correct_files/kattenverhaaltje 1.pdf'
-    assert file.metadata == 'metadata'
+    assert file.metadata is not None
+    assert file.body.body == "Verhaaltje over een kat"
+    assert file.metadata.author == 'Test Author'
+    assert file.metadata.title == 'kattenverhaaltje 1'
+    assert file.metadata.date == 'D:20220101000000+00\'00\''
 
 
