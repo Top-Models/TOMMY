@@ -15,33 +15,6 @@ def plot_selection_view(qtbot: QtBot) -> PlotSelectionView:
     return plot_selection_view
 
 
-def test_get_active_tab_name(plot_selection_view: PlotSelectionView, mocker):
-    """
-    Test getting the name of the active tab.
-    """
-    # Arrange
-    plot_selection_view.setCurrentIndex(0)
-    plot_selection_view.setTabVisible(6, True)
-    plot_selection_view.setTabVisible(7, True)
-
-    # Mock update_current_visualization method of the graph controller
-    plot_selection_view._graph_controller.update_current_visualization = \
-        lambda x: True
-
-    # Act & Assert
-    assert plot_selection_view.get_active_tab_name() == "Woordaantal"
-    plot_selection_view.setCurrentIndex(2)
-    assert plot_selection_view.get_active_tab_name() == "Correlatie"
-    plot_selection_view.setCurrentIndex(3)
-    assert plot_selection_view.get_active_tab_name() == "Topic Netwerk"
-    plot_selection_view.setCurrentIndex(4)
-    assert plot_selection_view.get_active_tab_name() == "Doc. Netwerk"
-    plot_selection_view.setCurrentIndex(6)
-    assert plot_selection_view.get_active_tab_name() == "Woordenwolk"
-    plot_selection_view.setCurrentIndex(7)
-    assert plot_selection_view.get_active_tab_name() == "Woordgewichten"
-
-
 def test_tab_clicked_event(plot_selection_view: PlotSelectionView):
     # Mock update_current_visualization method of the graph controller
     plot_selection_view._graph_controller.update_current_visualization = \

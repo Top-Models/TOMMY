@@ -140,14 +140,6 @@ class PlotSelectionView(QTabWidget):
         self.addTab(QWidget(), "     ")
         self.setTabEnabled(self.count() - 1, False)
 
-    def get_active_tab_name(self) -> str:
-        """
-        Get the name of the active tab.
-
-        :return: The name of the active tab
-        """
-        return self.tabText(self.currentIndex())
-
 
 """
 This program has been developed by students from the bachelor Computer Science
