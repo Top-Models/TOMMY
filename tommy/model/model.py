@@ -37,7 +37,10 @@ class Model:
         return self.config_model.topic_model
 
     def create_configuration(self) -> ConfigModel:
-        # TODO: copy current configuration into new configmodel
+        """
+        Create a new configuration based on the current configuration
+        :return: The newly created config model
+        """
         return ConfigModel(self.config_model)
 
 

@@ -42,7 +42,6 @@ class ConfigController:
         Add a new configuration with the given name and switch to the new
         configuration
         :param name: Name of the configuration
-        :param config: Configuration settings
         :return: Whether the config could successfully be created. Creating a
         config fails if a config with that name already exists
         """
