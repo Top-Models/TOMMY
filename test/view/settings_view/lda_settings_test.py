@@ -45,9 +45,9 @@ def test_alpha_input_editing_finished_event_disabled(lda_settings: LdaSettings,
 
 
 @pytest.mark.parametrize("text, expected",
-                         [("0", False), ("abc", False), ("1", True),
-                          ("2.5", True), ("7", True), ("999", True),
-                          ("1000", True)])
+                         [("-1", False), ("0", False), ("abc", False),
+                          ("1", True), ("2.5", True), ("7", True),
+                          ("999", True), ("1000", True)])
 def test_validate_alpha_field_not_auto(lda_settings: LdaSettings,
                                        text: str,
                                        expected: bool,
@@ -113,9 +113,9 @@ def test_beta_input_editing_finished_event_disabled(lda_settings: LdaSettings,
 
 
 @pytest.mark.parametrize("text, expected",
-                         [("0", False), ("abc", False), ("1", True),
-                          ("2.5", True), ("7", True), ("999", True),
-                          ("1000", True)])
+                         [("-1", False), ("0", False), ("abc", False),
+                          ("1", True), ("2.5", True), ("7", True),
+                          ("999", True), ("1000", True)])
 def test_validate_beta_field_not_auto(lda_settings: LdaSettings,
                                       text: str,
                                       expected: bool,

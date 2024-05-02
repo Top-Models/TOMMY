@@ -70,6 +70,32 @@ def test_get_topic_amount(abstract_settings: AbstractSettings, mocker):
     assert result == 7
 
 
+def test_get_topic_amount_empty(abstract_settings: AbstractSettings, mocker):
+    # Mock scroll_layout
+    scroll_layout = mocker.MagicMock()
+    abstract_settings.initialize_parameter_widgets(scroll_layout)
+
+    # Act
+    abstract_settings._topic_amount_field.setText("")
+    result = abstract_settings.get_topic_amount()
+
+    # Assert
+    assert result == 0
+
+
+def test_get_topic_amount_invalid(abstract_settings: AbstractSettings, mocker):
+    # Mock scroll_layout
+    scroll_layout = mocker.MagicMock()
+    abstract_settings.initialize_parameter_widgets(scroll_layout)
+
+    # Act
+    abstract_settings._topic_amount_field.setText("abc")
+    result = abstract_settings.get_topic_amount()
+
+    # Assert
+    assert result == 0
+
+
 @pytest.mark.parametrize("text, expected",
                          [("0", False), ("abc", False), ("1", True),
                           ("2.5", False), ("7", True), ("999", True),
