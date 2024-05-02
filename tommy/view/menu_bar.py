@@ -30,11 +30,13 @@ class MenuBar(QMenuBar):
         import_input_folder_action = QAction("Selecteer input folder", self)
         export_to_gexf_action = QAction("Exporteer naar Graph Exchange XML Format (.gexf)", self)
         export_to_png_action = QAction("Exporteer grafieken (.png)", self)
+        export_topic_words_action = QAction("Exporteer onderwerpwijzer (.csv)", self)
 
         # Connect actions to event handlers
         import_input_folder_action.triggered.connect(self.import_input_folder)
         export_to_gexf_action.triggered.connect(self.export_to_gexf)
         export_to_png_action.triggered.connect(self.export_to_png)
+        export_topic_words_action.triggered.connect(self.export_topic_words)
 
         # Create menu bar
         file_menu = self.addMenu("Bestand")
@@ -44,6 +46,7 @@ class MenuBar(QMenuBar):
         export_menu = file_menu.addMenu("Exporteren")
         export_menu.addAction(export_to_gexf_action)
         export_menu.addAction(export_to_png_action)
+        export_menu.addAction(export_topic_words_action)
 
         # Set style
         self.setStyleSheet(f"""
@@ -109,7 +112,17 @@ class MenuBar(QMenuBar):
         if dialog:
             self._export_controller.export_graphs(dialog)
 
+    def export_topic_words(self) -> None:
+        """
+        Export words related to topics to a CSV file.
+        :return: None
+        """
+        dialog = QFileDialog.getSaveFileName(self, "Selecteer export locatie",
+                                             filter="CSV files (*.csv)")
 
+        if dialog[0]:
+            export_path = dialog[0]
+            self._export_controller.export_topic_words_csv(export_path)
 
 
 """

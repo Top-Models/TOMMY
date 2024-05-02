@@ -1,3 +1,5 @@
+import csv
+
 import matplotlib.figure
 import networkx as nx
 from matplotlib import pyplot as plt
@@ -34,6 +36,26 @@ class ExportController:
         for i in range(len(graph_exports)):
             new_path = os.path.join(path, f"{i}.png")
             graph_exports[i].savefig(new_path)
+
+    def export_topic_words_csv(self, path: str) -> None:
+        """
+        Export words related to topics to a CSV file.
+        :param path: Path to the CSV file
+        :return: None
+        """
+        # Open the CSV file for writing
+        with open(path, 'w', newline='') as csvfile:
+            csv_writer = csv.writer(csvfile)
+            csv_writer.writerow(['Topic', 'Word', 'Score'])  # Write header row
+
+            # Iterate through topics
+            for i in range(self._graph_controller.get_number_of_topics()):
+                topic_name = f"Topic {i + 1}"
+                topic = self._graph_controller.get_topic_with_scores(i, 100)
+
+                # Iterate through words in the topic
+                for word, score in zip(topic.top_words, topic.word_scores):
+                    csv_writer.writerow([topic_name, word, score])
 
     def set_controller_refs(self, graph_controller: GraphController) -> None:
         self._graph_controller = graph_controller
