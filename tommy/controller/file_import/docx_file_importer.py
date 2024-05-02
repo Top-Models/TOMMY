@@ -8,7 +8,7 @@ from tommy.controller.file_import.raw_body import RawBody
 from tommy.controller.file_import.raw_file import RawFile
 
 
-class WordFileImporter(file_importer_base.FileImporterBase):
+class DocxFileImporter(file_importer_base.FileImporterBase):
     """
     Handles importing of Word files
     """
