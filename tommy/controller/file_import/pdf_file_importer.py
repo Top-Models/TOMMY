@@ -51,7 +51,8 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         except Exception as e:
             print(f"Failed to load file {path} due to error: {e}")
 
-    def generate_file(self, file: str, path, metadata) -> RawFile:
+    @staticmethod
+    def generate_file(file: str, path, metadata) -> RawFile:
         """
         Generates a File object from a PDF page.
 

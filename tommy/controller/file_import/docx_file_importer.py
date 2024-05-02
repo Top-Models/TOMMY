@@ -26,6 +26,7 @@ class DocxFileImporter(file_importer_base.FileImporterBase):
 
         :param path: The string path to the Word file to be checked for
                      compatibility.
+
         :return: bool: True if the file is compatible, False otherwise.
         """
 
@@ -52,7 +53,8 @@ class DocxFileImporter(file_importer_base.FileImporterBase):
             text = result.value  # Extracted text
             yield self.generate_file(text, path)
 
-    def generate_file(self, text: str, path) -> RawFile:
+    @staticmethod
+    def generate_file(text: str, path) -> RawFile:
         """
         Generates a File object from a Word file.
 
