@@ -20,7 +20,7 @@ class GenericFileImporter:
         """
         self.importers: (
             List)[file_importer_base.FileImporterBase] = [
-            docx_file_importer.WordFileImporter(),
+            docx_file_importer.DocxFileImporter(),
             pdf_file_importer.PdfFileImporter(),
             csv_file_importer.CsvFileImporter()
         ]
