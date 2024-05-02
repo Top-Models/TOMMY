@@ -9,7 +9,7 @@ from tommy.controller.visualizations.possible_visualization import (
 
 class PlotSelectionView(QTabWidget):
     """A class to display options for selecting a plot."""
-
+    _disable_tab_clicked_event: bool
     ORDER_OF_VIS_GROUPS: list[VisGroup] = [VisGroup.CORPUS,
                                            VisGroup.MODEL,
                                            VisGroup.TOPIC]
@@ -21,6 +21,8 @@ class PlotSelectionView(QTabWidget):
                  graph_view: GraphView) -> None:
         """Initialize the GraphDisplay."""
         super().__init__()
+
+        self._disable_tab_clicked_event = False
 
         # Initialize widget properties
         self.setFixedHeight(50)
@@ -62,7 +64,10 @@ class PlotSelectionView(QTabWidget):
 
         # Set reference to the graph-controller and graphview
         self._graph_controller = graph_controller
-        self._graph_controller.plots_changed_event.subscribe(self._create_tabs)
+        self._graph_controller.possible_plots_changed_event.subscribe(
+            self._create_tabs)
+        self._graph_controller.refresh_plots_event.subscribe(
+            lambda _: self._tab_clicked_event())
         self._graph_view = graph_view
 
         # Initialize a dict from tab index to the corresponding visualization
@@ -73,9 +78,14 @@ class PlotSelectionView(QTabWidget):
 
     def _tab_clicked_event(self) -> None:
         """Update the currently selected tab in the graph-view"""
-        selected_tab_index = self.currentIndex()
+        # do not update while we are removing all the tabs
+        if self._disable_tab_clicked_event:
+            return
 
-        assert selected_tab_index in self._tabs_plots
+        selected_tab_index = self.currentIndex()
+        assert selected_tab_index in self._tabs_plots, (
+            f"incorrect tab index "
+            f"selected: {selected_tab_index}")
 
         new_possible_vis = self._tabs_plots[selected_tab_index]
         new_plot = self._graph_controller.get_visualization(
@@ -89,10 +99,7 @@ class PlotSelectionView(QTabWidget):
         :param possible_vis_list: The list of all possible visualization to
             create tabs for
         """
-        # Clear layout and list of indices
-        if self.count() > 0:
-            self.clear()
-        self._tabs_plots = {}
+        self.remove_all_tabs()
 
         # Partition all tabs based on in which visualization group they belong
         partitioned_tabs: dict[VisGroup, list[PossibleVisualization]] = {
@@ -110,6 +117,17 @@ class PlotSelectionView(QTabWidget):
 
             # Add disabled tab as a spacer between groups
             self._add_spacer_tab()
+
+    def remove_all_tabs(self):
+        """Clear layout and list of possible plots"""
+        # disable tab clicked event because it would be called for every tab
+        self._disable_tab_clicked_event = True
+
+        self._tabs_plots = {}
+        if self.count() > 0:
+            self.clear()
+
+        self._disable_tab_clicked_event = False
 
     def _add_multiple_tabs(self, visualizations: list[PossibleVisualization]):
         """Add a tab and save the plot index for each visualization given"""

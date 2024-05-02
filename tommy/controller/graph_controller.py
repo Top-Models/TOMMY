@@ -2,6 +2,7 @@ from itertools import product
 
 import networkx as nx
 import matplotlib.figure
+import matplotlib.pyplot
 
 # Import controllers
 from tommy.controller.corpus_controller import CorpusController
@@ -69,8 +70,9 @@ class GraphController:
     _current_topic_runner: TopicRunner | None = None
 
     # EventHandlers
-    _plots_changed_event: EventHandler[list[PossibleVisualization]]
+    _possible_plots_changed_event: EventHandler[list[PossibleVisualization]]
     _topics_changed_event: EventHandler[None]
+    _refresh_plots_event: EventHandler[None]
 
     # Exporters
     NX_EXPORTS: list[NxExporterOnData | NxExporter] = [
@@ -79,20 +81,30 @@ class GraphController:
     _possible_nx_exports: list[int] | None = None
 
     @property
-    def plots_changed_event(self) -> EventHandler[list[PossibleVisualization]]:
-        """Get event that triggers when (possible) plots are changed."""
-        return self._plots_changed_event
+    def possible_plots_changed_event(self) -> EventHandler[
+                list[PossibleVisualization]]:
+        """Get event that triggers when the list of possible plots changes."""
+        return self._possible_plots_changed_event
 
     @property
     def topics_changed_event(self) -> EventHandler[None]:
         """Get the eventhandler that triggers when the topics are changed."""
         return self._topics_changed_event
 
+    @property
+    def refresh_plots_event(self) -> EventHandler[None]:
+        """
+        Get the event that triggers when the content of any plots changes.
+        """
+        return self._refresh_plots_event
+
     def __init__(self) -> None:
         """Initialize the graph-controller and its two publishers"""
         super().__init__()
-        self._plots_changed_event = EventHandler[list[PossibleVisualization]]()
+        self._possible_plots_changed_event = EventHandler[
+            list[PossibleVisualization]]()
         self._topics_changed_event = EventHandler[None]()
+        self._refresh_plots_event = EventHandler[None]()
 
     def set_model_refs(self,
                        topic_modelling_controller: TopicModellingController,
@@ -115,7 +127,9 @@ class GraphController:
         :return: None
         """
         self._current_topic_selected_id = topic_index
-        self._plots_changed_event.publish(self._possible_visualizations)
+
+        # trigger event to notify that plots may have changed
+        self._refresh_plots_event.publish(None)
 
     def get_number_of_topics(self) -> int:
         """
@@ -227,9 +241,7 @@ class GraphController:
                     keyword_args['topic_id'] = override_topic
                 case VisInputData.TOPIC_ID if override_topic is None:
                     if self._current_topic_selected_id is None:
-                        raise NotImplementedError("Implement a figure telling "
-                                                  "the user to select "
-                                                  "a topic")
+                        return self._get_no_topic_selected_screen()
                     keyword_args['topic_id'] = self._current_topic_selected_id
                 case VisInputData.PROCESSED_CORPUS:
                     processed_corpus = (self._corpus_controller.
@@ -246,6 +258,17 @@ class GraphController:
 
         return vis_creator.get_figure(self._current_topic_runner,
                                       **keyword_args)
+
+    @staticmethod
+    def _get_no_topic_selected_screen() -> matplotlib.figure.Figure:
+        """Returns a figure showing a text that a topic needs to be selected"""
+        fig = matplotlib.pyplot.figure()
+        matplotlib.pyplot.figtext(0.5, 0.5, "Selecteer een topic om "
+                                  "deze visualizatie te zien",
+                                  horizontalalignment='center',
+                                  verticalalignment='center')
+        matplotlib.pyplot.close()
+        return fig
 
     def _run_nx_export_on_data(self, nx_exporter_on_data: NxExporterOnData
                                ) -> nx.Graph:
@@ -309,7 +332,7 @@ class GraphController:
         """
         if self._current_topic_runner is None:
             raise RuntimeError("Exports cannot be requested when topic model "
-                                 "has not been run.")
+                               "has not been run.")
 
         return [self._get_nx_export(vis) for vis
                 in range(len(self._possible_nx_exports))]
@@ -325,7 +348,8 @@ class GraphController:
         self._current_topic_runner = topic_runner
         self._calculate_possible_visualizations()
         self._topics_changed_event.publish(None)
-        self._plots_changed_event.publish(self._possible_visualizations)
+        self._possible_plots_changed_event.publish(
+            self._possible_visualizations)
 
 
 """
