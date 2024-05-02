@@ -76,8 +76,12 @@ class ConfigView(QDialog):
         selected_config = self.config_controller.get_selected_configuration()
         for name in configurations:
             if name == selected_config:
+                # TODO: change the style of this item to communicate to the
+                #  user that this is the selected config
                 item = QListWidgetItem(name)
                 self.config_list_widget.addItem(item)
+                # TODO: When the UI can display the currently selected
+                #  config, remove this print statement
                 print(f"The currently selected config is {name}")
             else:
                 self.config_list_widget.addItem(name)
@@ -91,21 +95,11 @@ class ConfigView(QDialog):
             if success:
                 self.update_config_list()
             else:
+                # this happens when trying to add a configuration with a
+                # name that already exists as a configuration
                 QMessageBox.warning(self, "Fout bij toevoegen",
                                     "De configuratie kon niet worden "
                                     "toegevoegd")
-            """
-            # Create a new ConfigModel instance
-            config = ConfigModel(name)
-            # Set the parameters from the ModelParametersController
-            config.model_parameters.n_topics = (
-                self.model_parameters_controller.get_model_n_topics())
-            config.model_parameters.model_type = (
-                self.model_parameters_controller.get_model_type())
-            # Add the configuration
-            self.config_controller.add_configuration(name, config)
-            self.update_config_list()
-            """
 
     def delete_configuration(self):
         """Method to delete a configuration"""
@@ -137,16 +131,6 @@ class ConfigView(QDialog):
                 QMessageBox.warning(self, "Fout bij Laden",
                                     "Er is een fout opgetreden bij het "
                                     "laden van de configuratie.")
-
-    def load_model_parameters(self, config: ConfigModel):
-        """Method to load model parameters from a configuration"""
-        model_parameters = config.model_parameters
-        if model_parameters:
-            # Set the loaded model parameters in the model parameters controller
-            self.model_parameters_controller.set_model_n_topics(
-                model_parameters.n_topics)
-            self.model_parameters_controller.set_model_type(
-                model_parameters.model_type)
 
 
 """

@@ -8,10 +8,14 @@ from tommy.support.model_type import ModelType
 class ModelParametersModel:
     """A class representing the topic modelling parameters."""
 
+    default_n_topics: int = 3
+    default_model_type: ModelType = ModelType.LDA
+
     def __init__(self, derive_from: ModelParametersModel = None):
         if derive_from is None:
-            self.n_topics: int = 3
-            self.model_type: ModelType = ModelType.LDA
+            self.n_topics: int = ModelParametersModel.default_n_topics
+            self.model_type: ModelType = (
+                ModelParametersModel.default_model_type)
         else:
             self.n_topics = derive_from.n_topics
             self.model_type = derive_from.model_type

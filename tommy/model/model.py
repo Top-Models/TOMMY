@@ -3,17 +3,18 @@ from tommy.model.project_settings_model import ProjectSettingsModel
 
 
 class Model:
+    default_config_name = "Config 1"
+
     configs: dict[str, ConfigModel] = {}
     selected_config_name: str
     project_settings_model: ProjectSettingsModel
 
     def __init__(self):
-        first_config_name = "Config 1"
         first_config = ConfigModel()
 
         self.project_settings_model = ProjectSettingsModel()
-        self.selected_config_name = first_config_name
-        self.configs[first_config_name] = first_config
+        self.selected_config_name = Model.default_config_name
+        self.configs[Model.default_config_name] = first_config
 
     @property
     def config_model(self):

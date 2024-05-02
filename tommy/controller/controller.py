@@ -95,11 +95,11 @@ class Controller:
             self._model_parameters_controller, self._corpus_controller)
 
         self._config_controller.config_switched_event.subscribe(
-            self.update_config_model_references)
+            self._update_config_model_references)
 
     def _set_model_references(self) -> None:
         """
-        Give each controller the correct references to the model
+        Give each controller the correct references to each model
         :return: None
         """
         self._project_settings_controller.set_model_refs(
@@ -139,7 +139,10 @@ class Controller:
         self._corpus_controller.set_processed_corpus(processed_files)
         self._topic_modelling_controller.train_model()
 
-    def update_config_model_references(self, config_model: ConfigModel):
+    def _update_config_model_references(self, config_model: ConfigModel):
+        """When the user switches configuration, this event handler makes
+        sure that every controller gets a reference to the models of the
+        currently selected config"""
         self._model_parameters_controller.change_config_model_refs(
             config_model.model_parameters_model)
 

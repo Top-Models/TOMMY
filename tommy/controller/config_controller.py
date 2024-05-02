@@ -11,11 +11,9 @@ class ConfigController:
     config_list_changed_event: EventHandler[list[str]] = EventHandler()
     _model: Model = None
 
-    # TODO: add docstring to many methods
-
     def set_model_refs(self, model: Model) -> None:
         """
-        Set a reference to the model so this class can manage the
+        Set a reference to the main model so this class can manage the
         configurations
         :param model: The model
         :return: None
@@ -23,6 +21,12 @@ class ConfigController:
         self._model = model
 
     def switch_configuration(self, name: str) -> bool:
+        """
+        Set the name of the config model in the main model and
+        :param name: The name of the config to switch to
+        :return: Whether or not the switch succeeded. Switching
+        configuration can fail when the name is not recognized
+        """
         config_exists = name in self.get_configuration_names()
         if config_exists:
             self._model.selected_config_name = name
@@ -30,6 +34,7 @@ class ConfigController:
         return config_exists
 
     def get_configuration_names(self) -> list[str]:
+        """Return a list of all the names of all configurations"""
         return list(self._model.configs.keys())
 
     def add_configuration(self, name: str) -> bool:

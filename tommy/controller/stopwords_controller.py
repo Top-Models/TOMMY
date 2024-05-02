@@ -9,6 +9,8 @@ class StopwordsController:
 
     @property
     def stopwords_model_changed_event(self) -> EventHandler[set[str]]:
+        """This event gets triggered when the stopwords model is changed due
+        to the user switching config"""
         return self._stopwords_model_changed_event
 
     @property

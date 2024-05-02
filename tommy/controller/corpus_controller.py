@@ -28,6 +28,11 @@ class CorpusController:
 
     @property
     def metadata_changed_event(self) -> EventHandler[[Metadata]]:
+        """
+        This event gets triggered every time the metadata of the corpus is
+        changed, so the UI can update itself to show the metadata
+        :return:
+        """
         return self._metadata_changed_event
 
     def __init__(self) -> None:
