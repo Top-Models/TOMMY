@@ -8,9 +8,15 @@ from tommy.controller.controller import GraphController
 
 
 class ExportController:
+    """Class for exporting graphs and networks to file"""
     _graph_controller: GraphController = None
 
     def export_networks(self, path: str) -> None:
+        """"
+        Exports networks to gexf file for all available nx exports
+        :param path: path to the folder where to save the gexf files
+        :return: None
+        """
         nx_exports = self._graph_controller.get_all_nx_exports()
 
         for i in range(len(nx_exports)):
@@ -18,6 +24,11 @@ class ExportController:
             nx.write_gexf(nx_exports[i], new_path)
 
     def export_graphs(self, path: str) -> None:
+        """"
+        Exports graphs to png file for all available visualizations
+        :param path: path to the folder where to save the png files
+        :return: None
+        """
         graph_exports = self._graph_controller.get_all_visualizations()
 
         for i in range(len(graph_exports)):

@@ -39,8 +39,11 @@ class MenuBar(QMenuBar):
         # Create menu bar
         file_menu = self.addMenu("Bestand")
         file_menu.addAction(import_input_folder_action)
-        file_menu.addAction(export_to_gexf_action)
-        file_menu.addAction(export_to_png_action)
+
+        # Add sub menu export_menu to menu bar
+        export_menu = file_menu.addMenu("Exporteren")
+        export_menu.addAction(export_to_gexf_action)
+        export_menu.addAction(export_to_png_action)
 
         # Set style
         self.setStyleSheet(f"""
