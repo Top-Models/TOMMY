@@ -1,6 +1,8 @@
 from unittest import mock
+from unittest.mock import Mock
 
 import pytest
+from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.controller import Controller
@@ -37,7 +39,7 @@ def test_fetch_topic_num(model_params_view: ModelParamsView, test_input: str,
 
 
 def test_apply_validates_input(model_params_view: ModelParamsView,
-                               mocker: mock):
+                               mocker: MockerFixture):
     # mock topic modelling to curb execution time
     mock_on_run_topic_modelling = mocker.Mock()
     model_params_view._controller.on_run_topic_modelling = (
@@ -50,7 +52,7 @@ def test_apply_validates_input(model_params_view: ModelParamsView,
 
 
 def test_editing_finished_validates_input(model_params_view: ModelParamsView,
-                                          mocker: mock):
+                                          mocker: MockerFixture):
     # test if validate_input is called by topic_input_editing_finished_event
     method_spy = mocker.patch.object(model_params_view, "validate_input")
     model_params_view.topic_input_editing_finished_event()

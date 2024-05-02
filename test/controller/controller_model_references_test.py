@@ -36,6 +36,10 @@ def test_controller_refs(controller: Controller):
 
 
 def test_model_refs(controller: Controller):
+    helper_check_model_refs(controller)
+
+
+def helper_check_model_refs(controller: Controller):
     model_parameter_controller = controller.model_parameters_controller
     graph_controller = controller.graph_controller
     topic_modelling_controller = controller._topic_modelling_controller

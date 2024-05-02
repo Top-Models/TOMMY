@@ -1,6 +1,6 @@
 import pytest
 from PySide6.QtCore import Qt
-from pytest_mock import mocker
+from pytest_mock import mocker, MockerFixture
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.graph_controller import GraphController
@@ -94,7 +94,7 @@ def test_clear_topics(fetched_topics_view: FetchedTopicsView, qtbot: QtBot):
 
 
 def test_refresh_topics_lda(fetched_topics_view: FetchedTopicsView,
-                            mocker: mocker):
+                            mocker: MockerFixture):
     """
     Test refreshing the topics in the fetched topics view.
     """

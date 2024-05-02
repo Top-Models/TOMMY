@@ -5,7 +5,7 @@ from pytestqt.qtbot import QtBot
 from tommy.view.model_params_view import ModelParamsView
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
-from pytest_mock import mocker
+from pytest_mock import mocker, MockerFixture
 from tommy.controller.controller import Controller
 
 
@@ -55,7 +55,7 @@ def test_topic_input_return_pressed(model_params_view: ModelParamsView,
 def test_apply_button_clicked_changed_topic_num(
         model_params_view: ModelParamsView,
         qtbot: QtBot,
-        mocker: mocker):
+        mocker: MockerFixture):
     # Arrange
     initial_value = model_params_view.fetch_topic_num()
 
@@ -77,7 +77,7 @@ def test_apply_button_clicked_changed_topic_num(
 def test_apply_button_clicked_calls_on_run_topic_modelling(
         model_params_view: ModelParamsView,
         qtbot: QtBot,
-        mocker: mocker):
+        mocker: MockerFixture):
     # Arrange
     mock_on_run_topic_modelling = mocker.Mock()
     model_params_view._controller.on_run_topic_modelling = (

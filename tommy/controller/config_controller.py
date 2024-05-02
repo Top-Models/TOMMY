@@ -7,9 +7,15 @@ class ConfigController:
     """
     Controls the access to and changes to the configuration settings.
     """
-    config_switched_event: EventHandler[ConfigModel] = EventHandler()
-    config_list_changed_event: EventHandler[list[str]] = EventHandler()
+
+    @property
+    def config_switched_event(self) -> EventHandler[ConfigModel]:
+        return self._config_switched_event
+
     _model: Model = None
+
+    def __init__(self):
+        self._config_switched_event: EventHandler[ConfigModel] = EventHandler()
 
     def set_model_refs(self, model: Model) -> None:
         """
@@ -30,7 +36,7 @@ class ConfigController:
         config_exists = name in self.get_configuration_names()
         if config_exists:
             self._model.selected_config_name = name
-            self.config_switched_event.publish(self._model.config_model)
+            self._config_switched_event.publish(self._model.config_model)
         return config_exists
 
     def get_configuration_names(self) -> list[str]:
@@ -50,8 +56,6 @@ class ConfigController:
 
         config = self._model.create_configuration()
         self._model.configs[name] = config
-        self.config_list_changed_event.publish(
-            self.get_configuration_names())
         self.switch_configuration(name)
         return True
 
@@ -81,7 +85,6 @@ class ConfigController:
             self.switch_configuration(configs[new_index])
 
         self._model.configs.pop(name)
-        self.config_list_changed_event.publish(self.get_configuration_names())
         return True
 
     def get_selected_configuration(self) -> str:
