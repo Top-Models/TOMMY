@@ -7,8 +7,12 @@ class TestPdfFileImporter:
         self.pdf_importer = PdfFileImporter()
 
     def test_compatible_file(self):
-        assert self.pdf_importer.compatible_file('test_pdf/correct_files/kattenverhaaltje 1.pdf')
-        assert not self.pdf_importer.compatible_file('test_pdf/incorrect_files/kattenverhaaltje 1.docx')
+        assert self.pdf_importer.compatible_file('test_pdf/'
+                                                 'correct_files/'
+                                                 'kattenverhaaltje 1.pdf')
+        assert not self.pdf_importer.compatible_file('test_pdf/'
+                                                     'incorrect_files/'
+                                                     'kattenverhaaltje 1.docx')
 
     def test_load_file(self):
         for testfile in self.pdf_importer.load_file('test_pdf/correct_files'):
@@ -17,4 +21,10 @@ class TestPdfFileImporter:
             assert file is not None
 
     def test_generate_file(self):
-        #TODO: Implement test
+        file = self.pdf_importer.generate_file('test',
+                                               'test_pdf/correct_files/kattenverhaaltje 1.pdf',
+                                               'metadata')
+        assert file is not None
+        assert file.body == 'test'
+        assert file.path == 'test_pdf/correct_files/kattenverhaaltje 1.pdf'
+        assert file.metadata == 'metadata'
