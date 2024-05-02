@@ -5,14 +5,12 @@ from matplotlib.backends.backend_template import FigureCanvas
 from matplotlib.figure import Figure
 from pytestqt.qtbot import QtBot
 
-from tommy.controller.graph_controller import GraphController
 from tommy.view.graph_view import GraphView
 
 
 @pytest.fixture(scope='function')
 def graph_view(qtbot: QtBot) -> GraphView:
-    graph_controller = GraphController()
-    graph_view = GraphView(graph_controller)
+    graph_view = GraphView()
     qtbot.addWidget(graph_view)
     return graph_view
 
@@ -100,21 +98,6 @@ def test_display_plot_default(graph_view: GraphView):
     assert canvas.subplotpars.bottom == 0.1
     assert canvas.subplotpars.right == 0.9
     assert canvas.subplotpars.top == 0.9
-
-
-def test_update_from_event(graph_view: GraphView):
-    """
-    Test updating the graph_view from an update of the eventhandler.
-    """
-    # create mock canvas
-    canvas = Figure()
-    canvas.add_subplot(111, title="gewicht")
-
-    # simulate triggering of eventhandler
-    graph_view._graph_controller.plots_changed_event.publish(canvas)
-
-    # Check if the layout was cleared
-    assert graph_view.layout.count() == 1
 
 
 """
