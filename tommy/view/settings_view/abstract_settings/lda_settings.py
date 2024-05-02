@@ -182,14 +182,10 @@ class LdaSettings(AbstractSettings):
                 self.disabled_input_stylesheet)
             return True
 
-        # Check if beta is 0
-        if self._beta_value_input.text() == "0":
-            is_valid = False
-
         # Check if beta is a valid float
         try:
             beta = float(self._beta_value_input.text())
-            if beta < 0:
+            if beta <= 0:
                 is_valid = False
         except ValueError:
             is_valid = False
