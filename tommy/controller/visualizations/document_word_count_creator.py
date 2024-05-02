@@ -20,6 +20,7 @@ class DocumentWordCountCreator(AbstractVisualization):
     """
     _required_interfaces = []
     name = 'Distributie aantal woorden per document'
+    short_tab_name = 'Woordaantal'
     vis_group = VisGroup.CORPUS
     needed_input_data = [VisInputData.METADATA_CORPUS]
 

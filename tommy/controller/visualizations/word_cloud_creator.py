@@ -19,6 +19,7 @@ class WordCloudCreator(AbstractVisualization):
     """
     _required_interfaces = []
     name = 'Woordenwolk'
+    short_tab_name = 'Woordenwolk'
     vis_group = VisGroup.TOPIC
     needed_input_data = [VisInputData.TOPIC_ID]
 

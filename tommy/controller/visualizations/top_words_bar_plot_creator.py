@@ -20,6 +20,7 @@ class TopWordsBarPlotCreator(AbstractVisualization):
     """
     _required_interfaces = []
     name = 'Woorden met het hoogste gewicht'
+    short_tab_name = 'Woordgewichten'
     vis_group = VisGroup.TOPIC
     needed_input_data = [VisInputData.TOPIC_ID]
 

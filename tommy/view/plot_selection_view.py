@@ -115,7 +115,7 @@ class PlotSelectionView(QTabWidget):
         """Add a tab and save the plot index for each visualization given"""
         for vis in visualizations:
             self._tabs_plots[self.count()] = vis
-            self.addTab(QWidget(), vis.name)
+            self.addTab(QWidget(), vis.short_tab_name)
 
     def _add_spacer_tab(self):
         """Add a disabled tab to the tabs bar as a spacer"""

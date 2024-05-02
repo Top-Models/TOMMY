@@ -15,6 +15,7 @@ class VisGroup(Enum):
 class PossibleVisualization:
     index: int
     name: str
+    short_tab_name: str
     type: VisGroup
     needs_topic: bool
 

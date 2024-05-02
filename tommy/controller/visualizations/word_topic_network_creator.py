@@ -19,6 +19,7 @@ class WordTopicNetworkCreator(AbstractVisualization):
     """
     _required_interfaces = []
     name = 'Topics en 15 meest voorkomende woorden'
+    short_tab_name = 'Woord Netwerk'
     vis_group = VisGroup.MODEL
     needed_input_data = []
 

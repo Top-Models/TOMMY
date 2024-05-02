@@ -23,6 +23,7 @@ class CorrelationMatrixCreator(AbstractVisualization):
     """
     _required_interfaces = [CorrelationMatrixInterface]
     name = 'Correlatiematrix topics'
+    short_tab_name = 'Correlatie'
     vis_group = VisGroup.MODEL
     needed_input_data = [VisInputData.PROCESSED_CORPUS]
 

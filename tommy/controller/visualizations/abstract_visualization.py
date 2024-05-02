@@ -14,10 +14,11 @@ class AbstractVisualization(ABC):
     Abstract class that defines the interface to create a matplotlib figure
     of a visualization given a topic runner object
     """
-    _required_interfaces: []
-    name: str
-    vis_group: VisGroup
-    needed_input_data: list[VisInputData]
+    _required_interfaces: list[type] = NotImplemented
+    name: str = NotImplemented
+    short_tab_name: str = NotImplemented
+    vis_group: VisGroup = NotImplemented
+    needed_input_data: list[VisInputData] = NotImplemented
 
     @abstractmethod
     def get_figure(self, topic_runner: TopicRunner,

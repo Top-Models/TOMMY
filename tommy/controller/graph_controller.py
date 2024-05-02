@@ -148,6 +148,7 @@ class GraphController:
         self._possible_visualizations = [
             PossibleVisualization(vis_index,
                                   visualization.name,
+                                  visualization.short_tab_name,
                                   visualization.vis_group,
                                   (VisInputData.TOPIC_ID in
                                    visualization.needed_input_data))
