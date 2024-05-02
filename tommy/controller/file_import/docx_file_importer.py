@@ -66,8 +66,10 @@ class WordFileImporter(file_importer_base.FileImporterBase):
 
         return RawFile(
             metadata=Metadata(author=None,
-                              title=None, date=None,
-                              url=None, path=path,
+                              title=alt_title,
+                              date=None,
+                              url=None,
+                              path=path,
                               format="docx",
                               length=len(text.split(" ")),
                               name=alt_title,
