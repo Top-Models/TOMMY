@@ -51,11 +51,11 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
             return False
 
         except UnicodeDecodeError as e:
-            #print(f"Error decoding file '{path}': {e}")
+            print(f"Error decoding file '{path}': {e}")
             return False
 
         except Exception as e:
-            #print(f"Error reading file '{path}': {e}")
+            print(f"Error reading file '{path}': {e}")
             return False
 
     def load_file(self, path: str) -> Generator[RawFile, None, None]:
