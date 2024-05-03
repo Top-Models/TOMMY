@@ -19,14 +19,19 @@ def test_display_plot_layout_cleared_correctly(graph_view: GraphView):
     """
     Test if the layout is cleared correctly when displaying a plot.
     """
-    # Create a canvas
+    # Create two canvases
     canvas = Figure()
     canvas.add_subplot(111)
+    canvas2 = Figure()
+    canvas2.add_subplot(222)
 
-    # Display the plot
+    # Display plot 1
     graph_view.display_plot(canvas)
 
-    # Check if the layout was cleared
+    # Display plot 2
+    graph_view.display_plot(canvas2)
+
+    # Check if the layout was cleared before displaying the second plot
     assert graph_view.layout.count() == 1
     assert isinstance(graph_view.layout.itemAt(0).widget(), FigureCanvasQTAgg)
 
