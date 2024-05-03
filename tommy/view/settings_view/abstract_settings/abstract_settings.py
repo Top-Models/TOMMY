@@ -69,8 +69,8 @@ class AbstractSettings:
 
         :return: bool
         """
-        return self.validate_topic_amount_field() and \
-            self.validate_amount_of_words_field()
+        return self.validate_topic_amount_field() and (
+            self.validate_amount_of_words_field())
 
     def add_header_label(self, header_text: str, size: int) -> None:
         """
