@@ -52,6 +52,8 @@ class AbstractSettings:
     def initialize_parameter_widgets(self, scroll_layout: QVBoxLayout) -> None:
         """
         Initialize the parameter widgets
+        This method should be overridden by the child class
+        to add the model specific widgets to the view
 
         :return: None
         """
