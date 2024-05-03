@@ -83,9 +83,11 @@ class PlotSelectionView(QTabWidget):
             return
 
         selected_tab_index = self.currentIndex()
-        assert selected_tab_index in self._tabs_plots, (
-            f"incorrect tab index "
-            f"selected: {selected_tab_index}")
+
+        # because pyqt tries to select inactive (spacer) tab after creation
+        #   if the tab bar was empty before
+        if selected_tab_index not in self._tabs_plots:
+            return
 
         new_possible_vis = self._tabs_plots[selected_tab_index]
         new_plot = self._graph_controller.get_visualization(
@@ -111,12 +113,14 @@ class PlotSelectionView(QTabWidget):
 
         # Create all tabs
         for vis_group in self.ORDER_OF_VIS_GROUPS:
-            # add all tabs in the group
             tabs_in_group = partitioned_tabs[vis_group]
-            self._add_multiple_tabs(tabs_in_group)
 
-            # Add disabled tab as a spacer between groups
-            self._add_spacer_tab()
+            # Add disabled tab as a spacer between groups (but not on the left)
+            if self.count() > 0 and len(tabs_in_group) > 0:
+                self._add_spacer_tab()
+
+            # add all tabs in the group
+            self._add_multiple_tabs(tabs_in_group)
 
     def remove_all_tabs(self):
         """Clear layout and list of possible plots"""
