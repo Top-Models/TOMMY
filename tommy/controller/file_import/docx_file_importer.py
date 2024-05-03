@@ -1,6 +1,7 @@
 import os
-from typing import Generator
 import mammoth
+from typing import Generator
+from datetime import datetime
 
 from tommy.controller.file_import import file_importer_base
 from tommy.controller.file_import.metadata import Metadata
@@ -66,10 +67,17 @@ class DocxFileImporter(file_importer_base.FileImporterBase):
 
         alt_title = os.path.basename(path).replace('.docx', '')
 
+        try:
+            mod_time = os.path.getmtime(path)
+            file_date = datetime.fromtimestamp(mod_time)
+        except Exception:
+            # If unable to get the modification time, use the current date
+            file_date = datetime.now()
+
         return RawFile(
             metadata=Metadata(author=None,
                               title=alt_title,
-                              date=None,
+                              date=file_date,
                               url=None,
                               path=path,
                               format="docx",

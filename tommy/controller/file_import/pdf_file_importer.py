@@ -2,6 +2,7 @@ from pypdf import PdfReader
 import os.path
 from os import stat
 from typing import Generator
+from datetime import datetime
 
 from tommy.controller.file_import import file_importer_base
 from tommy.controller.file_import.metadata import Metadata
@@ -64,10 +65,17 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
 
         alt_title = os.path.basename(path).replace('.pdf', '')
 
+        try:
+            mod_time = os.path.getmtime(path)
+            file_date = datetime.fromtimestamp(mod_time)
+        except Exception:
+            # If unable to get the modification time, use the current date
+            file_date = datetime.now()
+
         return RawFile(
                 metadata=Metadata(author=metadata.get('/Author', None),
                                   title=alt_title,
-                                  date=metadata.get('/ModDate', None),
+                                  date=metadata.get('/ModDate', file_date),
                                   path=os.path.relpath(path),
                                   format="pdf",
                                   length=len(file.split(" ")),
