@@ -51,7 +51,7 @@ class DocxFileImporter(file_importer_base.FileImporterBase):
         """
         with open(path, "rb") as docx_file:
             result = mammoth.extract_raw_text(docx_file)
-            text = result.value  # Extracted text
+            text = result.value
             yield self.generate_file(text, path)
 
     @staticmethod

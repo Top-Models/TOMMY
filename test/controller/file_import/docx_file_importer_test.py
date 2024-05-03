@@ -1,5 +1,7 @@
 import os
 import pytest
+from datetime import datetime, timedelta
+
 from tommy.controller.file_import.docx_file_importer import DocxFileImporter
 
 
@@ -41,17 +43,17 @@ def test_generate_file(docx_file_importer):
     filepath = os.path.join(TEST_DATA_DIR,
                             'correct_files',
                             'kattenverhaaltje 1.docx')
-    testfile_metadata = {
-             '/Author': 'Test Author',
-             '/Title': 'kattenverhaaltje 1',
-             '/ModDate': 'D:20220101000000+00\'00\''}
 
     file = docx_file_importer.generate_file("Verhaaltje over een kat",
-                                                path=filepath,
-                                                metadata=testfile_metadata)
+                                                path=filepath)
     assert file is not None
     assert file.metadata is not None
     assert file.body.body == "Verhaaltje over een kat"
-    assert file.metadata.author == 'Test Author'
     assert file.metadata.title == 'kattenverhaaltje 1'
-    assert file.metadata.date == 'D:20220101000000+00\'00\''
+
+    # Get the current date
+    current_date = datetime.now()
+
+    # Check if the date in the metadata is valid (within 1 hour)
+    # We are insterested in days only, so we usually ignore time
+    assert abs(file.metadata.date - current_date) < timedelta(hours=1)
