@@ -24,13 +24,38 @@ class AbstractVisualizationOnData[T: Iterable[ProcessedFile]
     def input_data_type(self) -> type:
         pass
 
-    @abstractmethod
-    def get_figure(self,
-                   topic_runner: TopicRunner,
-                   data: T
-                   ) -> matplotlib.figure.Figure:
+    # cache of the generated plot
+    _cached_figure: matplotlib.figure.Figure | None = None
+
+    def get_figure(self, topic_runner: TopicRunner,
+                   data: T) -> matplotlib.figure.Figure:
         """
         Get the matplotlib figure showing the requested visualization
+        :param topic_runner: the topic runner to extract the result data from
+        :param data: the additional data to be used in the visualization.
+        :return: matplotlib figure showing the requested visualization
+        """
+        # check if cache exists first
+        result_figure = self._get_cached_figure()
+        if result_figure is None:
+            result_figure = self._create_figure(topic_runner=topic_runner,
+                                                data=data)
+            # save new figure in cache list
+            self._cached_figure = result_figure
+        return result_figure
+
+    def _get_cached_figure(self) -> matplotlib.figure.Figure | None:
+        """
+        Get the cached figure  if it exists
+        :return: A matplotlib figure showing the requested plot, or None
+        """
+        return self._cached_figure
+
+    @abstractmethod
+    def _create_figure(self, topic_runner: TopicRunner,
+                       data: T) -> matplotlib.figure.Figure:
+        """
+        Generate the matplotlib figure showing the requested visualization
         :param topic_runner: the topic runner to extract the result data from
         :param data: the additional data to be used in the visualization.
         :return: matplotlib figure showing the requested visualization
@@ -45,6 +70,10 @@ class AbstractVisualizationOnData[T: Iterable[ProcessedFile]
         """
         return all(isinstance(topic_runner, requirement)
                    for requirement in self._required_interfaces)
+
+    def delete_cache(self):
+        """Delete all cached figures"""
+        self._cached_figure = None
 
 
 """
