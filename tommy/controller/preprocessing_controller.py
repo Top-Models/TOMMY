@@ -5,19 +5,40 @@ from spacy.tokens import Doc
 
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.support.application_settings import application_settings
+from tommy.support.supported_languages import SupportedLanguage
+from tommy.controller.language_controller import LanguageController
 
 
 class PreprocessingController:
     """A class that can preprocess text using the Dutch SpaCy pipeline."""
     _stopwords_model: StopwordsModel = None
 
-    def __init__(self) -> None:
-        pipeline_path = os.path.join(
-            application_settings.preprocessing_data_folder
-            , "pipeline_download", "nl_core_news_sm-3.7.0")
-        nlp = spacy.load(pipeline_path,
-                         exclude=["tagger", "attribute_ruler", "parser",
-                                  "senter"])
+    def __init__(self, language_controller: LanguageController) -> None:
+        self._nlp = None
+        self.language_controller = language_controller
+        self.language_controller.model_trained_event.subscribe(
+            self.load_pipeline)
+
+    def load_pipeline(self, data: None) -> None:
+        nlp: spacy.Language
+        match self.language_controller.get_language():
+            case SupportedLanguage.Dutch:
+                pipeline_path = os.path.join(
+                    application_settings.preprocessing_data_folder
+                    , "pipeline_download", "nl_core_news_sm-3.7.0")
+                nlp = spacy.load(pipeline_path,
+                                 exclude=["tagger", "attribute_ruler", "parser",
+                                          "senter"])
+            case SupportedLanguage.English:
+                pipeline_path = os.path.join(
+                    application_settings.preprocessing_data_folder,
+                    "pipeline_download", "en_core_web_sm-3.7.1")
+                # tagger is taking over the role of the morphologizer (
+                # supposedly)
+                nlp = spacy.load(pipeline_path, exclude=["attribute_ruler",
+                                                         "parser", "senter"])
+            case _:
+                raise ValueError("Unsupported preprocessing language")
         self._nlp = nlp
 
         self._entity_categories = {"PERSON", "FAC", "LAW", "TIME", "PERCENT",

@@ -1,5 +1,9 @@
+import os.path
+
 from tommy.model.language_model import LanguageModel
+from tommy.support.application_settings import application_settings
 from tommy.support.supported_languages import SupportedLanguage
+from tommy.support.event_handler import EventHandler
 
 
 class LanguageController:
@@ -8,14 +12,24 @@ class LanguageController:
     modelling, and loading the settings from the associated file.
     """
     _language_model: LanguageModel = None
+    _model_change_language: EventHandler[None] = None
 
-    def set_language_refs(self, language_model: LanguageModel) -> None:
+    @property
+    def model_trained_event(self) -> EventHandler[None]:
+        return self._model_change_language
+
+    def __init__(self) -> None:
+        self._model_change_language = EventHandler[None]()
+
+    def set_model_refs(self, language_model: LanguageModel) -> None:
         """Set the reference to the language-model"""
         self._language_model = language_model
+        self._model_change_language.publish(None)
 
     def set_language(self, language: SupportedLanguage) -> None:
         """Set the language for the topic modelling"""
         self._language_model.selectedLanguage = language
+        self._model_change_language.publish(None)
 
     def get_language(self) -> SupportedLanguage:
         """Return the language for the topic modelling"""
@@ -23,10 +37,12 @@ class LanguageController:
 
     def get_stopwords_path(self) -> str:
         """Return the path to the stopwords file for the selected language"""
-        return f"tommy/data/stopwords/{self.get_language().name}.txt"
+        return os.path.join(application_settings.preprocessing_data_folder,
+                            "stopwords", f"{self.get_language().name}.txt")
 
     def get_preprocessing_model_name(self) -> str:
-        """Return the name of the preprocessing model for the selected language"""
+        """Return the name of the preprocessing model for the selected
+        language"""
         match self.get_language():
             case SupportedLanguage.Dutch:
                 return "nl_core_news_sm-3.7.0"
