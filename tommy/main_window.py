@@ -71,7 +71,8 @@ class MainWindow(QMainWindow):
 
         # Create widgets
         self.stopwords_view = StopwordsView(
-            self._controller.stopwords_controller)
+            self._controller.stopwords_controller,
+            self._controller.synonyms_controller)
         self.plot_selection_view = PlotSelectionView(
             self._controller.graph_controller
         )

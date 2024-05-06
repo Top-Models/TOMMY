@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (QScrollArea, QTabWidget,
                                QTextEdit)
 
 from tommy.controller.stopwords_controller import StopwordsController
+from tommy.controller.synonims_controller import SynonymsController
 from tommy.support.constant_variables import (
     text_font)
 
@@ -10,12 +11,15 @@ from tommy.support.constant_variables import (
 class StopwordsView(QScrollArea):
     """The StopWordsDisplay area to view all stopwords."""
 
-    def __init__(self, stopwords_controller: StopwordsController) -> None:
+    def __init__(self,
+                 stopwords_controller: StopwordsController,
+                 synonyms_controller: SynonymsController) -> None:
         """The initialization of the StopwordsDisplay."""
         super().__init__()
 
-        # Set reference to the controller
+        # Set reference to the controllers
         self._stopwords_controller = stopwords_controller
+        self._synonyms_controller = synonyms_controller
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -45,12 +49,12 @@ class StopwordsView(QScrollArea):
                 QTabBar::tab:hover {{
                     background-color: white;
                 }}
-                
+
                 QTabWidget::tab-bar {{
                     alignment: left;
                     width: 250px;
                 }}
-                
+
                 QScrollArea {{
                     border: 0px solid #00968F;
                     border-radius: 10px;
@@ -69,6 +73,20 @@ class StopwordsView(QScrollArea):
                 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
                     height: 0px; 
                 }}
+                QScrollBar:horizontal {{
+                    border: none;
+                    background: #F0F0F0;
+                    height: 30px;
+                    margin: 0px;
+                }}
+                QScrollBar::handle:horizontal {{
+                    background: #CCCCCC;
+                    min-width: 20px;
+                    border-radius: 10px;
+                }}
+                QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {{
+                    width: 0px; 
+                }}
                    """)
         # Initialize container for all elements
         self.container = QTabWidget()
@@ -83,14 +101,17 @@ class StopwordsView(QScrollArea):
                      f"background-color: white;"
                      f"margin: 5px;")
 
-        # self.stopwords_tab = QWidget()
-        # self.stopwords_tab.setStyleSheet(tab_style)
         self.blacklist_tab = QTextEdit()
         self.blacklist_tab.setStyleSheet(tab_style)
+        self.blacklist_tab.setLineWrapMode(QTextEdit.NoWrap)
+
         self.ngrams_tab = QTextEdit()
         self.ngrams_tab.setStyleSheet(tab_style)
+        self.ngrams_tab.setLineWrapMode(QTextEdit.NoWrap)
+
         self.synonym_tab = QTextEdit()
         self.synonym_tab.setStyleSheet(tab_style)
+        self.synonym_tab.setLineWrapMode(QTextEdit.NoWrap)
 
         # Set container as the focal point
         self.setWidget(self.container)
@@ -101,19 +122,16 @@ class StopwordsView(QScrollArea):
         self.setWidgetResizable(True)
 
         # Set layouts for tabs
-        # self.container.addTab(self.stopwords_tab, "Stopwords")
         self.container.addTab(self.blacklist_tab, "Blacklist")
         self.container.addTab(self.synonym_tab, "Synoniemen")
         self.container.addTab(self.ngrams_tab, "N-grams")
 
-        # Connect text changed event to update additional_stopwords
-        # self.stopwords_tab.textChanged.connect(self.update_stopwords)
+        # Connect text changed event to update methods
         self.blacklist_tab.textChanged.connect(self.update_blacklist)
         self.synonym_tab.textChanged.connect(self.update_synonyms)
         self.ngrams_tab.textChanged.connect(self.update_ngrams)
 
         # Disable rich text
-        # self.stopwords_tab.setAcceptRichText(False)
         self.blacklist_tab.setAcceptRichText(False)
         self.synonym_tab.setAcceptRichText(False)
         self.ngrams_tab.setAcceptRichText(False)
@@ -131,12 +149,26 @@ class StopwordsView(QScrollArea):
 
     def update_synonyms(self) -> None:
         """
-        Updtate the set of synonyms with the text from the Synonyms tab.
+        Update the set of synonyms with the text from the Synonyms tab.
 
         :return: None
         """
         input_text = self.synonym_tab.toPlainText()
-        # TODO: implement at a later point
+        synonyms_dict = {}
+
+        # Split the input text into lines
+        lines = input_text.split('\n')
+        for line in lines:
+            # Split each line into words
+            words = line.split()
+            if len(words) > 1:
+                # First word is considered as the main word, rest are synonyms
+                main_word = words[0].lower()
+                synonyms = [word.lower() for word in words[1:]]
+                synonyms_dict[main_word] = synonyms
+
+        # Pass the synonyms mapping to the controller to update synonyms
+        self._synonyms_controller.update_synonyms(synonyms_dict)
 
     def update_ngrams(self) -> None:
         """

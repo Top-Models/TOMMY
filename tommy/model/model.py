@@ -2,11 +2,13 @@ from tommy.model.corpus_model import CorpusModel
 from tommy.model.project_settings_model import ProjectSettingsModel
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.model.model_parameters_model import ModelParametersModel
+from tommy.model.synonyms_model import SynonymsModel
 from tommy.model.topic_model import TopicModel
 
 
 class Model:
     stopwords_model: StopwordsModel
+    synonyms_model: SynonymsModel
     model_parameters_model: ModelParametersModel
     project_settings_model: ProjectSettingsModel
     corpus_model: CorpusModel
@@ -14,6 +16,7 @@ class Model:
 
     def __init__(self):
         self.stopwords_model = StopwordsModel()
+        self.synonyms_model = SynonymsModel()
         self.model_parameters_model = ModelParametersModel()
         self.project_settings_model = ProjectSettingsModel()
         self.corpus_model = CorpusModel()
