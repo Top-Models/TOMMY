@@ -23,10 +23,10 @@ class WordCloudCreator(AbstractVisualization):
     vis_group = VisGroup.TOPIC
     needed_input_data = [VisInputData.TOPIC_ID]
 
-    def get_figure(self,
-                   topic_runner: TopicRunner,
-                   topic_id: TopicID = None,
-                   **kwargs) -> matplotlib.figure.Figure:
+    def _create_figure(self,
+                       topic_runner: TopicRunner,
+                       topic_id: TopicID = None,
+                       **kwargs) -> matplotlib.figure.Figure:
         """
         Construct a wordcloud matplotlib figure for the requested topics in the
         given topic runner
@@ -56,6 +56,9 @@ class WordCloudCreator(AbstractVisualization):
         plt.axis('off')
         plt.tight_layout(pad=0)
 
+        fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+
+        plt.close()
         return fig
 
 

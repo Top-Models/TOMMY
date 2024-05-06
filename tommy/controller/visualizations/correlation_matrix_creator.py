@@ -27,10 +27,10 @@ class CorrelationMatrixCreator(AbstractVisualization):
     vis_group = VisGroup.MODEL
     needed_input_data = [VisInputData.PROCESSED_CORPUS]
 
-    def get_figure(self,
-                   topic_runner: TopicRunner | CorrelationMatrixInterface,
-                   **kwargs
-                   ) -> matplotlib.figure.Figure:
+    def _create_figure(self,
+                       topic_runner: TopicRunner | CorrelationMatrixInterface,
+                       **kwargs
+                       ) -> matplotlib.figure.Figure:
         """
         Construct a correlation matrix plot for the topics in the given
         topic runner and return it as a matplotlib figure.
@@ -67,6 +67,9 @@ class CorrelationMatrixCreator(AbstractVisualization):
         plt.yticks(np.arange(num_topics),
                    np.arange(1, num_topics + 1))
 
+        fig.figure.subplots_adjust(0.3, 0.2, 0.7, 0.8)
+
+        plt.close()
         return fig
 
 

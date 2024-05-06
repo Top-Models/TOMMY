@@ -24,9 +24,9 @@ class DocumentWordCountCreator(AbstractVisualization):
     vis_group = VisGroup.CORPUS
     needed_input_data = [VisInputData.METADATA_CORPUS]
 
-    def get_figure(self, topic_runner: TopicRunner,
-                   metadata_corpus: MetadataCorpus = None,
-                   **kwargs) -> matplotlib.figure.Figure:
+    def _create_figure(self, topic_runner: TopicRunner,
+                       metadata_corpus: MetadataCorpus = None,
+                       **kwargs) -> matplotlib.figure.Figure:
         """
         Construct a word count plot showing the number of words per document
         in the given corpus
@@ -53,6 +53,9 @@ class DocumentWordCountCreator(AbstractVisualization):
         plt.ylabel("aantal documenten")
         plt.title("Distributie aantal woorden per document")
 
+        fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+
+        plt.close()
         return fig
 
 

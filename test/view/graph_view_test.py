@@ -62,11 +62,8 @@ def test_display_plot_weight(graph_view: GraphView):
     # Display the plot
     graph_view.display_plot(canvas)
 
-    # Check if the canvas was resized correctly
-    assert canvas.subplotpars.left == 0.2
-    assert canvas.subplotpars.bottom == 0.2
-    assert canvas.subplotpars.right == 0.8
-    assert canvas.subplotpars.top == 0.8
+    # Check if the canvas was displayed
+    assert graph_view.layout.count() == 1
 
 
 def test_display_plot_correlation_matrix(graph_view: GraphView):
@@ -80,11 +77,8 @@ def test_display_plot_correlation_matrix(graph_view: GraphView):
     # Display the plot
     graph_view.display_plot(canvas)
 
-    # Check if the canvas was resized correctly
-    assert canvas.subplotpars.left == 0.3
-    assert canvas.subplotpars.bottom == 0.2
-    assert canvas.subplotpars.right == 0.7
-    assert canvas.subplotpars.top == 0.8
+    # Check if the canvas was displayed
+    assert graph_view.layout.count() == 1
 
 
 def test_display_plot_default(graph_view: GraphView):
@@ -98,11 +92,8 @@ def test_display_plot_default(graph_view: GraphView):
     # Display the plot
     graph_view.display_plot(canvas)
 
-    # Check if the canvas was resized correctly
-    assert canvas.subplotpars.left == 0.1
-    assert canvas.subplotpars.bottom == 0.1
-    assert canvas.subplotpars.right == 0.9
-    assert canvas.subplotpars.top == 0.9
+    # Check if the canvas was displayed
+    assert graph_view.layout.count() == 1
 
 
 """

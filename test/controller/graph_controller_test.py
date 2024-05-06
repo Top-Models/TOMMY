@@ -13,6 +13,7 @@ from tommy.controller.graph_controller import (GraphController,
                                                VisInputData,
                                                AbstractVisualization)
 
+
 @pytest.fixture(scope='function')
 def plot() -> Figure:
     canvas = Figure()
@@ -168,6 +169,20 @@ def test_run_visualization_creator(plot: Figure,
     # Assert - that visualization is called with expected arguments
     mocked_method.assert_called_once_with(
         graph_controller._current_topic_runner, **expected_args)
+
+
+def test_delete_all_cached_plots(graph_controller: GraphController,
+                                 mocker: mocker):
+    # Arrange
+    method_spies = [mocker.spy(vis, "delete_cache")
+                    for vis in graph_controller.VISUALIZATIONS]
+
+    # Act
+    graph_controller._delete_all_cached_plots()
+
+    # Assert
+    for spy in method_spies:
+        spy.assert_called_once()
 
 
 """

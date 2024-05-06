@@ -33,26 +33,13 @@ class GraphView(QWidget):
         """
 
         # Clear the layout
-        for i in reversed(range(self.layout.count())):
-            self.layout.itemAt(i).widget().setParent(None)
+        while self.layout.count():
+            child = self.layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
 
         # Set the DPI for the canvas
         canvas.figure.set_dpi(100)
-
-        # todo: rework this later possibly by adding additional data
-        #   about this plot (like size) to the return value
-        #   from the graphcontroller
-        # Resize canvas based on plot type
-        plot_type: str = ""
-        if len(canvas.figure.axes) > 0:
-            plot_type = canvas.figure.axes[0].get_title().lower()
-
-        if plot_type.__contains__("gewicht"):
-            canvas.figure.subplots_adjust(0.2, 0.2, 0.8, 0.8)
-        elif plot_type.__contains__("correlatiematrix"):
-            canvas.figure.subplots_adjust(0.3, 0.2, 0.7, 0.8)
-        else:
-            canvas.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
 
         # Add the canvas to the layout
         self.layout.addWidget(FigureCanvas(canvas.figure))

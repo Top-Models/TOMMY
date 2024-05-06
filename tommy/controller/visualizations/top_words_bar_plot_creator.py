@@ -24,10 +24,10 @@ class TopWordsBarPlotCreator(AbstractVisualization):
     vis_group = VisGroup.TOPIC
     needed_input_data = [VisInputData.TOPIC_ID]
 
-    def get_figure(self,
-                   topic_runner: TopicRunner,
-                   topic_id: TopicID = None,
-                   **kwargs) -> matplotlib.figure.Figure:
+    def _create_figure(self,
+                       topic_runner: TopicRunner,
+                       topic_id: TopicID = None,
+                       **kwargs) -> matplotlib.figure.Figure:
         """
         Construct a bar plot matplotlib figure showing
         the top words for the requested topic in the given topic runner.
@@ -56,6 +56,9 @@ class TopWordsBarPlotCreator(AbstractVisualization):
         plt.xlabel("gewicht")
         plt.title(f"Woorden met het hoogste gewicht topic {topic_id+1}")
 
+        fig.figure.subplots_adjust(0.2, 0.2, 0.8, 0.8)
+
+        plt.close()
         return fig
 
 

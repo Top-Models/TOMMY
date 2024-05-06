@@ -32,10 +32,10 @@ class DocumentTopicNetworkSummaryCreator(AbstractVisualization):
     vis_group = VisGroup.MODEL
     needed_input_data = [VisInputData.PROCESSED_CORPUS]
 
-    def get_figure(self,
-                   topic_runner: TopicRunner | DocumentTopicsInterface,
-                   processed_corpus: ProcessedCorpus = None,
-                   **kwargs) -> matplotlib.figure.Figure:
+    def _create_figure(self,
+                       topic_runner: TopicRunner | DocumentTopicsInterface,
+                       processed_corpus: ProcessedCorpus = None,
+                       **kwargs) -> matplotlib.figure.Figure:
         """
         Construct a summarized document-topic network plot showing the
         relations between documents and topics
@@ -117,6 +117,9 @@ class DocumentTopicNetworkSummaryCreator(AbstractVisualization):
 
         nx.draw_networkx_labels(graph, pos, labels=labels)
 
+        fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+
+        plt.close()
         return fig
 
     @staticmethod

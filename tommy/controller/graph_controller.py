@@ -267,6 +267,8 @@ class GraphController:
                                   "deze visualizatie te zien",
                                   horizontalalignment='center',
                                   verticalalignment='center')
+
+        fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
         matplotlib.pyplot.close()
         return fig
 
@@ -337,6 +339,11 @@ class GraphController:
         return [self._get_nx_export(vis) for vis
                 in range(len(self._possible_nx_exports))]
 
+    def _delete_all_cached_plots(self):
+        """Delete all cached figures saved by the visualization creators"""
+        for vis_creator in self.VISUALIZATIONS:
+            vis_creator.delete_cache()
+
     def on_topic_runner_complete(self, topic_runner: TopicRunner) -> None:
         """
         Signal the graph-controller that a topic runner has finished training
@@ -345,6 +352,7 @@ class GraphController:
         :param topic_runner: The newly trained topic runner object
         :return: None
         """
+        self._delete_all_cached_plots()
         self._current_topic_runner = topic_runner
         self._calculate_possible_visualizations()
         self._topics_changed_event.publish(None)
