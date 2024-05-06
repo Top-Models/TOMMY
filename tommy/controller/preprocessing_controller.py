@@ -70,8 +70,8 @@ class PreprocessingController:
         """
         return [token for token in tokens if token not in self._stopwords_model]
 
-    def replace_synonyms(self, tokens: list[str]) -> list[str]:
-        #todo
+    #def replace_synonyms(self, tokens: list[str]) -> list[str]:
+        # todo
 
 
 """
