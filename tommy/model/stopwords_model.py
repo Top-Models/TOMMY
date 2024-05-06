@@ -26,7 +26,7 @@ class StopwordsModel:
         """Initializes the stopwords model."""
         with open(os.path.join(
                 application_settings.preprocessing_data_folder,
-                "stopwords.txt"), 'r') as file:
+                "Dutch.txt"), 'r') as file:
             file_content = file.read()
         stopword_list = file_content.split()
         self._default_words = set(stopword_list)
