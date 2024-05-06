@@ -27,8 +27,8 @@ class StopwordsView(QScrollArea):
                 }}
 
                 QTabBar::tab {{ 
-                    color: black;
-                    background-color: rgba(230, 230, 230, 1);
+                    color: rgba(120, 120, 120, 1);
+                    background-color: rgba(210, 210, 210, 1);
                     font-size: 15px;
                     padding-left: 5px;
                     padding-right: 5px;
