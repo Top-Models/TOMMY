@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QWidget,
                                QPushButton)
 
+from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
@@ -9,6 +10,7 @@ from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
     pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray)
 from tommy.support.model_type import ModelType
+from tommy.view.config_view import ConfigView
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
@@ -19,7 +21,7 @@ class ModelParamsView(QScrollArea):
 
     def __init__(self, model_parameters_controller: ModelParametersController,
                  controller: Controller,
-                 ) -> None:
+                 config_controller: ConfigController) -> None:
         """The initialization ot the ModelParamDisplay."""
         super().__init__()
 
@@ -29,9 +31,14 @@ class ModelParamsView(QScrollArea):
         # Set reference to the model parameters controller
         self._model_parameters_controller = model_parameters_controller
         self._controller = controller
+        self._config_controller = config_controller
+
+        # Subscribe to the event when the config changes
+        self._model_parameters_controller.params_model_changed_event.subscribe(
+            self._update_model_params)
 
         # Initialize model settings
-        self.SETTINGS_VIEWS = {
+        self.SETTINGS_VIEWS: dict[ModelType, AbstractSettings] = {
             ModelType.LDA: LdaSettings(self._model_parameters_controller)
         }
 
@@ -88,8 +95,11 @@ class ModelParamsView(QScrollArea):
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidget(self.scroll_widget)
 
-        # Initialize topic widgets
+        # Initialize button widgets
         self.apply_button = None
+
+        # TODO: Frontend people make this pretty
+        self.config_management_button = None
 
         # Initialize button layout
         self.button_layout = QVBoxLayout()
@@ -124,6 +134,7 @@ class ModelParamsView(QScrollArea):
         """
         Initialize the parameter widgets.
         """
+        self.initialize_config_button()
         current_view = self.get_current_settings_view()
         current_view.initialize_parameter_widgets(self.scroll_layout)
         self.initialize_apply_button()
@@ -143,6 +154,44 @@ class ModelParamsView(QScrollArea):
                     if widget is not None:
                         widget.deleteLater()
                 layout.deleteLater()
+
+    def open_config_management_widget(self):
+        """Method to open the configuration management widget"""
+        config_management_widget = ConfigView(
+            self._config_controller, self._model_parameters_controller)
+        config_management_widget.exec()
+
+    def initialize_config_button(self) -> None:
+        """
+        Initialize the button that opens the config view
+        TODO: Frontend people make this pretty
+        :return:
+        """
+        self.config_management_button = QPushButton("Beheer Configuraties")
+        self.config_management_button.setStyleSheet(
+            f"""
+                            QPushButton {{
+                                background-color: {seco_col_blue};
+                                color: white;
+                                border-radius: 5px;
+                                padding: 10px 20px;
+                                font-size: 14px;
+                                font-family: {text_font};
+                            }}
+
+                            QPushButton:hover {{
+                                background-color: {hover_seco_col_blue};
+                            }}
+
+                            QPushButton:pressed {{
+                                background-color: {pressed_seco_col_blue};
+                            }}
+                            """
+        )
+        self.config_management_button.clicked.connect(
+            self.open_config_management_widget)
+        self.button_layout.addWidget(self.config_management_button,
+                                     alignment=Qt.AlignTop)
 
     def initialize_apply_button(self) -> None:
         """
@@ -201,6 +250,11 @@ class ModelParamsView(QScrollArea):
         """
         self.clear_layouts_from_scroll_layout()
         self.initialize_parameter_widgets()
+
+    def _update_model_params(self, data: tuple[int, ModelType]):
+        # TODO: update the parameters in the text input fields
+        num_topics, model_type = data
+        # self.topic_input.setText(str(num_topics))
 
 
 """

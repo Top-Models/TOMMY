@@ -3,6 +3,8 @@ from PySide6.QtGui import QDoubleValidator
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QCheckBox, \
     QVBoxLayout
 
+from tommy.controller.model_parameters_controller import \
+    ModelParametersController
 from tommy.support.constant_variables import text_font, seco_col_blue
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
@@ -14,7 +16,7 @@ class LdaSettings(AbstractSettings):
     """
 
     def __init__(self,
-                 model_parameters_controller):
+                 model_parameters_controller: ModelParametersController):
         """
         Constructor for LDA settings
 
