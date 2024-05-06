@@ -1,34 +1,44 @@
 from itertools import product
-
+import networkx as nx
 import matplotlib.figure
 
+# Import controllers
 from tommy.controller.corpus_controller import CorpusController
-from tommy.support.event_handler import EventHandler
-from tommy.datatypes.topics import TopicWithScores
-
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.controller.topic_modelling_controller import (
     TopicModellingController)
+
+# Import visualizations
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
-from tommy.controller.visualizations.abstract_visualizations_per_topic import (
-    AbstractVisualizationPerTopic)
 from tommy.controller.visualizations.abstract_visualization_on_data import (
     AbstractVisualizationOnData)
+from tommy.controller.visualizations.abstract_visualizations_per_topic import (
+    AbstractVisualizationPerTopic)
 from tommy.controller.visualizations.correlation_matrix_creator import (
     CorrelationMatrixCreator)
+from tommy.controller.visualizations.document_topic_network_summary_creator \
+    import DocumentTopicNetworkSummaryCreator
+from tommy.controller.visualizations.document_topic_nx_exporter import (
+    DocumentTopicNxExporter)
+from tommy.controller.visualizations.word_topic_nx_exporter import (
+    WordTopicNxExporter)
+from tommy.controller.visualizations.document_word_count_creator import (
+    DocumentWordCountCreator)
 from tommy.controller.visualizations.top_words_bar_plot_creator import (
     TopWordsBarPlotCreator)
+from tommy.controller.visualizations.visualization_input_datatypes import (
+    ProcessedCorpus, MetadataCorpus)
+from tommy.controller.visualizations.nx_exporter_on_data import (
+    NxExporterOnData)
+from tommy.controller.visualizations.nx_exporter import NxExporter
 from tommy.controller.visualizations.word_cloud_creator import WordCloudCreator
 from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
-from tommy.controller.visualizations.document_topic_network_summary_creator \
-    import DocumentTopicNetworkSummaryCreator
-from tommy.controller.visualizations.document_word_count_creator import (
-    DocumentWordCountCreator)
-from tommy.controller.visualizations.visualization_input_datatypes import (
-    ProcessedCorpus, MetadataCorpus)
+
+from tommy.datatypes.topics import TopicWithScores
+from tommy.support.event_handler import EventHandler
 
 
 class GraphController:
@@ -52,8 +62,12 @@ class GraphController:
         WordCloudCreator(),
         TopWordsBarPlotCreator()
     ]
+    NX_EXPORTS: list[NxExporterOnData | NxExporter] = [
+        DocumentTopicNxExporter(),
+        WordTopicNxExporter()]
     _possible_global_visualizations: list[int] = None
     _possible_topic_visualizations: list[int] = None
+    _possible_nx_exports: list[int] = None
 
     _current_visualization_index: int = None
     _current_tab_index: int = 0
@@ -182,6 +196,13 @@ class GraphController:
             self._current_visualization_index = 0
         self._current_visualization_index %= self.get_visualization_count()
 
+        self._possible_nx_exports = [
+            export_index
+            for (export_index, exporter)
+            in enumerate(self.NX_EXPORTS)
+            if exporter.is_possible(self._current_topic_runner)
+        ]
+
     def get_visualization_count(self) -> int:
         """Return the number of possible visualization that can be requested"""
         return (len(self._possible_global_visualizations)
@@ -242,9 +263,9 @@ class GraphController:
         # otherwise run the visualization without additional data
         return vis_creator.get_figure(self._current_topic_runner)
 
-    def _run_global_visualization_on_data(
-            self,
-            vis_creator: AbstractVisualizationOnData):
+    def _run_global_visualization_on_data(self,
+            vis_creator: AbstractVisualizationOnData
+                                          ) -> matplotlib.figure.Figure:
         """
         Runs the global visualization on the additional data that it needs
         :param vis_creator: Index of the visualization to be requested
@@ -275,6 +296,59 @@ class GraphController:
         vis_index, vis_topic = (self._possible_topic_visualizations[vis_index])
         return (self.TOPIC_VISUALIZATIONS[vis_index]
                 .get_figure(self._current_topic_runner, vis_topic))
+
+    def _get_nx_export(self, vis_index: int) -> nx.graph:
+        """
+        Returns the networkx graph corresponding showing the network
+        corresponding to the given index in the list of possible exports.
+        :param vis_index: Index of the export to be requested
+        :return: networkx graph of a visualization corresponding to the index
+        :raises IndexError: if the index is negative or bigger than the number
+            of possible visualizations as calculated by this class.
+        """
+        # if not, the index is out of range
+        if self._current_visualization_index < 0:
+            raise IndexError(f'Negative index of {vis_index} is not accepted '
+                             'in _get_visualization')
+
+        # checks if the index of the export is within bounds.
+        if vis_index < len(self._possible_nx_exports):
+            if isinstance(self.NX_EXPORTS[vis_index], NxExporterOnData):
+                return self._get_nx_export_on_data(self.NX_EXPORTS[vis_index])
+            if isinstance(self.NX_EXPORTS[vis_index], NxExporter):
+                return self._get_nx_export_no_data(self.NX_EXPORTS[vis_index])
+
+        # if not, the index is out of range
+        raise IndexError(f'No exports with index {vis_index} available')
+
+    def _get_nx_export_on_data(self, nx_exporter_on_data: NxExporterOnData)\
+            -> nx.Graph:
+        """
+        Runs the networkx exporter on the additional data that it needs
+        :param nx_exporter_on_data: Index of the visualization to be requested
+        :return: nx.graph of the exporter
+        """
+
+        if nx_exporter_on_data.input_data_type == ProcessedCorpus:
+            processed_corpus = self._corpus_controller.get_processed_corpus()
+            return nx_exporter_on_data.get_nx_graph(self._current_topic_runner,
+                                                    processed_corpus)
+        if nx_exporter_on_data.input_data_type == MetadataCorpus:
+            metadata = self._corpus_controller.get_metadata()
+            return nx_exporter_on_data.get_nx_graph(self._current_topic_runner,
+                                                    metadata)
+
+        raise Exception("The graph-controller is asked to supply data of type"
+                        f" {nx_exporter_on_data.input_data_type}, which is not"
+                        " supported")
+
+    def _get_nx_export_no_data(self, nx_exporter: NxExporter) -> nx.Graph:
+        """
+        Runs the networkx exporter
+        :param nx_exporter: Index of the visualization to be requested
+        :return: nx.graph of the exporter
+        """
+        return nx_exporter.get_nx_graph(self._current_topic_runner)
 
     def on_next_plot(self) -> None:
         """
@@ -328,6 +402,32 @@ class GraphController:
                        + selected_topic))
 
         self._plots_changed_event.publish(self.get_current_visualization())
+
+    def get_all_visualizations(self) -> list[matplotlib.figure.Figure]:
+        """
+        Get all the possible visualization for the current run
+        :return: A list of  matplotlib Figures of all possible visualizations
+        """
+        if self._current_topic_runner is None:
+            raise RuntimeError("Plots cannot be requested when topic model "
+                                 "has not been run.")
+
+        return [self._get_visualization(vis) for vis
+                in range(len(self._possible_global_visualizations)
+                + len(self._possible_topic_visualizations))]
+
+    def get_all_nx_exports(self) -> list[nx.graph]:
+        """
+        Get all the networkx graphs for the possible visualization for the
+        current run
+        :return: A list of nx.graph objects of all possible visualizations
+        """
+        if self._current_topic_runner is None:
+            raise RuntimeError("Exports cannot be requested when topic model "
+                                 "has not been run.")
+
+        return [self._get_nx_export(vis) for vis
+                in range(len(self._possible_nx_exports))]
 
     def on_topic_runner_complete(self, topic_runner: TopicRunner) -> None:
         """

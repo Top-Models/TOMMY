@@ -15,6 +15,7 @@ from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.controller.save_controller import SaveController
 from tommy.controller.config_controller import ConfigController
+from tommy.controller.export_controller import ExportController
 
 
 class Controller:
@@ -54,6 +55,12 @@ class Controller:
     _project_settings_controller: ProjectSettingsController
     _save_controller: SaveController
 
+    _export_controller: ExportController
+
+    @property
+    def export_controller(self) -> ExportController:
+        return self._export_controller
+
     @property
     def config_controller(self) -> ConfigController:
         return self._config_controller
@@ -77,6 +84,7 @@ class Controller:
         self._project_settings_controller = ProjectSettingsController()
         self._save_controller = SaveController()
         self._config_controller = ConfigController()
+        self._export_controller = ExportController()
 
     def _set_controller_references(self) -> None:
         """
@@ -87,6 +95,7 @@ class Controller:
         """
         self._corpus_controller.set_controller_refs(
             self._project_settings_controller)
+        self._export_controller.set_controller_refs(self._graph_controller)
 
         self._graph_controller.set_controller_refs(
             self._topic_modelling_controller, self._corpus_controller)

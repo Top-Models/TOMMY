@@ -9,6 +9,7 @@ class ModelParametersController:
     modelling
     """
     _parameters_model: ModelParametersModel = None
+    # TODO: Not all parameters emit this event when changed
     _params_changed_event: EventHandler[tuple[int, ModelType]] = EventHandler()
 
     def set_model_refs(self,
@@ -25,6 +26,44 @@ class ModelParametersController:
         self._parameters_model = parameters_model
         self._params_changed_event.publish((self.get_model_n_topics(),
                                             self.get_model_type()))
+
+    def set_model_word_amount(self, word_amount: int) -> None:
+        """Set the amount of words to be displayed per topic"""
+        self._parameters_model.word_amount = word_amount
+
+    def get_model_word_amount(self) -> int:
+        """Return the amount of words to be displayed per topic"""
+        return self._parameters_model.word_amount
+
+    def set_model_alpha_beta_custom_enabled(self, enabled: bool) -> None:
+        """
+        Set whether the alpha and beta parameters should be set manually
+        :param enabled: whether the parameters should be set manually
+        """
+        self._parameters_model.alpha_beta_custom_enabled = enabled
+
+    def get_model_alpha_beta_custom_enabled(self) -> bool:
+        """
+        Return whether the alpha and beta parameters
+        should be set manually
+        """
+        return self._parameters_model.alpha_beta_custom_enabled
+
+    def set_model_alpha(self, alpha: float) -> None:
+        """Set the alpha parameter for the topic modelling"""
+        self._parameters_model.alpha = alpha
+
+    def get_model_alpha(self) -> float:
+        """Return the alpha parameter for the topic modelling"""
+        return self._parameters_model.alpha
+
+    def set_model_beta(self, beta: float) -> None:
+        """Set the beta parameter for the topic modelling"""
+        self._parameters_model.beta = beta
+
+    def get_model_beta(self) -> float:
+        """Return the beta parameter for the topic modelling"""
+        return self._parameters_model.beta
 
     def set_model_n_topics(self, n_topics: int) -> None:
         """
