@@ -1,4 +1,5 @@
 from pypdf import PdfReader
+from pypdf.errors import PdfReadError
 import os.path
 from os import stat
 from typing import Generator
@@ -21,16 +22,32 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         """
         pass
 
+    from pypdf.errors import PdfReadError
+
     def compatible_file(self, path: str) -> bool:
         """
         A PDF file is compatible with this parser if and only if
-        the file extension is .pdf
+        the file extension is .pdf and the file is not corrupted.
 
         :param path: The string path to the PDF file to be checked for
                      compatibility.
         :return: bool: True if the file is compatible, False otherwise.
         """
-        return path.endswith('.pdf')
+        if not path.endswith('.pdf'):
+            return False
+
+        try:
+            with open(path, 'rb') as file:
+                PdfReader(file)
+        except self.PdfReadError:
+            return False
+        except Exception as e:
+            print(
+                f"Failed to check compatibility of file {path} due "
+                f"to error: {e}")
+            return False
+
+        return True
 
     def load_file(self, path: str) -> Generator[RawFile, None, None]:
         """
@@ -48,9 +65,11 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
                 text = ''
                 for page in pdf.pages:
                     text += page.extract_text()
-                yield self.generate_file(text, path, metadata)
         except Exception as e:
             print(f"Failed to load file {path} due to error: {e}")
+            return
+
+        yield self.generate_file(text, path, metadata)
 
     @staticmethod
     def generate_file(file: str, path, metadata) -> RawFile:
@@ -59,6 +78,7 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
 
         :param file: A string representing a page of PDF data.
         :param path: The string path to the PDF file.
+        :param metadata: The metadata of the PDF file.
         :return: A RawFile object generated from the PDF page
         containing metadata and the raw text of the file.
         """
@@ -74,7 +94,7 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
 
         return RawFile(
                 metadata=Metadata(author=metadata.get('/Author', None),
-                                  title=alt_title,
+                                  title=metadata.get('/Title', alt_title),
                                   date=metadata.get('/ModDate', file_date),
                                   path=os.path.relpath(path),
                                   format="pdf",

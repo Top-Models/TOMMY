@@ -29,6 +29,13 @@ def test_compatible_file(pdf_file_importer):
     assert not pdf_file_importer.compatible_file(incompatible_path)
 
 
+def test_corrupted_file(pdf_file_importer):
+    corrupted_path = os.path.join(TEST_DATA_DIR,
+                            'corrupt_files',
+                            'hondenverhaaltje 5.pdf')
+    assert not pdf_file_importer.compatible_file(corrupted_path)
+
+
 def test_load_file(pdf_file_importer):
     testfile = os.path.join(TEST_DATA_DIR,
                             'correct_files',
