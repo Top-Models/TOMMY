@@ -39,10 +39,11 @@ def test_corrupted_file(pdf_file_importer):
 def test_load_file(pdf_file_importer):
     testfile = os.path.join(TEST_DATA_DIR,
                             'correct_files',
-                            'kattenverhaaltje 1.pdf')
-    file_generator = pdf_file_importer.load_file(testfile)
-    assert file_generator is not None
+                            'kattenverhaaltje 2.pdf')
 
+    for file_generator in pdf_file_importer.load_file(testfile):
+        assert file_generator is not None
+        assert file_generator.body.body == "Verhaaltje over een kat  "
 
 
 def test_generate_file(pdf_file_importer):
