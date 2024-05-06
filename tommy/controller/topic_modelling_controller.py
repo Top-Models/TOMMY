@@ -73,6 +73,20 @@ class TopicModellingController:
                   for document
                   in self._corpus_controller.get_processed_corpus()]
         num_topics = self._model_parameters_controller.get_model_n_topics()
+        alpha_value = self._model_parameters_controller.get_model_alpha()
+        beta_value = self._model_parameters_controller.get_model_beta()
+        alpha_beta_custom_enabled = (
+            self._model_parameters_controller.
+            get_model_alpha_beta_custom_enabled())
+
+        if alpha_beta_custom_enabled:
+            self._topic_runner = LdaRunner(topic_model=self._topic_model,
+                                           docs=corpus,
+                                           num_topics=num_topics,
+                                           alpha=alpha_value,
+                                           beta=beta_value)
+            return
+
         self._topic_runner = LdaRunner(topic_model=self._topic_model,
                                        docs=corpus,
                                        num_topics=num_topics)
