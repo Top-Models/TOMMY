@@ -1,14 +1,12 @@
 {{ fullname | escape | underline }}
 
 .. automodule:: {{ fullname }}
-   :noindex:
    {% block classes %}
    {% if classes %}
    .. rubric:: Classes
 
    {% for class in classes %}
    .. autoclass:: {{ class }}
-       :noindex:
        :members:
        :undoc-members:
        :inherited-members:

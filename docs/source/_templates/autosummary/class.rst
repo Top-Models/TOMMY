@@ -3,7 +3,6 @@
 .. currentmodule:: {{ module }}
 
 .. autoclass:: {{ objname }}
-   :noindex:
    :members:
    :undoc-members:
    :inherited-members:

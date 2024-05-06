@@ -34,7 +34,7 @@ Code documentation
 
 .. autosummary::
     :toctree: code
-    :caption: Contents
+    :caption: Code documentation
     :recursive:
 
     tommy
