@@ -1,10 +1,7 @@
 import pytest
-from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.controller import Controller
-from tommy.support.constant_variables import sec_col_purple, text_font
-from tommy.view.model_params_view import ModelParamsView
 from tommy.view.stopwords_view import StopwordsView
 
 

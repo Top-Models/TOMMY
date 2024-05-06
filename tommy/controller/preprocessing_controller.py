@@ -57,7 +57,7 @@ class PreprocessingController:
 
         # 8 - stopword removal and synonym replacement
         lemmas = self.filter_stopwords(lemmas)
-        lemmas = self.replace_synonyms(lemmas)
+        #lemmas = self.replace_synonyms(lemmas)
 
         return lemmas
 

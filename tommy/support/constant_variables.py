@@ -24,6 +24,7 @@ seco_purple_border_color = "#A59BC3"
 sec_col_brown = "#94795D"
 
 # Gray color properties
+disabled_gray = "#B0B0B0"
 light_gray = "#E0E0E0"
 extra_light_gray = "#F5F5F5"
 medium_light_gray = "#D3D3D3"
