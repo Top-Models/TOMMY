@@ -14,11 +14,36 @@ class AbstractVisualization(ABC):
     _required_interfaces: []
     name: str
 
-    @abstractmethod
+    # cache of the generated plot
+    _cached_figure: matplotlib.figure.Figure | None = None
+
     def get_figure(self, topic_runner: TopicRunner
                    ) -> matplotlib.figure.Figure:
         """
         Get the matplotlib figure showing the requested visualization
+        :param topic_runner: the topic runner to extract the result data from
+        :return: The matplotlib figure showing the requested visualization
+        """
+        # check if cache exists first
+        result_figure = self._get_cached_figure()
+        if result_figure is None:
+            result_figure = self._create_figure(topic_runner=topic_runner)
+            # save new figure in cache list
+            self._cached_figure = result_figure
+        return result_figure
+
+    def _get_cached_figure(self) -> matplotlib.figure.Figure | None:
+        """
+        Get the cached figure for if it exists
+        :return: A matplotlib figure showing the requested plot, or None
+        """
+        return self._cached_figure
+
+    @abstractmethod
+    def _create_figure(self, topic_runner: TopicRunner
+                       ) -> matplotlib.figure.Figure:
+        """
+        Generate the matplotlib figure showing the requested visualization
         :param topic_runner: the topic runner to extract the result data from
         :return: The matplotlib figure showing the requested visualization
         """
@@ -32,6 +57,10 @@ class AbstractVisualization(ABC):
         """
         return all(isinstance(topic_runner, requirement)
                    for requirement in self._required_interfaces)
+
+    def delete_cache(self):
+        """Delete all cached figures"""
+        self._cached_figure = None
 
 
 """

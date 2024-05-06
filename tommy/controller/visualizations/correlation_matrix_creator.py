@@ -21,9 +21,9 @@ class CorrelationMatrixCreator(AbstractVisualization):
     _required_interfaces = [CorrelationMatrixInterface]
     name = 'Correlatiematrix topics'
 
-    def get_figure(self,
-                   topic_runner: TopicRunner | CorrelationMatrixInterface
-                   ) -> matplotlib.figure.Figure:
+    def _create_figure(self,
+                       topic_runner: TopicRunner | CorrelationMatrixInterface
+                       ) -> matplotlib.figure.Figure:
         """
         Construct a correlation matrix plot for the topics in the given
         topic runner and return it as a matplotlib figure.
@@ -60,6 +60,7 @@ class CorrelationMatrixCreator(AbstractVisualization):
         plt.yticks(np.arange(num_topics),
                    np.arange(1, num_topics + 1))
 
+        plt.close()
         return fig
 
 

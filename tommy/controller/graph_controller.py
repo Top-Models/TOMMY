@@ -423,10 +423,16 @@ class GraphController:
         """
         if self._current_topic_runner is None:
             raise RuntimeError("Exports cannot be requested when topic model "
-                                 "has not been run.")
+                               "has not been run.")
 
         return [self._get_nx_export(vis) for vis
                 in range(len(self._possible_nx_exports))]
+
+    def _delete_all_cached_plots(self):
+        """Delete all cached figures saved by the visualization creators"""
+        for vis_creator in (self.TOPIC_VISUALIZATIONS
+                            + self.GLOBAL_VISUALIZATIONS):
+            vis_creator.delete_cache()
 
     def on_topic_runner_complete(self, topic_runner: TopicRunner) -> None:
         """
@@ -436,6 +442,7 @@ class GraphController:
         :param topic_runner: The newly trained topic runner object
         :return: None
         """
+        self._delete_all_cached_plots()
         self._current_topic_runner = topic_runner
         self._calculate_possible_visualizations()
         self._topics_changed_event.publish(None)

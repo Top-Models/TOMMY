@@ -28,10 +28,10 @@ class DocumentWordCountCreator(
         """Returns the type of the additional data needed in get_figure"""
         return MetadataCorpus
 
-    def get_figure(self,
-                   topic_runner: TopicRunner,
-                   data: MetadataCorpus
-                   ) -> matplotlib.figure.Figure:
+    def _create_figure(self,
+                       topic_runner: TopicRunner,
+                       data: MetadataCorpus
+                       ) -> matplotlib.figure.Figure:
         """
         Construct a word count plot showing the number of words per document
         in the given corpus
@@ -54,6 +54,7 @@ class DocumentWordCountCreator(
         plt.ylabel("aantal documenten")
         plt.title("Distributie aantal woorden per document")
 
+        plt.close()
         return fig
 
 
