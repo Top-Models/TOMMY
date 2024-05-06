@@ -42,8 +42,11 @@ def test_load_file(pdf_file_importer):
                             'kattenverhaaltje 2.pdf')
 
     for file_generator in pdf_file_importer.load_file(testfile):
+        file_text = file_generator.body.body.strip()
+
+        # Assert
         assert file_generator is not None
-        assert file_generator.body.body == "Verhaaltje over een kat  "
+        assert file_text == "Verhaaltje over een kat"
 
 
 def test_generate_file(pdf_file_importer):

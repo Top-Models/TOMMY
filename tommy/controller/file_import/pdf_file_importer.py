@@ -1,5 +1,4 @@
 from pypdf import PdfReader
-from pypdf.errors import PdfReadError
 import os.path
 from os import stat
 from typing import Generator
@@ -39,8 +38,6 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         try:
             with open(path, 'rb') as file:
                 PdfReader(file)
-        except self.PdfReadError:
-            return False
         except Exception as e:
             print(
                 f"Failed to check compatibility of file {path} due "

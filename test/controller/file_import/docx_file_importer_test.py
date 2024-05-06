@@ -31,12 +31,24 @@ def test_compatible_file(docx_file_importer):
     assert not docx_file_importer.compatible_file(incompatible_path)
 
 
+def test_corrupted_file(docx_file_importer):
+    corrupted_path = os.path.join(TEST_DATA_DIR,
+                                  'corrupt_files',
+                                  'hondenverhaaltje 1.docx')
+    assert not docx_file_importer.compatible_file(corrupted_path)
+
+
 def test_load_file(docx_file_importer):
     testfile = os.path.join(TEST_DATA_DIR,
                             'correct_files',
-                            'kattenverhaaltje 1.docx')
-    file_generator = docx_file_importer.load_file(testfile)
-    assert file_generator is not None
+                            'kattenverhaaltje 2.docx')
+
+    for file_generator in docx_file_importer.load_file(testfile):
+        file_text = file_generator.body.body.strip()
+
+        # Assert
+        assert file_generator is not None
+        assert file_text == "Verhaaltje over een kat"
 
 
 def test_generate_file(docx_file_importer):
