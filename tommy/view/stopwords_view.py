@@ -104,6 +104,7 @@ class StopwordsView(QScrollArea):
         self.blacklist_tab = QTextEdit()
         self.blacklist_tab.setStyleSheet(tab_style)
         self.blacklist_tab.setLineWrapMode(QTextEdit.NoWrap)
+        self.blacklist_tab.setPlaceholderText("Voer blacklist woorden in op deze manier:\nwoord1[enter]\nwoord2[enter]\netc")
 
         self.ngrams_tab = QTextEdit()
         self.ngrams_tab.setStyleSheet(tab_style)
@@ -112,6 +113,8 @@ class StopwordsView(QScrollArea):
         self.synonym_tab = QTextEdit()
         self.synonym_tab.setStyleSheet(tab_style)
         self.synonym_tab.setLineWrapMode(QTextEdit.NoWrap)
+        self.synonym_tab.setPlaceholderText("Type synoniemen in deze manier:\nwoord1 [spatie] synoniem1 [spatie] synoniem2 [spatie] ...\n[enter] woord2 [spatie] synoniem1 [spatie] synoniem2 [spatie] ...")
+
 
         # Set container as the focal point
         self.setWidget(self.container)
