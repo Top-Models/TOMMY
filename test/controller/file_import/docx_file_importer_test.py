@@ -73,5 +73,5 @@ def test_generate_file(docx_file_importer):
     current_date = datetime.now()
 
     # Check if the date in the metadata is validly set (within 1 day)
-    # We are insterested in days only, so we usually ignore time
+    # We are interested in days only, so we usually ignore time
     assert abs(file.metadata.date - current_date) < timedelta(minutes=10)
