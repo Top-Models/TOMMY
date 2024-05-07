@@ -3,8 +3,8 @@ from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from pytest_mock import mocker
 
-from tommy.controller.visualizations.abstract_visualizations_per_topic import \
-    AbstractVisualizationPerTopic, TopicRunner
+from tommy.controller.visualizations.abstract_visualization import (
+    AbstractVisualization, TopicRunner, VisGroup, VisInputData, TopicID)
 
 # create test plot
 test_plot = Figure()
@@ -17,13 +17,17 @@ def plot() -> Figure:
     return test_plot
 
 
-class MockVisualization(AbstractVisualizationPerTopic):
+class MockVisualization(AbstractVisualization):
     _required_interfaces = []
     name = "MockVisualization"
+    short_tab_name: str = "Mock"
+    vis_group: VisGroup = VisGroup.TOPIC
+    needed_input_data: list[VisInputData] = [VisInputData.TOPIC_ID]
 
     def _create_figure(self,
                        topic_runner: TopicRunner,
-                       topic_id: int) -> Figure:
+                       topic_id: TopicID = None,
+                       **kwargs) -> Figure:
         return test_plot
 
 
@@ -55,10 +59,13 @@ def test_get_figure(mock_visualization: MockVisualization,
     # Assert
     mocked_cache_method.assert_called_once_with(topic_id=topic_id)
     if cached_plot is None:
-        # assert that new plot is calculated and saved in cache
-        mocked_create_figure_method.assert_called_once_with(topic_runner=
-                                                            mock_topic_runner,
-                                                            topic_id=topic_id)
+        # assert that new plot is calculated with the correct arguments
+        mocked_create_figure_method.assert_called_once()
+        args, kwargs = mocked_create_figure_method.call_args
+        assert kwargs['topic_id'] == topic_id
+        assert kwargs['topic_runner'] == mock_topic_runner
+
+        # assert that the new plot is saved in cache
         mocker.stop(mocked_cache_method)
         assert mock_visualization._get_cached_figure(
             topic_id=topic_id) == plot
