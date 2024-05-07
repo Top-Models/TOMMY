@@ -28,11 +28,8 @@ def graph_controller() -> GraphController:
 
     topic_modelling_controller = TopicModellingController()
     corpus_controller = CorpusController()
-    graph_controller.set_controller_refs(corpus_controller)
-
-    # note: in another branch the setting of topic_modelling_controller
-    #   will be moved to set_controller_refs
-    graph_controller.set_model_refs(topic_modelling_controller)
+    graph_controller.set_controller_refs(topic_modelling_controller,
+                                         corpus_controller)
 
     return graph_controller
 
@@ -66,7 +63,7 @@ def test_get_number_of_topics(graph_controller: GraphController, n_topics: int,
 def words_with_scores() -> list[tuple[str, float]]:
     return list(zip(
         ["word1", "word2", "s", "LONG WORD WITH SPACES", "5", "SIX",
-                "7", "8", "9", "10", "11", "12", "13", "14", "15"],
+         "7", "8", "9", "10", "11", "12", "13", "14", "15"],
         [0.8394117569613936, 0.803704272713246, 0.7547414141744883,
          0.7403765400825127, 0.5650882510726273, 0.5530634246164807,
          0.40274019930419425, 0.3914758433804091, 0.3750981383670168,
@@ -87,7 +84,7 @@ def test_get_topic_with_scores(graph_controller: GraphController,
                         "get_topic_with_scores",
                         return_value=TopicWithScores(topic_id,
                                                      words_with_scores[:n_words
-                                                                       ]))
+                                                     ]))
 
     # Assert
     topic = graph_controller.get_topic_with_scores(topic_id, n_words)
@@ -100,7 +97,6 @@ def test_get_topic_with_scores(graph_controller: GraphController,
 def test_get_visualization(plot: Figure, graph_controller: GraphController,
                            vis_index: int, override_topic: int | None,
                            mocker: mocker):
-
     # Arrange
     mocked_method: mocker = mocker.patch.object(
         graph_controller,
@@ -112,7 +108,8 @@ def test_get_visualization(plot: Figure, graph_controller: GraphController,
         graph_controller.get_visualization(vis_index, override_topic)
     except IndexError:
         # Assert - should only raise error if index actually out of bounds
-        assert vis_index < 0 or vis_index >= len(graph_controller.VISUALIZATIONS)
+        assert vis_index < 0 or vis_index >= len(
+            graph_controller.VISUALIZATIONS)
     else:
         # Assert - that run_visualization is called once with correct params
         mocked_method.assert_called_once_with(
@@ -124,8 +121,8 @@ def test_get_visualization(plot: Figure, graph_controller: GraphController,
                          [([VisInputData.TOPIC_ID,
                             VisInputData.METADATA_CORPUS], None),
                           ([VisInputData.PROCESSED_CORPUS,
-                           VisInputData.METADATA_CORPUS,
-                           VisInputData.TOPIC_ID], 3),
+                            VisInputData.METADATA_CORPUS,
+                            VisInputData.TOPIC_ID], 3),
                           ([], 7), ([], None)])
 def test_run_visualization_creator(plot: Figure,
                                    graph_controller: GraphController,

@@ -3,7 +3,6 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget
 from pytestqt.qtbot import QtBot
 
-from tommy.view.model_params_view import ModelParamsView
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 from pytest_mock import mocker, MockerFixture
