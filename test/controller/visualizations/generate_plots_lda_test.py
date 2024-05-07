@@ -78,33 +78,34 @@ def metadata():
 
 def test_generate_correlation_matrix(lda_runner):
     correlation_matrix = CorrelationMatrixCreator()
-    figure = correlation_matrix.get_figure(lda_runner)
+    figure = correlation_matrix._create_figure(lda_runner)
     assert figure
 
 
 def test_generate_document_word_count(lda_runner, metadata):
     document_word_count = DocumentWordCountCreator()
-    figure = document_word_count.get_figure(lda_runner, metadata)
+    figure = document_word_count._create_figure(lda_runner, metadata)
+    figure.show()
     assert figure
 
 
 @pytest.mark.parametrize("topic_id", [0, 1, 2, 3])
 def test_generate_top_words_bar_plot(lda_runner, topic_id):
     top_words_bar_plot = TopWordsBarPlotCreator()
-    figure = top_words_bar_plot.get_figure(lda_runner, topic_id)
+    figure = top_words_bar_plot._create_figure(lda_runner, topic_id)
     assert figure
 
 
 @pytest.mark.parametrize("topic_id", [0, 1, 2, 3])
 def test_generate_word_cloud(lda_runner, topic_id):
     word_cloud_creator = WordCloudCreator()
-    figure = word_cloud_creator.get_figure(lda_runner, topic_id)
+    figure = word_cloud_creator._create_figure(lda_runner, topic_id)
     assert figure
 
 
 def test_generate_word_topic_network(lda_runner):
     word_topic_network = WordTopicNetworkCreator()
-    figure = word_topic_network.get_figure(lda_runner)
+    figure = word_topic_network._create_figure(lda_runner)
     assert figure
 
 
