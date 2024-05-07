@@ -9,7 +9,8 @@ Welcome to TOMMY's wiki!
 Download
 ========
 
-- :download:`TOMMY for Mac <download/tommy-mac.dmg>`
+- :download:`TOMMY for Mac (Apple Silicon) <download/tommy-mac-silicon.dmg>`
+- :download:`TOMMY for Mac (Intel) <download/tommy-mac-intel.dmg>`
 - :download:`TOMMY for Windows <download/tommy-windows.zip>`
 - :download:`TOMMY for Linux <download/tommy-linux.zip>`
 
@@ -26,6 +27,7 @@ Download
     wiki-dev/Style-guide.md
     wiki-dev/Style-guide-source-control.md
     wiki-dev/Generating-Portable-Executable.md
+    wiki-dev/Generating-Mac-Installer.md
     wiki-dev/How-to-run-tests-from-PyCharm.md
     wiki-dev/Writing-unit-tests-with-PyTest.md
     wiki-dev/New-algorithm-settings.md

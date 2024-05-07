@@ -21,13 +21,13 @@ dubbelklikken.
 Om data in het programma te laden is er een format bedacht welke dit voor de
 computer leesbaar maakt. Dit format bestaat uit een csv bestand waarbij de
 eerste regel een lijst aan headers is. Elke regel hierna beschrijft een document.
-Om een csv bestand te kunnen inlezen moet er een header genaamd ”body”zijn.
+Om een csv bestand te kunnen inlezen moet er een header genaamd ”body” zijn.
 Dit geeft aan dat deze kolom de tekst bevat die geanalyseerd moet worden.
 Daarnaast worden er een aantal optionele headers ondersteund.
 
 - title: Deze header geeft aan dat de desbetrevende kolom de titels van
 de documenten bevat. Deze titels worden dan gebruikt onder het kopje
-ge¨ımporteerde bestanden zoals later beschreven wordt.
+geïmporteerde bestanden zoals later beschreven wordt.
 - date: Deze header geeft aan dat deze kolom de publicatiedatums van de
 documenten bevat. Dit wordt op dit moment nog niet gebruikt in het
 programma.
@@ -38,16 +38,16 @@ gramma.
 het document bevat. Dit wordt op dit moment nog niet gebruikt in het
 programma.
 
-Nadat de bestanden zijn ge¨ımporteerd, zijn deze te vinden in de bestands-
-weergave onder het kopje ge¨ımporteerde bestanden. De bestanden worden aan-
+Nadat de bestanden zijn geïmporteerde, zijn deze te vinden in de bestands-
+weergave onder het kopje geïmporteerde bestanden. De bestanden worden aan-
 geduid met een titel als deze is meegegeven en anders met de bestandslocatie. Er
-wordt metadata over het bestand getoond als u op een bestand in ge¨ımporteerde
+wordt metadata over het bestand getoond als u op een bestand in geïmporteerde
 bestanden klikt. Deze data bevindt zich onder bestandsinformatie en bevat on-
 der andere het aantal woorden, bestandsformat en de bestandsgrootte.
 
 ## Topic modelling uitvoeren
 
-Topic modelling wordt door de applicatie uitgevoerd op alle ge¨ımporteerde be-
+Topic modelling wordt door de applicatie uitgevoerd op alle geïmporteerde be-
 standen. Hierbij worden door de gebruiker geselecteerde instellingen meege-
 nomen. Hieronder staat beschreven hoe deze instellingen aangepast kunnen
 worden.
@@ -65,7 +65,7 @@ resultaten beter te interpreteren met een lager aantal topics.
 
 ### Woorden uitsluiten
 
-Niet alle woorden uit de ge¨ımporteerde bestanden worden gebruikt bij topic
+Niet alle woorden uit de geïmporteerde bestanden worden gebruikt bij topic
 modelling. Bepaalde stopwoorden zoals lidwoorden en andere veel voorkomende
 woorden als te, door en is worden standaard uit de bestanden gefilterd. Dit zorgt
 ervoor dat enkel de belangrijke woorden overblijven, waardoor topics uit meer
@@ -74,9 +74,7 @@ er woorden in de analyse opduiken die niet van toepassing zijn. In de praktijk
 zal dit best vaak voorkomen, aangezien de standaardlijst van stopwoorden vrij
 conservatief opgesteld is. Deze woorden kunnen uitgesloten worden door ze in
 te voeren in het tekstinvoervak boven de knop Uitsluiten en vervolgens op de
-knop te klikken of op enter te drukken. De uitgesloten woorden worden getoond
-onder de Uitsluiten knop (zie ook Figuur 1). Door op een woord te klikken in de lijst onder Uitsluiten kan een eerder uitgesloten woord weer toegevoegd worden.
-Hierdoor wordt het uitsluiten ongedaan gemaakt.
+knop te klikken of op enter te drukken.
 
 ### Topic modelling toepassen
 
@@ -84,7 +82,7 @@ Nadat de instellingen zijn aangepast, kan het algoritme uitgevoerd worden. Dit
 wordt gedaan door op de Toepassen knop te klikken. Door deze knop wordt
 het achterliggende algoritme uitgevoerd en worden er resultaten gegenereerd.
 Dit kan enige tijd duren, denk aan enkele minuten of minder. De tijd is sterk
-afhankelijk van de grootte van de ge¨ımporteerde bestanden.
+afhankelijk van de grootte van de geïmporteerde bestanden.
 
 ## Grafische resultaten
 
@@ -129,6 +127,8 @@ en 4 is namelijk identiek aan de correlatie tussen topic 4 en 1. Ook valt op dat
 de nevendiagonaal enkel bestaat uit donkerblauwe vakjes. Een topic verschilt
 namelijk niet van zichzelf.
 
+![](../_static/User-guide/correlatiematrix.png)
+
 ### Netwerken
 
 Een essentieel onderdeel van de grafische resultaten zijn twee netwerken die
@@ -146,6 +146,8 @@ zou het kunnen dat dit woord niet veel toevoegt (en dus uitgesloten zou kunnen
 worden). Om dit soort woorden op te sporen, is een netwerk een goed middel.
 In het netwerk komen tevens ook woorden naar voren die maar aan ´e´en topic
 gerelateerd zijn.
+
+![](../_static/User-guide/woorden_topic_netwerk.png)
 
 In Figuur 3 worden per topic de 15 belangrijkste woorden weergegeven. Als
 een woord in meerdere topics voorkomt, zal dit naar voren komen door meerdere
@@ -166,6 +168,8 @@ een maat die het aantal documenten weergeeft die verbonden zijn aan een topic.
 Des te dikker de lijn, des te meer documenten aan het topic toebehoren. Uit dit
 netwerk is goed op te maken of een topic veel losse documenten heeft of juist
 veel voorkomt in documenten in combinatie met een ander topic.
+
+![](../_static/User-guide/document_topic_netwerk.png)
 
 ### Bekende bugs
 

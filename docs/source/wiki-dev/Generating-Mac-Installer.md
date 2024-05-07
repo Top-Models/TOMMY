@@ -1,4 +1,4 @@
-# Generating a Disk Image for macOS
+# Generating a Disk Image for MacOS
 
 ## Prerequisites
 
