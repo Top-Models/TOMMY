@@ -28,6 +28,7 @@ Download
     wiki-dev/Generating-Portable-Executable.md
     wiki-dev/How-to-run-tests-from-PyCharm.md
     wiki-dev/Writing-unit-tests-with-PyTest.md
+    wiki-dev/New-algorithm-settings.md
 
 Code documentation
 ==================

@@ -15,3 +15,10 @@ To run the tests from PyCharm, a new configuration needs to be created. This is 
 
 ## Running the tests
 Once the configuration is configured (pun not intended), simply select it from the dropdown next to the run button. Now press the run button and the test results should appear at the bottom of your screen.
+
+## Running PyTest normally
+You can run PyTest from the command line, using the pytest.ini, by using the following commands:
+```bash
+cd ./tommy
+pytest
+```
