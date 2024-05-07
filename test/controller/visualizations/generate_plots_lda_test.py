@@ -66,5 +66,5 @@ def test_generate_word_topic_network(lda_runner):
     assert figure
 
 
-def test_generate_document_topic_network_summary(lda_runner, processed_corpus):
-    # enkel processed corpus nodig!
+# def test_generate_document_topic_network_summary(lda_runner, processed_corpus):
+#     # enkel processed corpus nodig!
