@@ -66,6 +66,6 @@ def test_generate_file(docx_file_importer):
     # Get the current date
     current_date = datetime.now()
 
-    # Check if the date in the metadata is valid (within 1 hour)
+    # Check if the date in the metadata is valid (within 1 day)
     # We are insterested in days only, so we usually ignore time
-    assert abs(file.metadata.date - current_date) < timedelta(hours=1)
+    assert abs(file.metadata.date - current_date) < timedelta(days=1)
