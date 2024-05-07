@@ -18,9 +18,9 @@ class TopWordsBarPlotCreator(AbstractVisualizationPerTopic):
     _required_interfaces = []
     name = 'Woorden met het hoogste gewicht'
 
-    def get_figure(self,
-                   topic_runner: TopicRunner,
-                   topic_id: int) -> matplotlib.figure.Figure:
+    def _create_figure(self,
+                       topic_runner: TopicRunner,
+                       topic_id: int) -> matplotlib.figure.Figure:
         """
         Construct a bar plot matplotlib figure showing
         the top words for the requested topic in the given topic runner.
@@ -44,6 +44,7 @@ class TopWordsBarPlotCreator(AbstractVisualizationPerTopic):
         plt.xlabel("gewicht")
         plt.title(f"Woorden met het hoogste gewicht topic {topic_id+1}")
 
+        plt.close()
         return fig
 
 

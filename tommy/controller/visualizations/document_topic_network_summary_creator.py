@@ -35,10 +35,10 @@ class DocumentTopicNetworkSummaryCreator(
         """Returns the type of the additional data needed in get_figure"""
         return ProcessedCorpus
 
-    def get_figure(self,
-                   topic_runner: TopicRunner | DocumentTopicsInterface,
-                   data: ProcessedCorpus
-                   ) -> matplotlib.figure.Figure:
+    def _create_figure(self,
+                       topic_runner: TopicRunner | DocumentTopicsInterface,
+                       data: ProcessedCorpus
+                       ) -> matplotlib.figure.Figure:
         """
         Construct a summarized document-topic network plot showing the
         relations between documents and topics
@@ -114,6 +114,7 @@ class DocumentTopicNetworkSummaryCreator(
 
         nx.draw_networkx_labels(graph, pos, labels=labels)
 
+        plt.close()
         return fig
 
     @staticmethod

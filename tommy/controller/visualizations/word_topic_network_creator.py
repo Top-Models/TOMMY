@@ -19,9 +19,9 @@ class WordTopicNetworkCreator(AbstractVisualization):
     _required_interfaces = []
     name = 'Topics en 15 meest voorkomende woorden'
 
-    def get_figure(self,
-                   topic_runner: TopicRunner
-                   ) -> matplotlib.figure.Figure:
+    def _create_figure(self,
+                       topic_runner: TopicRunner
+                       ) -> matplotlib.figure.Figure:
         """
         Construct a word-topic network which is used to plot the relations
         between topics and probable words
@@ -57,6 +57,7 @@ class WordTopicNetworkCreator(AbstractVisualization):
                              node_color=node_colors,
                              font_size=8)
 
+        plt.close()
         return fig
 
     @staticmethod

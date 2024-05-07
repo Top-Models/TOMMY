@@ -17,9 +17,9 @@ class WordCloudCreator(AbstractVisualizationPerTopic):
     _required_interfaces = []
     name = 'Woordenwolk'
 
-    def get_figure(self,
-                   topic_runner: TopicRunner,
-                   topic_id: int) -> matplotlib.figure.Figure:
+    def _create_figure(self,
+                       topic_runner: TopicRunner,
+                       topic_id: int) -> matplotlib.figure.Figure:
         """
         Construct a wordcloud matplotlib figure for the requested topics in the
         given topic runner
@@ -44,6 +44,7 @@ class WordCloudCreator(AbstractVisualizationPerTopic):
         plt.axis('off')
         plt.tight_layout(pad=0)
 
+        plt.close()
         return fig
 
 

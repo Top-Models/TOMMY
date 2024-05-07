@@ -14,16 +14,45 @@ class AbstractVisualizationPerTopic(ABC):
     _required_interfaces: []
     name: str
 
-    @abstractmethod
-    def get_figure(self,
-                   topic_runner: TopicRunner,
+    # dict from used topic_id -> cache of the generated plot
+    _cached_figures: dict[int, matplotlib.figure.Figure] = {}
+
+    def get_figure(self, topic_runner: TopicRunner,
                    topic_id: int) -> matplotlib.figure.Figure:
+        """
+        Get the matplotlib figure showing the requested visualization
+        :param topic_runner: the topic runner to extract the result data from
+        :param topic_id: the index of the topic to create the visualization
+        :return: The matplotlib figure showing the requested visualization
+        """
+        # check if cache exists first
+        result_figure = self._get_cached_figure(topic_id=topic_id)
+        if result_figure is None:
+            result_figure = self._create_figure(topic_runner=topic_runner,
+                                                topic_id=topic_id)
+            # save new figure in cache list
+            self._cached_figures[topic_id] = result_figure
+        return result_figure
+
+    @abstractmethod
+    def _create_figure(self,
+                       topic_runner: TopicRunner,
+                       topic_id: int) -> matplotlib.figure.Figure:
         """
         Get the matplotlib figure showing the requested visualization
         :param topic_runner: the topic runner to extract the result data from
         :param topic_id: the topic_id of the topic to get the figure on
         :return: matplotlib figure showing the requested visualization
         """
+
+    def _get_cached_figure(self, topic_id: int
+                           ) -> matplotlib.figure.Figure | None:
+        """
+        Get the cached figure for the corresponding topic_id if it exists
+        :param topic_id: The topic id of the requested figure, defaults to None
+        :return: A matplotlib figure showing the requested plot, or None
+        """
+        return self._cached_figures.get(topic_id, None)
 
     def is_possible(self, topic_runner: TopicRunner) -> bool:
         """
@@ -34,6 +63,10 @@ class AbstractVisualizationPerTopic(ABC):
         """
         return all(isinstance(topic_runner, requirement)
                    for requirement in self._required_interfaces)
+
+    def delete_cache(self):
+        """Delete all cached figures"""
+        self._cached_figures = {}
 
 
 """
