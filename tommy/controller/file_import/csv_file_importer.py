@@ -31,23 +31,32 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                      compatibility.
         :return: bool: True if the file is compatible, False otherwise.
         """
-        with open(path, 'r', newline="", encoding='utf-8') as csvfile:
-            csv_reader = csv.DictReader(csvfile, delimiter=',')
+        try:
+            with open(path, 'r', newline="", encoding='utf-8') as csvfile:
+                csv_reader = csv.DictReader(csvfile, delimiter=',')
 
-            # To check whether each mandatory header exists and is unique,
-            # we keep an array of occurrences of all mandatory headers
-            mandatory_fields_counts = [0] * len(self.mandatory_fields)
+                # To check whether each mandatory header exists and is unique,
+                # we keep an array of occurrences of all mandatory headers
+                mandatory_fields_counts = [0] * len(self.mandatory_fields)
 
-            for header in csv_reader.fieldnames:
-                if header.lower() in self.mandatory_fields:
-                    mandatory_fields_counts[self.mandatory_fields.index(
-                        header.lower())] += 1
+                for header in csv_reader.fieldnames:
+                    if header.lower() in self.mandatory_fields:
+                        mandatory_fields_counts[self.mandatory_fields.index(
+                            header.lower())] += 1
 
-            if mandatory_fields_counts == [1] * len(self.mandatory_fields):
-                return True
+                if mandatory_fields_counts == [1] * len(self.mandatory_fields):
+                    return True
 
-        print("Incorrect number of headers", mandatory_fields_counts)
-        return False
+            print("Incorrect number of headers", mandatory_fields_counts)
+            return False
+
+        except UnicodeDecodeError as e:
+            print(f"Error decoding file '{path}': {e}")
+            return False
+
+        except Exception as e:
+            print(f"Error reading file '{path}': {e}")
+            return False
 
     def load_file(self, path: str) -> Generator[RawFile, None, None]:
         """

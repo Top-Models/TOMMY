@@ -1,14 +1,13 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (QLabel, QScrollArea, QWidget, QVBoxLayout,
-                               QLineEdit, QHBoxLayout, QPushButton)
+from PySide6.QtWidgets import (QScrollArea, QTabWidget,
+                               QTextEdit)
 
 from tommy.controller.stopwords_controller import StopwordsController
-from tommy.support.constant_variables import text_font, \
-    hover_seco_col_blue, pressed_seco_col_blue, sec_col_purple
-from tommy.view.observer.observer import Observer
+from tommy.support.constant_variables import (
+    text_font)
 
 
-class StopwordsView(QScrollArea, Observer):
+class StopwordsView(QScrollArea):
     """The StopWordsDisplay area to view all stopwords."""
 
     def __init__(self, stopwords_controller: StopwordsController) -> None:
@@ -17,203 +16,136 @@ class StopwordsView(QScrollArea, Observer):
 
         # Set reference to the controller
         self._stopwords_controller = stopwords_controller
-        stopwords_controller.add(self)
 
         # Initialize widget properties
         self.setFixedWidth(250)
-        self.setStyleSheet("background-color: white;")
+        self.setContentsMargins(0, 0, 0, 0)
+        self.setStyleSheet(f"""        
+                QTabWidget {{
+                    color: black;
+                    border: none;
+                }}
 
+                QTabBar::tab {{ 
+                    color: rgba(120, 120, 120, 1);
+                    background-color: rgba(210, 210, 210, 1);
+                    font-size: 15px;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                    font-weight: bold;
+                }}
+
+                QTabBar::tab:selected {{
+                    color: #000000;
+                    background-color: white;
+                }}
+
+                QTabBar::tab:hover {{
+                    background-color: white;
+                }}
+                
+                QTabWidget::tab-bar {{
+                    alignment: left;
+                    width: 250px;
+                }}
+                
+                QScrollArea {{
+                    border: 0px solid #00968F;
+                    border-radius: 10px;
+                }}
+                QScrollBar:vertical {{
+                    border: none;
+                    background: #F0F0F0;
+                    width: 30px;
+                    margin: 0px;
+                }}
+                QScrollBar::handle:vertical {{
+                    background: #CCCCCC;
+                    min-height: 20px;
+                    border-radius: 10px;
+                }}
+                QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
+                    height: 0px; 
+                }}
+                   """)
         # Initialize container for all elements
-        self.container = QWidget()
+        self.container = QTabWidget()
 
-        # Initialize layout for container
-        self.container_layout = QVBoxLayout(self.container)
-        self.container_layout.setAlignment(Qt.AlignTop)
+        # Initialize tabs
+        tab_style = (f"border-radius: 5px;"
+                     f"font-size: 14px;"
+                     f"font-family: {text_font};"
+                     f"color: black;"
+                     f"border: 2px solid #00968F;"
+                     f"padding: 5px;"
+                     f"background-color: white;"
+                     f"margin: 5px;")
 
-        # Initialize container for the input field and button
-        self.input_container = QWidget()
-        self.input_layout = QVBoxLayout(self.input_container)
-        self.input_layout.setAlignment(Qt.AlignCenter)
-        self.container_layout.addWidget(self.input_container)
-
-        # Initialize input field
-        self.add_button = None
-        self.input_field = None
-        self.initialize_widgets()
-
-        # Initialize scroll area and its layout
-        self.scroll_area = QWidget()
-        self.scroll_layout = QHBoxLayout(self.scroll_area)
-        self.scroll_layout.setAlignment(Qt.AlignCenter)
-
-        # Initialize excluded words
-        self.word_layout = QVBoxLayout()
-        self.scroll_layout.addLayout(self.word_layout)
-        # TODO: maybe this isn't good design,
-        #  and it should happen from the controller
-        self.show_excluded_words([])
-
-        # Add scroll area to container
-        self.container_layout.addWidget(self.scroll_area)
+        # self.stopwords_tab = QWidget()
+        # self.stopwords_tab.setStyleSheet(tab_style)
+        self.blacklist_tab = QTextEdit()
+        self.blacklist_tab.setStyleSheet(tab_style)
+        self.ngrams_tab = QTextEdit()
+        self.ngrams_tab.setStyleSheet(tab_style)
+        self.synonym_tab = QTextEdit()
+        self.synonym_tab.setStyleSheet(tab_style)
 
         # Set container as the focal point
         self.setWidget(self.container)
 
         # Add scroll options
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setWidgetResizable(True)
 
-    def initialize_widgets(self) -> None:
-        """Initialize the widgets."""
-        self.initialize_input_field()
-        self.initialize_add_button()
+        # Set layouts for tabs
+        # self.container.addTab(self.stopwords_tab, "Stopwords")
+        self.container.addTab(self.blacklist_tab, "Blacklist")
+        self.container.addTab(self.synonym_tab, "Synoniemen")
+        self.container.addTab(self.ngrams_tab, "N-grams")
 
-    def initialize_input_field(self) -> None:
+        # Connect text changed event to update additional_stopwords
+        # self.stopwords_tab.textChanged.connect(self.update_stopwords)
+        self.blacklist_tab.textChanged.connect(self.update_blacklist)
+        self.synonym_tab.textChanged.connect(self.update_synonyms)
+        self.ngrams_tab.textChanged.connect(self.update_ngrams)
+
+        # Disable rich text
+        # self.stopwords_tab.setAcceptRichText(False)
+        self.blacklist_tab.setAcceptRichText(False)
+        self.synonym_tab.setAcceptRichText(False)
+        self.ngrams_tab.setAcceptRichText(False)
+
+    def update_blacklist(self) -> None:
         """
-        Initialize the input field.
+        Update the set of blacklisted words with the text from the Blacklist
+        tab.
 
         :return: None
         """
-        self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText("Voer een woord in")
-        self.input_field.setStyleSheet(f"border-radius: 5px;"
-                                       f"font-size: 14px;"
-                                       f"font-family: {text_font};"
-                                       f"color: black;"
-                                       f"border: 2px solid #00968F;"
-                                       f"padding: 5px;"
-                                       f"background-color: white;")
-        self.input_layout.addWidget(self.input_field)
+        input_text = self.blacklist_tab.toPlainText()
+        blacklist = set([word.lower() for word in input_text.split()])
+        self._stopwords_controller.update_stopwords(blacklist)
 
-        # Add event for pressing enter
-        self.input_field.returnPressed.connect(self.add_to_word_list)
-
-    def initialize_add_button(self) -> None:
+    def update_synonyms(self) -> None:
         """
-        Initialize the add button.
+        Updtate the set of synonyms with the text from the Synonyms tab.
 
         :return: None
         """
-        self.add_button = QPushButton("Uitsluiten")
-        self.add_button.setStyleSheet(f"background-color: #00968F;"
-                                      f"color: white;"
-                                      f"font-family: {text_font};"
-                                      f"padding: 10px;"
-                                      f"border: none;")
+        input_text = self.synonym_tab.toPlainText()
+        # TODO: implement at a later point
 
-        self.add_button.setStyleSheet(
-            f"""
-                QPushButton {{
-                    background-color: #00968F;
-                    color: white;
-                    font-family: {text_font};
-                    padding: 10px;
-                    border: none;
-                }}
-                
-                QPushButton:hover {{
-                    background-color: {hover_seco_col_blue};
-                }}
-                
-                QPushButton:pressed {{
-                    background-color: {pressed_seco_col_blue};
-                }}
-            """)
-
-        self.input_layout.addWidget(self.add_button)
-
-        # Connect button click event to add_to_word_list method
-        self.add_button.clicked.connect(self.add_to_word_list)
-
-    def create_word_label(self, stopword: str) -> QLabel:
-        """Create a label for every word"""
-        stopword_label = QLabel(stopword, self)
-        stopword_label.setStyleSheet(f"background-color: {sec_col_purple};"
-                                     f"color: white;"
-                                     f"font-family: {text_font};"
-                                     f"font-size: 12px;"
-                                     f"padding: 15px;")
-        stopword_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        stopword_label.setScaledContents(True)
-        stopword_label.setWordWrap(True)
-        stopword_label.setCursor(Qt.PointingHandCursor)
-
-        # Connect click event to remove_word method
-        stopword_label.mousePressEvent = lambda event: (
-            self.remove_word(stopword))
-
-        return stopword_label
-
-    def show_excluded_words(self, word_list: list[str]) -> None:
+    def update_ngrams(self) -> None:
         """
-        Visualize words in the words list.
-
-        :param word_list: The list of words needed to be shown
+        Update ngrams set with the text from the ngrams tab.
+        should be updated to handle the right parsing.
         :return: None
         """
-        horizontal_layout = QHBoxLayout()
-
-        for i, word in enumerate(word_list):
-            # Make and format word
-            word_label = self.create_word_label(word)
-            horizontal_layout.addWidget(word_label)
-
-            if (i + 1) % 2 == 0 or len(word) >= 8:
-                self.word_layout.addLayout(horizontal_layout)
-                horizontal_layout = QHBoxLayout()
-
-        # Add remaining widgets if any
-        if horizontal_layout.count() > 0:
-            self.word_layout.addLayout(horizontal_layout)
-
-    def add_to_word_list(self) -> None:
-        """
-        Add words to the list of excluded words and update the UI.
-
-        :return: None
-        """
-        new_word = self.input_field.text()
-        if new_word:
-            self._stopwords_controller.add_stopword(new_word)
-            self.input_field.clear()
-
-    def remove_word(self, word) -> None:
-        """
-        Remove a word from the list of excluded words and update the UI.
-
-        :param word: The word to be removed
-        :return: None
-        """
-        self._stopwords_controller.remove_stopword(word)
-
-    def update_word_vis(self, stopwords: list[str]) -> None:
-        """
-        Remove current words from excluded word UI and show new ones.
-
-        :return: None
-        """
-        # Clear current view
-        for i in reversed(range(self.word_layout.count())):
-            layout_item = self.word_layout.itemAt(i)
-            if layout_item is not None:
-                while layout_item.count():
-                    item = layout_item.takeAt(0)
-                    current_item = item.widget()
-                    if current_item:
-                        current_item.setParent(None)
-
-        # Display updated words in UI
-        self.show_excluded_words(stopwords)
-
-    def update_observer(self, publisher) -> None:
-        """
-        Update the observer.
-
-        :param publisher: The publisher that is being observed
-        :return: None
-        """
-        self.update_word_vis(list(publisher.stopwords_model.extra_words))
+        input_text = self.ngrams_tab.toPlainText()
+        # TODO: implement at a later point
 
 
 """

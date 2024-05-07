@@ -1,7 +1,10 @@
+import os
 from typing import List, Generator
 
 from tommy.controller.file_import import file_importer_base
 from tommy.controller.file_import import csv_file_importer
+from tommy.controller.file_import import pdf_file_importer
+from tommy.controller.file_import import docx_file_importer
 from tommy.controller.file_import.raw_file import RawFile
 
 
@@ -17,7 +20,10 @@ class GenericFileImporter:
         """
         self.importers: (
             List)[file_importer_base.FileImporterBase] = [
-            csv_file_importer.CsvFileImporter()]
+            docx_file_importer.DocxFileImporter(),
+            pdf_file_importer.PdfFileImporter(),
+            csv_file_importer.CsvFileImporter()
+        ]
 
     def import_file(self, path: str) -> Generator[RawFile, None, None]:
         """
@@ -26,6 +32,8 @@ class GenericFileImporter:
         :param path: The string path of the file to import.
         :return Generator[File, None, None]: A generator yielding File objects.
         """
+        path = os.path.normpath(path)
+
         for importer in self.importers:
             if importer.compatible_file(path):
                 return importer.load_file(path)

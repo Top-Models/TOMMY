@@ -4,10 +4,12 @@ from matplotlib import pyplot as plt
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.datatypes.topics import Topic, TopicWithScores
 
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
+from tommy.controller.visualizations.word_topic_nx_exporter import (
+    WordTopicNxExporter)
+from tommy.controller.visualizations.possible_visualization import VisGroup
 
 
 class WordTopicNetworkCreator(AbstractVisualization):
@@ -17,10 +19,13 @@ class WordTopicNetworkCreator(AbstractVisualization):
     """
     _required_interfaces = []
     name = 'Topics en 15 meest voorkomende woorden'
+    short_tab_name = 'Woord Netwerk'
+    vis_group = VisGroup.MODEL
+    needed_input_data = []
 
-    def get_figure(self,
-                   topic_runner: TopicRunner
-                   ) -> matplotlib.figure.Figure:
+    def _create_figure(self,
+                       topic_runner: TopicRunner,
+                       **kwargs) -> matplotlib.figure.Figure:
         """
         Construct a word-topic network which is used to plot the relations
         between topics and probable words
@@ -29,7 +34,7 @@ class WordTopicNetworkCreator(AbstractVisualization):
         """
         # Construct a plot and graph
         fig = plt.figure()
-        graph = self._construct_word_topic_network(topic_runner)
+        graph = self.construct_word_topic_network(topic_runner, 15)
 
         # Get the scale factor used for the displayed edge weight (width)
         edge_scale_factor = self._get_edge_scale_factor(topic_runner)
@@ -56,43 +61,23 @@ class WordTopicNetworkCreator(AbstractVisualization):
                              node_color=node_colors,
                              font_size=8)
 
+        fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+
+        plt.close()
         return fig
 
     @staticmethod
-    def _construct_word_topic_network(topic_runner: TopicRunner) -> nx.Graph:
+    def construct_word_topic_network(topic_runner: TopicRunner,
+                                     node_amount: int
+                                     ) -> nx.Graph:
         """
         Construct a word-topic network which is used to plot the relations
         between topics and probable words
         :param topic_runner: The topic runner to extract topic data from
         :return: matplotlib figure showing a word-topic network plot
         """
-        graph = nx.Graph()
-
-        # List of simple, distinct colors from
-        # https://sashamaps.net/docs/resources/20-colors/
-        colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
-                  '#9a6324', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
-                  '#008080', '#e6beff', '#000075', '#fffac8', '#800000',
-                  '#aaffc3', '#808000', '#ffd8b1', '#808080', '#911eb4']
-
-        # Amount of words displayed for each topic
-        node_amount = 15
-
-        for topic in topic_runner.get_topics_with_scores(
-                n_words=node_amount):
-            # Add topic node to graph
-            graph.add_node(topic.topic_id + 1,
-                           color=colors[topic.topic_id % 20])
-
-            # Add edge from topic node to its words
-            for word, score in topic.top_words_with_scores:
-                graph.add_edge(
-                    topic.topic_id + 1,
-                    word,
-                    color=colors[topic.topic_id % 20],
-                    weight=score)
-
-        return graph
+        return WordTopicNxExporter.construct_word_topic_network(topic_runner,
+                                                                node_amount)
 
     @staticmethod
     def _get_edge_scale_factor(topic_runner: TopicRunner) -> float:
