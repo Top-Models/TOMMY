@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, \
 
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
+from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import text_font, seco_col_blue, \
     disabled_gray, heading_font
 
@@ -280,6 +281,14 @@ class AbstractSettings:
         if input_valid:
             return int(text)
         return 0
+
+    def set_text_on_config_change(self,
+                                  model_parameters_model:
+                                  ModelParametersModel):
+        self._topic_amount_field.setText(
+            str(model_parameters_model.n_topics))
+        self._amount_of_words_field.setText(
+            str(model_parameters_model.word_amount))
 
 
 """

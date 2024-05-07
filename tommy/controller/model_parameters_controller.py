@@ -11,7 +11,7 @@ class ModelParametersController:
     _parameters_model: ModelParametersModel = None
     # TODO: Not all parameters emit this event when changed
     _params_model_changed_event: EventHandler[
-        tuple[int, ModelType]] = EventHandler()
+        ModelParametersModel] = EventHandler()
 
     def set_model_refs(self,
                        parameters_model: ModelParametersModel) -> None:
@@ -26,8 +26,7 @@ class ModelParametersController:
         update the frontend
         """
         self._parameters_model = parameters_model
-        self._params_model_changed_event.publish((self.get_model_n_topics(),
-                                                  self.get_model_type()))
+        self._params_model_changed_event.publish(self._parameters_model)
 
     def set_model_word_amount(self, word_amount: int) -> None:
         """Set the amount of words to be displayed per topic"""

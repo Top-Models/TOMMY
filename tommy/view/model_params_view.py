@@ -13,7 +13,10 @@ from tommy.view.config_view import ConfigView
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 
+# TODO: This is the old version of model_params_view. It is no longer used.
+#  The new implementation is found in settings_view.model_params_view
 
+'''
 class ModelParamsView(QScrollArea):
     """The ModelParamsDisplay that displays the model settings"""
 
@@ -262,6 +265,8 @@ class ModelParamsView(QScrollArea):
         num_topics, model_type = data
         self.topic_input.setText(str(num_topics))
 
+
+'''
 
 """
 This program has been developed by students from the bachelor Computer Science

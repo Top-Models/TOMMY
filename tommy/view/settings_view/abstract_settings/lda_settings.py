@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QCheckBox, \
 
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
+from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import text_font, seco_col_blue
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
@@ -259,24 +260,17 @@ class LdaSettings(AbstractSettings):
         :return: None
         """
         auto_calculate = self._auto_calc_alpha_beta_checkbox.isChecked()
-        if auto_calculate:
-            self._alpha_value_input.setText("-:-")
-            self._beta_value_input.setText("-:-")
-            self._alpha_value_input.setReadOnly(True)
-            self._beta_value_input.setReadOnly(True)
-        else:
-            alpha_value = self._model_parameters_controller.get_model_alpha()
-            beta_value = self._model_parameters_controller.get_model_beta()
-            self._alpha_value_input.setText(str(alpha_value))
-            self._beta_value_input.setText(str(beta_value))
-            self._alpha_value_input.setReadOnly(False)
-            self._beta_value_input.setReadOnly(False)
+        alpha_value = self._model_parameters_controller.get_model_alpha()
+        beta_value = self._model_parameters_controller.get_model_beta()
 
-        self.change_style_of_alpha_beta_fields()
+        self._change_text_of_alpha_beta_fields(alpha_value, beta_value,
+                                               auto_calculate)
+
+        self._change_style_of_alpha_beta_fields()
         self._model_parameters_controller.set_model_alpha_beta_custom_enabled(
             not auto_calculate)
 
-    def change_style_of_alpha_beta_fields(self) -> None:
+    def _change_style_of_alpha_beta_fields(self) -> None:
         """
         Change the style of the alpha and beta fields based on whether they
         are auto calculated or not.
@@ -294,6 +288,34 @@ class LdaSettings(AbstractSettings):
                 self.enabled_input_stylesheet)
             self._beta_value_input.setStyleSheet(
                 self.enabled_input_stylesheet)
+
+    def _change_text_of_alpha_beta_fields(self, alpha: float, beta: float,
+                                          auto_calculate: bool) -> None:
+        """
+        Change the text in the alpha and beta input fields to "-:-" if
+        auto_calculate is true
+        :param alpha:
+        :param beta:
+        :param auto_calculate:
+        :return:
+        """
+        alpha_text = "-:-" if auto_calculate else str(alpha)
+        beta_text = "-:-" if auto_calculate else str(beta)
+        self._alpha_value_input.setText(alpha_text)
+        self._beta_value_input.setText(beta_text)
+        self._alpha_value_input.setReadOnly(auto_calculate)
+        self._beta_value_input.setReadOnly(auto_calculate)
+
+    def set_text_on_config_change(self,
+                                  model_parameters_model:
+                                  ModelParametersModel):
+        super().set_text_on_config_change(model_parameters_model)
+        auto_calculate = not model_parameters_model.alpha_beta_custom_enabled
+        self._change_text_of_alpha_beta_fields(
+            model_parameters_model.alpha,
+            model_parameters_model.beta,
+            auto_calculate)
+        self._auto_calc_alpha_beta_checkbox.setChecked(auto_calculate)
 
 
 """

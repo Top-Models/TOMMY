@@ -6,6 +6,7 @@ from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
+from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
     pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray)
@@ -251,10 +252,10 @@ class ModelParamsView(QScrollArea):
         self.clear_layouts_from_scroll_layout()
         self.initialize_parameter_widgets()
 
-    def _update_model_params(self, data: tuple[int, ModelType]):
+    def _update_model_params(self, data: ModelParametersModel):
         # TODO: update the parameters in the text input fields
-        num_topics, model_type = data
-        # self.topic_input.setText(str(num_topics))
+        for settings_view in self.SETTINGS_VIEWS.values():
+            settings_view.set_text_on_config_change(data)
 
 
 """
