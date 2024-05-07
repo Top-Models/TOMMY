@@ -14,10 +14,12 @@ from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.controller.save_controller import SaveController
+from tommy.controller.export_controller import ExportController
 
 
 class Controller:
     """The main controller for the tommy that creates all sub-controllers"""
+
     _models: list[Model]
     _selected_model: int
 
@@ -54,6 +56,12 @@ class Controller:
     _project_settings_controller: ProjectSettingsController
     _save_controller: SaveController
 
+    _export_controller: ExportController
+
+    @property
+    def export_controller(self) -> ExportController:
+        return self._export_controller
+
     def __init__(self) -> None:
         """Initialize the main controller and its sub-controllers."""
         self._initialize_components()
@@ -71,10 +79,12 @@ class Controller:
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
         self._save_controller = SaveController()
+        self._export_controller = ExportController()
 
         self._corpus_controller.set_controller_refs(
             self._project_settings_controller)
         self._graph_controller.set_controller_refs(self._corpus_controller)
+        self._export_controller.set_controller_refs(self._graph_controller)
 
     def select_model(self, model_index: int) -> None:
         """

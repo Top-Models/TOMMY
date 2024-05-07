@@ -1,7 +1,3 @@
-import pytest
-from PySide6.QtCore import Qt
-from tommy.view.model_params_view import ModelParamsView
-
 # @pytest.fixture
 # def parameter_display(qtbot):
 #    # Create and return your parameter_display object here

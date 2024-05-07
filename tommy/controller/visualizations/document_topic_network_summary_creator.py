@@ -1,6 +1,4 @@
 import math
-from collections.abc import Iterable
-from typing import TypeAliasType
 
 import matplotlib.figure
 import networkx as nx
@@ -8,19 +6,20 @@ from matplotlib import pyplot as plt
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.datatypes.topics import Topic, TopicWithScores
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
+from tommy.controller.visualizations.abstract_visualization import (
+        AbstractVisualization)
+from tommy.controller.visualizations.document_topic_nx_exporter import (
+        DocumentTopicNxExporter)
+from tommy.controller.visualizations.possible_visualization import VisGroup
 from tommy.controller.visualizations.visualization_input_datatypes import (
-    ProcessedCorpus)
-
-from tommy.controller.visualizations.abstract_visualization_on_data import (
-        AbstractVisualizationOnData)
+    VisInputData, ProcessedCorpus)
 
 from tommy.support.constant_variables import plot_colors
 
-class DocumentTopicNetworkSummaryCreator(
-        AbstractVisualizationOnData[ProcessedCorpus]):
+
+class DocumentTopicNetworkSummaryCreator(AbstractVisualization):
     """
     A class for constructing a network showing the summary of topics and the
     number of documents that contain that topic for the topics in the given
@@ -29,30 +28,34 @@ class DocumentTopicNetworkSummaryCreator(
     """
     _required_interfaces = [DocumentTopicsInterface]
     name = 'Topics en documenten die daar ten minste 5% bij horen'
+    short_tab_name = 'Doc. Netwerk'
+    vis_group = VisGroup.MODEL
+    needed_input_data = [VisInputData.PROCESSED_CORPUS]
 
-    @property
-    def input_data_type(self) -> TypeAliasType:
-        """Returns the type of the additional data needed in get_figure"""
-        return ProcessedCorpus
-
-    def get_figure(self,
-                   topic_runner: TopicRunner | DocumentTopicsInterface,
-                   data: ProcessedCorpus
-                   ) -> matplotlib.figure.Figure:
+    def _create_figure(self,
+                       topic_runner: TopicRunner | DocumentTopicsInterface,
+                       processed_corpus: ProcessedCorpus = None,
+                       **kwargs) -> matplotlib.figure.Figure:
         """
         Construct a summarized document-topic network plot showing the
         relations between documents and topics
         :param topic_runner: The topic runner (implementing
             DocumentTopicsInterface) to extract topic data from
-        :param data: The preprocessed corpus containing
+        :param processed_corpus: The preprocessed corpus containing
             all files as bags of words after preprocessing.
         :return: matplotlib figure showing a document-topic network plot
+        :raises ValueError: If the processed_corpus argument is None
         """
+        if processed_corpus is None:
+            raise ValueError("Preprocessed Corpus keyword argument is "
+                             "necessary in the "
+                             "document_topic_network_summary_creator")
 
         # Construct a plot and a graph
         fig = plt.figure(dpi=60)
         plt.title(self.name)
-        graph = self._construct_doc_topic_network(topic_runner, data)
+        graph = self._construct_doc_topic_network(topic_runner,
+                                                  processed_corpus)
 
         # Get graph elements
         edges = graph.edges()
@@ -114,11 +117,14 @@ class DocumentTopicNetworkSummaryCreator(
 
         nx.draw_networkx_labels(graph, pos, labels=labels)
 
+        fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+
+        plt.close()
         return fig
 
     @staticmethod
     def _construct_doc_topic_network(topic_runner: TopicRunner
-                                                   | DocumentTopicsInterface,
+                                     | DocumentTopicsInterface,
                                      processed_files: ProcessedCorpus
                                      ) -> nx.Graph:
         """
@@ -132,18 +138,8 @@ class DocumentTopicNetworkSummaryCreator(
         """
 
         # Construct a graph with topic nodes
-        init_graph = nx.Graph()
-        for topic in topic_runner.get_topics_with_scores(0):
-            init_graph.add_node(topic.topic_id)
-
-        # Generate initial document topic network
-        for document_id, file in enumerate(processed_files):
-            document_topic = topic_runner.get_document_topics(file.body.body,
-                                                              0.05)
-
-            # Add edges from each document to all associated topics
-            for topic_id, topic_probability in document_topic:
-                init_graph.add_edge(topic_id, 'd' + str(document_id))
+        init_graph = DocumentTopicNxExporter.construct_doc_topic_network(
+            topic_runner, processed_files, 0.05)
 
         # Construct simplified document topic network
         graph = nx.Graph()
