@@ -38,3 +38,10 @@ class ExportController:
     def set_controller_refs(self, graph_controller: GraphController) -> None:
         self._graph_controller = graph_controller
 
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""
