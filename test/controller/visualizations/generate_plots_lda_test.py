@@ -1,5 +1,6 @@
 import pytest
-from gensim import models
+from gensim import models, corpora
+import pickle
 
 from tommy.controller.visualizations.visualization_input_datatypes import (
     MetadataCorpus, ProcessedCorpus)
@@ -18,6 +19,8 @@ from tommy.controller.visualizations.word_cloud_creator import (
     WordCloudCreator)
 from tommy.controller.visualizations.word_topic_network_creator import \
     WordTopicNetworkCreator
+from tommy.controller.visualizations.document_topic_network_summary_creator import \
+    DocumentTopicNetworkSummaryCreator
 
 
 @pytest.fixture
@@ -26,13 +29,21 @@ def lda_model():
     model = models.LdaModel.load('../../test_data/test_lda_model/lda_model')
     return model
 
+@pytest.fixture
+def lda_model_dictionary():
+    dictionary = (corpora.Dictionary.load
+                  ('../../test_data/test_lda_model/lda_model.id2word'))
+    return dictionary
+
 
 @pytest.fixture
-def lda_runner(lda_model, mocker):
+def lda_runner(lda_model, lda_model_dictionary, mocker):
     topic_model = TopicModel()
     mocker.patch.object(LdaRunner, 'train_model')
+    mocker.patch.object(LdaRunner, 'get_n_topics', return_value=4)
     lda_runner = LdaRunner(topic_model, [], 0, 0)
     lda_runner._model = lda_model
+    lda_runner._dictionary = lda_model_dictionary
     return lda_runner
 
 
@@ -75,6 +86,11 @@ def metadata():
     return [Metadata(name='', size=0, length=length, format='')
             for length in docs]
 
+@pytest.fixture
+def processed_files():
+    with open('../../test_data/test_processed_files/processed_files.pkl', 'rb') as f:
+        processed_files = pickle.load(f)
+        return processed_files
 
 def test_generate_correlation_matrix(lda_runner):
     correlation_matrix = CorrelationMatrixCreator()
@@ -85,7 +101,6 @@ def test_generate_correlation_matrix(lda_runner):
 def test_generate_document_word_count(lda_runner, metadata):
     document_word_count = DocumentWordCountCreator()
     figure = document_word_count._create_figure(lda_runner, metadata)
-    figure.show()
     assert figure
 
 
@@ -109,5 +124,10 @@ def test_generate_word_topic_network(lda_runner):
     assert figure
 
 
-# def test_generate_document_topic_network_summary(lda_runner, processed_corpus):
-#     # enkel processed corpus nodig!
+def test_generate_document_topic_network_summary(lda_runner, processed_files):
+    document_topic_network_summary = DocumentTopicNetworkSummaryCreator()
+    figure = document_topic_network_summary._create_figure(lda_runner,
+                                                           processed_files)
+    figure.show()
+    assert figure
+
