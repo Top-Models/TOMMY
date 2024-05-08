@@ -19,6 +19,7 @@ Download
     :caption: User wiki
 
     wiki-user/User-guide.md
+    wiki-user/Installation-guide.md
 
 .. toctree::
     :maxdepth: 1
