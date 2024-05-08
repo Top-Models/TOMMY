@@ -49,3 +49,11 @@ def test_stopwords_view_model_linkage(stopwords_controller,stopwords_view, stopw
 
     # Check if the stopword is added to the model
     assert test_stopword in stopwords_model.extra_words
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""
