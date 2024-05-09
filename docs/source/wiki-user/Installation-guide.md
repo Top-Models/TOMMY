@@ -25,7 +25,25 @@ Dit is eenmalig; voortaan kan de applicatie direct vanuit Launchpad geopend word
 
 ## Windows
 
-TODO
+Download de windows-versie van de website.
+
+Pak het zip-bestand uit op de plek waar je het programma wilt opslaan. Zorg dat het .exe bestand in dezelfde map staat waar ook de '_internal' map in staat.
+
+Dubbel-klik het .exe bestand om de TOMMY applicatie te starten. Het is mogelijk dat Windows een melding geeft dat de applicatie niet herkend wordt. Die waarschuwing ziet er als volgt uit:
+![](smartscreen1.png)
+De waarschuwing komt omdat het developer team op dit moment niet beschikt over een certificaat om de code mee te signeren. De waarschuwing kan genegeerd worden door op 'More info' en vervolgens op 'Run anyway' te klikken.
+![](smartscreen2.png)
+
+Dit hoeft eenmalig; voortaan zal er geen waarschuwing worden gegeven als de applicatie wordt geopend.
+
+### Toevoegen aan bureaublad
+Ga naar het bureaublad en klik met rechtermuisknop op een lege plek op het bureaublad.
+
+Selecteer nieuw > Snelkoppeling.
+
+Voer de bestandslocatie van de applicatie in of selecteer Bladeren om het item te zoeken in Verkenner, selecteer de locatie en selecteer 'OK'.
+
+Selecteer 'Volgende'. Geef de snelkoppeling optioneel een naam en selecteer 'Voltooien'.
 
 ## Linux
 
