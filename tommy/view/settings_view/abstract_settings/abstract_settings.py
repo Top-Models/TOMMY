@@ -6,6 +6,7 @@ from tommy.controller.model_parameters_controller import \
     ModelParametersController
 from tommy.support.constant_variables import text_font, seco_col_blue, \
     disabled_gray, heading_font
+from tommy.support.model_type import ModelType
 
 
 class AbstractSettings:
@@ -307,12 +308,24 @@ class AbstractSettings:
         self._algorithm_field.addItem("BERTopic")
         self._algorithm_field.addItem("NMF")
 
-        self._algorithm_field.currentIndexChanged.connect(
-                self.algorithm_field_changed_event)
-        self._algorithm_field.setCurrentText(
-                str(self._model_parameters_controller.get_model_type()))
+        # Try to disconnect the algorithm_field_changed_event method
+        try:
+            self._algorithm_field.currentIndexChanged.disconnect(
+                    self.algorithm_field_changed_event)
+        except RuntimeError:
+            pass  # Ignore the error if the method is not connected
+
+        current_model = self._model_parameters_controller.get_model_type().name
+        self._algorithm_field.setCurrentText(current_model)
         self._algorithm_field.setStyleSheet(self.enabled_input_stylesheet)
         algorithm_layout.addWidget(self._algorithm_field)
+
+        # Reconnect the algorithm_field_changed_event method
+        self._algorithm_field.currentIndexChanged.connect(
+                self.algorithm_field_changed_event)
+
+        # Add algorithm layout to container layout
+        self._scroll_layout.addLayout(algorithm_layout)
 
         # Add algorithm layout to container layout
         self._scroll_layout.addLayout(algorithm_layout)
@@ -324,8 +337,9 @@ class AbstractSettings:
         :return: None
         """
         selected_model_type = self._algorithm_field.currentText()
+        model_type_enum = ModelType[selected_model_type]
         self._model_parameters_controller.set_model_type(
-                selected_model_type)
+                model_type_enum)
 
 
 

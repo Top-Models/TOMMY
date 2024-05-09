@@ -38,8 +38,9 @@ class ModelParamsView(QScrollArea):
         # Initialize model settings
         self.SETTINGS_VIEWS = {
             ModelType.LDA: LdaSettings(self._model_parameters_controller),
-            ModelType.BERT: BertSettings(self._model_parameters_controller),
-            ModelType.NMF: NmfSettings(self._model_parameters_controller),
+            ModelType.BERTopic: BertSettings(
+                    self._model_parameters_controller),
+            ModelType.NMF: NmfSettings(self._model_parameters_controller)
         }
 
         # Initialize widget properties
@@ -141,6 +142,20 @@ class ModelParamsView(QScrollArea):
 
         :return: None
         """
+
+        layout = self.scroll_layout
+        while layout.count():
+            child = layout.takeAt(0)
+            if child.widget() is not None:
+                # Delete the widget
+                child.widget().deleteLater()
+            elif child.layout() is not None:
+                # Delete all widgets in the layout
+                while child.layout().count():
+                    sub_child = child.layout().takeAt(0)
+                    if sub_child.widget() is not None:
+                        sub_child.widget().deleteLater()
+        """                
         for i in reversed(range(self.scroll_layout.count())):
             layout = self.scroll_layout.itemAt(i)
 
@@ -150,6 +165,7 @@ class ModelParamsView(QScrollArea):
                     if widget is not None:
                         widget.deleteLater()
                 layout.deleteLater()
+        """
 
     def initialize_apply_button(self) -> None:
         """
@@ -187,6 +203,7 @@ class ModelParamsView(QScrollArea):
         :return: AbstractSettings
         """
         current_model_type = self._model_parameters_controller.get_model_type()
+        print(current_model_type)
         return self.SETTINGS_VIEWS[current_model_type]
 
     def apply_button_clicked_event(self) -> None:

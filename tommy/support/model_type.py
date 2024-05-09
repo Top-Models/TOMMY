@@ -4,9 +4,10 @@ from enum import Enum
 class ModelType(Enum):
     """An enumeration of the types of models."""
     LDA = 1
-    BERT = 2
+    BERTopic = 2
     NMF = 3
     # LSI = 4
+
 
 """
 This program has been developed by students from the bachelor Computer Science
