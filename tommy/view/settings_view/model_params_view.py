@@ -12,6 +12,9 @@ from tommy.support.model_type import ModelType
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
+from tommy.view.settings_view.abstract_settings.bert_settings import (
+    BertSettings)
+from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 
 
 class ModelParamsView(QScrollArea):
@@ -28,11 +31,15 @@ class ModelParamsView(QScrollArea):
 
         # Set reference to the model parameters controller
         self._model_parameters_controller = model_parameters_controller
+        self._model_parameters_controller.algorithm_changed_event.subscribe(
+            lambda _: self.model_type_changed_event())
         self._controller = controller
 
         # Initialize model settings
         self.SETTINGS_VIEWS = {
-            ModelType.LDA: LdaSettings(self._model_parameters_controller)
+            ModelType.LDA: LdaSettings(self._model_parameters_controller),
+            ModelType.BERT: BertSettings(self._model_parameters_controller),
+            ModelType.NMF: NmfSettings(self._model_parameters_controller),
         }
 
         # Initialize widget properties

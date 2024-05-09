@@ -1,6 +1,6 @@
 from PySide6.QtGui import QIntValidator, Qt
 from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, \
-    QVBoxLayout
+    QVBoxLayout, QComboBox
 
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
@@ -42,6 +42,7 @@ class AbstractSettings:
                                           f"padding: 5px;")
 
         # Initialize input fields
+        self._algorithm_field = QComboBox()
         self._topic_amount_field = QLineEdit()
         self._amount_of_words_field = QLineEdit()
 
@@ -59,6 +60,7 @@ class AbstractSettings:
         """
         self._scroll_layout = scroll_layout
         self.add_header_label("Algemeen", 17)
+        self.initialize_algorithm_field()
         self.initialize_topic_amount_field()
         self.initialize_amount_of_words_field()
         self.add_margin(10)
@@ -280,6 +282,52 @@ class AbstractSettings:
         if input_valid:
             return int(text)
         return 0
+
+    def initialize_algorithm_field(self) -> None:
+        """
+        Initialize the algorithm field
+
+        :return: str
+        """
+        algorithm_layout = QHBoxLayout()
+
+        # Add label
+        algorithm_label = QLabel("Algoritme:")
+        algorithm_label.setStyleSheet(f"font-size: 16px;"
+                                      f"color: black;"
+                                      f"font-family: {text_font};")
+        algorithm_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                     Qt.AlignmentFlag.AlignVCenter)
+        algorithm_layout.addWidget(algorithm_label)
+
+        # Add input field
+        self._algorithm_field = QComboBox()
+        self._algorithm_field.setFixedWidth(100)
+        self._algorithm_field.addItem("LDA")
+        self._algorithm_field.addItem("BERTopic")
+        self._algorithm_field.addItem("NMF")
+
+        self._algorithm_field.currentIndexChanged.connect(
+                self.algorithm_field_changed_event)
+        self._algorithm_field.setCurrentText(
+                str(self._model_parameters_controller.get_model_type()))
+        self._algorithm_field.setStyleSheet(self.enabled_input_stylesheet)
+        algorithm_layout.addWidget(self._algorithm_field)
+
+        # Add algorithm layout to container layout
+        self._scroll_layout.addLayout(algorithm_layout)
+
+    def algorithm_field_changed_event(self) -> None:
+        """
+        Event handler for when the algorithm field is changed
+
+        :return: None
+        """
+        selected_model_type = self._algorithm_field.currentText()
+        self._model_parameters_controller.set_model_type(
+                selected_model_type)
+
+
 
 
 """
