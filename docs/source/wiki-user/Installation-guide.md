@@ -47,4 +47,8 @@ Selecteer 'Volgende'. Geef de snelkoppeling optioneel een naam en selecteer 'Vol
 
 ## Linux
 
-TODO
+Download de linux-versie van de website.
+
+Pak get zip-bestand uit op een plek waar je het programma wilt opslaan.
+
+Draai 'main' door er in een file explorer op te klikken, of door het via een terminal te draaien.
