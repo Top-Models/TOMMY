@@ -98,3 +98,11 @@ def test_cache(mock_visualization: MockVisualization,
     # Assert - that there is no cache again
     assert (mock_visualization.
             _get_cached_figure(topic_id=topic_id) is None)
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

@@ -1,0 +1,6 @@
+# Sphinx documentation
+_build/
+source/code/
+# everything in download except download.readme.txt
+download/
+!download/readme.txt
