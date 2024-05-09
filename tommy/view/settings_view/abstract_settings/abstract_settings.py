@@ -308,12 +308,15 @@ class AbstractSettings:
         self._algorithm_field.addItem("BERTopic")
         self._algorithm_field.addItem("NMF")
 
-        # Try to disconnect the algorithm_field_changed_event method
+        # Try to disconnect the algorithm_field_changed_event method, otherwise
+        # endless recursion
         try:
             self._algorithm_field.currentIndexChanged.disconnect(
                     self.algorithm_field_changed_event)
+        # Upon first initialization this is not necessary and will result in
+        # an error
         except RuntimeError:
-            pass  # Ignore the error if the method is not connected
+            pass
 
         current_model = self._model_parameters_controller.get_model_type().name
         self._algorithm_field.setCurrentText(current_model)
