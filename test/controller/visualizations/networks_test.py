@@ -11,6 +11,8 @@ from tommy.controller.visualizations.word_topic_nx_exporter import (
     WordTopicNxExporter)
 from tommy.controller.visualizations.document_topic_nx_exporter import (
     DocumentTopicNxExporter)
+from tommy.controller.visualizations.document_topic_network_summary_creator import (
+    DocumentTopicNetworkSummaryCreator)
 
 
 # Test data directory
@@ -65,26 +67,32 @@ def lda_runner(lda_model, lda_model_dictionary, mocker):
 
 
 @pytest.mark.parametrize("node_amount", [1, 2, 3, 4, 5, 8, 15, 21, 50])
-def test_word_topic_graph_size(lda_runner, node_amount):
+def test_word_topic_graph(lda_runner, node_amount):
     exporter = WordTopicNxExporter()
     graph = exporter.construct_word_topic_network(lda_runner, node_amount)
     topic_amount = lda_runner.get_n_topics()
+    isolates = nx.isolates(graph)
 
     # Assert - The number of nodes should not exceed the amount of topic nodes
     # plus the amount of word nodes (topic_amount * node_amount)
     assert graph.number_of_nodes() <= topic_amount * node_amount + topic_amount
 
-    # Assert
+    # Assert - The number of edges should always be the topic_amount times
+    # the node amount
     assert graph.number_of_edges() == topic_amount * node_amount
 
+    # Assert - There are no node which are not connected to the network
+    assert all(False for _ in isolates)
 
-@pytest.mark.parametrize("probability", [0.0, 0.01, 0.05, 0.1, 0.24, 80])
-def test_document_topic_graph_size(lda_runner, processed_files, probability):
+
+@pytest.mark.parametrize("probability", [0.0, 0.01, 0.05, 0.1, 0.24, 0.6])
+def test_document_topic_graph(lda_runner, processed_files, probability):
     exporter = DocumentTopicNxExporter()
     graph = exporter.construct_doc_topic_network(lda_runner,
                                                  processed_files,
                                                  0.05)
     topic_amount = lda_runner.get_n_topics()
+    isolates = nx.isolates(graph)
 
     # Assert - The number of nodes should not change when probability changes
     assert graph.number_of_nodes() == topic_amount + len(processed_files)
@@ -92,5 +100,17 @@ def test_document_topic_graph_size(lda_runner, processed_files, probability):
     # Assert - The number of edges should not exceed topic amount times the
     # amount of files
     assert graph.number_of_edges() <= topic_amount * len(processed_files)
+
+    # Assert - There are no node which are not connected to the network
+    assert all(False for _ in isolates)
+
+
+def test_document_topic_summary_graph(lda_runner, processed_files):
+    summary = DocumentTopicNetworkSummaryCreator
+    graph = summary._construct_doc_topic_network(lda_runner, processed_files)
+    isolates = nx.isolates(graph)
+
+    # Assert - There are no node which are not connected to the network
+    assert all(False for _ in isolates)
 
 

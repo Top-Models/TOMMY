@@ -114,4 +114,3 @@ def test_generate_document_topic_network_summary(lda_runner, processed_files):
     doc_topic_summary = DocumentTopicNetworkSummaryCreator()
     figure = doc_topic_summary._create_figure(lda_runner, processed_files)
     assert figure
-
