@@ -140,15 +140,12 @@ class DocumentTopicNetworkSummaryCreator(AbstractVisualization):
         # Construct a graph with topic nodes
         init_graph = DocumentTopicNxExporter.construct_doc_topic_network(
             topic_runner, processed_files, 0.05)
-        print("Aantal nodes: " + str(init_graph.number_of_nodes()))
-        print("-------------------------++---------------------------")
 
         # Construct simplified document topic network
         graph = nx.Graph()
 
         # Add topic nodes and nodes with degree one to graph
         num_topics: int = topic_runner.get_n_topics()
-        print(num_topics)
         for topic_id in range(num_topics):
             graph.add_node(topic_id,
                            color=plot_colors[topic_id % len(plot_colors)])
