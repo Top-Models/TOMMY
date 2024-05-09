@@ -81,7 +81,6 @@ class ModelParametersController:
         :param model_type: the algorithm type to be run
         """
         self._parameters_model.model_type = model_type
-        # Notify the model has been changed
         self._algorithm_changed_event.publish(None)
 
     def get_model_type(self) -> ModelType:

@@ -208,7 +208,6 @@ class ModelParamsView(QScrollArea):
         :return: AbstractSettings
         """
         current_model_type = self._model_parameters_controller.get_model_type()
-        print(current_model_type)
         return self.SETTINGS_VIEWS[current_model_type]
 
     def apply_button_clicked_event(self) -> None:
