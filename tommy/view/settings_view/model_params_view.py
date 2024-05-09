@@ -142,13 +142,18 @@ class ModelParamsView(QScrollArea):
 
         :return: None
         """
-
         layout = self.scroll_layout
+
+        # While layout is not empty
         while layout.count():
             child = layout.takeAt(0)
+
+            # If there is a widget
             if child.widget() is not None:
                 # Delete the widget
                 child.widget().deleteLater()
+
+            # If there is a layout
             elif child.layout() is not None:
                 # Delete all widgets in the layout
                 while child.layout().count():
