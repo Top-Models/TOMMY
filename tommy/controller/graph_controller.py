@@ -25,6 +25,7 @@ from tommy.controller.visualizations.top_words_bar_plot_creator import (
 from tommy.controller.visualizations.word_cloud_creator import WordCloudCreator
 from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
+from tommy.controller.visualizations.k_value_creator import KValueCreator
 
 # Import exporters
 from tommy.controller.visualizations.nx_exporter import NxExporter
@@ -57,6 +58,7 @@ class GraphController:
     # Visualization Creators
     VISUALIZATIONS: list[AbstractVisualization] = [
         DocumentWordCountCreator(),
+        KValueCreator(),
         CorrelationMatrixCreator(),
         WordTopicNetworkCreator(),
         DocumentTopicNetworkSummaryCreator(),
