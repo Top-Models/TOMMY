@@ -1,11 +1,22 @@
 import pytest
+
+from tommy.controller.language_controller import LanguageController
+from tommy.model.language_model import LanguageModel
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.controller.preprocessing_controller import PreprocessingController
+from tommy.support.supported_languages import SupportedLanguage
 
 
 @pytest.fixture
-def preprocessing_controller():
-    return PreprocessingController()
+def language_controller():
+    language_controller = LanguageController()
+    language_controller.set_model_refs(LanguageModel())
+    return language_controller
+
+
+@pytest.fixture
+def preprocessing_controller(language_controller):
+    return PreprocessingController(language_controller)
 
 
 @pytest.fixture
@@ -17,11 +28,13 @@ def test_process_text(preprocessing_controller, stopwords_model):
     """
     Test the process_text method of PreprocessingController.
     """
+    preprocessing_controller.load_pipeline(
+        SupportedLanguage.Dutch)
     preprocessing_controller.set_model_refs(stopwords_model)
     text = "Dit is een test zin token2."
     tokens = preprocessing_controller.process_text(text)
     assert isinstance(tokens, list)
-
+    print(tokens)
     # Check the expected number of tokens
     assert len(tokens) == 2
 

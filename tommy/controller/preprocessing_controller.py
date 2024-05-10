@@ -18,12 +18,12 @@ class PreprocessingController:
         self._nlp = None
         self._enable_pos: bool
         self.language_controller = language_controller
-        self.language_controller.model_trained_event.subscribe(
+        self.language_controller.change_language_event.subscribe(
             self.load_pipeline)
 
-    def load_pipeline(self, data: None) -> None:
+    def load_pipeline(self, language: SupportedLanguage) -> None:
         nlp: spacy.Language
-        match self.language_controller.get_language():
+        match language:
             case SupportedLanguage.Dutch:
                 self._enable_pos = True
                 pipeline_path = os.path.join(

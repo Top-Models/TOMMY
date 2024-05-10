@@ -12,44 +12,28 @@ class LanguageController:
     modelling, and loading the settings from the associated file.
     """
     _language_model: LanguageModel = None
-    _model_change_language: EventHandler[None] = None
+    _model_change_language: EventHandler[SupportedLanguage] = None
 
     @property
-    def model_trained_event(self) -> EventHandler[None]:
+    def change_language_event(self) -> EventHandler[SupportedLanguage]:
         return self._model_change_language
 
     def __init__(self) -> None:
-        self._model_change_language = EventHandler[None]()
+        self._model_change_language = EventHandler[SupportedLanguage]()
 
     def set_model_refs(self, language_model: LanguageModel) -> None:
         """Set the reference to the language-model"""
         self._language_model = language_model
-        self._model_change_language.publish(None)
+        self._model_change_language.publish(language_model.selectedLanguage)
 
     def set_language(self, language: SupportedLanguage) -> None:
         """Set the language for the topic modelling"""
         self._language_model.selectedLanguage = language
-        self._model_change_language.publish(None)
+        self._model_change_language.publish(language)
 
     def get_language(self) -> SupportedLanguage:
         """Return the language for the topic modelling"""
         return self._language_model.selectedLanguage
-
-    def get_stopwords_path(self) -> str:
-        """Return the path to the stopwords file for the selected language"""
-        return os.path.join(application_settings.preprocessing_data_folder,
-                            "stopwords", f"{self.get_language().name}.txt")
-
-    def get_preprocessing_model_name(self) -> str:
-        """Return the name of the preprocessing model for the selected
-        language"""
-        match self.get_language():
-            case SupportedLanguage.Dutch:
-                return "nl_core_news_sm-3.7.0"
-            case SupportedLanguage.English:
-                return "en_core_web_sm-3.7.1"
-            case _:
-                raise ValueError("Unsupported language")
 
 
 """

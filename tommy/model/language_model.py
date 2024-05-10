@@ -5,7 +5,7 @@ from tommy.support.supported_languages import SupportedLanguage
 @dataclass
 class LanguageModel():
     """A class representing the supported languages for topic modelling ."""
-    selectedLanguage: SupportedLanguage = SupportedLanguage.English
+    selectedLanguage: SupportedLanguage = SupportedLanguage.Dutch
 
 
 """
