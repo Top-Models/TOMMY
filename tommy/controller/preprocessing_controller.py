@@ -44,10 +44,9 @@ class PreprocessingController:
                 raise ValueError("Unsupported preprocessing language")
         self._nlp = nlp
 
+        # TODO: refine the entity set (i.e. "proper-noun filtering")
         self._entity_categories = {"PERSON", "FAC", "LAW", "TIME", "PERCENT",
                                    "MONEY", "QUANTITY", "ORDINAL", "CARDINAL"}
-        # TODO: refine the entity set (i.e. "proper-noun filtering")
-
         self._pos_categories = {"NOUN", "PROPN", "ADJ", "ADV", "VERB"}
 
     def set_model_refs(self, stopwords_model: StopwordsModel):
@@ -71,7 +70,6 @@ class PreprocessingController:
                   token.ent_type_ not in self._entity_categories and (
                           not self._enable_pos or
                           token.pos_ in self._pos_categories)]
-        # TODO: look at pos tags (i.e. fine-grained pos i/p coarse-grained pos)
 
         # 5 - transforming the tokens (lemmas) themselves
         lemmas = [lemma.lower() for lemma in lemmas if len(lemma) > 3]
@@ -80,8 +78,6 @@ class PreprocessingController:
 
         # TODO: fix "-"words and remove diacritical marks
         #  (i.e. character 'normalization')
-
-        # TODO: 6,7
 
         # 8 - stopword removal
         lemmas = self.filter_stopwords(lemmas)
@@ -102,9 +98,6 @@ class PreprocessingController:
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """
-
-if __name__ == "__main__":
-    p = PreprocessingController()

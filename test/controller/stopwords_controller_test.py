@@ -77,3 +77,11 @@ def test_stopwords_path(stopwords_controller, language_controller):
         SupportedLanguage.English) ==
             os.path.join(application_settings.preprocessing_data_folder,
                          "stopwords", "English.txt"))
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""
