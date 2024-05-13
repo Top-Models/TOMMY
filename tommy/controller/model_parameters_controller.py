@@ -14,6 +14,44 @@ class ModelParametersController:
         """Set the reference to the model-parameters-model"""
         self._parameters_model = parameters_model
 
+    def set_model_word_amount(self, word_amount: int) -> None:
+        """Set the amount of words to be displayed per topic"""
+        self._parameters_model.word_amount = word_amount
+
+    def get_model_word_amount(self) -> int:
+        """Return the amount of words to be displayed per topic"""
+        return self._parameters_model.word_amount
+
+    def set_model_alpha_beta_custom_enabled(self, enabled: bool) -> None:
+        """
+        Set whether the alpha and beta parameters should be set manually
+        :param enabled: whether the parameters should be set manually
+        """
+        self._parameters_model.alpha_beta_custom_enabled = enabled
+
+    def get_model_alpha_beta_custom_enabled(self) -> bool:
+        """
+        Return whether the alpha and beta parameters
+        should be set manually
+        """
+        return self._parameters_model.alpha_beta_custom_enabled
+
+    def set_model_alpha(self, alpha: float) -> None:
+        """Set the alpha parameter for the topic modelling"""
+        self._parameters_model.alpha = alpha
+
+    def get_model_alpha(self) -> float:
+        """Return the alpha parameter for the topic modelling"""
+        return self._parameters_model.alpha
+
+    def set_model_beta(self, beta: float) -> None:
+        """Set the beta parameter for the topic modelling"""
+        self._parameters_model.beta = beta
+
+    def get_model_beta(self) -> float:
+        """Return the beta parameter for the topic modelling"""
+        return self._parameters_model.beta
+
     def set_model_n_topics(self, n_topics: int) -> None:
         """
         Set the number of topics to use in the topic modelling
@@ -40,6 +78,6 @@ class ModelParametersController:
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

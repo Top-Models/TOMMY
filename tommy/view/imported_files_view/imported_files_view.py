@@ -47,10 +47,6 @@ class ImportedFilesView(QWidget):
         self.scroll_widget = QWidget()
         self.scroll_layout = QVBoxLayout(self.scroll_widget)
         self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.scroll_area.setVerticalScrollBarPolicy(
-            Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        self.scroll_area.setHorizontalScrollBarPolicy(
-            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidget(self.scroll_widget)
         self.layout.addWidget(self.scroll_area)
 
@@ -255,6 +251,6 @@ class ImportedFilesView(QWidget):
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

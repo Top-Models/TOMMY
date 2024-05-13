@@ -2,6 +2,8 @@ from PySide6.QtCore import Qt, Signal, QEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
 from tommy.controller.graph_controller import GraphController
+from tommy.controller.model_parameters_controller import \
+    ModelParametersController
 from tommy.support.constant_variables import sec_col_orange
 from tommy.datatypes.topics import TopicWithScores
 
@@ -14,7 +16,10 @@ class FetchedTopicsView(QScrollArea):
 
     topicClicked = Signal(object)
 
-    def __init__(self, graph_controller: GraphController) -> None:
+    def __init__(self,
+                 graph_controller: GraphController,
+                 model_parameters_controller: ModelParametersController) \
+            -> None:
         """Initialize the FetchedTopicDisplay widget."""
         super().__init__()
 
@@ -57,6 +62,9 @@ class FetchedTopicsView(QScrollArea):
         self._graph_controller = graph_controller
         self._graph_controller.topics_changed_event.subscribe(
             self._refresh_topics)
+
+        # Set reference to the model parameters controller
+        self._model_parameters_controller = model_parameters_controller
 
     def _add_topic(self,
                    tab_name: str,
@@ -129,7 +137,8 @@ class FetchedTopicsView(QScrollArea):
 
         for i in range(self._graph_controller.get_number_of_topics()):
             topic_name = f"Topic {i + 1}"
-            topic = self._graph_controller.get_topic_with_scores(i, 10)
+            topic = self._graph_controller.get_topic_with_scores(
+                i, self._model_parameters_controller.get_model_word_amount())
             topic_words = topic.top_words
             self._add_topic(self._current_tab_name, topic_name, topic_words, i)
 
@@ -188,6 +197,6 @@ class FetchedTopicsView(QScrollArea):
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

@@ -1,27 +1,26 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
-import matplotlib.figure
+import networkx as nx
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 
 
-class AbstractVisualizationPerTopic(ABC):
+class NxExporter:
     """
-    Abstract class that defines the interface to create a matplotlib figure
-    of a visualization about a topic given a topic runner object and a topic_id
+    Abstract class that defines the interface to create an nx graph of a
+    visualization about a given topic runner object.
     """
     _required_interfaces: []
     name: str
 
     @abstractmethod
-    def get_figure(self,
-                   topic_runner: TopicRunner,
-                   topic_id: int) -> matplotlib.figure.Figure:
+    def get_nx_graph(self,
+                     topic_runner: TopicRunner
+                     ) -> nx.Graph:
         """
-        Get the matplotlib figure showing the requested visualization
+        Get the nx graph data representing showing the requested visualization
         :param topic_runner: the topic runner to extract the result data from
-        :param topic_id: the topic_id of the topic to get the figure on
         :return: matplotlib figure showing the requested visualization
         """
 
@@ -39,6 +38,6 @@ class AbstractVisualizationPerTopic(ABC):
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

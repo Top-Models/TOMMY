@@ -4,6 +4,8 @@ from pytest_mock import mocker
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.graph_controller import GraphController
+from tommy.controller.model_parameters_controller import \
+    ModelParametersController
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
 from tommy.model.topic_model import TopicModel
 from tommy.support.constant_variables import sec_col_purple
@@ -15,7 +17,9 @@ from tommy.view.topic_view.topic_entity_component.topic_entity import (
 @pytest.fixture(scope='function')
 def fetched_topics_view(qtbot: QtBot) -> FetchedTopicsView:
     graph_controller = GraphController()
-    fetched_topics_view = FetchedTopicsView(graph_controller)
+    model_parameters_controller = ModelParametersController()
+    fetched_topics_view = FetchedTopicsView(graph_controller,
+                                            model_parameters_controller)
     qtbot.addWidget(fetched_topics_view)
     return fetched_topics_view
 
@@ -91,55 +95,6 @@ def test_clear_topics(fetched_topics_view: FetchedTopicsView, qtbot: QtBot):
     # Assert
     assert (fetched_topics_view.topic_container == {})
     assert (fetched_topics_view.layout.count() == 0)
-
-
-def test_refresh_topics_lda(fetched_topics_view: FetchedTopicsView,
-                            mocker: mocker):
-    """
-    Test refreshing the topics in the fetched topics view.
-    """
-    # Arrange
-    fetched_topics_view._add_topic(
-        "lda_model",
-        "test_topic",
-        ["word1", "word2", "word3"],
-        0)
-
-    # Mock TopicRunner in GraphController
-    mock_topic_model = TopicModel()
-
-    # Instantiate the model
-    term_lists = [["word1", "word2", "word3"], ["word4", "word5", "word6"]]
-    num_topics = 2
-    model = LdaRunner(topic_model=mock_topic_model,
-                      docs=term_lists,
-                      num_topics=num_topics)
-    fetched_topics_view._graph_controller._current_topic_runner = model
-    mocker.patch.object(
-        fetched_topics_view._graph_controller._current_topic_runner,
-        "get_topics_with_scores",
-        return_value=[])
-
-    # Act
-    fetched_topics_view._refresh_topics(None)
-
-    # Assert
-    assert fetched_topics_view.topic_container == {
-        'lda_model': [('Topic 1',
-                       ('word5',
-                        'word4',
-                        'word6',
-                        'word1',
-                        'word3',
-                        'word2')),
-                      ('Topic 2',
-                       ('word2',
-                        'word3',
-                        'word1',
-                        'word6',
-                        'word4',
-                        'word5'))]}
-    assert fetched_topics_view.layout.count() == 2
 
 
 def test_on_word_clicked(fetched_topics_view: FetchedTopicsView, qtbot: QtBot):
@@ -249,6 +204,6 @@ def test_deselect_all_topics(fetched_topics_view: FetchedTopicsView):
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

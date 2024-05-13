@@ -27,8 +27,8 @@ class StopwordsView(QScrollArea):
                 }}
 
                 QTabBar::tab {{ 
-                    color: black;
-                    background-color: rgba(230, 230, 230, 1);
+                    color: rgba(120, 120, 120, 1);
+                    background-color: rgba(210, 210, 210, 1);
                     font-size: 15px;
                     padding-left: 5px;
                     padding-right: 5px;
@@ -151,6 +151,6 @@ class StopwordsView(QScrollArea):
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

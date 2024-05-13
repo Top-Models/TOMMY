@@ -26,28 +26,28 @@ def set_app_user_model_id():
             print("Failed to set AppUserModelID.")
 
 
-# Program entry point
-app = QApplication(sys.argv)
-set_app_user_model_id()
+if __name__ == "__main__":
+    # Program entry point
+    app = QApplication(sys.argv)
+    set_app_user_model_id()
 
-# Set window icon
-icon_path = os.path.abspath("../assets/tommy.ico")
-app.setWindowIcon(QIcon(icon_path))
+    # Set window icon
+    icon_path = os.path.abspath("../assets/tommy.ico")
+    app.setWindowIcon(QIcon(icon_path))
 
-# Set application name
-app.setApplicationDisplayName("TOMMY")
+    # Set application name
+    app.setApplicationDisplayName("TOMMY")
 
-# Create and show main window
-window = MainWindow()
-window.show()
+    # Create and show main window
+    window = MainWindow()
+    window.show()
 
-# Execute the application
-app.exec()
-
+    # Execute the application
+    app.exec()
 
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """
