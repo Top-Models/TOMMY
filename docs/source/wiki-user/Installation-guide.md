@@ -5,13 +5,10 @@ De TOMMY software is te vinden op [https://tommy.fyor.nl/](https://tommy.fyor.nl
 
 ## macOS
 
-Download the juiste software-versie van de website. 
-Om te controleren welke versie gedownload moet worden, kun je in *Systeeminstellingen > Algemeen > Info* kijken of je een Intel of Apple Silicon processor hebt.
-Als er bij *Chip* een Intel processor aangegeven staat, dient de Intel versie gedownload te worden.
-Als er bij *Chip* een Apple M... processor aangegeven staat, dient de Apple Silicon versie gedownload te worden.
+Download de macOS-versie van de website.
 
 Open vervolgens het .dmg bestand en sleep de TOMMY applicatie binnen de installer naar de Applications map. 
-Doordat de applicatie momenteel nog niet gesigneerd is, kan de applicatie niet direct in de launchpad geopend worden.
+Doordat de applicatie momenteel nog niet gesigneerd is, kan de applicatie niet direct in Launchpad geopend worden.
 
 Navigeer daarom eerst in Finder naar de Apps folder. Dubbel-klik vervolgens op de TOMMY applicatie, waarbij de volgende waarschuwing weergegeven zal worden:
 
@@ -25,8 +22,33 @@ Dit is eenmalig; voortaan kan de applicatie direct vanuit Launchpad geopend word
 
 ## Windows
 
-TODO
+Download de windows-versie van de website.
+
+Pak het zip-bestand uit op de plek waar je het programma wilt opslaan. Zorg dat het .exe bestand in dezelfde map staat waar ook de '_internal' map in staat.
+
+Dubbel-klik het .exe bestand om de TOMMY applicatie te starten. Het is mogelijk dat Windows een melding geeft dat de applicatie niet herkend wordt. Die waarschuwing ziet er als volgt uit:
+
+![](smartscreen1.png)
+
+De waarschuwing komt omdat het developer team op dit moment niet beschikt over een certificaat om de code mee te signeren. De waarschuwing kan genegeerd worden door op 'More info' en vervolgens op 'Run anyway' te klikken.
+
+![](smartscreen2.png)
+
+Dit hoeft eenmalig; voortaan zal er geen waarschuwing worden gegeven als de applicatie wordt geopend.
+
+### Toevoegen aan bureaublad
+Ga naar het bureaublad en klik met rechtermuisknop op een lege plek op het bureaublad.
+
+Selecteer nieuw > Snelkoppeling.
+
+Voer de bestandslocatie van de applicatie in of selecteer Bladeren om het item te zoeken in Verkenner, selecteer de locatie en selecteer 'OK'.
+
+Selecteer 'Volgende'. Geef de snelkoppeling optioneel een naam en selecteer 'Voltooien'.
 
 ## Linux
 
-TODO
+Download de linux-versie van de website.
+
+Pak get zip-bestand uit op een plek waar je het programma wilt opslaan.
+
+Draai 'main' door er in een file explorer op te klikken, of door het via een terminal te draaien.
