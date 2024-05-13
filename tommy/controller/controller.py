@@ -9,7 +9,7 @@ from tommy.controller.graph_controller import GraphController
 from tommy.controller.topic_modelling_controller import (
     TopicModellingController)
 from tommy.controller.stopwords_controller import StopwordsController
-from tommy.controller.synonims_controller import SynonymsController
+from tommy.controller.synonyms_controller import SynonymsController
 from tommy.controller.preprocessing_controller import PreprocessingController
 from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (

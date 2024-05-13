@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (QScrollArea, QTabWidget,
                                QTextEdit)
 
 from tommy.controller.stopwords_controller import StopwordsController
-from tommy.controller.synonims_controller import SynonymsController
+from tommy.controller.synonyms_controller import SynonymsController
 from tommy.support.constant_variables import (
     text_font)
 
@@ -161,21 +161,10 @@ class StopwordsView(QScrollArea):
         :return: None
         """
         input_text = self.synonym_tab.toPlainText()
-        synonyms_dict = {}
-
-        # Split the input text into lines
         lines = input_text.split('\n')
-        for line in lines:
-            # Split each line into words
-            words = line.split()
-            if len(words) > 1:
-                # First word is considered as the main word, rest are synonyms
-                main_word = words[0].lower()
-                synonyms = [word.lower() for word in words[1:]]
-                synonyms_dict[main_word] = synonyms
-
-        # Pass the synonyms mapping to the controller to update synonyms
-        self._synonyms_controller.update_synonyms(synonyms_dict)
+        synonyms = {source: target for (source, target)
+                    in map(str.split, lines)}
+        self._synonyms_controller.update_synonyms(synonyms)
 
     def update_ngrams(self) -> None:
         """

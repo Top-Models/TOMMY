@@ -17,7 +17,7 @@ from tommy.view.settings_view.model_params_view import (
 from tommy.view.plot_selection_view import (
     PlotSelectionView)
 from tommy.view.selected_information_view import SelectedInformationView
-from tommy.view.stopwords_view import (
+from tommy.view.preprocessing_view import (
     StopwordsView)
 from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView

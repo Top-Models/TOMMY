@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QApplication
 from PySide6.QtTest import QTest
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.model.stopwords_model import StopwordsModel
-from tommy.view.stopwords_view import StopwordsView
+from tommy.view.preprocessing_view import StopwordsView
 
 
 @pytest.fixture

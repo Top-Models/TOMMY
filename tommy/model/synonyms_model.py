@@ -1,11 +1,7 @@
-import os
-from collections.abc import Iterable
-
-from tommy.support.application_settings import application_settings
-
-
 class SynonymsModel:
     """
+    TODO: replace
+
     A class representing the set of synonyms.
 
     The class acts as a wrapper around a set of synonyms, providing basic
@@ -15,20 +11,20 @@ class SynonymsModel:
     """
 
     @property
-    def synonyms(self) -> dict[str, list[str]]:
-        return self._synonyms_dict
+    def synonyms(self) -> dict[str, str]:
+        return self._synonyms
 
     def __init__(self) -> None:
-        """Initializes the SynonymsModel."""
-        self._synonyms_dict = {}
+        """Initializes the synonyms model."""
+        self._synonyms = dict()
 
     def __len__(self) -> int:
         """Gets the number of main words in the synonyms."""
-        return len(self._synonyms_dict)
+        return len(self._synonyms)
 
     def __contains__(self, word: str) -> bool:
         """Checks if the synonyms contain a main word."""
-        return word in self._synonyms_dict
+        return word in self._synonyms
 
     def __getitem__(self, word: str) -> list[str]:
         """
@@ -37,17 +33,17 @@ class SynonymsModel:
         :param word: The main word
         :return: The list of synonyms associated with the main word
         """
-        return self._synonyms_dict.get(word, [])
+        return self._synonyms.get(word, [])
 
-    def replace(self, synonyms_dict: dict[str, list[str]]) -> None:
+    def replace(self, synonyms: dict[str, str]) -> None:
         """
         Replace the synonyms with the provided mapping.
 
-        :param synonyms_dict: A dictionary where keys represent main words and values represent synonyms.
+        :param synonyms: A dictionary where the keys represent source words
+        and the values represent target words.
         :return: None
         """
-        self._synonyms_dict = synonyms_dict.copy()
-
+        self._synonyms = synonyms
 
 
 """

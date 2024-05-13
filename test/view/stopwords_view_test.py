@@ -2,7 +2,7 @@ import pytest
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.controller import Controller
-from tommy.view.stopwords_view import StopwordsView
+from tommy.view.preprocessing_view import StopwordsView
 
 
 @pytest.fixture(scope='function')
