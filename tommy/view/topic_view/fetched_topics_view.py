@@ -135,6 +135,9 @@ class FetchedTopicsView(QScrollArea):
         """Retrieve the topics from the GraphController and update the view"""
         self._clear_topics()
 
+        if not self._graph_controller.has_topic_runner:
+            return
+
         for i in range(self._graph_controller.get_number_of_topics()):
             topic_name = f"Topic {i + 1}"
             topic = self._graph_controller.get_topic_with_scores(

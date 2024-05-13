@@ -26,7 +26,7 @@ class ModelParametersController:
         update the frontend
         """
         self._parameters_model = parameters_model
-        self._params_model_changed_event.publish(self._parameters_model)
+        self._params_model_changed_event.publish(parameters_model)
 
     def set_model_word_amount(self, word_amount: int) -> None:
         """Set the amount of words to be displayed per topic"""

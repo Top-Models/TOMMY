@@ -28,22 +28,22 @@ class LdaRunner(TopicRunner,
     @property
     def _dictionary(self) -> Dictionary:
         """get the term_ids-to-terms dictionary saved in the topic model"""
-        return self._topic_model.model['dictionary']
+        return self._topic_model.dictionary
 
     @_dictionary.setter
     def _dictionary(self, new_dictionary: Dictionary) -> None:
         """Takes and sets the term_ids-to-terms dictionary"""
-        self._topic_model.model['dictionary'] = new_dictionary
+        self._topic_model.dictionary = new_dictionary
 
     @property
     def _model(self) -> LdaModel:
         """Get the model than is being run from the topic model"""
-        return self._topic_model.model['model']
+        return self._topic_model.model
 
     @_model.setter
     def _model(self, new_model: LdaModel) -> None:
         """Set the LDA model than is being run in the topic model"""
-        self._topic_model.model['model'] = new_model
+        self._topic_model.model = new_model
 
     def __init__(self,
                  topic_model: TopicModel,
@@ -65,8 +65,6 @@ class LdaRunner(TopicRunner,
         super().__init__(topic_model=topic_model)
 
         # clear location where model and dictionary will be stored
-        self._topic_model.model = {}
-
         self._num_topics = num_topics
         self._alpha = alpha
         self._beta = beta

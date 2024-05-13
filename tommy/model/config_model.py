@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+from typing import Optional
+
+from tommy.controller.topic_modelling_runners.abstract_topic_runner import \
+    TopicRunner
 from tommy.model.corpus_model import CorpusModel
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.model.stopwords_model import StopwordsModel
@@ -10,6 +14,7 @@ class ConfigModel:
     """A class representing the configuration."""
 
     def __init__(self, derive_from: ConfigModel = None):
+        self.topic_runner: Optional[TopicRunner] = None
         self.topic_model = TopicModel()
         if derive_from is None:
             self.stopwords_model = StopwordsModel()

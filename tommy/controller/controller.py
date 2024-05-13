@@ -121,7 +121,8 @@ class Controller:
             self._model.model_parameters_model)
 
         self._topic_modelling_controller.set_model_refs(
-            self._model.topic_model)
+            self._model.topic_model,
+            self._model.config_model)
 
         self._stopwords_controller.set_model_refs(
             self._model.stopwords_model)
@@ -156,7 +157,8 @@ class Controller:
             config_model.model_parameters_model)
 
         self._topic_modelling_controller.change_config_model_refs(
-            config_model.topic_model)
+            config_model.topic_model,
+            self._model.config_model)
 
         self._stopwords_controller.change_config_model_refs(
             config_model.stopwords_model)
