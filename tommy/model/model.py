@@ -1,4 +1,5 @@
 from tommy.model.corpus_model import CorpusModel
+from tommy.model.language_model import LanguageModel
 from tommy.model.project_settings_model import ProjectSettingsModel
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.model.model_parameters_model import ModelParametersModel
@@ -11,6 +12,7 @@ class Model:
     project_settings_model: ProjectSettingsModel
     corpus_model: CorpusModel
     topic_model: TopicModel
+    language_model: LanguageModel
 
     def __init__(self):
         self.stopwords_model = StopwordsModel()
@@ -18,6 +20,7 @@ class Model:
         self.project_settings_model = ProjectSettingsModel()
         self.corpus_model = CorpusModel()
         self.topic_model = TopicModel()
+        self.language_model = LanguageModel()
 
 
 """
