@@ -30,7 +30,7 @@ class MenuBar(QMenuBar):
         import_input_folder_action = QAction("Selecteer input folder", self)
         export_to_gexf_action = QAction("Exporteer naar Graph Exchange XML Format (.gexf)", self)
         export_to_png_action = QAction("Exporteer grafieken (.png)", self)
-        export_topic_words_action = QAction("Exporteer onderwerpwijzer (.csv)", self)
+        export_topic_words_action = QAction("Exporteer Topicdata (.csv)", self)
 
         # Connect actions to event handlers
         import_input_folder_action.triggered.connect(self.import_input_folder)
