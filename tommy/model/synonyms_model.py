@@ -1,13 +1,10 @@
 class SynonymsModel:
     """
-    TODO: replace
+    A class representing the dictionary of synonyms.
 
-    A class representing the set of synonyms.
-
-    The class acts as a wrapper around a set of synonyms, providing basic
-    iterable-like functionality. Initially it represents the set of
-    basic/general stopwords imported from a text file, but extra words may
-    be added, removed or replaced.
+    The class acts as a wrapper around a dictionary of synoyms, providing basic
+    map-like functionality. This model can be used to map source words to
+    target words (synonyms).
     """
 
     @property
@@ -19,21 +16,32 @@ class SynonymsModel:
         self._synonyms = dict()
 
     def __len__(self) -> int:
-        """Gets the number of main words in the synonyms."""
+        """Gets the number of synonyms."""
         return len(self._synonyms)
 
     def __contains__(self, word: str) -> bool:
-        """Checks if the synonyms contain a main word."""
+        """Checks if the dictionary of synonyms contains a source word."""
         return word in self._synonyms
 
-    def __getitem__(self, word: str) -> list[str]:
-        """
-        Get the list of synonyms for a given main word.
+    def __setitem__(self, key: str, item: str):
+        """Adds a synonym to the dictionary."""
+        self._synonyms[key] = item
 
-        :param word: The main word
-        :return: The list of synonyms associated with the main word
+    def __getitem__(self, key: str):
+        """Gets the synonym for a given source word"""
+        return self._synonyms[key]
+
+    def get(self, key: str, default: str = None) -> str:
         """
-        return self._synonyms.get(word, [])
+        Gets the synonym for a given source word.
+        Returns a default value when the source word is not found.
+
+        :param key: The source word
+        :param default: The default value to return
+        if the source word is not found, defaults to None
+        :return: The synonym associated with the source word
+        """
+        return self._synonyms.get(key, default)
 
     def replace(self, synonyms: dict[str, str]) -> None:
         """

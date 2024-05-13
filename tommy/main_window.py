@@ -18,7 +18,7 @@ from tommy.view.plot_selection_view import (
     PlotSelectionView)
 from tommy.view.selected_information_view import SelectedInformationView
 from tommy.view.preprocessing_view import (
-    StopwordsView)
+    PreprocessingView)
 from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
 from tommy.view.topic_view.topic_entity_component.topic_entity import (
@@ -71,9 +71,10 @@ class MainWindow(QMainWindow):
                                 self._controller.export_controller))
 
         # Create widgets
-        self.stopwords_view = StopwordsView(
+        self.stopwords_view = PreprocessingView(
             self._controller.stopwords_controller,
             self._controller.synonyms_controller)
+        self.graph_view = GraphView()
         self.plot_selection_view = PlotSelectionView(
             self._controller.graph_controller,
             self.graph_view

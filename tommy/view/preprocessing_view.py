@@ -8,8 +8,11 @@ from tommy.support.constant_variables import (
     text_font)
 
 
-class StopwordsView(QScrollArea):
-    """The StopWordsDisplay area to view all stopwords."""
+class PreprocessingView(QScrollArea):
+    """
+    The PreprocessingDisplay area to view all preprocessing-related
+    input.
+    """
 
     def __init__(self,
                  stopwords_controller: StopwordsController,

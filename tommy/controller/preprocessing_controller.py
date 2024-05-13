@@ -70,7 +70,8 @@ class PreprocessingController:
         :param tokens: The list of tokens
         :return: The list of tokens where tokens are mapped to their synonyms
         """
-        return [token for token in tokens]
+        return (list(map(
+            lambda token: self._synonyms_model.get(token, token), tokens)))
 
     def filter_stopwords(self, tokens: list[str]) -> list[str]:
         """
@@ -79,7 +80,8 @@ class PreprocessingController:
         :param tokens: The list of tokens
         :return: The list of tokens without stopwords
         """
-        return [token for token in tokens if token not in self._stopwords_model]
+        return [token for token in tokens
+                if token not in self._stopwords_model]
 
 
 """
@@ -88,6 +90,3 @@ at Utrecht University within the Software Project course.
 © Copyright Utrecht University 
 (Department of Information and Computing Sciences)
 """
-
-if __name__ == "__main__":
-    p = PreprocessingController()
