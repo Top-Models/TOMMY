@@ -1,7 +1,8 @@
-import pytest
-from gensim import models, corpora
-import pickle
 import os
+import pytest
+import pickle
+
+from gensim import models, corpora
 
 from tommy.model.topic_model import TopicModel
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
@@ -16,8 +17,8 @@ from tommy.controller.visualizations.word_cloud_creator import (
     WordCloudCreator)
 from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
-from tommy.controller.visualizations.document_topic_network_summary_creator import (
-    DocumentTopicNetworkSummaryCreator)
+from tommy.controller.visualizations.document_topic_network_summary_creator \
+    import DocumentTopicNetworkSummaryCreator
 
 
 # Test data directory
