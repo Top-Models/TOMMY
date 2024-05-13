@@ -108,8 +108,7 @@ class PreprocessingView(QScrollArea):
         self.blacklist_tab.setStyleSheet(tab_style)
         self.blacklist_tab.setLineWrapMode(QTextEdit.NoWrap)
         self.blacklist_tab.setPlaceholderText(
-            "Voer blacklist woorden in op deze manier:\nwoord1["
-            "enter]\nwoord2[enter]\netc")
+            "woord\nwoord\netc...")
 
         self.ngrams_tab = QTextEdit()
         self.ngrams_tab.setStyleSheet(tab_style)
@@ -119,9 +118,7 @@ class PreprocessingView(QScrollArea):
         self.synonym_tab.setStyleSheet(tab_style)
         self.synonym_tab.setLineWrapMode(QTextEdit.NoWrap)
         self.synonym_tab.setPlaceholderText(
-            "Type synoniemen in deze manier:\nwoord1 [spatie] synoniem1 ["
-            "spatie] synoniem2 [spatie] ...\n[enter] woord2 [spatie] "
-            "synoniem1 [spatie] synoniem2 [spatie] ...")
+            "woord synoniem\nwoord synoniem\netc...")
 
         # Set container as the focal point
         self.setWidget(self.container)
@@ -165,8 +162,8 @@ class PreprocessingView(QScrollArea):
         """
         input_text = self.synonym_tab.toPlainText()
         lines = input_text.split('\n')
-        synonyms = {source: target for (source, target)
-                    in map(str.split, lines)}
+        synonyms = {words[0]: words[1] for words
+                    in map(str.split, lines) if len(words) == 2}
         self._synonyms_controller.update_synonyms(synonyms)
 
     def update_ngrams(self) -> None:
