@@ -140,6 +140,7 @@ class Controller:
 
         self._corpus_controller.set_processed_corpus(processed_files)
         self._topic_modelling_controller.train_model()
+        self._topic_modelling_controller.calculate_topic_document_correspondence()
 
 
 """

@@ -2,6 +2,8 @@ from tommy.controller.model_parameters_controller import (
     ModelParametersController,
     ModelType)
 from tommy.controller.corpus_controller import CorpusController
+from tommy.controller.result_interfaces.document_topics_interface import \
+    DocumentTopicsInterface
 
 from tommy.model.topic_model import TopicModel
 
@@ -62,6 +64,24 @@ class TopicModellingController:
                     f"topic modelling controller")
 
         self._model_trained_event.publish(self._topic_runner)
+
+    def calculate_topic_document_correspondence(self):
+        processed_files = self._corpus_controller.get_processed_corpus()
+        topic_runner: DocumentTopicsInterface = self._topic_runner # TODO: fix unsafe cast
+        topics_amount = self._topic_runner.get_n_topics()
+
+        for document_id, document in enumerate(processed_files):
+            document_topic = (
+                topic_runner.get_document_topics(document.body.body, 0.0))
+
+            if len(document_topic) != topics_amount:
+                print(f"Document {document_id} has {len(document_topic)} topics ")
+
+            document.topic_correspondence = [0.0] * topics_amount
+
+            # Add edges from each document to all associated topics
+            for (topic_id, topic_probability) in document_topic:
+                document.topic_correspondence[topic_id] = topic_probability
 
     def _train_lda(self) -> None:
         """
