@@ -17,6 +17,7 @@ from tommy.controller.project_settings_controller import (
 from tommy.controller.save_controller import SaveController
 from tommy.controller.export_controller import ExportController
 
+
 class Controller:
     """The main controller for the tommy that creates all sub-controllers"""
 
@@ -62,7 +63,8 @@ class Controller:
     @property
     def export_controller(self):
         if self._export_controller is None:
-            from tommy.controller.export_controller import ExportController  # Local import to avoid circular dependency
+            from tommy.controller.export_controller import \
+                ExportController  # Local import to avoid circular dependency
             self._export_controller = ExportController()
             self._export_controller.set_controller_refs(self._graph_controller)
         return self._export_controller
@@ -142,3 +144,11 @@ class Controller:
 
         self._corpus_controller.set_processed_corpus(processed_files)
         self._topic_modelling_controller.train_model()
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""
