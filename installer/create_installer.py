@@ -2,17 +2,25 @@ import sys
 import subprocess
 
 if __name__ == "__main__":
-    match sys.platform:
+    access_permissions_command = ['chmod', '+x', 'installer/mac-installer.sh']
+    platform = sys.platform
+    script = ''
+
+    match platform:
         case "darwin":
-            access_permissions = ['chmod', '+x', 'installer/mac-installer.sh']
-            subprocess.run(access_permissions)
-            subprocess.run('./installer/mac-installer.sh')
+            script = 'installer/mac-installer.sh'
         case "win32":
-            print("Windows is not supported!")
+            script = 'installer/windows-installer.bat'
         case "linux":
-            print("Linux is not supported!")
+            script = 'installer/linux-installer.sh'
         case _:
             print("Your OS is not supported!")
+
+    # Give access permissions and run the installer script
+    if platform in ["darwin", "win32", "linux"]:
+        access_permissions_command.append(script)
+        subprocess.run(access_permissions_command)
+        subprocess.run(script)
 
 
 """
