@@ -1,6 +1,7 @@
 import pytest
 
 from tommy.controller.controller import Controller
+from tommy.support.model_type import ModelType
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
 
@@ -131,6 +132,58 @@ def test_get_amount_of_words(abstract_settings: AbstractSettings,
 
     # Assert
     assert result == expected
+
+
+def test_initialize_algorithm_field(abstract_settings: AbstractSettings, mocker):
+    # Mock the ModelParametersController
+    model_parameters_controller = mocker.MagicMock()
+    abstract_settings._model_parameters_controller = (
+        model_parameters_controller)
+
+    # Mock the selection field
+    algorithm_field = mocker.MagicMock()
+    abstract_settings._algorithm_field = algorithm_field
+
+    # Mock the scroll layout
+    scroll_layout = mocker.MagicMock()
+    abstract_settings._scroll_layout = scroll_layout
+
+    # Set the return value of get_model_type
+    model_parameters_controller.get_model_type.return_value = ModelType.LDA
+
+    # Act
+    abstract_settings.initialize_algorithm_field()
+
+    # Check if the correct items are added to the selection menu
+    algorithm_field.addItem.assert_any_call("LDA")
+    algorithm_field.addItem.assert_any_call("BERTopic")
+    algorithm_field.addItem.assert_any_call("NMF")
+
+    # Check if the current text of the selection menu is set correctly
+    algorithm_field.setCurrentText.assert_called_once_with("LDA")
+
+    # Check if the algorithm field is added to the scroll layout
+    scroll_layout.addLayout.assert_called()
+
+
+def test_algorithm_field_changed_event(abstract_settings: AbstractSettings,
+                                       mocker):
+    # Mock the ModelParametersController
+    model_parameters_controller = mocker.MagicMock()
+    abstract_settings._model_parameters_controller = (
+        model_parameters_controller)
+
+    # Mock the selction field
+    algorithm_field = mocker.MagicMock()
+    abstract_settings._algorithm_field = algorithm_field
+
+    # Change the model to nmf
+    algorithm_field.currentText.return_value = "NMF"
+    abstract_settings.algorithm_field_changed_event()
+
+    # Assert
+    model_parameters_controller.set_model_type.assert_called_with(
+            ModelType.NMF)
 
 
 """
