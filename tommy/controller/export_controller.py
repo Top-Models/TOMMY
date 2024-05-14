@@ -1,21 +1,20 @@
 import csv
 import os
-
+import networkx as nx
 from matplotlib import pyplot as plt
 from pathlib import Path
-
+from tommy.controller.graph_controller import GraphController
 
 class ExportController:
     """Class for exporting graphs and networks to file"""
-    _graph_controller = None
-
+    _graph_controller: GraphController = None
     def export_networks(self, path: str) -> None:
         """"
         Exports networks to gexf file for all available nx exports
         :param path: path to the folder where to save the gexf files
         :return: None
         """
-        import networkx as nx  # Local import to avoid circular dependency
+
         nx_exports = self._graph_controller.get_all_nx_exports()
 
         for i in range(len(nx_exports)):
