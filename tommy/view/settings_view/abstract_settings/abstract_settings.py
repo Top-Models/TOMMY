@@ -356,6 +356,7 @@ class AbstractSettings:
         language_layout = QHBoxLayout()
 
         # Add label
+        self._language_field = QComboBox()
         language_label = QLabel("Taal corpus:")
         language_label.setStyleSheet(f"font-size: 16px;"
                                       f"color: black;"
@@ -380,7 +381,6 @@ class AbstractSettings:
             pass
 
         current_language = self._language_controller.get_language()
-        print(current_language)
         match current_language:
             case SupportedLanguage.Dutch:
                 self._language_field.setCurrentText("Nederlands")
