@@ -79,6 +79,7 @@ class LdaRunner(TopicRunner,
         super().__init__(topic_model=topic_model)
 
         # clear location where model and dictionary will be stored
+        self.docs = docs
         self._topic_model.model = {}
 
         self._num_topics = num_topics
@@ -152,9 +153,18 @@ class LdaRunner(TopicRunner,
                                                minimum_probability=
                                                minimum_probability)
 
-    def get_topic_coherence(self):
-        coherence_model = CoherenceModel(model=self._model,
+    def get_topic_coherence(self, num_topics):
+        new_model = LdaModel(corpus=self._bags_of_words,
+                             id2word=self._dictionary,
+                             num_topics=num_topics,
+                             random_state=self._random_seed,
+                             alpha=self._alpha,
+                             eta=self._beta)
+
+        coherence_model = CoherenceModel(model=new_model,
                                          corpus=self._bags_of_words,
+                                         dictionary=self._dictionary,
+                                         texts=self.docs,
                                          coherence='u_mass')
         coherence = coherence_model.get_coherence()
         return coherence

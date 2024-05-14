@@ -3,14 +3,15 @@ from abc import ABC, abstractmethod
 
 class TopicCoherenceInterface(ABC):
     """
-    Abstract class that defines the interface for getting
-    a coherence value for an amount of topics
+    Abstract class that defines the interface for getting a coherence value for
+    an amount of topics
     """
 
     @abstractmethod
-    def get_topic_coherence(self) -> float:
+    def get_topic_coherence(self, num_topics: int) -> float:
         """
-        Returns the topic coherence value for the current amount of topics
+        Returns the topic coherence value for the given amount of topics
+        :param num_topics: The number of topics
         :return: the topic coherence value
         """
 
