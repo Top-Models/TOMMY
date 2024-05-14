@@ -2,7 +2,7 @@ import sys
 import subprocess
 
 if __name__ == "__main__":
-    access_permissions_command = ['chmod', '+x', 'installer/mac-installer.sh']
+    access_permissions_command = ['chmod', '+x']
     platform = sys.platform
 
     match platform:
