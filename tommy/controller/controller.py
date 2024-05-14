@@ -56,7 +56,7 @@ class Controller:
     _project_settings_controller: ProjectSettingsController
     _save_controller: SaveController
 
-    _export_controller: ExportController  # Explicitly define _export_controller type
+    _export_controller: ExportController
     _language_controller: LanguageController
 
     @property
