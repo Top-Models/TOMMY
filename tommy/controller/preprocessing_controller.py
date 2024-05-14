@@ -30,8 +30,8 @@ class PreprocessingController:
                     application_settings.preprocessing_data_folder
                     , "pipeline_download", "nl_core_news_sm-3.7.0")
                 nlp = spacy.load(pipeline_path,
-                                 exclude=["tagger", "attribute_ruler", "parser",
-                                          "senter"])
+                                 exclude=["tagger", "attribute_ruler",
+                                          "parser", "senter"])
             case SupportedLanguage.English:
                 self._enable_pos = False
                 pipeline_path = os.path.join(
