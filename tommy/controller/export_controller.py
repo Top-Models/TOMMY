@@ -50,9 +50,8 @@ class ExportController:
                 for word, score in zip(topic.top_words, topic.word_scores):
                     csv_writer.writerow([topic_name, word, score])
 
-    def set_controller_refs(self, graph_controller) -> None:
+    def set_controller_refs(self, graph_controller: GraphController) -> None:
         self._graph_controller = graph_controller
-
 
 """
 This program has been developed by students from the bachelor Computer Science
