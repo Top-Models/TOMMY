@@ -1,3 +1,4 @@
+from tommy.controller.language_controller import LanguageController
 from tommy.model.model import Model
 
 from tommy.controller.file_import.processed_body import ProcessedBody
@@ -55,7 +56,8 @@ class Controller:
     _project_settings_controller: ProjectSettingsController
     _save_controller: SaveController
 
-    _export_controller = None
+    _export_controller: ExportController  # Explicitly define _export_controller type
+    _language_controller: LanguageController
 
     @property
     def export_controller(self):
@@ -75,13 +77,18 @@ class Controller:
     def _initialize_components(self):
         """Initialize all sub-components"""
         self._model_parameters_controller = ModelParametersController()
+        self._language_controller = LanguageController()
         self._graph_controller = GraphController()
         self._topic_modelling_controller = TopicModellingController()
-        self._stopwords_controller = StopwordsController()
-        self._preprocessing_controller = PreprocessingController()
+        self._stopwords_controller = StopwordsController(
+            self._language_controller)
+        self._preprocessing_controller = PreprocessingController(
+            self._language_controller)
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
         self._save_controller = SaveController()
+
+        self._export_controller = None  # Initialize _export_controller as None
 
         self._corpus_controller.set_controller_refs(
             self._project_settings_controller)
@@ -116,6 +123,9 @@ class Controller:
 
         self._project_settings_controller.set_model_refs(
             self._models[model_index].project_settings_model)
+
+        self._language_controller.set_model_refs(
+            self._models[model_index].language_model)
 
     def on_run_topic_modelling(self) -> None:
         """
