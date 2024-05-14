@@ -359,10 +359,10 @@ class AbstractSettings:
         self._language_field = QComboBox()
         language_label = QLabel("Taal corpus:")
         language_label.setStyleSheet(f"font-size: 16px;"
-                                      f"color: black;"
-                                      f"font-family: {text_font};")
+                                     f"color: black;"
+                                     f"font-family: {text_font};")
         language_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
-                                     Qt.AlignmentFlag.AlignVCenter)
+                                    Qt.AlignmentFlag.AlignVCenter)
         language_layout.addWidget(language_label)
 
         # Add input field
