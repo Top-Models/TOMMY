@@ -18,19 +18,17 @@ class StopwordsModel:
     def default_words(self) -> set[str]:
         return self._default_words
 
+    @default_words.setter
+    def default_words(self, default_words: set[str]) -> None:
+        self._default_words = default_words
+
     @property
     def extra_words(self) -> set[str]:
         return self._extra_words
 
     def __init__(self) -> None:
         """Initializes the stopwords model."""
-        with open(os.path.join(
-                application_settings.preprocessing_data_folder,
-                "stopwords.txt"), 'r') as file:
-            file_content = file.read()
-        stopword_list = file_content.split()
-        self._default_words = set(stopword_list)
-
+        self._default_words = set()
         self._extra_words = set()
 
     def __len__(self) -> int:
