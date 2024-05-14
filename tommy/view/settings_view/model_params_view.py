@@ -133,6 +133,13 @@ class ModelParamsView(QScrollArea):
         Initialize the parameter widgets.
         """
         current_view = self.get_current_settings_view()
+
+        # If a scroll is already present, remove it for new parameters
+        if self.scroll_widget.layout() is not None:
+            old_layout = self.scroll_widget.layout()
+            while old_layout.count():
+                old_layout.takeAt(0).widget().deleteLater()
+
         current_view.initialize_parameter_widgets(self.scroll_layout)
         self.initialize_apply_button()
 
@@ -160,17 +167,6 @@ class ModelParamsView(QScrollArea):
                     sub_child = child.layout().takeAt(0)
                     if sub_child.widget() is not None:
                         sub_child.widget().deleteLater()
-        """                
-        for i in reversed(range(self.scroll_layout.count())):
-            layout = self.scroll_layout.itemAt(i)
-
-            if layout is not None:
-                for j in reversed(range(layout.count())):
-                    widget = layout.itemAt(j).widget()
-                    if widget is not None:
-                        widget.deleteLater()
-                layout.deleteLater()
-        """
 
     def initialize_apply_button(self) -> None:
         """
