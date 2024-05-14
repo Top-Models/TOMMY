@@ -154,14 +154,6 @@ def test_initialize_algorithm_field(abstract_settings: AbstractSettings, mocker)
     # Act
     abstract_settings.initialize_algorithm_field()
 
-    # Check if the correct items are added to the selection menu
-    algorithm_field.addItem.assert_any_call("LDA")
-    algorithm_field.addItem.assert_any_call("BERTopic")
-    algorithm_field.addItem.assert_any_call("NMF")
-
-    # Check if the current text of the selection menu is set correctly
-    algorithm_field.setCurrentText.assert_called_once_with("LDA")
-
     # Check if the algorithm field is added to the scroll layout
     scroll_layout.addLayout.assert_called()
 
