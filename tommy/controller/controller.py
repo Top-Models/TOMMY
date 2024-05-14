@@ -16,6 +16,8 @@ from tommy.controller.project_settings_controller import (
 from tommy.controller.save_controller import SaveController
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.export_controller import ExportController
+from tommy.controller.language_controller import LanguageController
+
 
 
 class Controller:
@@ -56,6 +58,7 @@ class Controller:
     _save_controller: SaveController
 
     _export_controller: ExportController
+    _language_controller: LanguageController
 
     @property
     def export_controller(self) -> ExportController:
@@ -76,10 +79,13 @@ class Controller:
     def _initialize_components(self):
         """Initialize all sub-components"""
         self._model_parameters_controller = ModelParametersController()
+        self._language_controller = LanguageController()
         self._graph_controller = GraphController()
         self._topic_modelling_controller = TopicModellingController()
-        self._stopwords_controller = StopwordsController()
-        self._preprocessing_controller = PreprocessingController()
+        self._stopwords_controller = StopwordsController(
+            self._language_controller)
+        self._preprocessing_controller = PreprocessingController(
+            self._language_controller)
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
         self._save_controller = SaveController()
@@ -173,6 +179,6 @@ class Controller:
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

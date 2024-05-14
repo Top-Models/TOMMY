@@ -1,4 +1,6 @@
 from tommy.model.config_model import ConfigModel
+from tommy.model.corpus_model import CorpusModel
+from tommy.model.language_model import LanguageModel
 from tommy.model.project_settings_model import ProjectSettingsModel
 
 
@@ -6,10 +8,11 @@ class Model:
     default_config_name = "Config 1"
 
     def __init__(self):
-        first_config = ConfigModel()
-
+        self.language_model: LanguageModel = LanguageModel()
         self.project_settings_model: ProjectSettingsModel = (
             ProjectSettingsModel())
+
+        first_config = ConfigModel()
         self.selected_config_name: str = Model.default_config_name
 
         # add fist configuration to dictionary using the default config name
@@ -47,6 +50,6 @@ class Model:
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

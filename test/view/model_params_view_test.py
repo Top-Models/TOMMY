@@ -71,6 +71,6 @@ def test_apply_button_clicked_calls_on_run_topic_modelling(
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

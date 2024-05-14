@@ -20,6 +20,10 @@ class StopwordsModel:
     def default_words(self) -> set[str]:
         return self._default_words
 
+    @default_words.setter
+    def default_words(self, default_words: set[str]) -> None:
+        self._default_words = default_words
+
     @property
     def extra_words(self) -> set[str]:
         return self._extra_words
@@ -114,6 +118,6 @@ class StopwordsModel:
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """
