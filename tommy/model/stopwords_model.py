@@ -31,13 +31,7 @@ class StopwordsModel:
     def __init__(self, derive_from: StopwordsModel = None) -> None:
         """Initializes the stopwords model."""
         if derive_from is None:
-            with open(os.path.join(
-                    application_settings.preprocessing_data_folder,
-                    "stopwords.txt"), 'r') as file:
-                file_content = file.read()
-            stopword_list = file_content.split()
-            self._default_words = set(stopword_list)
-
+            self._default_words = set()
             self._extra_words = set()
         else:
             self._default_words = derive_from.default_words.copy()
