@@ -1,10 +1,7 @@
 #!/bin/bash
 
 APP_NAME="Tommy"
-VOLUME_NAME="${APP_NAME} Installer"
 OUTPUT_FOLDER="dist"
-DMG_FOLDER_PATH="${OUTPUT_FOLDER}/${APP_NAME}-Installer.dmg"
-SOURCE_FOLDER_PATH="${OUTPUT_FOLDER}/${APP_NAME}.app"
 DATA_FOLDER_PATH="tommy/data"
 
 echo "> Removing the dist folder if it exists"

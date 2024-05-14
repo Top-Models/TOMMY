@@ -10,7 +10,8 @@ if __name__ == "__main__":
         case "darwin":
             script = 'installer/mac-installer.sh'
         case "win32":
-            script = 'installer/windows-installer.bat'
+            script = 'installer/linux-installer.sh'
+            #script = 'installer/windows-installer.bat'
         case "linux":
             script = 'installer/linux-installer.sh'
         case _:
