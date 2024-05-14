@@ -1,17 +1,13 @@
 import csv
-
-import matplotlib.figure
-import networkx as nx
-from matplotlib import pyplot as plt
-from pathlib import Path
 import os
 
-from tommy.controller.controller import GraphController
+from matplotlib import pyplot as plt
+from pathlib import Path
 
 
 class ExportController:
     """Class for exporting graphs and networks to file"""
-    _graph_controller: GraphController = None
+    _graph_controller = None
 
     def export_networks(self, path: str) -> None:
         """"
@@ -19,6 +15,7 @@ class ExportController:
         :param path: path to the folder where to save the gexf files
         :return: None
         """
+        import networkx as nx  # Local import to avoid circular dependency
         nx_exports = self._graph_controller.get_all_nx_exports()
 
         for i in range(len(nx_exports)):
@@ -43,27 +40,16 @@ class ExportController:
         :param path: Path to the CSV file
         :return: None
         """
-        # Open the CSV file for writing
         with open(path, 'w', newline='') as csvfile:
             csv_writer = csv.writer(csvfile)
             csv_writer.writerow(['Topic', 'Word', 'Score'])  # Write header row
 
-            # Iterate through topics
             for i in range(self._graph_controller.get_number_of_topics()):
                 topic_name = f"Topic {i + 1}"
                 topic = self._graph_controller.get_topic_with_scores(i, 100)
 
-                # Iterate through words in the topic
                 for word, score in zip(topic.top_words, topic.word_scores):
                     csv_writer.writerow([topic_name, word, score])
 
-    def set_controller_refs(self, graph_controller: GraphController) -> None:
+    def set_controller_refs(self, graph_controller) -> None:
         self._graph_controller = graph_controller
-
-
-"""
-This program has been developed by students from the bachelor Computer Science
-at Utrecht University within the Software Project course.
-© Copyright Utrecht University
-(Department of Information and Computing Sciences)
-"""

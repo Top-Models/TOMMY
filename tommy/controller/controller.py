@@ -14,7 +14,6 @@ from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.controller.save_controller import SaveController
-from tommy.controller.export_controller import ExportController
 
 
 class Controller:
@@ -56,10 +55,14 @@ class Controller:
     _project_settings_controller: ProjectSettingsController
     _save_controller: SaveController
 
-    _export_controller: ExportController
+    _export_controller = None
 
     @property
-    def export_controller(self) -> ExportController:
+    def export_controller(self):
+        if self._export_controller is None:
+            from tommy.controller.export_controller import ExportController  # Local import to avoid circular dependency
+            self._export_controller = ExportController()
+            self._export_controller.set_controller_refs(self._graph_controller)
         return self._export_controller
 
     def __init__(self) -> None:
@@ -79,12 +82,10 @@ class Controller:
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
         self._save_controller = SaveController()
-        self._export_controller = ExportController()
 
         self._corpus_controller.set_controller_refs(
             self._project_settings_controller)
         self._graph_controller.set_controller_refs(self._corpus_controller)
-        self._export_controller.set_controller_refs(self._graph_controller)
 
     def select_model(self, model_index: int) -> None:
         """
@@ -92,7 +93,6 @@ class Controller:
         :param model_index: The index of the model to be selected
         :return: None
         """
-        # TODO: input validation
         self._selected_model = model_index
 
         self._model_parameters_controller.set_model_refs(
@@ -132,11 +132,3 @@ class Controller:
 
         self._corpus_controller.set_processed_corpus(processed_files)
         self._topic_modelling_controller.train_model()
-
-
-"""
-This program has been developed by students from the bachelor Computer Science
-at Utrecht University within the Software Project course.
-© Copyright Utrecht University
-(Department of Information and Computing Sciences)
-"""
