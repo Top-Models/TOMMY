@@ -9,7 +9,8 @@ from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 @pytest.fixture(scope='function')
 def lda_settings() -> LdaSettings:
     controller = Controller()
-    lda_settings = LdaSettings(controller.model_parameters_controller)
+    lda_settings = LdaSettings(controller.model_parameters_controller,
+                               controller.language_controller)
     return lda_settings
 
 
