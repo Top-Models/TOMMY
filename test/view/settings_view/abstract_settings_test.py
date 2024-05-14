@@ -1,6 +1,4 @@
 import pytest
-from PySide6.QtCore import QCoreApplication
-from PySide6.QtWidgets import QComboBox, QWidget
 
 from tommy.controller.controller import Controller
 from tommy.support.model_type import ModelType
