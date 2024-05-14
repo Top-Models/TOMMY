@@ -32,7 +32,8 @@ def test_get_current_settings_view_returns_correct_settings_view(
     settings_view = model_params_view.get_current_settings_view()
 
     # Assert
-    assert settings_view == model_params_view.SETTINGS_VIEWS[ModelType.LDA]
+    assert (settings_view ==
+            model_params_view.algorithm_specific_settings_views[ModelType.LDA])
 
 
 def test_apply_button_clicked_not_all_fields_valid_does(

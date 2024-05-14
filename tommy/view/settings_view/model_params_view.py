@@ -39,7 +39,8 @@ class ModelParamsView(QScrollArea):
             self._update_model_params)
 
         # Initialize model settings
-        self.SETTINGS_VIEWS: dict[ModelType, AbstractSettings] = {
+        self.algorithm_specific_settings_views: dict[
+            ModelType, AbstractSettings] = {
             ModelType.LDA: LdaSettings(self._model_parameters_controller)
         }
 
@@ -230,7 +231,7 @@ class ModelParamsView(QScrollArea):
         :return: AbstractSettings
         """
         current_model_type = self._model_parameters_controller.get_model_type()
-        return self.SETTINGS_VIEWS[current_model_type]
+        return self.algorithm_specific_settings_views[current_model_type]
 
     def apply_button_clicked_event(self) -> None:
         """
@@ -239,7 +240,8 @@ class ModelParamsView(QScrollArea):
         :return: None
         """
         current_model_type = self._model_parameters_controller.get_model_type()
-        current_view = self.SETTINGS_VIEWS[current_model_type]
+        current_view = self.algorithm_specific_settings_views[
+            current_model_type]
         if current_view.all_fields_valid():
             self._controller.on_run_topic_modelling()
 
@@ -253,8 +255,7 @@ class ModelParamsView(QScrollArea):
         self.initialize_parameter_widgets()
 
     def _update_model_params(self, data: ModelParametersModel):
-        # TODO: update the parameters in the text input fields
-        for settings_view in self.SETTINGS_VIEWS.values():
+        for settings_view in self.algorithm_specific_settings_views.values():
             settings_view.set_text_on_config_change(data)
 
 
