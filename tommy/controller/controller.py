@@ -15,7 +15,7 @@ from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.controller.save_controller import SaveController
-
+from tommy.controller.export_controller import ExportController
 
 class Controller:
     """The main controller for the tommy that creates all sub-controllers"""
@@ -56,7 +56,7 @@ class Controller:
     _project_settings_controller: ProjectSettingsController
     _save_controller: SaveController
 
-    _export_controller: ExportController  # Explicitly define _export_controller type
+    _export_controller: ExportController
     _language_controller: LanguageController
 
     @property
