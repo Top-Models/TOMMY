@@ -356,7 +356,7 @@ class AbstractSettings:
         language_layout = QHBoxLayout()
 
         # Add label
-        language_label = QLabel("Algoritme:")
+        language_label = QLabel("Taal corpus:")
         language_label.setStyleSheet(f"font-size: 16px;"
                                       f"color: black;"
                                       f"font-family: {text_font};")
@@ -379,8 +379,13 @@ class AbstractSettings:
         except RuntimeError:
             pass
 
-        current_language = (self._language_controller.get_language()).name
-        self._language_field.setCurrentText(current_language)
+        current_language = self._language_controller.get_language()
+        print(current_language)
+        match current_language:
+            case SupportedLanguage.Dutch:
+                self._language_field.setCurrentText("Nederlands")
+            case SupportedLanguage.English:
+                self._language_field.setCurrentText("Engels")
         self._language_field.setStyleSheet(self.enabled_input_stylesheet)
         language_layout.addWidget(self._language_field)
 
