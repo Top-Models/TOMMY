@@ -4,7 +4,9 @@ import subprocess
 if __name__ == "__main__":
     match sys.platform:
         case "darwin":
-            subprocess.run('./mac-installer.sh')
+            access_permissions = ['chmod', '+x', 'installer/mac-installer.sh']
+            subprocess.run(access_permissions)
+            subprocess.run('./installer/mac-installer.sh')
         case "win32":
             print("Windows is not supported!")
         case "linux":
