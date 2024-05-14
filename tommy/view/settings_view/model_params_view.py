@@ -133,13 +133,6 @@ class ModelParamsView(QScrollArea):
         Initialize the parameter widgets.
         """
         current_view = self.get_current_settings_view()
-
-        # If a scroll is already present, remove it for new parameters
-        if self.scroll_widget.layout() is not None:
-            old_layout = self.scroll_widget.layout()
-            while old_layout.count():
-                old_layout.takeAt(0).widget().deleteLater()
-
         current_view.initialize_parameter_widgets(self.scroll_layout)
         self.initialize_apply_button()
 
@@ -192,10 +185,14 @@ class ModelParamsView(QScrollArea):
                     background-color: {pressed_seco_col_blue};
                 }}
             """)
-        self.button_layout.addWidget(self.apply_button,
-                                     alignment=Qt.AlignBottom)
         self.apply_button.clicked.connect(self.apply_button_clicked_event)
-        self.scroll_layout.addLayout(self.button_layout, stretch=1)
+
+        if self.apply_button not in self.button_layout.children():
+            self.button_layout.addWidget(self.apply_button,
+                                         alignment=Qt.AlignBottom)
+
+        if self.button_layout not in self.scroll_layout.children():
+            self.scroll_layout.addLayout(self.button_layout, stretch=1)
 
     def get_current_settings_view(self) -> AbstractSettings:
         """
