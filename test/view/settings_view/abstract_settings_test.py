@@ -1,4 +1,6 @@
 import pytest
+from PySide6.QtCore import QCoreApplication
+from PySide6.QtWidgets import QComboBox, QWidget
 
 from tommy.controller.controller import Controller
 from tommy.support.model_type import ModelType
@@ -185,10 +187,6 @@ def test_initialize_language_field(abstract_settings: AbstractSettings,
     # Mock the languageController
     language_controller = mocker.MagicMock()
     abstract_settings._language_controller = language_controller
-
-    # Mock the selection field
-    language_field = mocker.MagicMock()
-    abstract_settings._language_field = language_field
 
     # Mock the scroll layout
     scroll_layout = mocker.MagicMock()
