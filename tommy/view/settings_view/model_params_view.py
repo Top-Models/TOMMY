@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QWidget,
 
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
+from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 from tommy.model.model_parameters_model import ModelParametersModel
@@ -24,11 +25,11 @@ class ModelParamsView(QScrollArea):
     """The ModelParamsDisplay that displays the model settings"""
 
     def __init__(self, model_parameters_controller: ModelParametersController,
+                 language_controller: LanguageController,
                  controller: Controller,
                  config_controller: ConfigController) -> None:
         """The initialization ot the ModelParamDisplay."""
         super().__init__()
-
         self.setObjectName("model_params_display")
         self.setContentsMargins(0, 0, 0, 0)
 
@@ -46,10 +47,15 @@ class ModelParamsView(QScrollArea):
         # Initialize model settings
         self.algorithm_specific_settings_views: dict[
             ModelType, AbstractSettings] = {
-            ModelType.LDA: LdaSettings(self._model_parameters_controller),
+            ModelType.LDA: LdaSettings(
+                self._model_parameters_controller,
+                language_controller),
             ModelType.BERTopic: BertSettings(
-                    self._model_parameters_controller),
-            ModelType.NMF: NmfSettings(self._model_parameters_controller)
+                self._model_parameters_controller,
+                language_controller),
+            ModelType.NMF: NmfSettings(
+                self._model_parameters_controller,
+                language_controller)
         }
 
         # Initialize widget properties

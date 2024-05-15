@@ -3,6 +3,7 @@ from tommy.model.model import Model
 
 from tommy.controller.file_import.processed_body import ProcessedBody
 from tommy.controller.file_import.processed_file import ProcessedFile
+from tommy.controller.file_import.metadata import Metadata
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 from tommy.controller.graph_controller import GraphController
@@ -17,7 +18,6 @@ from tommy.controller.save_controller import SaveController
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.export_controller import ExportController
 from tommy.controller.language_controller import LanguageController
-
 
 
 class Controller:
@@ -53,6 +53,10 @@ class Controller:
     @property
     def project_settings_controller(self) -> ProjectSettingsController:
         return self._project_settings_controller
+
+    @property
+    def language_controller(self) -> LanguageController:
+        return self._language_controller
 
     _project_settings_controller: ProjectSettingsController
     _save_controller: SaveController
@@ -138,6 +142,13 @@ class Controller:
 
         self._corpus_controller.set_model_refs(
             self._model.corpus_model)
+
+        self._project_settings_controller.set_model_refs(
+            self._model.project_settings_model)
+
+        self._language_controller.set_model_refs(
+            self._model.language_model
+        )
 
     def on_run_topic_modelling(self) -> None:
         """

@@ -2,12 +2,14 @@ from PySide6.QtGui import QIntValidator, Qt
 from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, \
     QVBoxLayout, QComboBox
 
+from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import text_font, seco_col_blue, \
     disabled_gray, heading_font
 from tommy.support.model_type import ModelType
+from tommy.support.supported_languages import SupportedLanguage
 
 
 class AbstractSettings:
@@ -18,7 +20,8 @@ class AbstractSettings:
     _scroll_layout: QVBoxLayout
 
     def __init__(self,
-                 model_parameters_controller: ModelParametersController):
+                 model_parameters_controller: ModelParametersController,
+                 language_controller: LanguageController):
         """
         Constructor for abstract settings
 
@@ -26,6 +29,7 @@ class AbstractSettings:
         """
         # Initialize controllers
         self._model_parameters_controller = model_parameters_controller
+        self._language_controller = language_controller
 
         # Initialize stylesheet
         self.enabled_input_stylesheet = (f"background-color: white;"
@@ -45,6 +49,7 @@ class AbstractSettings:
 
         # Initialize input fields
         self._algorithm_field = QComboBox()
+        self._language_field = QComboBox()
         self._topic_amount_field = QLineEdit()
         self._amount_of_words_field = QLineEdit()
 
@@ -65,6 +70,7 @@ class AbstractSettings:
         self.initialize_algorithm_field()
         self.initialize_topic_amount_field()
         self.initialize_amount_of_words_field()
+        self.initialize_language_field()
         self.add_margin(10)
 
     def all_fields_valid(self) -> bool:
@@ -339,9 +345,6 @@ class AbstractSettings:
         # Add algorithm layout to container layout
         self._scroll_layout.addLayout(algorithm_layout)
 
-        # Add algorithm layout to container layout
-        self._scroll_layout.addLayout(algorithm_layout)
-
     def algorithm_field_changed_event(self) -> None:
         """
         Event handler for when the algorithm field is changed
@@ -353,7 +356,68 @@ class AbstractSettings:
         self._model_parameters_controller.set_model_type(
                 model_type_enum)
 
+    def initialize_language_field(self) -> None:
+        """
+        Initialize the language field
 
+        :return: None
+        """
+        language_layout = QHBoxLayout()
+
+        # Add label
+        self._language_field = QComboBox()
+        language_label = QLabel("Taal corpus:")
+        language_label.setStyleSheet(f"font-size: 16px;"
+                                     f"color: black;"
+                                     f"font-family: {text_font};")
+        language_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                    Qt.AlignmentFlag.AlignVCenter)
+        language_layout.addWidget(language_label)
+
+        # Add input field
+        self._language_field.setFixedWidth(100)
+        self._language_field.addItem("Nederlands")
+        self._language_field.addItem("Engels")
+
+        # Try to disconnect the algorithm_field_changed_event method, otherwise
+        # endless recursion
+        try:
+            self._language_field.currentIndexChanged.disconnect(
+                self.language_field_changed_event)
+        # Upon first initialization this is not necessary and will result in
+        # an error
+        except RuntimeError:
+            pass
+
+        current_language = self._language_controller.get_language()
+        match current_language:
+            case SupportedLanguage.Dutch:
+                self._language_field.setCurrentText("Nederlands")
+            case SupportedLanguage.English:
+                self._language_field.setCurrentText("Engels")
+        self._language_field.setStyleSheet(self.enabled_input_stylesheet)
+        language_layout.addWidget(self._language_field)
+
+        # Reconnect the algorithm_field_changed_event method
+        self._language_field.currentIndexChanged.connect(
+            self.language_field_changed_event)
+
+        # Add algorithm layout to container layout
+        self._scroll_layout.addLayout(language_layout)
+
+    def language_field_changed_event(self) -> None:
+        """
+        Event handler for when the algorithm field is changed
+
+        :return: None
+        """
+        selected_model_type = self._language_field.currentText()
+        match selected_model_type:
+            case "Engels":
+                self._language_controller.set_language(
+                    SupportedLanguage.English)
+            case _:
+                self._language_controller.set_language(SupportedLanguage.Dutch)
 
 
 """
