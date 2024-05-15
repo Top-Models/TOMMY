@@ -153,6 +153,7 @@ class ModelParamsView(QScrollArea):
         self.initialize_config_button()
         current_view = self.get_current_settings_view()
         current_view.initialize_parameter_widgets(self.scroll_layout)
+        current_view.set_field_values_from_backend()
         self.initialize_apply_button()
 
     def clear_layouts_from_scroll_layout(self) -> None:
@@ -282,8 +283,8 @@ class ModelParamsView(QScrollArea):
         self.initialize_parameter_widgets()
 
     def _update_model_params(self, data: ModelParametersModel):
-        for settings_view in self.algorithm_specific_settings_views.values():
-            settings_view.set_text_on_config_change(data)
+        settings_view = self.algorithm_specific_settings_views[data.model_type]
+        settings_view.set_text_on_config_change()
 
 
 """
