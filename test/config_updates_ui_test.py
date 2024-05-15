@@ -66,19 +66,18 @@ def test_config_updates_lda_num_topics_textbox(
     # get reference to textbox for amount of topics
     lda_settings_view = model_params_view.algorithm_specific_settings_views[
         ModelType.LDA]
-    topic_amount_field = lda_settings_view._topic_amount_field
 
     num_topics = 6
 
     # add configuration "6 topics" and set topic amount to 6
     config_controller.add_configuration("6 topics")
-    topic_amount_field.setText(str(num_topics))
-    topic_amount_field.editingFinished.emit()
+    lda_settings_view._topic_amount_field.setText(str(num_topics))
+    lda_settings_view._topic_amount_field.editingFinished.emit()
 
     # add configuration "5 topics" and set topic amount to 5
     config_controller.add_configuration("5 topics")
-    topic_amount_field.setText(str(5))
-    topic_amount_field.editingFinished.emit()
+    lda_settings_view._topic_amount_field.setText(str(5))
+    lda_settings_view._topic_amount_field.editingFinished.emit()
 
     # switch to config "6 topics"
     config_controller.switch_configuration("6 topics")
@@ -93,19 +92,18 @@ def test_config_updates_lda_amount_of_words_textbox(
     # get reference to textbox for amount of words
     lda_settings_view = model_params_view.algorithm_specific_settings_views[
         ModelType.LDA]
-    amount_of_words_field = lda_settings_view._amount_of_words_field
 
     num_words = 6
 
     # add configuration "6 words" and set amount of words to 6
     config_controller.add_configuration("6 words")
-    amount_of_words_field.setText(str(num_words))
-    amount_of_words_field.editingFinished.emit()
+    lda_settings_view._amount_of_words_field.setText(str(num_words))
+    lda_settings_view._amount_of_words_field.editingFinished.emit()
 
     # add configuration "5 words" and set amount of words to 5
     config_controller.add_configuration("5 words")
-    amount_of_words_field.setText(str(5))
-    amount_of_words_field.editingFinished.emit()
+    lda_settings_view._amount_of_words_field.setText(str(5))
+    lda_settings_view._amount_of_words_field.editingFinished.emit()
 
     # switch to config "6 words"
     config_controller.switch_configuration("6 words")
@@ -122,26 +120,25 @@ def test_config_updates_lda_alpha_value_textbox(
     lda_settings_view: LdaSettings = (
         model_params_view.algorithm_specific_settings_views)[
         ModelType.LDA]
-    alpha_value_input = lda_settings_view._alpha_value_input
 
     alpha_value = 0.5
 
     # add configuration "0.5 alpha value" and set alpha value to 0.5
     config_controller.add_configuration("0.5 alpha value")
     lda_settings_view._auto_calc_alpha_beta_checkbox.setChecked(False)
-    alpha_value_input.setText(str(alpha_value))
-    alpha_value_input.editingFinished.emit()
+    lda_settings_view._alpha_value_input.setText(str(alpha_value))
+    lda_settings_view._alpha_value_input.editingFinished.emit()
 
     # add configuration "0.6 alpha value" and set alpha value to 0.6
     config_controller.add_configuration("0.6 alpha value")
-    alpha_value_input.setText(str(0.6))
-    alpha_value_input.editingFinished.emit()
+    lda_settings_view._alpha_value_input.setText(str(0.6))
+    lda_settings_view._alpha_value_input.editingFinished.emit()
 
     # switch to config "0.5 alpha value"
     config_controller.switch_configuration("0.5 alpha value")
 
     # assert that get_alpha_value returns 0.5
-    assert alpha_value_input.text() == str(alpha_value)
+    assert lda_settings_view._alpha_value_input.text() == str(alpha_value)
 
 
 def test_config_updates_lda_beta_value_textbox(
@@ -152,26 +149,25 @@ def test_config_updates_lda_beta_value_textbox(
     lda_settings_view: LdaSettings = (
         model_params_view.algorithm_specific_settings_views)[
         ModelType.LDA]
-    beta_value_input = lda_settings_view._beta_value_input
 
     beta_value = 0.5
 
     # add configuration "0.5 beta value" and set beta value to 0.5
     config_controller.add_configuration("0.5 beta value")
     lda_settings_view._auto_calc_alpha_beta_checkbox.setChecked(False)
-    beta_value_input.setText(str(beta_value))
-    beta_value_input.editingFinished.emit()
+    lda_settings_view._beta_value_input.setText(str(beta_value))
+    lda_settings_view._beta_value_input.editingFinished.emit()
 
     # add configuration "0.6 beta value" and set beta value to 0.6
     config_controller.add_configuration("0.6 beta value")
-    beta_value_input.setText(str(0.6))
-    beta_value_input.editingFinished.emit()
+    lda_settings_view._beta_value_input.setText(str(0.6))
+    lda_settings_view._beta_value_input.editingFinished.emit()
 
     # switch to config "0.5 beta value"
     config_controller.switch_configuration("0.5 beta value")
 
     # assert that get_beta_value returns 0.5
-    assert beta_value_input.text() == str(beta_value)
+    assert lda_settings_view._beta_value_input.text() == str(beta_value)
 
 
 def test_config_updates_lda_alpha_beta_checkbox(
@@ -182,27 +178,48 @@ def test_config_updates_lda_alpha_beta_checkbox(
     lda_settings_view: LdaSettings = (
         model_params_view.algorithm_specific_settings_views)[
         ModelType.LDA]
-    auto_calc_alpha_beta_checkbox = lda_settings_view._auto_calc_alpha_beta_checkbox
 
     # add configuration "auto calc alpha beta" and set checkbox to checked
     config_controller.add_configuration("auto calc alpha beta")
-    auto_calc_alpha_beta_checkbox.setChecked(True)
+    lda_settings_view._auto_calc_alpha_beta_checkbox.setChecked(True)
 
     # add configuration "manual alpha beta" and set checkbox to unchecked
     config_controller.add_configuration("manual alpha beta")
-    auto_calc_alpha_beta_checkbox.setChecked(False)
+    lda_settings_view._auto_calc_alpha_beta_checkbox.setChecked(False)
 
     # switch to config "auto calc alpha beta"
     config_controller.switch_configuration("auto calc alpha beta")
 
     # assert that auto_calc_alpha_beta_checkbox is checked
-    assert auto_calc_alpha_beta_checkbox.isChecked() is True
+    assert lda_settings_view._auto_calc_alpha_beta_checkbox.isChecked() is True
 
     # switch to config "manual alpha beta"
     config_controller.switch_configuration("manual alpha beta")
 
     # assert that auto_calc_alpha_beta_checkbox is unchecked
-    assert auto_calc_alpha_beta_checkbox.isChecked() is False
+    assert (lda_settings_view._auto_calc_alpha_beta_checkbox.isChecked() is
+            False)
+
+
+def test_config_updates_algorithm_dropdown(
+        model_params_view: ModelParamsView,
+        config_controller: ConfigController):
+    # add configuration "NMF" and set algorithm to "NMF"
+    config_controller.add_configuration("NMF")
+    settings_view = model_params_view.get_current_settings_view()
+    settings_view._algorithm_field.setCurrentText("NMF")
+
+    # add configuration "LDA" and set algorithm to "LDA"
+    config_controller.add_configuration("LDA")
+    settings_view = model_params_view.get_current_settings_view()
+    settings_view._algorithm_field.setCurrentText("LDA")
+
+    # switch to config "NMF"
+    config_controller.switch_configuration("NMF")
+    settings_view = model_params_view.get_current_settings_view()
+
+    # assert that algorithm_field is set to "NMF"
+    assert settings_view._algorithm_field.currentText() == "NMF"
 
 
 def test_config_updates_blacklist_textbox(
