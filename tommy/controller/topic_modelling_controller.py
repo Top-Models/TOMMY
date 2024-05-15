@@ -8,6 +8,7 @@ from tommy.model.topic_model import TopicModel
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
+from tommy.controller.topic_modelling_runners.nmf_runner import NmfRunner
 from tommy.support.event_handler import EventHandler
 
 
@@ -56,6 +57,8 @@ class TopicModellingController:
         match new_model_type:
             case ModelType.LDA:
                 self._train_lda()
+            case ModelType.NMF:
+                self._train_nmf()
             case _:
                 raise NotImplementedError(
                     f"model type {new_model_type.name} is not supported by "
@@ -88,6 +91,20 @@ class TopicModellingController:
             return
 
         self._topic_runner = LdaRunner(topic_model=self._topic_model,
+                                       docs=corpus,
+                                       num_topics=num_topics)
+
+    def _train_nmf(self) -> None:
+        """
+        Retrieves the corpus and model parameters,
+        then runs the NMF model on the corpus and saves the topic runner.
+        :return: None
+        """
+        corpus = [document.body.body
+                  for document
+                  in self._corpus_controller.get_processed_corpus()]
+        num_topics = self._model_parameters_controller.get_model_n_topics()
+        self._topic_runner = NmfRunner(topic_model=self._topic_model,
                                        docs=corpus,
                                        num_topics=num_topics)
 
