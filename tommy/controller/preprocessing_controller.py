@@ -58,25 +58,6 @@ class PreprocessingController:
         tokens = self.process_tokens(tokens)
         return tokens
 
-    # def process_text(self, text: str) -> list[str]:
-    #     """
-    #     Process the text to tokens.
-    #
-    #     :param text: The text to process.
-    #     :return:
-    #     """
-    #     tokens = set(text.lower().split())
-    #     remove_these = ["hebben", "heeft", "volgens", "wordt", "kunnen",
-    #                     "bekijk", "moeten", "worden", "omdat", "tegen",
-    #                     "onder", "zouden", "waarin", "andere", "waren",
-    #                     "komen", "alleen", "steeds", "tijdens",
-    #                     "pagina:", "oorspronkelijke", "zijn.",
-    #                     "bodegraven.", "werken", "maakt", "waarvan"]
-    #     for token in tokens.copy():
-    #         if len(token) <= 4 or token in remove_these:
-    #             tokens.remove(token)
-    #     return list(tokens)
-
     def process_tokens(self, doc: Doc) -> list[str]:
         """
         Processes the tokens given by the SpaCy pipeline.
