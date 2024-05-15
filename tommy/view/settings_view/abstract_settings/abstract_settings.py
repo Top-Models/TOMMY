@@ -325,6 +325,8 @@ class AbstractSettings:
         except RuntimeError:
             pass
 
+        current_model = self._model_parameters_controller.get_model_type().name
+        self._algorithm_field.setCurrentText(current_model)
         self._algorithm_field.setStyleSheet(self.enabled_input_stylesheet)
         algorithm_layout.addWidget(self._algorithm_field)
 
@@ -404,8 +406,8 @@ class AbstractSettings:
                 self._language_controller.set_language(SupportedLanguage.Dutch)
 
     def set_field_values_from_backend(self):
-        current_model = self._model_parameters_controller.get_model_type().name
-        self._algorithm_field.setCurrentText(current_model)
+        # the model type is already set before the event is connected
+
         self._topic_amount_field.setText(
             str(self._model_parameters_controller.get_model_n_topics()))
         self._amount_of_words_field.setText(
