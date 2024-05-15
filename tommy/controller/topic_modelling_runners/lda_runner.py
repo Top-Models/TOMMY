@@ -164,7 +164,6 @@ class LdaRunner(TopicRunner,
         coherence_model = CoherenceModel(model=new_model,
                                          corpus=self._bags_of_words,
                                          dictionary=self._dictionary,
-                                         texts=self.docs,
                                          coherence='u_mass')
         coherence = coherence_model.get_coherence()
         return coherence

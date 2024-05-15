@@ -19,6 +19,7 @@ from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
 from tommy.controller.visualizations.document_topic_network_summary_creator \
     import DocumentTopicNetworkSummaryCreator
+from tommy.controller.visualizations.k_value_creator import KValueCreator
 
 
 # Test data directory
@@ -114,4 +115,11 @@ def test_generate_word_topic_network(lda_runner):
 def test_generate_document_topic_network_summary(lda_runner, processed_files):
     doc_topic_summary = DocumentTopicNetworkSummaryCreator()
     figure = doc_topic_summary._create_figure(lda_runner, processed_files)
+    assert figure
+
+
+def test_generate_k_value_plot(lda_runner):
+    k_value_plot = KValueCreator()
+    figure = k_value_plot._create_figure(lda_runner)
+    figure.show()
     assert figure
