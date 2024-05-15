@@ -59,7 +59,7 @@ def processed_files():
 
 
 @pytest.fixture
-def lda_runner(lda_model, lda_model_dictionary, mocker):
+def lda_runner(lda_model, lda_model_dictionary, processed_files, mocker):
     topic_model = TopicModel()
 
     # Mock LdaRunner functions
@@ -70,6 +70,9 @@ def lda_runner(lda_model, lda_model_dictionary, mocker):
     lda_runner = LdaRunner(topic_model, [], 0, 0)
     lda_runner._model = lda_model
     lda_runner._dictionary = lda_model_dictionary
+    docs = [document.body.body for document in processed_files]
+    lda_runner._bags_of_words = [lda_model_dictionary.doc2bow(tokens)
+                                 for tokens in docs]
     return lda_runner
 
 
@@ -121,5 +124,4 @@ def test_generate_document_topic_network_summary(lda_runner, processed_files):
 def test_generate_k_value_plot(lda_runner):
     k_value_plot = KValueCreator()
     figure = k_value_plot._create_figure(lda_runner)
-    figure.show()
     assert figure
