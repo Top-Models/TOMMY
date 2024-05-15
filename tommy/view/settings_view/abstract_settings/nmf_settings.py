@@ -3,6 +3,7 @@ from PySide6.QtGui import QDoubleValidator
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QCheckBox, \
     QVBoxLayout
 
+from tommy.controller.language_controller import LanguageController
 from tommy.support.constant_variables import text_font, seco_col_blue
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
@@ -14,13 +15,14 @@ class NmfSettings(AbstractSettings):
     """
 
     def __init__(self,
-                 model_parameters_controller):
+                 model_parameters_controller, 
+                 language_controller: LanguageController):
         """
         Constructor for NMF settings
 
         :param model_parameters_controller: ModelParametersController
         """
-        super().__init__(model_parameters_controller)
+        super().__init__(model_parameters_controller, language_controller)
 
     def initialize_parameter_widgets(self,
                                      scroll_layout: QVBoxLayout) -> None:

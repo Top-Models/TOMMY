@@ -30,8 +30,8 @@ class PreprocessingController:
                     application_settings.preprocessing_data_folder
                     , "pipeline_download", "nl_core_news_sm-3.7.0")
                 nlp = spacy.load(pipeline_path,
-                                 exclude=["tagger", "attribute_ruler", "parser",
-                                          "senter"])
+                                 exclude=["tagger", "attribute_ruler",
+                                          "parser", "senter"])
             case SupportedLanguage.English:
                 self._enable_pos = False
                 pipeline_path = os.path.join(
@@ -86,7 +86,8 @@ class PreprocessingController:
         """
         # 2, 3, 4 - all steps that require token-level information
         lemmas = [token.lemma_ for token in doc if
-                  token.ent_type_ not in self._entity_categories and (
+                  token.ent_type_ not in self._entity_categories and
+                  not str.isspace(token.lemma_) and (
                           not self._enable_pos or
                           token.pos_ in self._pos_categories)]
 
