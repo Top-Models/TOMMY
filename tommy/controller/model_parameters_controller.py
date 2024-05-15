@@ -1,5 +1,6 @@
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.model_type import ModelType
+from tommy.support.event_handler import EventHandler
 
 
 class ModelParametersController:
@@ -8,6 +9,17 @@ class ModelParametersController:
     modelling
     """
     _parameters_model: ModelParametersModel = None
+    _algorithm_changed_event: EventHandler[None]
+
+    @property
+    def algorithm_changed_event(self) -> EventHandler[None]:
+        """The event that is triggered when the algorithm is changed"""
+        return self._algorithm_changed_event
+
+    def __init__(self) -> None:
+        """Initialize the model-parameters-controller and its publisher"""
+        super().__init__()
+        self._algorithm_changed_event = EventHandler[None]()
 
     def set_model_refs(self,
                        parameters_model: ModelParametersModel) -> None:
@@ -69,6 +81,7 @@ class ModelParametersController:
         :param model_type: the algorithm type to be run
         """
         self._parameters_model.model_type = model_type
+        self._algorithm_changed_event.publish(None)
 
     def get_model_type(self) -> ModelType:
         """Return the type of topic modelling algorithm to be run"""

@@ -1,6 +1,8 @@
 import pytest
 
 from tommy.controller.controller import Controller
+from tommy.support.model_type import ModelType
+from tommy.support.supported_languages import SupportedLanguage
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
 
@@ -9,7 +11,7 @@ from tommy.view.settings_view.abstract_settings.abstract_settings import \
 def abstract_settings() -> AbstractSettings:
     controller = Controller()
     abstract_settings = AbstractSettings(
-        controller.model_parameters_controller)
+        controller.model_parameters_controller, controller.language_controller)
     return abstract_settings
 
 
@@ -131,6 +133,91 @@ def test_get_amount_of_words(abstract_settings: AbstractSettings,
 
     # Assert
     assert result == expected
+
+
+def test_initialize_algorithm_field(abstract_settings: AbstractSettings,
+                                    mocker):
+    # Mock the ModelParametersController
+    model_parameters_controller = mocker.MagicMock()
+    abstract_settings._model_parameters_controller = (
+        model_parameters_controller)
+
+    # Mock the selection field
+    algorithm_field = mocker.MagicMock()
+    abstract_settings._algorithm_field = algorithm_field
+
+    # Mock the scroll layout
+    scroll_layout = mocker.MagicMock()
+    abstract_settings._scroll_layout = scroll_layout
+
+    # Set the return value of get_model_type
+    model_parameters_controller.get_model_type.return_value = ModelType.LDA
+
+    # Act
+    abstract_settings.initialize_algorithm_field()
+
+    # Check if the algorithm field is added to the scroll layout
+    scroll_layout.addLayout.assert_called()
+
+
+def test_algorithm_field_changed_event(abstract_settings: AbstractSettings,
+                                       mocker):
+    # Mock the ModelParametersController
+    model_parameters_controller = mocker.MagicMock()
+    abstract_settings._model_parameters_controller = (
+        model_parameters_controller)
+
+    # Mock the selction field
+    algorithm_field = mocker.MagicMock()
+    abstract_settings._algorithm_field = algorithm_field
+
+    # Change the model to nmf
+    algorithm_field.currentText.return_value = "NMF"
+    abstract_settings.algorithm_field_changed_event()
+
+    # Assert
+    model_parameters_controller.set_model_type.assert_called_with(
+        ModelType.NMF)
+
+
+def test_initialize_language_field(abstract_settings: AbstractSettings,
+                                   mocker):
+    # Mock the languageController
+    language_controller = mocker.MagicMock()
+    abstract_settings._language_controller = language_controller
+
+    # Mock the scroll layout
+    scroll_layout = mocker.MagicMock()
+    abstract_settings._scroll_layout = scroll_layout
+
+    # Set the return value of get_language
+    language_controller.get_language.return_value = SupportedLanguage.Dutch
+
+    # Act
+    abstract_settings.initialize_language_field()
+
+    # Check if the language field is added to the scroll layout
+    scroll_layout.addLayout.assert_called()
+
+
+def test_language_field_changed_event(abstract_settings: AbstractSettings,
+                                      mocker):
+    # Mock the LanguageController
+    language_controller = mocker.MagicMock()
+    abstract_settings._language_controller = (
+        language_controller)
+
+    # Mock the selction field
+    language_field = mocker.MagicMock()
+    abstract_settings._language_field = language_field
+
+    # Change the model to nmf
+    language_field.currentText.return_value = "Nederlands"
+    abstract_settings.language_field_changed_event()
+
+    # Assert
+    language_controller.set_language.assert_called_with(
+        SupportedLanguage.Dutch)
 
 
 """

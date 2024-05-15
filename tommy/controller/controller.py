@@ -1,4 +1,3 @@
-from tommy.controller.language_controller import LanguageController
 from tommy.model.model import Model
 
 from tommy.controller.file_import.processed_body import ProcessedBody
@@ -16,6 +15,7 @@ from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.controller.save_controller import SaveController
 from tommy.controller.export_controller import ExportController
+from tommy.controller.language_controller import LanguageController
 
 
 class Controller:
@@ -53,6 +53,10 @@ class Controller:
     @property
     def project_settings_controller(self) -> ProjectSettingsController:
         return self._project_settings_controller
+
+    @property
+    def language_controller(self) -> LanguageController:
+        return self._language_controller
 
     _project_settings_controller: ProjectSettingsController
     _save_controller: SaveController
@@ -121,9 +125,10 @@ class Controller:
 
         self._project_settings_controller.set_model_refs(
             self._models[model_index].project_settings_model)
-
+        
         self._language_controller.set_model_refs(
-            self._models[model_index].language_model)
+            self._models[model_index].language_model
+        )
 
     def on_run_topic_modelling(self) -> None:
         """

@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QWidget,
                                QPushButton)
 
 from tommy.controller.controller import Controller
+from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 from tommy.support.constant_variables import (
@@ -12,27 +13,37 @@ from tommy.support.model_type import ModelType
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
+from tommy.view.settings_view.abstract_settings.bert_settings import (
+    BertSettings)
+from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 
 
 class ModelParamsView(QScrollArea):
     """The ModelParamsDisplay that displays the model settings"""
 
     def __init__(self, model_parameters_controller: ModelParametersController,
+                 language_controller: LanguageController,
                  controller: Controller,
                  ) -> None:
         """The initialization ot the ModelParamDisplay."""
         super().__init__()
-
         self.setObjectName("model_params_display")
         self.setContentsMargins(0, 0, 0, 0)
 
         # Set reference to the model parameters controller
         self._model_parameters_controller = model_parameters_controller
+        self._model_parameters_controller.algorithm_changed_event.subscribe(
+            lambda _: self.model_type_changed_event())
         self._controller = controller
 
         # Initialize model settings
         self.SETTINGS_VIEWS = {
-            ModelType.LDA: LdaSettings(self._model_parameters_controller)
+            ModelType.LDA: LdaSettings(self._model_parameters_controller,
+                                       language_controller),
+            ModelType.BERTopic: BertSettings(
+                    self._model_parameters_controller, language_controller),
+            ModelType.NMF: NmfSettings(self._model_parameters_controller,
+                                       language_controller)
         }
 
         # Initialize widget properties
@@ -134,15 +145,24 @@ class ModelParamsView(QScrollArea):
 
         :return: None
         """
-        for i in reversed(range(self.scroll_layout.count())):
-            layout = self.scroll_layout.itemAt(i)
+        layout = self.scroll_layout
 
-            if layout is not None:
-                for j in reversed(range(layout.count())):
-                    widget = layout.itemAt(j).widget()
-                    if widget is not None:
-                        widget.deleteLater()
-                layout.deleteLater()
+        # While layout is not empty
+        while layout.count():
+            child = layout.takeAt(0)
+
+            # If there is a widget
+            if child.widget() is not None:
+                # Delete the widget
+                child.widget().deleteLater()
+
+            # If there is a layout
+            elif child.layout() is not None:
+                # Delete all widgets in the layout
+                while child.layout().count():
+                    sub_child = child.layout().takeAt(0)
+                    if sub_child.widget() is not None:
+                        sub_child.widget().deleteLater()
 
     def initialize_apply_button(self) -> None:
         """
@@ -168,10 +188,14 @@ class ModelParamsView(QScrollArea):
                     background-color: {pressed_seco_col_blue};
                 }}
             """)
-        self.button_layout.addWidget(self.apply_button,
-                                     alignment=Qt.AlignBottom)
         self.apply_button.clicked.connect(self.apply_button_clicked_event)
-        self.scroll_layout.addLayout(self.button_layout, stretch=1)
+
+        if self.apply_button not in self.button_layout.children():
+            self.button_layout.addWidget(self.apply_button,
+                                         alignment=Qt.AlignBottom)
+
+        if self.button_layout not in self.scroll_layout.children():
+            self.scroll_layout.addLayout(self.button_layout, stretch=1)
 
     def get_current_settings_view(self) -> AbstractSettings:
         """
