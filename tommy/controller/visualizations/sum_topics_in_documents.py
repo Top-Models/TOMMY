@@ -14,11 +14,11 @@ from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
 
 
-class DocumentsOverTimeCreator(AbstractVisualization):
+class SumTopicsInDocuments(AbstractVisualization):
 
     _required_interfaces = []
-    name = 'Documenten over tijd'
-    short_tab_name = 'Doc. over tijd'
+    name = 'Topics in documenten'
+    short_tab_name = 'Topics in doc.'
     vis_group = VisGroup.MODEL
     needed_input_data = [VisInputData.PROCESSED_CORPUS]
 
@@ -29,7 +29,7 @@ class DocumentsOverTimeCreator(AbstractVisualization):
                        ) -> matplotlib.figure.Figure:
 
         # Construct a plot and axes
-        figure, ax = plt.subplots()
+        fig, ax = plt.subplots()
 
         topic_sum = [0] * topic_runner.get_n_topics()
 
@@ -40,10 +40,8 @@ class DocumentsOverTimeCreator(AbstractVisualization):
             for (topic_id, probability) in document_topic:
                 topic_sum[topic_id] += probability
 
-        ax.plot(range(1, topic_runner.get_n_topics() + 1), topic_sum)
+        plt.bar(range(1, topic_runner.get_n_topics() + 1), topic_sum)
+        fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
 
-        return figure
-
-
-
+        return fig
 
