@@ -128,7 +128,7 @@ class StopwordsView(QScrollArea):
         :return: None
         """
         input_text = self.blacklist_tab.toPlainText()
-        blacklist = set([word.lower() for word in input_text.split()])
+        blacklist = input_text.split()
         self._stopwords_controller.update_stopwords(blacklist)
 
     def update_synonyms(self) -> None:
@@ -149,7 +149,7 @@ class StopwordsView(QScrollArea):
         input_text = self.ngrams_tab.toPlainText()
         # TODO: implement at a later point
 
-    def _update_blacklist_textbox(self, words: set[str]):
+    def _update_blacklist_textbox(self, words: list[str]):
         text = "\n".join(words)
         self.blacklist_tab.setText(text)
 

@@ -3,6 +3,7 @@ from pytestqt.qtbot import QtBot
 
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
+from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
 from tommy.controller.stopwords_controller import StopwordsController
@@ -29,14 +30,21 @@ def model_parameters_controller(controller: Controller) -> (
 
 
 @pytest.fixture
+def language_controller(controller: Controller) -> LanguageController:
+    return controller.language_controller
+
+
+@pytest.fixture
 def model_params_view(controller: Controller,
                       model_parameters_controller: ModelParametersController,
                       config_controller: ConfigController,
+                      language_controller: LanguageController,
                       qtbot: QtBot) -> ModelParamsView:
     controller = Controller()
     model_params_view = ModelParamsView(model_parameters_controller,
-                                        controller,
-                                        config_controller)
+                                        language_controller,
+                                        config_controller,
+                                        controller)
     qtbot.addWidget(model_params_view)
     return model_params_view
 
@@ -203,11 +211,11 @@ def test_config_updates_blacklist_textbox(
     # get reference to textbox for blacklist
     blacklist_tab = stopwords_view.blacklist_tab
 
+    test_words = "word5\nword1\nword2"
+
     # add configuration "blacklist" and set blacklist to "word1 word2"
     config_controller.add_configuration("blacklist")
-    # TODO: the order of the words in the blacklist is alphabetical after
-    #  switching configurations.
-    blacklist_tab.setText("word1\nword2")
+    blacklist_tab.setText(test_words)
 
     # add configuration "blacklist2" and set blacklist to "word3 word4"
     config_controller.add_configuration("blacklist2")
@@ -216,8 +224,8 @@ def test_config_updates_blacklist_textbox(
     # switch to config "blacklist"
     config_controller.switch_configuration("blacklist")
 
-    # assert that blacklist_tab text is "word1\nword2"
-    assert blacklist_tab.toPlainText() == "word1\nword2"
+    # assert that blacklist_tab text is test_words
+    assert blacklist_tab.toPlainText() == test_words
 
 # TODO: implement and then test the behaviour for the other tabs in the
 #  stopwords view

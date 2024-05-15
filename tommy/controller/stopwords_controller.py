@@ -11,10 +11,10 @@ class StopwordsController:
     """A class that handles all stopword related functionality."""
     _stopwords_model: StopwordsModel
     _language_controller: LanguageController
-    _stopwords_model_changed_event: EventHandler[set[str]] = EventHandler()
+    _stopwords_model_changed_event: EventHandler[list[str]] = EventHandler()
 
     @property
-    def stopwords_model_changed_event(self) -> EventHandler[set[str]]:
+    def stopwords_model_changed_event(self) -> EventHandler[list[str]]:
         """This event gets triggered when the stopwords model is changed due
         to the user switching config"""
         return self._stopwords_model_changed_event
@@ -39,7 +39,7 @@ class StopwordsController:
         frontend"""
         self._stopwords_model = stopwords_model
         self._stopwords_model_changed_event.publish(
-            stopwords_model.extra_words)
+            stopwords_model.extra_words_in_order)
 
     def load_default_stopwords(self, language: SupportedLanguage) -> None:
         """Load the default stopwords of the selected language"""
@@ -54,15 +54,15 @@ class StopwordsController:
         return os.path.join(application_settings.preprocessing_data_folder,
                             "stopwords", f"{language.name}.txt")
 
-    def update_stopwords(self, words: set[str]) -> None:
+    def update_stopwords(self, words: list[str]) -> None:
         """
         Update the stopwords model with a new list of extra stopwords.
 
         :param words: The new list of stopwords
         :return: None
         """
-
-        self._stopwords_model.replace(words)
+        word_set = set([word.lower() for word in words])
+        self._stopwords_model.replace(word_set, words)
 
 
 """
