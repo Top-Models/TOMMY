@@ -283,6 +283,7 @@ class ModelParamsView(QScrollArea):
         self.initialize_parameter_widgets()
 
     def _update_model_params(self, data: ModelParametersModel):
+        self.model_type_changed_event()
         settings_view = self.algorithm_specific_settings_views[data.model_type]
         settings_view.set_text_on_config_change()
 
