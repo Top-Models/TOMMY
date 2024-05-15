@@ -26,8 +26,8 @@ class ModelParamsView(QScrollArea):
 
     def __init__(self, model_parameters_controller: ModelParametersController,
                  language_controller: LanguageController,
-                 controller: Controller,
-                 config_controller: ConfigController) -> None:
+                 config_controller: ConfigController,
+                 controller: Controller) -> None:
         """The initialization ot the ModelParamDisplay."""
         super().__init__()
         self.setObjectName("model_params_display")
