@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, \
 from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
+from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import text_font, seco_col_blue, \
     disabled_gray, heading_font
 from tommy.support.model_type import ModelType
@@ -149,8 +150,6 @@ class AbstractSettings:
         # anything that isn't an integer
         self._topic_amount_field.setValidator(QIntValidator(1, 999))
         self._topic_amount_field.setPlaceholderText("Voer aantal topics in")
-        self._topic_amount_field.setText(
-            str(self._model_parameters_controller.get_model_n_topics()))
         self._topic_amount_field.setStyleSheet(self.topic_input_layout_valid)
         self._topic_amount_field.setAlignment(Qt.AlignmentFlag.AlignLeft)
         topic_amount_layout.addWidget(self._topic_amount_field)
@@ -230,7 +229,6 @@ class AbstractSettings:
         self._amount_of_words_field.setFixedWidth(100)
         self._amount_of_words_field.setPlaceholderText("Voer aantal "
                                                        "woorden in")
-        self._amount_of_words_field.setText("10")
         self._amount_of_words_field.setStyleSheet(
             self.enabled_input_stylesheet)
         self._amount_of_words_field.setAlignment(Qt.AlignmentFlag.AlignLeft)
@@ -290,6 +288,9 @@ class AbstractSettings:
             return int(text)
         return 0
 
+    def set_text_on_config_change(self):
+        self.set_field_values_from_backend()
+
     def initialize_algorithm_field(self) -> None:
         """
         Initialize the algorithm field
@@ -318,7 +319,7 @@ class AbstractSettings:
         # endless recursion
         try:
             self._algorithm_field.currentIndexChanged.disconnect(
-                    self.algorithm_field_changed_event)
+                self.algorithm_field_changed_event)
         # Upon first initialization this is not necessary and will result in
         # an error
         except RuntimeError:
@@ -331,7 +332,7 @@ class AbstractSettings:
 
         # Reconnect the algorithm_field_changed_event method
         self._algorithm_field.currentIndexChanged.connect(
-                self.algorithm_field_changed_event)
+            self.algorithm_field_changed_event)
 
         # Add algorithm layout to container layout
         self._scroll_layout.addLayout(algorithm_layout)
@@ -345,7 +346,7 @@ class AbstractSettings:
         selected_model_type = self._algorithm_field.currentText()
         model_type_enum = ModelType[selected_model_type]
         self._model_parameters_controller.set_model_type(
-                model_type_enum)
+            model_type_enum)
 
     def initialize_language_field(self) -> None:
         """
@@ -380,12 +381,6 @@ class AbstractSettings:
         except RuntimeError:
             pass
 
-        current_language = self._language_controller.get_language()
-        match current_language:
-            case SupportedLanguage.Dutch:
-                self._language_field.setCurrentText("Nederlands")
-            case SupportedLanguage.English:
-                self._language_field.setCurrentText("Engels")
         self._language_field.setStyleSheet(self.enabled_input_stylesheet)
         language_layout.addWidget(self._language_field)
 
@@ -409,6 +404,27 @@ class AbstractSettings:
                     SupportedLanguage.English)
             case _:
                 self._language_controller.set_language(SupportedLanguage.Dutch)
+
+    def set_field_values_from_backend(self):
+        """
+        Get the parameter values from the backend and put them in the
+        text boxes in the frontend. The dropdown for the model type has already
+        been set in initialize_algorithm_field. If it was set here,
+        it would trigger the algorithm_changed event and cause an infinite
+        recursion.
+        :return: None
+        """
+
+        self._topic_amount_field.setText(
+            str(self._model_parameters_controller.get_model_n_topics()))
+        self._amount_of_words_field.setText(
+            str(self._model_parameters_controller.get_model_word_amount()))
+        current_language = self._language_controller.get_language()
+        match current_language:
+            case SupportedLanguage.Dutch:
+                self._language_field.setCurrentText("Nederlands")
+            case SupportedLanguage.English:
+                self._language_field.setCurrentText("Engels")
 
 
 """
