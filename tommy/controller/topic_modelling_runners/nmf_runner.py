@@ -1,10 +1,15 @@
+import numpy as np
+
 from collections.abc import Iterable
+from numpy import ndarray
 
 from gensim.corpora.dictionary import Dictionary
 from gensim.models.nmf import Nmf
 
 from tommy.model.topic_model import TopicModel
 from tommy.datatypes.topics import Topic, TopicWithScores
+from tommy.controller.result_interfaces.correlation_matrix_interface import (
+    CorrelationMatrixInterface)
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
 
@@ -15,7 +20,8 @@ STANDARD_RANDOM_SEED = 42
 
 
 class NmfRunner(TopicRunner,
-                DocumentTopicsInterface):
+                DocumentTopicsInterface,
+                CorrelationMatrixInterface):
     """GensimNMF class for topic modeling using NMF with Gensim."""
     _num_topics: int
     _random_seed: int
@@ -98,6 +104,43 @@ class NmfRunner(TopicRunner,
         return self._model.get_document_topics(bag_of_words,
                                                minimum_probability=
                                                minimum_probability)
+
+    def get_correlation_matrix(self, **kwargs) -> ndarray:
+        """
+        Calculate the topic correlation matrix.
+
+        :return: ndarray representing the correlation matrix of topics.
+        """
+        topic_word_distribution = self._model.get_topics()
+
+        # Binarize the topic-word distribution based on a set treshhold 0.01
+        # i.e. see if a word is related enough to a topic
+        binary_topic_distribution = (topic_word_distribution >
+                                     0.01).astype(int)
+
+        num_topics = binary_topic_distribution.shape[0]
+        dice_matrix = np.zeros((num_topics, num_topics))
+
+        # Compute the Dice-Sørensen coefficient for each pair of topics
+        for i in range(num_topics):
+            for j in range(num_topics):
+                # Check if intersection is 1 or 0
+                intersection = np.sum(
+                    binary_topic_distribution[i] *
+                    binary_topic_distribution[j])
+
+                sum_i = np.sum(binary_topic_distribution[i])
+                sum_j = np.sum(binary_topic_distribution[j])
+
+                # Fill in the formula
+                if sum_i + sum_j > 0:
+                    dice_matrix[i, j] = 2 * intersection / (
+                                sum_i + sum_j)
+                # Deviding by zero is impossible, so make it 0
+                else:
+                    dice_matrix[i, j] = 0.0
+
+        return dice_matrix
 
 
 """
