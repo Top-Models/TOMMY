@@ -1,13 +1,10 @@
 from collections.abc import Iterable
 
-from numpy import ndarray
 from gensim.corpora.dictionary import Dictionary
 from gensim.models.nmf import Nmf
 
 from tommy.model.topic_model import TopicModel
 from tommy.datatypes.topics import Topic, TopicWithScores
-from tommy.controller.result_interfaces.correlation_matrix_interface import (
-    CorrelationMatrixInterface)
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
 
@@ -17,7 +14,7 @@ from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
 STANDARD_RANDOM_SEED = 42
 
 
-class NMFRunner(TopicRunner,
+class NmfRunner(TopicRunner,
                 DocumentTopicsInterface):
     """GensimNMF class for topic modeling using NMF with Gensim."""
     _num_topics: int
@@ -40,13 +37,13 @@ class NMFRunner(TopicRunner,
 
     @_model.setter
     def _model(self, new_model: Nmf) -> None:
-        """Set the LDA model than is being run in the topic model"""
+        """Set the NMF model than is being run in the topic model"""
         self._topic_model.model['model'] = new_model
 
     def __init__(self, topic_model: TopicModel, docs: Iterable[list[str]],
                  num_topics: int, random_seed=STANDARD_RANDOM_SEED) -> None:
         """
-        Initialize the GensimLdaModel.
+        Initialize the GensimNmfModel.
         :param topic_model: Reference to the topic model where the algorithm
             and data should be saved.
         :param docs: Generator returning the preprocessed lists of words as
@@ -66,13 +63,12 @@ class NMFRunner(TopicRunner,
 
     def train_model(self, docs: Iterable[list[str]]) -> None:
         """
-        Train the LDA model on the given documents and save the resulting model
+        Train the NMF model on the given documents and save the resulting model
         and dictionary in the topic model ready to return results.
         :param docs: Generator returning the preprocessed lists of words as
             training input
         :return: None
         """
-
         self._dictionary = Dictionary(docs)
         bags_of_words = [self._dictionary.doc2bow(tokens)
                          for tokens in docs]
@@ -91,15 +87,6 @@ class NMFRunner(TopicRunner,
         return TopicWithScores(topic_id, words_with_scores)
 
     def get_topics_with_scores(self, n_words) -> list[TopicWithScores]:
-        # Underlying library in gensim has a bug where it crashes when
-        # n_words is 0. This is a workaround.
-        if n_words == 0:
-            return [TopicWithScores(topic_id, [])
-                    for (topic_id, _)
-                    in
-                    self._model.show_topics(formatted=False,
-                                            num_words=1,
-                                            num_topics=self._num_topics)]
         return [TopicWithScores(topic_id, words_with_scores)
                 for (topic_id, words_with_scores)
                 in self._model.show_topics(formatted=False,
