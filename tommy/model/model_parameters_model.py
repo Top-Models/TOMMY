@@ -46,21 +46,30 @@ class ModelParametersModel:
         """
         return {
             "n_topics": self.n_topics,
-            "model_type": self.model_type.value
+            "model_type": ModelType.to_string(self.model_type),
+            "word_amount": self.word_amount,
+            "alpha": self.alpha,
+            "beta": self.beta,
+            "alpha_beta_custom_enabled": self.alpha_beta_custom_enabled
         }
 
     @classmethod
-    def from_dict(cls, model_parameters_dict):
+    def from_dict(cls, model_parameters_dict: dict) -> ModelParametersModel:
         """
         Create a ModelParametersModel instance from a dictionary representation.
         :param model_parameters_dict: Dictionary representation of the model parameters
         :return: ModelParametersModel instance
         """
-        n_topics = model_parameters_dict.get("n_topics", 3)
-        model_type_value = model_parameters_dict.get("model_type",
-                                                     ModelType.LDA.value)
-        model_type = ModelType(model_type_value)
-        return cls(n_topics=n_topics, model_type=model_type)
+        model = cls()
+        model.n_topics = model_parameters_dict["n_topics"]
+        model.model_type = ModelType.from_string(
+            model_parameters_dict["model_type"])
+        model.word_amount = model_parameters_dict["word_amount"]
+        model.alpha = model_parameters_dict["alpha"]
+        model.beta = model_parameters_dict["beta"]
+        model.alpha_beta_custom_enabled = model_parameters_dict[
+            "alpha_beta_custom_enabled"]
+        return model
 
 
 """

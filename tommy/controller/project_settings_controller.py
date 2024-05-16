@@ -4,7 +4,6 @@ from typing import Dict
 
 from PySide6.QtWidgets import QMessageBox
 
-from tommy.controller.publisher.publisher import Publisher
 from tommy.model.config_model import ConfigModel
 from tommy.support.event_handler import EventHandler
 from tommy.model.project_settings_model import ProjectSettingsModel
@@ -22,91 +21,56 @@ class ProjectSettingsController:
     def input_folder_path_changed_event(self) -> EventHandler[str]:
         return self._input_folder_path_changed_event
 
-    def add_configuration(self, name: str, config: ConfigModel) -> None:
-        """
-        Add a new configuration to the project settings model.
-        :param name: Name of the configuration
-        :param config: Configuration settings
-        """
-        # Add the configuration to the project settings model
-        self._project_settings_model.configs.append(config)
-        # Notify observers of the change
-        self.notify()
+    # def save_settings_to_file(self) -> None:
+    #     """
+    #     Save the project settings to a new file in the 'settings' folder as 'ProjectSettings.json'.
+    #     :return: None
+    #     """
+    # settings_data = {
+    #     "input_folder_path": os.path.relpath(
+    #         self._project_settings_model.input_folder_path,
+    #         os.path.dirname(__file__)),
+    #     "configs": [config.to_dict() for config in
+    #                 self._project_settings_model.configs]
+    # }
+    # settings_folder_path = os.path.join(os.path.dirname(__file__), "..",
+    #                                     "settings")
+    # os.makedirs(settings_folder_path,
+    #             exist_ok=True)  # Create the 'settings' folder if it doesn't exist
+    # file_path = os.path.join(settings_folder_path, "ProjectSettings.json")
+    # with open(file_path, "w") as file:
+    #     json.dump(settings_data, file, indent=4)
+    # QMessageBox.information(None, "Success",
+    #                         "Settings saved successfully.")
 
-    def delete_configuration(self, name: str, config: ConfigModel) -> None:
-        """
-        delete a configuration to the project settings model.
-        :param name: Name of the configuration
-        :param config: Configuration settings
-        """
-        # Add the configuration to the project settings model
-        self._project_settings_model.configs.remove(config)
-        # Notify observers of the change
-        self.notify()
-
-    def get_configurations(self) -> Dict[str, ConfigModel]:
-        """
-        Get all configurations from the project settings model.
-        :return: A dictionary of configurations
-        """
-        return {config.name: config for config in
-                self._project_settings_model.configs}
-
-    def get_configuration(self, name: str) -> ConfigModel:
-        """
-        Get a configuration by name from the project settings model.
-        :param name: Name of the configuration to retrieve
-        :return: The configuration model
-        """
-        for config in self._project_settings_model.configs:
-            if config.name == name:
-                return config
-        return None
-
-    def save_settings_to_file(self) -> None:
-        """
-        Save the project settings to a new file in the 'settings' folder as 'ProjectSettings.json'.
-        :return: None
-        """
-        settings_data = {
-            "input_folder_path": os.path.relpath(
-                self._project_settings_model.input_folder_path,
-                os.path.dirname(__file__)),
-            "configs": [config.to_dict() for config in
-                        self._project_settings_model.configs]
-        }
-        settings_folder_path = os.path.join(os.path.dirname(__file__), "..", "settings")
-        os.makedirs(settings_folder_path, exist_ok=True)  # Create the 'settings' folder if it doesn't exist
-        file_path = os.path.join(settings_folder_path, "ProjectSettings.json")
-        with open(file_path, "w") as file:
-            json.dump(settings_data, file, indent=4)
-        QMessageBox.information(None, "Success", "Settings saved successfully.")
-
-    def load_settings_from_file(self) -> None:
-        """
-        Load the project settings from a file.
-        :return: None
-        """
-        settings_folder_path = os.path.join(os.path.dirname(__file__), "..", "settings")
-        file_path = os.path.join(settings_folder_path, "ProjectSettings.json")
-        if os.path.exists(file_path):
-            with open(file_path, "r") as file:
-                settings_data = json.load(file)
-                input_folder_path = settings_data.get("input_folder_path")
-                if input_folder_path:
-                    self._project_settings_model.input_folder_path = os.path.join(
-                        os.path.dirname(__file__), "..", "data", input_folder_path)
-                configs_data = settings_data.get("configs")
-                if configs_data:
-                    self._project_settings_model.configs.clear()
-                    for config_dict in configs_data:
-                        config = ConfigModel(config_dict["name"])
-                        config = ConfigModel.from_dict(config_dict)
-                        self._project_settings_model.configs.append(config)
-            self.notify()
-            QMessageBox.information(None, "Success", "Settings loaded successfully.")
-        else:
-            QMessageBox.warning(None, "Error", "Failed to load settings.")
+    # def load_settings_from_file(self) -> None:
+    #     """
+    #     Load the project settings from a file.
+    #     :return: None
+    #     """
+    # settings_folder_path = os.path.join(os.path.dirname(__file__), "..",
+    #                                     "settings")
+    # file_path = os.path.join(settings_folder_path, "ProjectSettings.json")
+    # if os.path.exists(file_path):
+    #     with open(file_path, "r") as file:
+    #         settings_data = json.load(file)
+    #         input_folder_path = settings_data.get("input_folder_path")
+    #         if input_folder_path:
+    #             self._project_settings_model.input_folder_path = os.path.join(
+    #                 os.path.dirname(__file__), "..", "data",
+    #                 input_folder_path)
+    #         configs_data = settings_data.get("configs")
+    #         if configs_data:
+    #             self._project_settings_model.configs.clear()
+    #             for config_dict in configs_data:
+    #                 config = ConfigModel(config_dict["name"])
+    #                 config = ConfigModel.from_dict(config_dict)
+    #                 self._project_settings_model.configs.append(config)
+    #     self.notify()
+    #     QMessageBox.information(None, "Success",
+    #                             "Settings loaded successfully.")
+    # else:
+    #     QMessageBox.warning(None, "Error", "Failed to load settings.")
 
     def __init__(self) -> None:
         """

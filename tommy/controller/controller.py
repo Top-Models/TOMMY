@@ -1,3 +1,4 @@
+from tommy.controller.saving_loading_controller import SavingLoadingController
 from tommy.model.config_model import ConfigModel
 from tommy.model.model import Model
 
@@ -59,7 +60,7 @@ class Controller:
         return self._language_controller
 
     _project_settings_controller: ProjectSettingsController
-    _save_controller: SaveController
+    _saving_loading_controller: SavingLoadingController
 
     _export_controller: ExportController
     _language_controller: LanguageController
@@ -71,6 +72,10 @@ class Controller:
     @property
     def config_controller(self) -> ConfigController:
         return self._config_controller
+
+    @property
+    def saving_loading_controller(self):
+        return self._saving_loading_controller
 
     def __init__(self) -> None:
         """Initialize the main controller and its sub-controllers."""
@@ -92,7 +97,7 @@ class Controller:
             self._language_controller)
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
-        self._save_controller = SaveController()
+        self._saving_loading_controller = SavingLoadingController()
         self._config_controller = ConfigController()
         self._export_controller = ExportController()
 

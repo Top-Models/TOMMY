@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 from tommy.model.config_model import ConfigModel
 from tommy.model.corpus_model import CorpusModel
 from tommy.model.language_model import LanguageModel
 from tommy.model.project_settings_model import ProjectSettingsModel
+from tommy.support.supported_languages import SupportedLanguage
 
 
 class Model:
@@ -45,6 +48,33 @@ class Model:
         :return: The newly created config model
         """
         return ConfigModel(self.config_model)
+
+    def to_dict(self) -> dict:
+        config_data = {}
+        for name, config in self.configs.items():
+            config_data[name] = config.to_dict()
+        return {
+            "input_folder_path": self.project_settings_model.input_folder_path,
+            "language": SupportedLanguage.to_string(
+                self.language_model.selectedLanguage),
+            "configs": config_data,
+            "selected_config": self.selected_config_name
+        }
+
+    @classmethod
+    def from_dict(cls, model_dict: dict) -> Model:
+        model = cls()
+        model.project_settings_model.input_folder_path = model_dict[
+            "input_folder_path"]
+        model.language_model.selectedLanguage = model_dict["language"]
+        configs_data = model_dict["configs"]
+        if configs_data:
+            model.configs.clear()
+            for name, config_dict in configs_data.items():
+                config = ConfigModel.from_dict(config_dict)
+                model.configs[name] = config
+        model.selected_config_name = model_dict["selected_config"]
+        return model
 
 
 """

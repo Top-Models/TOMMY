@@ -29,30 +29,28 @@ class ConfigModel:
                 derive_from.corpus_model
             )
 
-
     def to_dict(self):
         """
         Convert the configuration object to a dictionary.
         :return: Dictionary representation of the configuration
         """
         return {
-            "name": self.name,
-            "model_parameters": self.model_parameters.to_dict()
+            "stopwords": self.stopwords_model.to_dict(),
+            "model_parameters": self.model_parameters_model.to_dict()
         }
 
     @classmethod
-    def from_dict(cls, config_dict):
+    def from_dict(cls, config_dict) -> ConfigModel:
         """
         Create a ConfigModel instance from a dictionary representation.
         :param config_dict: Dictionary representation of the configuration
         :return: ConfigModel instance
         """
-        name = config_dict.get("name")
-        model_parameters_dict = config_dict.get("model_parameters")
-        config = cls(name)
-        if model_parameters_dict:
-            config.model_parameters = ModelParametersModel.from_dict(
-                model_parameters_dict)
+        config = cls()
+        config.stopwords_model = StopwordsModel.from_dict(
+            config_dict["stopwords"])
+        config.model_parameters_model = ModelParametersModel.from_dict(
+            config_dict["model_parameters"])
         return config
 
 

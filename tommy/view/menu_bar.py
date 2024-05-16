@@ -1,11 +1,12 @@
 import os
 
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QMenuBar, QMenu, QWidget, QFileDialog
+from PySide6.QtWidgets import QMenuBar, QWidget, QFileDialog
 
 from tommy.controller.export_controller import ExportController
-from tommy.controller.project_settings_controller import (
-    ProjectSettingsController)
+from tommy.controller.project_settings_controller import \
+    ProjectSettingsController
+from tommy.controller.saving_loading_controller import SavingLoadingController
 from tommy.support.constant_variables import (
     prim_col_red, dark_prim_col_red, extra_light_gray, text_font)
 
@@ -16,6 +17,7 @@ class MenuBar(QMenuBar):
     def __init__(self,
                  parent: QWidget,
                  project_settings_controller: ProjectSettingsController,
+                 saving_loading_controller: SavingLoadingController,
                  export_controller: ExportController
                  ) -> None:
         """Initialize the menu bar."""
@@ -23,12 +25,14 @@ class MenuBar(QMenuBar):
 
         # Set reference to project settings controller for input folder button
         self._project_settings_controller = project_settings_controller
+        self._saving_loading_controller = saving_loading_controller
 
         self._export_controller = export_controller
 
         # Create actions
         import_input_folder_action = QAction("Selecteer input folder", self)
-        export_to_gexf_action = QAction("Exporteer naar Graph Exchange XML Format (.gexf)", self)
+        export_to_gexf_action = QAction(
+            "Exporteer naar Graph Exchange XML Format (.gexf)", self)
         export_to_png_action = QAction("Exporteer grafieken (.png)", self)
         export_topic_words_action = QAction("Exporteer Topicdata (.csv)", self)
         save_settings_action = QAction("Instellingen opslaan", self)
@@ -40,7 +44,8 @@ class MenuBar(QMenuBar):
         export_to_png_action.triggered.connect(self.export_to_png)
         export_topic_words_action.triggered.connect(self.export_topic_words)
         save_settings_action.triggered.connect(self.save_settings_to_file)
-        load_settings_action.triggered.connect(self.load_settings_from_file)  # Connect to new method
+        load_settings_action.triggered.connect(
+            self.load_settings_from_file)  # Connect to new method
 
         # Create menu bar
         file_menu = self.addMenu("Bestand")
@@ -135,14 +140,15 @@ class MenuBar(QMenuBar):
         Save project settings to a file.
         :return: None
         """
-        self._project_settings_controller.save_settings_to_file()
+        self._saving_loading_controller.save_settings_to_file()
 
     def load_settings_from_file(self) -> None:
         """
         Load project settings from a file.
         :return: None
         """
-        self._project_settings_controller.load_settings_from_file()
+        self._saving_loading_controller.load_settings_from_file()
+
 
 """
 This program has been developed by students from the bachelor Computer Science
