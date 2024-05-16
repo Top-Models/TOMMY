@@ -116,7 +116,7 @@ class NmfRunner(TopicRunner,
         # Binarize the topic-word distribution based on a set treshhold 0.01
         # i.e. see if a word is related enough to a topic
         binary_topic_distribution = (topic_word_distribution >
-                                     0.01).astype(int)
+                                     0.005).astype(int)
 
         num_topics = binary_topic_distribution.shape[0]
         dice_matrix = np.zeros((num_topics, num_topics))
