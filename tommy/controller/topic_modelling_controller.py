@@ -131,10 +131,10 @@ class TopicModellingController:
                   in self._corpus_controller.get_processed_corpus()]
         num_topics = self._model_parameters_controller.get_model_n_topics()
 
-        self._config_model.topic_runner = NmfRunner(topic_model=self._topic_model,
-                                       docs=corpus,
-                                       num_topics=num_topics)
-
+        self._config_model.topic_runner = NmfRunner(
+                topic_model=self._topic_model,
+                docs=corpus,
+                num_topics=num_topics)
 
 
 """        
