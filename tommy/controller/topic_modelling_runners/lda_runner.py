@@ -32,32 +32,32 @@ class LdaRunner(TopicRunner,
     @property
     def _dictionary(self) -> Dictionary:
         """get the term_ids-to-terms dictionary saved in the topic model"""
-        return self._topic_model.model['dictionary']
+        return self._topic_model.dictionary
 
     @_dictionary.setter
     def _dictionary(self, new_dictionary: Dictionary) -> None:
         """Takes and sets the term_ids-to-terms dictionary"""
-        self._topic_model.model['dictionary'] = new_dictionary
+        self._topic_model.dictionary = new_dictionary
 
     @property
     def _model(self) -> LdaModel:
         """Get the model than is being run from the topic model"""
-        return self._topic_model.model['model']
+        return self._topic_model.model
 
     @_model.setter
     def _model(self, new_model: LdaModel) -> None:
         """Set the LDA model than is being run in the topic model"""
-        self._topic_model.model['model'] = new_model
+        self._topic_model.model = new_model
 
     @property
     def _bags_of_words(self) -> list[list[tuple[int, int]]]:
         """Get the bags of words for the topic model"""
-        return self._topic_model.model['corpus']
+        return self._topic_model.corpus
 
     @_bags_of_words.setter
     def _bags_of_words(self, bag: list[list[tuple[int, int]]]) -> None:
         """Set the bags of words"""
-        self._topic_model.model['corpus'] = bag
+        self._topic_model.corpus = bag
 
     def __init__(self,
                  topic_model: TopicModel,
@@ -80,7 +80,6 @@ class LdaRunner(TopicRunner,
 
         # clear location where model and dictionary will be stored
         self.docs = docs
-        self._topic_model.model = {}
 
         self._num_topics = num_topics
         self._alpha = alpha

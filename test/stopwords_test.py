@@ -91,6 +91,7 @@ def test_stopwords_add_single_word(stopwords, request):
     stopword_list.add("hoimam")
     assert "hoimam" in stopword_list
     assert len(stopword_list) == n + 1
+    assert stopword_list.extra_words == set(stopword_list.extra_words_in_order)
 
 
 @pytest.mark.parametrize("stopwords", ["dutch_stopwords", "english_stopwords"])
@@ -105,6 +106,7 @@ def test_stopwords_add_multiple_words(stopwords, request):
     assert "hoipap" in stopword_list
     assert "hoibroer" in stopword_list
     assert len(stopword_list) == n + 3
+    assert stopword_list.extra_words == set(stopword_list.extra_words_in_order)
 
 
 @pytest.mark.parametrize("stopwords", ["dutch_stopwords", "english_stopwords"])
@@ -119,6 +121,7 @@ def test_stopwords_add_list(stopwords, request):
     assert "hoipap" in stopword_list
     assert "hoibroer" in stopword_list
     assert len(stopword_list) == n + 3
+    assert stopword_list.extra_words == set(stopword_list.extra_words_in_order)
 
 
 @pytest.mark.parametrize("stopwords", ["dutch_stopwords", "english_stopwords"])
@@ -131,9 +134,11 @@ def test_stopwords_remove_single_word(stopwords, request):
     stopword_list.add("test")
     assert "test" in stopword_list
     assert len(stopword_list) == n + 1
+    assert stopword_list.extra_words == set(stopword_list.extra_words_in_order)
     stopword_list.remove("test")
     assert "test" not in stopword_list
     assert len(stopword_list) == n
+    assert stopword_list.extra_words == set(stopword_list.extra_words_in_order)
 
 
 @pytest.mark.parametrize("stopwords", ["dutch_stopwords", "english_stopwords"])
@@ -147,11 +152,14 @@ def test_stopwords_remove_multiple_words(stopwords, request):
     assert "hoimam" in stopword_list
     assert "hoipap" in stopword_list
     assert "hoibroer" in stopword_list
+    assert len(stopword_list) == n + 3
+    assert stopword_list.extra_words == set(stopword_list.extra_words_in_order)
     stopword_list.remove("hoimam", "hoipap", "hoibroer")
     assert "hoimam" not in stopword_list
     assert "hoipap" not in stopword_list
     assert "hoibroer" not in stopword_list
     assert len(stopword_list) == n
+    assert stopword_list.extra_words == set(stopword_list.extra_words_in_order)
 
 
 @pytest.mark.parametrize("stopwords", ["dutch_stopwords", "english_stopwords"])
@@ -160,15 +168,18 @@ def test_stopwords_remove_list(stopwords, request):
     Test removing a list of words from stop words.
     """
     stopword_list = request.getfixturevalue(stopwords)
+    print(type(stopword_list))
     n = len(stopword_list)
     stopword_list.add(["hoimam", "hoipap", "hoibroer"])
     assert "hoimam" in stopword_list
     assert "hoipap" in stopword_list
     assert "hoibroer" in stopword_list
+    assert stopword_list.extra_words == set(stopword_list.extra_words_in_order)
     stopword_list.remove(["hoimam", "hoipap", "hoibroer"])
     assert "hoimam" not in stopword_list
     assert "hoipap" not in stopword_list
     assert "hoibroer" not in stopword_list
+    assert stopword_list.extra_words == set(stopword_list.extra_words_in_order)
     assert len(stopword_list) == n
 
 
@@ -184,7 +195,7 @@ def test_stopwords_replace(stopwords, request):
 
     # New stopwords to replace the existing ones
     new_stopwords = ["new1", "new2", "new3"]
-    stopword_list.replace(*new_stopwords)
+    stopword_list.replace(set(new_stopwords), new_stopwords)
 
     # Check if old extra stopwords are removed
     for word in initial_extra_stopwords:
@@ -193,6 +204,9 @@ def test_stopwords_replace(stopwords, request):
     # Check if new stopwords are added
     for word in new_stopwords:
         assert word in stopword_list
+
+    # Check if extra words set contains same words as extra words in order list
+    assert stopword_list.extra_words == set(stopword_list.extra_words_in_order)
 
 
 # def test_stopwords_add_invalid_argument_type(stopwords):
