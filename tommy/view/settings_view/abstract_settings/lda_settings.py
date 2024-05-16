@@ -308,7 +308,12 @@ class LdaSettings(AbstractSettings):
         self._alpha_value_input.setReadOnly(auto_calculate)
         self._beta_value_input.setReadOnly(auto_calculate)
 
-    def set_field_values_from_backend(self):
+    def set_field_values_from_backend(self) -> None:
+        """
+        Get the parameter values from the backend and put them in the
+        text boxes in the frontend
+        :return: None
+        """
         super().set_field_values_from_backend()
         auto_calculate = not (self._model_parameters_controller
                               .get_model_alpha_beta_custom_enabled())
@@ -317,15 +322,6 @@ class LdaSettings(AbstractSettings):
             self._model_parameters_controller.get_model_beta(),
             auto_calculate)
         self._auto_calc_alpha_beta_checkbox.setChecked(auto_calculate)
-
-    # def set_text_on_config_change(self):
-    #     super().set_text_on_config_change()
-    #     auto_calculate = not model_parameters_model.alpha_beta_custom_enabled
-    #     self._change_text_of_alpha_beta_fields(
-    #         model_parameters_model.alpha,
-    #         model_parameters_model.beta,
-    #         auto_calculate)
-    #     self._auto_calc_alpha_beta_checkbox.setChecked(auto_calculate)
 
 
 """

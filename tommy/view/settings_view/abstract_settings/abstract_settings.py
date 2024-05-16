@@ -406,9 +406,14 @@ class AbstractSettings:
                 self._language_controller.set_language(SupportedLanguage.Dutch)
 
     def set_field_values_from_backend(self):
-        # the dropdown for the model type has already been set in
-        # initialize_algorithm_field, because it otherwise triggers the
-        # algorithm_changed event and causes a recursion
+        """
+        Get the parameter values from the backend and put them in the
+        text boxes in the frontend. The dropdown for the model type has already
+        been set in initialize_algorithm_field. If it was set here,
+        it would trigger the algorithm_changed event and cause an infinite
+        recursion.
+        :return: None
+        """
 
         self._topic_amount_field.setText(
             str(self._model_parameters_controller.get_model_n_topics()))
