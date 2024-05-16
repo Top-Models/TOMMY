@@ -52,12 +52,12 @@ class LdaRunner(TopicRunner,
     @property
     def _bags_of_words(self) -> list[list[tuple[int, int]]]:
         """Get the bags of words for the topic model"""
-        return self._topic_model.model['corpus']
+        return self._topic_model.corpus
 
     @_bags_of_words.setter
     def _bags_of_words(self, bag: list[list[tuple[int, int]]]) -> None:
         """Set the bags of words"""
-        self._topic_model.model['corpus'] = bag
+        self._topic_model.corpus = bag
 
     def __init__(self,
                  topic_model: TopicModel,

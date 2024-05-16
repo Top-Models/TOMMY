@@ -10,6 +10,7 @@ class TopicModel:
     modelling algorithm"""
     model: LdaModel = None
     dictionary: Dictionary = None
+    corpus: list[list[tuple[int, int]]] = None
 
 
 """
