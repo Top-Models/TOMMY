@@ -7,10 +7,9 @@ from tommy.support.constant_variables import (
     heading_font, label_height,
     text_font, medium_light_gray, hover_medium_light_gray,
     pressed_medium_light_gray)
-from tommy.view.observer.observer import Observer
 
 
-class FileLabel(QLabel, Observer):
+class FileLabel(QLabel):
     """A class to formulate the FileLabel object."""
 
     clicked = Signal(object)
@@ -135,19 +134,10 @@ class FileLabel(QLabel, Observer):
         self.clicked.emit(self)
         super().mouseReleaseEvent(event)
 
-    def update_observer(self, publisher) -> None:
-        """
-        Update the observer.
-
-        :param publisher: The publisher that is being observed
-        :return: None
-        """
-        pass
-
 
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

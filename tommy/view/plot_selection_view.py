@@ -1,17 +1,28 @@
 from PySide6.QtWidgets import QWidget, QTabWidget
 
+from tommy.view.graph_view import GraphView
+
 from tommy.controller.graph_controller import GraphController
-from tommy.support.constant_variables import (
-    hover_prim_col_red)
-from tommy.view.observer.observer import Observer
+from tommy.controller.visualizations.possible_visualization import (
+    PossibleVisualization, VisGroup)
 
 
-class PlotSelectionView(QTabWidget, Observer):
+class PlotSelectionView(QTabWidget):
     """A class to display options for selecting a plot."""
+    _disable_tab_clicked_event: bool
+    ORDER_OF_VIS_GROUPS: list[VisGroup] = [VisGroup.CORPUS,
+                                           VisGroup.MODEL,
+                                           VisGroup.TOPIC]
+    assert len(ORDER_OF_VIS_GROUPS) == len(VisGroup), (
+        "Not all visualization groups have a corresponding order in the plots "
+        "selection view")
 
-    def __init__(self, graph_controller: GraphController) -> None:
+    def __init__(self, graph_controller: GraphController,
+                 graph_view: GraphView) -> None:
         """Initialize the GraphDisplay."""
         super().__init__()
+
+        self._disable_tab_clicked_event = False
 
         # Initialize widget properties
         self.setFixedHeight(50)
@@ -45,85 +56,98 @@ class PlotSelectionView(QTabWidget, Observer):
                 QTabBar::tab:hover {{
                     background-color: rgba(230, 230, 230, 1);
                 }}
-                
+
                 QTabWidget::tab-bar {{
                     alignment: left;
                 }}
             """)
 
-        # Set reference to the graph-controller
+        # Set reference to the graph-controller and graphview
         self._graph_controller = graph_controller
+        self._graph_controller.possible_plots_changed_event.subscribe(
+            self._create_tabs)
+        self._graph_controller.refresh_plots_event.subscribe(
+            lambda _: self._tab_clicked_event())
+        self._graph_view = graph_view
 
-        # Non-topic modelling tabs
-        self.addTab(QWidget(), "Woordaantal")
-        self.addTab(QWidget(), "     ")
-
-        # General tabs
-        self.addTab(QWidget(), "Correlatie")
-        self.addTab(QWidget(), "Topic Netwerk")
-        self.addTab(QWidget(), "Doc. Netwerk")
-        self.addTab(QWidget(), "     ")
-
-        # Topic specific tabs
-        self.addTab(QWidget(), "Woordenwolk")
-        self.addTab(QWidget(), "Woordgewichten")
-
-        # Disable the empty space tabs
-        self.setTabEnabled(1, False)
-        self.setTabEnabled(5, False)
-
-        # Initially hide topic specific tabs
-        self.toggle_topic_specific_tabs(False)
+        # Initialize a dict from tab index to the corresponding visualization
+        self._tabs_plots: dict[int, PossibleVisualization] = {}
 
         # Add tabChanged event
-        self.currentChanged.connect(self.tab_clicked_event)
+        self.currentChanged.connect(self._tab_clicked_event)
 
-    def get_active_tab_name(self) -> str:
-        """
-        Get the name of the active tab.
+    def _tab_clicked_event(self) -> None:
+        """Update the currently selected tab in the graph-view"""
+        # do not update while we are removing all the tabs
+        if self._disable_tab_clicked_event:
+            return
 
-        :return: The name of the active tab
-        """
-        return self.tabText(self.currentIndex())
+        selected_tab_index = self.currentIndex()
 
-    def tab_clicked_event(self) -> None:
-        """
-        Handle a tab clicked event.
-        """
-        self.update_observer(None)
+        # because pyqt tries to select inactive (spacer) tab after creation
+        #   if the tab bar was empty before
+        if selected_tab_index not in self._tabs_plots:
+            return
 
-    def toggle_topic_specific_tabs(self, visible: bool) -> None:
-        """
-        Toggle the visibility of the topic specific tabs.
+        new_possible_vis = self._tabs_plots[selected_tab_index]
+        new_plot = self._graph_controller.get_visualization(
+            new_possible_vis.index)
+        self._graph_view.display_plot(new_plot)
 
-        :param visible: Whether to make the tabs visible
+    def _create_tabs(self, possible_vis_list: list[PossibleVisualization]
+                     ) -> None:
         """
-        if not visible and self.currentIndex() in [6, 7]:
-            self.setCurrentIndex(0)
-
-        # Hide or show the tabs
-        self.setTabVisible(6, visible)
-        self.setTabVisible(7, visible)
-
-    def update_observer(self, publisher) -> None:
+        Create new tabs for all the possible visualizations
+        :param possible_vis_list: The list of all possible visualization to
+            create tabs for
         """
-        Update the observer.
+        self.remove_all_tabs()
 
-        :param publisher: The publisher that is being observed
-        :return: None
-        """
-        tab_index = self.currentIndex()
-        if tab_index in [2, 3, 4]:
-            self._graph_controller.set_tab_index(tab_index - 1)
-        elif tab_index in [6, 7]:
-            self._graph_controller.set_tab_index(tab_index - 2)
-        else:
-            self._graph_controller.set_tab_index(tab_index)
+        # Partition all tabs based on in which visualization group they belong
+        partitioned_tabs: dict[VisGroup, list[PossibleVisualization]] = {
+            vis_group: []
+            for vis_group in VisGroup}
+
+        for vis in possible_vis_list:
+            partitioned_tabs[vis.type].append(vis)
+
+        # Create all tabs
+        for vis_group in self.ORDER_OF_VIS_GROUPS:
+            tabs_in_group = partitioned_tabs[vis_group]
+
+            # Add disabled tab as a spacer between groups (but not on the left)
+            if self.count() > 0 and len(tabs_in_group) > 0:
+                self._add_spacer_tab()
+
+            # add all tabs in the group
+            self._add_multiple_tabs(tabs_in_group)
+
+    def remove_all_tabs(self):
+        """Clear layout and list of possible plots"""
+        # disable tab clicked event because it would be called for every tab
+        self._disable_tab_clicked_event = True
+
+        self._tabs_plots = {}
+        if self.count() > 0:
+            self.clear()
+
+        self._disable_tab_clicked_event = False
+
+    def _add_multiple_tabs(self, visualizations: list[PossibleVisualization]):
+        """Add a tab and save the plot index for each visualization given"""
+        for vis in visualizations:
+            self._tabs_plots[self.count()] = vis
+            self.addTab(QWidget(), vis.short_tab_name)
+
+    def _add_spacer_tab(self):
+        """Add a disabled tab to the tabs bar as a spacer"""
+        self.addTab(QWidget(), "     ")
+        self.setTabEnabled(self.count() - 1, False)
 
 
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

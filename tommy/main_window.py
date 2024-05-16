@@ -12,7 +12,7 @@ from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.imported_files_view import (
     ImportedFilesView)
 from tommy.view.menu_bar import MenuBar
-from tommy.view.model_params_view import (
+from tommy.view.settings_view.model_params_view import (
     ModelParamsView)
 from tommy.view.plot_selection_view import (
     PlotSelectionView)
@@ -67,23 +67,27 @@ class MainWindow(QMainWindow):
 
         # Initialize the menu bar
         self.setMenuBar(MenuBar(self,
-                                self._controller.project_settings_controller))
+                                self._controller.project_settings_controller,
+                                self._controller.export_controller))
 
         # Create widgets
         self.stopwords_view = StopwordsView(
             self._controller.stopwords_controller)
+        self.graph_view = GraphView()
         self.plot_selection_view = PlotSelectionView(
-            self._controller.graph_controller
+            self._controller.graph_controller,
+            self.graph_view
         )
         self.imported_files_view = ImportedFilesView(
-            self._controller.corpus_controller,
-            self._controller.project_settings_controller)
+            self._controller.corpus_controller)
         self.model_params_view = ModelParamsView(
             self._controller.model_parameters_controller,
-            self._controller, self._controller.config_controller)
-        self.graph_view = GraphView(self._controller.graph_controller)
+            self._controller.language_controller,
+            self._controller.config_controller,
+            self._controller)
         self.fetched_topics_view = FetchedTopicsView(
-            self._controller.graph_controller)
+            self._controller.graph_controller,
+            self._controller.model_parameters_controller)
         self.selected_information_view = SelectedInformationView(
             self._controller.graph_controller,
             self._controller.model_parameters_controller)
@@ -122,6 +126,7 @@ class MainWindow(QMainWindow):
         """
 
         widget.setParent(self)
+
         widget.setGeometry(x, y, w, h)
         widget.show()
 
@@ -170,10 +175,8 @@ class MainWindow(QMainWindow):
         # Show info about run if no topic is selected
         if not topic_entity.selected:
             self.selected_information_view.display_run_info("lda_model")
-            self.plot_selection_view.toggle_topic_specific_tabs(False)
             return
 
-        self.plot_selection_view.toggle_topic_specific_tabs(True)
         self.selected_information_view.display_topic_info(topic_entity)
 
     def display_correct_initial_files(self) -> None:
@@ -204,6 +207,6 @@ class MainWindow(QMainWindow):
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

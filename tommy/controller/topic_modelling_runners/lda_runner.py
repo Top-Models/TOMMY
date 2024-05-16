@@ -1,51 +1,71 @@
 from collections.abc import Iterable
 
-from numpy import ndarray
 from gensim.corpora.dictionary import Dictionary
 from gensim.models.ldamodel import LdaModel
+from gensim.models.coherencemodel import CoherenceModel
+from numpy import ndarray
 
-from tommy.model.topic_model import TopicModel
-from tommy.datatypes.topics import Topic, TopicWithScores
 from tommy.controller.result_interfaces.correlation_matrix_interface import (
     CorrelationMatrixInterface)
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
-
+from tommy.controller.result_interfaces.topic_coherence_interface import (
+    TopicCoherenceInterface)
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
+from tommy.datatypes.topics import TopicWithScores
+from tommy.model.topic_model import TopicModel
 
 STANDARD_RANDOM_SEED = 42
 
 
 class LdaRunner(TopicRunner,
                 CorrelationMatrixInterface,
-                DocumentTopicsInterface):
+                DocumentTopicsInterface,
+                TopicCoherenceInterface):
     """GensimLdaModel class for topic modeling using LDA with Gensim."""
     _num_topics: int
+    _alpha: float
+    _beta: float
     _random_seed: int
 
     @property
     def _dictionary(self) -> Dictionary:
         """get the term_ids-to-terms dictionary saved in the topic model"""
-        return self._topic_model.model['dictionary']
+        return self._topic_model.dictionary
 
     @_dictionary.setter
     def _dictionary(self, new_dictionary: Dictionary) -> None:
         """Takes and sets the term_ids-to-terms dictionary"""
-        self._topic_model.model['dictionary'] = new_dictionary
+        self._topic_model.dictionary = new_dictionary
 
     @property
     def _model(self) -> LdaModel:
         """Get the model than is being run from the topic model"""
-        return self._topic_model.model['model']
+        return self._topic_model.model
 
     @_model.setter
     def _model(self, new_model: LdaModel) -> None:
         """Set the LDA model than is being run in the topic model"""
-        self._topic_model.model['model'] = new_model
+        self._topic_model.model = new_model
 
-    def __init__(self, topic_model: TopicModel, docs: Iterable[list[str]],
-                 num_topics: int, random_seed=STANDARD_RANDOM_SEED) -> None:
+    @property
+    def _bags_of_words(self) -> list[list[tuple[int, int]]]:
+        """Get the bags of words for the topic model"""
+        return self._topic_model.corpus
+
+    @_bags_of_words.setter
+    def _bags_of_words(self, bag: list[list[tuple[int, int]]]) -> None:
+        """Set the bags of words"""
+        self._topic_model.corpus = bag
+
+    def __init__(self,
+                 topic_model: TopicModel,
+                 docs: Iterable[list[str]],
+                 num_topics: int,
+                 alpha: float = None,
+                 beta: float = None,
+                 random_seed=STANDARD_RANDOM_SEED) -> None:
         """
         Initialize the GensimLdaModel.
         :param topic_model: Reference to the topic model where the algorithm
@@ -59,9 +79,11 @@ class LdaRunner(TopicRunner,
         super().__init__(topic_model=topic_model)
 
         # clear location where model and dictionary will be stored
-        self._topic_model.model = {}
+        self.docs = docs
 
         self._num_topics = num_topics
+        self._alpha = alpha
+        self._beta = beta
         self._random_seed = random_seed
         self.train_model(docs)
 
@@ -77,10 +99,23 @@ class LdaRunner(TopicRunner,
         self._dictionary = Dictionary(docs)
         bags_of_words = [self._dictionary.doc2bow(tokens)
                          for tokens in docs]
+        self._bags_of_words = bags_of_words
+
+        # Run optimized LDA if alpha and beta are None
+        if self._alpha and self._beta is None:
+            self._model = LdaModel(corpus=bags_of_words,
+                                   id2word=self._dictionary,
+                                   num_topics=self._num_topics,
+                                   random_state=self._random_seed)
+            return
+
+        # Run LDA with custom alpha and beta
         self._model = LdaModel(corpus=bags_of_words,
                                id2word=self._dictionary,
                                num_topics=self._num_topics,
-                               random_state=self._random_seed)
+                               random_state=self._random_seed,
+                               alpha=self._alpha,
+                               eta=self._beta)
 
     def get_n_topics(self) -> int:
         return self._num_topics
@@ -117,10 +152,25 @@ class LdaRunner(TopicRunner,
                                                minimum_probability=
                                                minimum_probability)
 
+    def get_topic_coherence(self, num_topics):
+        new_model = LdaModel(corpus=self._bags_of_words,
+                             id2word=self._dictionary,
+                             num_topics=num_topics,
+                             random_state=self._random_seed,
+                             alpha=self._alpha,
+                             eta=self._beta)
+
+        coherence_model = CoherenceModel(model=new_model,
+                                         corpus=self._bags_of_words,
+                                         dictionary=self._dictionary,
+                                         coherence='u_mass')
+        coherence = coherence_model.get_coherence()
+        return coherence
+
 
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

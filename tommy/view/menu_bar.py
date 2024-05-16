@@ -3,6 +3,7 @@ import os
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMenuBar, QMenu, QWidget, QFileDialog
 
+from tommy.controller.export_controller import ExportController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.support.constant_variables import (
@@ -14,7 +15,8 @@ class MenuBar(QMenuBar):
 
     def __init__(self,
                  parent: QWidget,
-                 project_settings_controller: ProjectSettingsController
+                 project_settings_controller: ProjectSettingsController,
+                 export_controller: ExportController
                  ) -> None:
         """Initialize the menu bar."""
         super().__init__(parent)
@@ -22,29 +24,35 @@ class MenuBar(QMenuBar):
         # Set reference to project settings controller for input folder button
         self._project_settings_controller = project_settings_controller
 
+        self._export_controller = export_controller
+
         # Create actions
         import_input_folder_action = QAction("Selecteer input folder", self)
-        export_action = QAction("Exporteren", self)
+        export_to_gexf_action = QAction("Exporteer naar Graph Exchange XML Format (.gexf)", self)
+        export_to_png_action = QAction("Exporteer grafieken (.png)", self)
+        export_topic_words_action = QAction("Exporteer Topicdata (.csv)", self)
         save_settings_action = QAction("Instellingen opslaan", self)
-        load_settings_action = QAction("Instellingen laden", self)  # New action for loading settings
-
-        # Create submenu for export
-        export_to_gexf = QMenu(self)
-        export_to_gexf.addAction("Graph Exchange XML Format (.gexf)")
-        export_action.setMenu(export_to_gexf)
+        load_settings_action = QAction("Instellingen laden", self)
 
         # Connect actions to event handlers
         import_input_folder_action.triggered.connect(self.import_input_folder)
-        export_to_gexf.triggered.connect(self.export_to_gexf)
+        export_to_gexf_action.triggered.connect(self.export_to_gexf)
+        export_to_png_action.triggered.connect(self.export_to_png)
+        export_topic_words_action.triggered.connect(self.export_topic_words)
         save_settings_action.triggered.connect(self.save_settings_to_file)
         load_settings_action.triggered.connect(self.load_settings_from_file)  # Connect to new method
 
         # Create menu bar
         file_menu = self.addMenu("Bestand")
         file_menu.addAction(import_input_folder_action)
-        file_menu.addAction(export_action)
         file_menu.addAction(save_settings_action)
-        file_menu.addAction(load_settings_action)  # Add the new action to the menu
+        file_menu.addAction(load_settings_action)
+
+        # Add sub menu export_menu to menu bar
+        export_menu = file_menu.addMenu("Exporteren")
+        export_menu.addAction(export_to_gexf_action)
+        export_menu.addAction(export_to_png_action)
+        export_menu.addAction(export_topic_words_action)
 
         # Set style
         self.setStyleSheet(f"""
@@ -90,11 +98,37 @@ class MenuBar(QMenuBar):
 
     def export_to_gexf(self) -> None:
         """
-        Export the current graph to a GEXF file.
-
+        Export the networks to GEXF files.
         :return: None
         """
-        pass
+        dialog = QFileDialog.getExistingDirectory(self,
+                                                  "Selecteer export folder")
+
+        if dialog:
+            self._export_controller.export_networks(dialog)
+
+    def export_to_png(self) -> None:
+        """
+        Export the plots to PNG files.
+        :return: None
+        """
+        dialog = QFileDialog.getExistingDirectory(self,
+                                                  "Selecteer export folder")
+
+        if dialog:
+            self._export_controller.export_graphs(dialog)
+
+    def export_topic_words(self) -> None:
+        """
+        Export words related to topics to a CSV file.
+        :return: None
+        """
+        dialog = QFileDialog.getSaveFileName(self, "Selecteer export locatie",
+                                             filter="CSV files (*.csv)")
+
+        if dialog[0]:
+            export_path = dialog[0]
+            self._export_controller.export_topic_words_csv(export_path)
 
     def save_settings_to_file(self) -> None:
         """
@@ -113,6 +147,6 @@ class MenuBar(QMenuBar):
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

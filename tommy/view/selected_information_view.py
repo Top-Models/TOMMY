@@ -9,16 +9,15 @@ from tommy.support.constant_variables import (
     heading_font,
     prim_col_red, hover_prim_col_red)
 from tommy.view.imported_files_view.file_label import FileLabel
-from tommy.view.observer.observer import Observer
 
 
-class SelectedInformationView(QScrollArea, Observer):
+class SelectedInformationView(QScrollArea):
     """Class to define the SelectedInformationView UI component"""
 
     def __init__(self,
                  graph_controller: GraphController,
-                 model_parameters_controller: ModelParametersController) \
-            -> None:
+                 model_parameters_controller: ModelParametersController
+                 ) -> None:
         """Initialize the FileStatsDisplay."""
         super().__init__()
 
@@ -310,11 +309,10 @@ class SelectedInformationView(QScrollArea, Observer):
         topic_amount_label.setMinimumHeight(20)
         vertical_layout.addWidget(topic_amount_label)
 
-    def update_observer(self, publisher) -> None:
-        """
-        Update the observer.
 
-        :param publisher: The publisher that is being observed
-        :return: None
-        """
-        pass
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

@@ -11,32 +11,34 @@ from tommy.controller.file_import.raw_body import RawBody
 from tommy.controller.file_import.raw_file import RawFile
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
-from tommy.controller.publisher.publisher import Publisher
+from tommy.support.event_handler import EventHandler
 from tommy.model.corpus_model import CorpusModel
-from tommy.view.observer.observer import Observer
 
 
-class CorpusController(Observer, Publisher):
+class CorpusController:
     """
     The corpus controller class is responsible for handling interactions with
     the corpus model.
     """
 
-    def update_observer(self, publisher: Publisher) -> None:
-        """
-        Updates the metadata when the project settings change
-        :param publisher: unused, the project settings controller
-        :return: None
-        """
-        self.extract_and_store_metadata()
-
     _corpus_model: CorpusModel = None
     _project_settings_controller: ProjectSettingsController = None
     fileParsers: GenericFileImporter = GenericFileImporter()
+    _metadata_changed_event: EventHandler[[Metadata]] = None
+
+    @property
+    def metadata_changed_event(self) -> EventHandler[[Metadata]]:
+        """
+        This event gets triggered every time the metadata of the corpus is
+        changed, so the UI can update itself to show the metadata
+        :return:
+        """
+        return self._metadata_changed_event
 
     def __init__(self) -> None:
-        """Initialize corpus controller and publisher"""
+        """Initialize corpus controller and eventhandler for metadata"""
         super().__init__()
+        self._metadata_changed_event = EventHandler[[Metadata]]()
 
     def set_controller_refs(self,
                             project_settings_controller:
@@ -48,9 +50,18 @@ class CorpusController(Observer, Publisher):
         :return: None
         """
         self._project_settings_controller = project_settings_controller
-        self._project_settings_controller.add(self)
+        project_settings_controller.input_folder_path_changed_event.subscribe(
+            self.on_input_folder_path_changed)
 
     def set_model_refs(self, corpus_model: CorpusModel) -> None:
+        """
+        Sets the reference to the corpus model
+        :param corpus_model: The corpus model
+        :return: None
+        """
+        self._corpus_model = corpus_model
+
+    def change_config_model_refs(self, corpus_model: CorpusModel) -> None:
         """
         Sets the reference to the corpus model
         :param corpus_model: The corpus model
@@ -87,20 +98,20 @@ class CorpusController(Observer, Publisher):
         path = self._project_settings_controller.get_input_folder_path()
         return self._read_files(path)
 
-    def extract_and_store_metadata(self) -> None:
+    def on_input_folder_path_changed(self, input_folder_path: str) -> None:
         """
         Gets the metadata from all files in the directory specified by the
-        project settings and stores it in the corpus model and notifies its
-        subscribers of the change in metadata
+        project settings and stores it in the corpus model and triggers the
+        metadata-changed-event
 
+        :param input_folder_path: The new path to the input folder
         :return: None
         """
-        files = self._read_files_from_input_folder()
+        files = self._read_files(input_folder_path)
         metadata = [file.metadata for file in files]
 
         self._corpus_model.metadata = metadata
-
-        self.notify()
+        self._metadata_changed_event.publish(metadata)
 
     def get_metadata(self) -> list[Metadata]:
         """
@@ -175,6 +186,6 @@ class CorpusController(Observer, Publisher):
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

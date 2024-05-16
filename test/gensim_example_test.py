@@ -18,11 +18,11 @@ def gensim_lda_model():
     return model
 
 
-# def test_train_model(gensim_lda_model):
-#     # Assert that the model has been trained and has the correct n. of topics
-#     assert gensim_lda_model.get_n_topics() == 2
-#     assert hasattr(gensim_lda_model, "topic_terms_with_scores")
-#     assert hasattr(gensim_lda_model, "topics_terms_with_scores")
+def test_train_model(gensim_lda_model):
+    # Assert that the model has been trained and has the correct n. of topics
+    assert gensim_lda_model.get_n_topics() == 2
+    assert hasattr(gensim_lda_model, "get_topic_with_scores")
+    assert hasattr(gensim_lda_model, "get_topics_with_scores")
 
 
 if __name__ == '__main__':
@@ -31,6 +31,6 @@ if __name__ == '__main__':
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

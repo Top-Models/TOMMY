@@ -16,6 +16,8 @@ class StopwordsView(QScrollArea):
 
         # Set reference to the controller
         self._stopwords_controller = stopwords_controller
+        stopwords_controller.stopwords_model_changed_event.subscribe(
+            self._update_blacklist_textbox)
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -27,8 +29,8 @@ class StopwordsView(QScrollArea):
                 }}
 
                 QTabBar::tab {{ 
-                    color: black;
-                    background-color: rgba(230, 230, 230, 1);
+                    color: rgba(120, 120, 120, 1);
+                    background-color: rgba(210, 210, 210, 1);
                     font-size: 15px;
                     padding-left: 5px;
                     padding-right: 5px;
@@ -126,7 +128,7 @@ class StopwordsView(QScrollArea):
         :return: None
         """
         input_text = self.blacklist_tab.toPlainText()
-        blacklist = set([word.lower() for word in input_text.split()])
+        blacklist = input_text.split()
         self._stopwords_controller.update_stopwords(blacklist)
 
     def update_synonyms(self) -> None:
@@ -147,10 +149,14 @@ class StopwordsView(QScrollArea):
         input_text = self.ngrams_tab.toPlainText()
         # TODO: implement at a later point
 
+    def _update_blacklist_textbox(self, words: list[str]):
+        text = "\n".join(words)
+        self.blacklist_tab.setText(text)
+
 
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

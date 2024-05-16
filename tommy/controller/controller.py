@@ -1,3 +1,4 @@
+from tommy.model.config_model import ConfigModel
 from tommy.model.model import Model
 
 from tommy.controller.file_import.processed_body import ProcessedBody
@@ -15,12 +16,13 @@ from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.controller.save_controller import SaveController
 from tommy.controller.config_controller import ConfigController
+from tommy.controller.export_controller import ExportController
+from tommy.controller.language_controller import LanguageController
 
 
 class Controller:
     """The main controller for the tommy that creates all sub-controllers"""
-    _models: list[Model]
-    _selected_model: int
+    _model: Model
 
     _model_parameters_controller: ModelParametersController
 
@@ -52,8 +54,19 @@ class Controller:
     def project_settings_controller(self) -> ProjectSettingsController:
         return self._project_settings_controller
 
+    @property
+    def language_controller(self) -> LanguageController:
+        return self._language_controller
+
     _project_settings_controller: ProjectSettingsController
     _save_controller: SaveController
+
+    _export_controller: ExportController
+    _language_controller: LanguageController
+
+    @property
+    def export_controller(self) -> ExportController:
+        return self._export_controller
 
     @property
     def config_controller(self) -> ConfigController:
@@ -63,59 +76,79 @@ class Controller:
         """Initialize the main controller and its sub-controllers."""
         self._initialize_components()
 
-        self._models = self._save_controller.get_models()
-        self.select_model(0)
+        self._model = Model()
+        self._set_model_references()
+        self._set_controller_references()
 
     def _initialize_components(self):
         """Initialize all sub-components"""
         self._model_parameters_controller = ModelParametersController()
+        self._language_controller = LanguageController()
         self._graph_controller = GraphController()
         self._topic_modelling_controller = TopicModellingController()
-        self._stopwords_controller = StopwordsController()
-        self._preprocessing_controller = PreprocessingController()
+        self._stopwords_controller = StopwordsController(
+            self._language_controller)
+        self._preprocessing_controller = PreprocessingController(
+            self._language_controller)
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
         self._save_controller = SaveController()
-        self._config_controller = ConfigController(
-            self._project_settings_controller)
+        self._config_controller = ConfigController()
+        self._export_controller = ExportController()
 
-        self._corpus_controller.set_controller_refs(
-            self._project_settings_controller)
-        self._graph_controller.set_controller_refs(self._corpus_controller)
-
-    def select_model(self, model_index: int) -> None:
+    def _set_controller_references(self) -> None:
         """
-        Select a model corresponding to the given index
-        :param model_index: The index of the model to be selected
+        Some controllers need references to other controllers, for example
+        to subscribe to events. This method gives each controller a
+        reference to the other controllers which it needs
         :return: None
         """
-        # TODO: input validation
-        self._selected_model = model_index
+        self._corpus_controller.set_controller_refs(
+            self._project_settings_controller)
+        self._export_controller.set_controller_refs(self._graph_controller)
 
-        self._model_parameters_controller.set_model_refs(
-            self._models[model_index].model_parameters_model)
+        self._graph_controller.set_controller_refs(
+            self._topic_modelling_controller, self._corpus_controller)
 
-        self._graph_controller.set_model_refs(self._topic_modelling_controller)
+        self._topic_modelling_controller.set_controller_refs(
+            self._model_parameters_controller, self._corpus_controller)
 
-        self._topic_modelling_controller.set_model_refs(
-            self._model_parameters_controller,
-            self._models[model_index].topic_model,
-            self._corpus_controller)
+        self._config_controller.config_switched_event.subscribe(
+            self._update_config_model_references)
 
-        self._stopwords_controller.set_model_refs(
-            self._models[model_index].stopwords_model)
-
-        self._preprocessing_controller.set_model_refs(
-            self._models[model_index].stopwords_model)
-
-        self._corpus_controller.set_model_refs(
-            self._models[model_index].corpus_model)
-
+    def _set_model_references(self) -> None:
+        """
+        Give each controller the correct references to each model
+        :return: None
+        """
         self._project_settings_controller.set_model_refs(
-            self._models[model_index].project_settings_model)
+            self._model.project_settings_model)
 
         self._config_controller.set_model_refs(
-            self._models[model_index].config_model)
+            self._model)
+
+        self._model_parameters_controller.set_model_refs(
+            self._model.model_parameters_model)
+
+        self._topic_modelling_controller.set_model_refs(
+            self._model.topic_model,
+            self._model.config_model)
+
+        self._stopwords_controller.set_model_refs(
+            self._model.stopwords_model)
+
+        self._preprocessing_controller.set_model_refs(
+            self._model.stopwords_model)
+
+        self._corpus_controller.set_model_refs(
+            self._model.corpus_model)
+
+        self._project_settings_controller.set_model_refs(
+            self._model.project_settings_model)
+
+        self._language_controller.set_model_refs(
+            self._model.language_model
+        )
 
     def on_run_topic_modelling(self) -> None:
         """
@@ -133,10 +166,30 @@ class Controller:
         self._corpus_controller.set_processed_corpus(processed_files)
         self._topic_modelling_controller.train_model()
 
+    def _update_config_model_references(self, config_model: ConfigModel):
+        """When the user switches configuration, this event handler makes
+        sure that every controller gets a reference to the models of the
+        currently selected config"""
+        self._model_parameters_controller.change_config_model_refs(
+            config_model.model_parameters_model)
+
+        self._topic_modelling_controller.change_config_model_refs(
+            config_model.topic_model,
+            self._model.config_model)
+
+        self._stopwords_controller.change_config_model_refs(
+            config_model.stopwords_model)
+
+        self._preprocessing_controller.change_config_model_refs(
+            config_model.stopwords_model)
+
+        self._corpus_controller.change_config_model_refs(
+            config_model.corpus_model)
+
 
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

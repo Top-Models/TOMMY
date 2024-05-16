@@ -1,7 +1,3 @@
-import pytest
-from PySide6.QtCore import Qt
-from tommy.view.model_params_view import ModelParamsView
-
 # @pytest.fixture
 # def parameter_display(qtbot):
 #    # Create and return your parameter_display object here
@@ -26,6 +22,6 @@ from tommy.view.model_params_view import ModelParamsView
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """
