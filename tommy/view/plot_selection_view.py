@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QWidget, QTabWidget
 
+from tommy.controller.config_controller import ConfigController
 from tommy.view.graph_view import GraphView
 
 from tommy.controller.graph_controller import GraphController
@@ -18,6 +19,7 @@ class PlotSelectionView(QTabWidget):
         "selection view")
 
     def __init__(self, graph_controller: GraphController,
+                 config_controller: ConfigController,
                  graph_view: GraphView) -> None:
         """Initialize the GraphDisplay."""
         super().__init__()
@@ -64,10 +66,13 @@ class PlotSelectionView(QTabWidget):
 
         # Set reference to the graph-controller and graphview
         self._graph_controller = graph_controller
+        self._config_controller = config_controller
         self._graph_controller.possible_plots_changed_event.subscribe(
             self._create_tabs)
         self._graph_controller.refresh_plots_event.subscribe(
             lambda _: self._tab_clicked_event())
+        self._config_controller.config_switched_event.subscribe(
+            lambda _: self._config_changed_event())
         self._graph_view = graph_view
 
         # Initialize a dict from tab index to the corresponding visualization
@@ -75,6 +80,19 @@ class PlotSelectionView(QTabWidget):
 
         # Add tabChanged event
         self.currentChanged.connect(self._tab_clicked_event)
+
+    def _config_changed_event(self) -> None:
+        """Update the currently selected tab in the graph-view"""
+        if not self._graph_controller.visualizations_available():
+            self.remove_all_tabs()
+            self._graph_view.clear_plot()
+            return
+
+        selected_tab_index = self.currentIndex()
+        new_possible_vis = self._tabs_plots[selected_tab_index]
+        new_plot = self._graph_controller.get_visualization(
+            new_possible_vis.index)
+        self._graph_view.display_plot(new_plot)
 
     def _tab_clicked_event(self) -> None:
         """Update the currently selected tab in the graph-view"""
