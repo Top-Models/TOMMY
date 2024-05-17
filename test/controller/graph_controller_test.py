@@ -1,4 +1,5 @@
 import pytest
+from gensim.models import LdaModel
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from pytest_mock import mocker, MockerFixture
@@ -12,6 +13,10 @@ from tommy.controller.graph_controller import (GraphController,
                                                TopicWithScores,
                                                VisInputData,
                                                AbstractVisualization)
+from tommy.controller.topic_modelling_runners.abstract_topic_runner import \
+    TopicRunner
+from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
+from tommy.model.topic_model import TopicModel
 
 
 @pytest.fixture(scope='function')
@@ -180,6 +185,34 @@ def test_delete_all_cached_plots(graph_controller: GraphController,
     # Assert
     for spy in method_spies:
         spy.assert_called_once()
+
+
+def test_reset_graph_view_state(graph_controller: GraphController,
+                                mocker: MockerFixture):
+    # Arrange
+    mocker.patch.object(graph_controller, "_delete_all_cached_plots")
+    mocker.patch.object(graph_controller, "_current_topic_selected_id", 5)
+
+    # Act
+    graph_controller.reset_graph_view_state()
+
+    # Assert
+    assert graph_controller._current_topic_selected_id is None
+
+
+def test_visualizations_available(graph_controller: GraphController,
+                                  mocker: MockerFixture):
+    graph_controller._current_topic_runner = None
+    assert not graph_controller.visualizations_available()
+
+    topic_model = TopicModel()
+    docs = [[f"doc{i}"] for i in
+            range(10)]  # Maak een iterabele lijst van lijsten
+
+    # Geen mocking van LdaRunner nodig als je de docs correct wilt doorgeven
+    graph_controller._current_topic_runner = LdaRunner(topic_model, docs, 5)
+
+    assert graph_controller.visualizations_available()
 
 
 """

@@ -23,23 +23,33 @@ def plot_selection_view(qtbot: QtBot) -> PlotSelectionView:
     controller = Controller()
     plot_selection_view = PlotSelectionView(
         controller.graph_controller,
-        GraphView()
+        controller.config_controller,
+        GraphView(),
     )
     qtbot.addWidget(plot_selection_view)
     return plot_selection_view
 
 
 @pytest.mark.parametrize("input_visualizations, expected_visualization_count",
-        [
-            ([], 0),
-            ([PossibleVisualization(0, "str", "s", VisGroup.TOPIC, False)], 1),
-            ([PossibleVisualization(3, "at", "sto", VisGroup.CORPUS, True),
-              PossibleVisualization(2, "n2", "2", VisGroup.CORPUS, True)], 2),
-            ([PossibleVisualization(3, "very long name", "long name",
-                                    VisGroup.MODEL, False),
-              PossibleVisualization(5, "", "", VisGroup.TOPIC, True),
-              PossibleVisualization(7, "1", "2", VisGroup.CORPUS, False)], 5)
-        ])
+                         [
+                             ([], 0),
+                             ([PossibleVisualization(0, "str", "s",
+                                                     VisGroup.TOPIC, False)],
+                              1),
+                             ([PossibleVisualization(3, "at", "sto",
+                                                     VisGroup.CORPUS, True),
+                               PossibleVisualization(2, "n2", "2",
+                                                     VisGroup.CORPUS, True)],
+                              2),
+                             ([PossibleVisualization(3, "very long name",
+                                                     "long name",
+                                                     VisGroup.MODEL, False),
+                               PossibleVisualization(5, "", "", VisGroup.TOPIC,
+                                                     True),
+                               PossibleVisualization(7, "1", "2",
+                                                     VisGroup.CORPUS, False)],
+                              5)
+                         ])
 def test_create_tabs_from_publisher(plot: Figure,
                                     plot_selection_view: PlotSelectionView,
                                     input_visualizations:
@@ -58,19 +68,25 @@ def test_create_tabs_from_publisher(plot: Figure,
 
 @pytest.mark.parametrize("input_visualizations, index_to_click, "
                          "expected_index_of_plot",
-        [
-            ([], 0, None),
-            ([PossibleVisualization(0, "str", "s", VisGroup.TOPIC, False)],
-             0, None),
-            ([PossibleVisualization(3, "at", "sto", VisGroup.CORPUS, True),
-              PossibleVisualization(2, "n2", "2", VisGroup.CORPUS, True)],
-             1, 2),
-            ([PossibleVisualization(3, "very long name", "long name",
-                                    VisGroup.CORPUS, False),
-              PossibleVisualization(5, "", "", VisGroup.MODEL, True),
-              PossibleVisualization(7, "1", "2", VisGroup.TOPIC, False)],
-             4, 7)
-        ])
+                         [
+                             ([], 0, None),
+                             ([PossibleVisualization(0, "str", "s",
+                                                     VisGroup.TOPIC, False)],
+                              0, None),
+                             ([PossibleVisualization(3, "at", "sto",
+                                                     VisGroup.CORPUS, True),
+                               PossibleVisualization(2, "n2", "2",
+                                                     VisGroup.CORPUS, True)],
+                              1, 2),
+                             ([PossibleVisualization(3, "very long name",
+                                                     "long name",
+                                                     VisGroup.CORPUS, False),
+                               PossibleVisualization(5, "", "", VisGroup.MODEL,
+                                                     True),
+                               PossibleVisualization(7, "1", "2",
+                                                     VisGroup.TOPIC, False)],
+                              4, 7)
+                         ])
 def test_tab_clicked_event(plot: Figure,
                            plot_selection_view: PlotSelectionView,
                            input_visualizations:
@@ -79,7 +95,8 @@ def test_tab_clicked_event(plot: Figure,
     requested_plots = []
     # Mock graph_retrieval from graph_controller and graph view
     plot_selection_view._graph_controller.get_visualization = (lambda
-            plot_index: requested_plots.append(plot_index))
+                                                                   plot_index: requested_plots.append(
+        plot_index))
     plot_selection_view._graph_view.display_plot = lambda _: "mock_display"
 
     # Create tabs and clear callback list again
@@ -99,23 +116,30 @@ def test_tab_clicked_event(plot: Figure,
 
 
 @pytest.mark.parametrize("input_visualizations",
-        [
-            ([]),
-            ([PossibleVisualization(0, "str", "s", VisGroup.TOPIC, False)]),
-            ([PossibleVisualization(3, "at", "sto", VisGroup.CORPUS, True),
-              PossibleVisualization(2, "n2", "2", VisGroup.CORPUS, True)]),
-            ([PossibleVisualization(3, "very long name", "long name",
-                                    VisGroup.CORPUS, False),
-              PossibleVisualization(5, "", "", VisGroup.MODEL, True),
-              PossibleVisualization(7, "1", "2", VisGroup.TOPIC, False)])
-        ])
+                         [
+                             ([]),
+                             ([PossibleVisualization(0, "str", "s",
+                                                     VisGroup.TOPIC, False)]),
+                             ([PossibleVisualization(3, "at", "sto",
+                                                     VisGroup.CORPUS, True),
+                               PossibleVisualization(2, "n2", "2",
+                                                     VisGroup.CORPUS, True)]),
+                             ([PossibleVisualization(3, "very long name",
+                                                     "long name",
+                                                     VisGroup.CORPUS, False),
+                               PossibleVisualization(5, "", "", VisGroup.MODEL,
+                                                     True),
+                               PossibleVisualization(7, "1", "2",
+                                                     VisGroup.TOPIC, False)])
+                         ])
 def test_remove_all_tabs(plot: Figure,
                          plot_selection_view: PlotSelectionView,
                          input_visualizations: list[PossibleVisualization]):
     requested_plots = []
     # Mock graph_retrieval from graph_controller and graph view
     plot_selection_view._graph_controller.get_visualization = (lambda
-            plot_index: requested_plots.append(plot_index))
+                                                                   plot_index: requested_plots.append(
+        plot_index))
     plot_selection_view._graph_view.display_plot = lambda _: "mock_display"
 
     # Create tabs and clear callback list again
@@ -130,17 +154,24 @@ def test_remove_all_tabs(plot: Figure,
     assert plot_selection_view.count() == 0
     assert requested_plots == []
 
+
 @pytest.mark.parametrize("input_visualizations",
-        [
-            ([]),
-            ([PossibleVisualization(0, "str", "s", VisGroup.TOPIC, False)]),
-            ([PossibleVisualization(3, "at", "sto", VisGroup.CORPUS, True),
-              PossibleVisualization(2, "n2", "2", VisGroup.CORPUS, True)]),
-            ([PossibleVisualization(3, "very long name", "long name",
-                                    VisGroup.CORPUS, False),
-              PossibleVisualization(5, "", "", VisGroup.MODEL, True),
-              PossibleVisualization(7, "1", "2", VisGroup.TOPIC, False)])
-        ])
+                         [
+                             ([]),
+                             ([PossibleVisualization(0, "str", "s",
+                                                     VisGroup.TOPIC, False)]),
+                             ([PossibleVisualization(3, "at", "sto",
+                                                     VisGroup.CORPUS, True),
+                               PossibleVisualization(2, "n2", "2",
+                                                     VisGroup.CORPUS, True)]),
+                             ([PossibleVisualization(3, "very long name",
+                                                     "long name",
+                                                     VisGroup.CORPUS, False),
+                               PossibleVisualization(5, "", "", VisGroup.MODEL,
+                                                     True),
+                               PossibleVisualization(7, "1", "2",
+                                                     VisGroup.TOPIC, False)])
+                         ])
 def test_add_spacer_tab(plot: Figure,
                         plot_selection_view: PlotSelectionView,
                         input_visualizations: list[PossibleVisualization]):
@@ -162,16 +193,22 @@ def test_add_spacer_tab(plot: Figure,
 
 
 @pytest.mark.parametrize("input_visualizations",
-        [
-            ([]),
-            ([PossibleVisualization(0, "str", "s", VisGroup.TOPIC, False)]),
-            ([PossibleVisualization(3, "at", "sto", VisGroup.CORPUS, True),
-              PossibleVisualization(2, "n2", "2", VisGroup.CORPUS, True)]),
-            ([PossibleVisualization(3, "very long name", "long name",
-                                    VisGroup.CORPUS, False),
-              PossibleVisualization(5, "", "", VisGroup.MODEL, True),
-              PossibleVisualization(7, "1", "2", VisGroup.TOPIC, False)])
-        ])
+                         [
+                             ([]),
+                             ([PossibleVisualization(0, "str", "s",
+                                                     VisGroup.TOPIC, False)]),
+                             ([PossibleVisualization(3, "at", "sto",
+                                                     VisGroup.CORPUS, True),
+                               PossibleVisualization(2, "n2", "2",
+                                                     VisGroup.CORPUS, True)]),
+                             ([PossibleVisualization(3, "very long name",
+                                                     "long name",
+                                                     VisGroup.CORPUS, False),
+                               PossibleVisualization(5, "", "", VisGroup.MODEL,
+                                                     True),
+                               PossibleVisualization(7, "1", "2",
+                                                     VisGroup.TOPIC, False)])
+                         ])
 def test_add_multiple_tabs(plot: Figure,
                            plot_selection_view: PlotSelectionView,
                            input_visualizations: list[PossibleVisualization]):
