@@ -44,4 +44,4 @@ echo "> Signing the DMG file"
 # TODO: Fix the signing (maybe only necessary for the dmg file?)
 #codesign --force --verbose  --verify--timestamp --sign "Developer ID Application: TTT" "${DMG_FOLDER_PATH}"
 
-echo "> You can find the signed DMG file in the dist folder"
+echo "> You can find the DMG file in the dist folder"

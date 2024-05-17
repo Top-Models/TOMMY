@@ -15,9 +15,9 @@ pyinstaller \
 --windowed \
 --onedir \
 --name "${APP_NAME}" \
---icon "assets/tommy.icns" \
+--icon "assets/tommy.svg" \
 --add-data "${DATA_FOLDER_PATH}/stopwords.txt:./preprocessing_data" \
 --add-data "${DATA_FOLDER_PATH}/pipeline_download:./preprocessing_data/pipeline_download" \
 tommy/main.py
 
-echo "> You can find the signed DMG file in the dist folder"
+echo "> You can find the application in the dist folder"
