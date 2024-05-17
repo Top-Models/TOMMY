@@ -1,7 +1,7 @@
 import pytest
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
-from pytest_mock import mocker
+from pytest_mock import mocker, MockerFixture
 
 from tommy.controller.topic_modelling_controller import (
     TopicModellingController)
@@ -28,11 +28,8 @@ def graph_controller() -> GraphController:
 
     topic_modelling_controller = TopicModellingController()
     corpus_controller = CorpusController()
-    graph_controller.set_controller_refs(corpus_controller)
-
-    # note: in another branch the setting of topic_modelling_controller
-    #   will be moved to set_controller_refs
-    graph_controller.set_model_refs(topic_modelling_controller)
+    graph_controller.set_controller_refs(topic_modelling_controller,
+                                         corpus_controller)
 
     return graph_controller
 
@@ -51,7 +48,7 @@ def test_set_selected_topic(graph_controller: GraphController, topic_id: int):
 
 @pytest.mark.parametrize("n_topics", [(5,), (1,), (2,), (999,)])
 def test_get_number_of_topics(graph_controller: GraphController, n_topics: int,
-                              mocker: mocker):
+                              mocker: MockerFixture):
     # Arrange
     mock_topic_runner = mocker.Mock()
     graph_controller._current_topic_runner = mock_topic_runner
@@ -66,7 +63,7 @@ def test_get_number_of_topics(graph_controller: GraphController, n_topics: int,
 def words_with_scores() -> list[tuple[str, float]]:
     return list(zip(
         ["word1", "word2", "s", "LONG WORD WITH SPACES", "5", "SIX",
-                "7", "8", "9", "10", "11", "12", "13", "14", "15"],
+         "7", "8", "9", "10", "11", "12", "13", "14", "15"],
         [0.8394117569613936, 0.803704272713246, 0.7547414141744883,
          0.7403765400825127, 0.5650882510726273, 0.5530634246164807,
          0.40274019930419425, 0.3914758433804091, 0.3750981383670168,
@@ -79,7 +76,7 @@ def words_with_scores() -> list[tuple[str, float]]:
 def test_get_topic_with_scores(graph_controller: GraphController,
                                topic_id: int, n_words: int,
                                words_with_scores,
-                               mocker: mocker):
+                               mocker: MockerFixture):
     # Arrange
     mock_topic_runner = mocker.Mock()
     graph_controller._current_topic_runner = mock_topic_runner
@@ -87,7 +84,7 @@ def test_get_topic_with_scores(graph_controller: GraphController,
                         "get_topic_with_scores",
                         return_value=TopicWithScores(topic_id,
                                                      words_with_scores[:n_words
-                                                                       ]))
+                                                     ]))
 
     # Assert
     topic = graph_controller.get_topic_with_scores(topic_id, n_words)
@@ -99,8 +96,7 @@ def test_get_topic_with_scores(graph_controller: GraphController,
                          [(5, None), (1, 3), (2, 7), (999, None)])
 def test_get_visualization(plot: Figure, graph_controller: GraphController,
                            vis_index: int, override_topic: int | None,
-                           mocker: mocker):
-
+                           mocker: MockerFixture):
     # Arrange
     mocked_method: mocker = mocker.patch.object(
         graph_controller,
@@ -112,7 +108,8 @@ def test_get_visualization(plot: Figure, graph_controller: GraphController,
         graph_controller.get_visualization(vis_index, override_topic)
     except IndexError:
         # Assert - should only raise error if index actually out of bounds
-        assert vis_index < 0 or vis_index >= len(graph_controller.VISUALIZATIONS)
+        assert vis_index < 0 or vis_index >= len(
+            graph_controller.VISUALIZATIONS)
     else:
         # Assert - that run_visualization is called once with correct params
         mocked_method.assert_called_once_with(
@@ -124,14 +121,14 @@ def test_get_visualization(plot: Figure, graph_controller: GraphController,
                          [([VisInputData.TOPIC_ID,
                             VisInputData.METADATA_CORPUS], None),
                           ([VisInputData.PROCESSED_CORPUS,
-                           VisInputData.METADATA_CORPUS,
-                           VisInputData.TOPIC_ID], 3),
+                            VisInputData.METADATA_CORPUS,
+                            VisInputData.TOPIC_ID], 3),
                           ([], 7), ([], None)])
 def test_run_visualization_creator(plot: Figure,
                                    graph_controller: GraphController,
                                    needed_input_data: [VisInputData],
                                    override_topic: int | None,
-                                   mocker: mocker):
+                                   mocker: MockerFixture):
     # Arrange - mock abstract_visualization
     mocked_graph_creator: AbstractVisualization = mocker.Mock()
     mocked_graph_creator.needed_input_data = needed_input_data
@@ -172,7 +169,7 @@ def test_run_visualization_creator(plot: Figure,
 
 
 def test_delete_all_cached_plots(graph_controller: GraphController,
-                                 mocker: mocker):
+                                 mocker: MockerFixture):
     # Arrange
     method_spies = [mocker.spy(vis, "delete_cache")
                     for vis in graph_controller.VISUALIZATIONS]

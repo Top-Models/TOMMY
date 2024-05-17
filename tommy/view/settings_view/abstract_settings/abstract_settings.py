@@ -1,11 +1,15 @@
 from PySide6.QtGui import QIntValidator, Qt
 from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, \
-    QVBoxLayout
+    QVBoxLayout, QComboBox
 
+from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
+from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import text_font, seco_col_blue, \
     disabled_gray, heading_font
+from tommy.support.model_type import ModelType
+from tommy.support.supported_languages import SupportedLanguage
 
 
 class AbstractSettings:
@@ -16,7 +20,8 @@ class AbstractSettings:
     _scroll_layout: QVBoxLayout
 
     def __init__(self,
-                 model_parameters_controller: ModelParametersController):
+                 model_parameters_controller: ModelParametersController,
+                 language_controller: LanguageController):
         """
         Constructor for abstract settings
 
@@ -24,6 +29,7 @@ class AbstractSettings:
         """
         # Initialize controllers
         self._model_parameters_controller = model_parameters_controller
+        self._language_controller = language_controller
 
         # Initialize stylesheet
         self.enabled_input_stylesheet = (f"background-color: white;"
@@ -42,6 +48,8 @@ class AbstractSettings:
                                           f"padding: 5px;")
 
         # Initialize input fields
+        self._algorithm_field = QComboBox()
+        self._language_field = QComboBox()
         self._topic_amount_field = QLineEdit()
         self._amount_of_words_field = QLineEdit()
 
@@ -59,8 +67,10 @@ class AbstractSettings:
         """
         self._scroll_layout = scroll_layout
         self.add_header_label("Algemeen", 17)
+        self.initialize_algorithm_field()
         self.initialize_topic_amount_field()
         self.initialize_amount_of_words_field()
+        self.initialize_language_field()
         self.add_margin(10)
 
     def all_fields_valid(self) -> bool:
@@ -140,8 +150,6 @@ class AbstractSettings:
         # anything that isn't an integer
         self._topic_amount_field.setValidator(QIntValidator(1, 999))
         self._topic_amount_field.setPlaceholderText("Voer aantal topics in")
-        self._topic_amount_field.setText(
-            str(self._model_parameters_controller.get_model_n_topics()))
         self._topic_amount_field.setStyleSheet(self.topic_input_layout_valid)
         self._topic_amount_field.setAlignment(Qt.AlignmentFlag.AlignLeft)
         topic_amount_layout.addWidget(self._topic_amount_field)
@@ -221,7 +229,6 @@ class AbstractSettings:
         self._amount_of_words_field.setFixedWidth(100)
         self._amount_of_words_field.setPlaceholderText("Voer aantal "
                                                        "woorden in")
-        self._amount_of_words_field.setText("10")
         self._amount_of_words_field.setStyleSheet(
             self.enabled_input_stylesheet)
         self._amount_of_words_field.setAlignment(Qt.AlignmentFlag.AlignLeft)
@@ -280,6 +287,144 @@ class AbstractSettings:
         if input_valid:
             return int(text)
         return 0
+
+    def set_text_on_config_change(self):
+        self.set_field_values_from_backend()
+
+    def initialize_algorithm_field(self) -> None:
+        """
+        Initialize the algorithm field
+
+        :return: str
+        """
+        algorithm_layout = QHBoxLayout()
+
+        # Add label
+        algorithm_label = QLabel("Algoritme:")
+        algorithm_label.setStyleSheet(f"font-size: 16px;"
+                                      f"color: black;"
+                                      f"font-family: {text_font};")
+        algorithm_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                     Qt.AlignmentFlag.AlignVCenter)
+        algorithm_layout.addWidget(algorithm_label)
+
+        # Add input field
+        self._algorithm_field = QComboBox()
+        self._algorithm_field.setFixedWidth(100)
+        self._algorithm_field.addItem("LDA")
+        self._algorithm_field.addItem("BERTopic")
+        self._algorithm_field.addItem("NMF")
+
+        # Try to disconnect the algorithm_field_changed_event method, otherwise
+        # endless recursion
+        try:
+            self._algorithm_field.currentIndexChanged.disconnect(
+                self.algorithm_field_changed_event)
+        # Upon first initialization this is not necessary and will result in
+        # an error
+        except RuntimeError:
+            pass
+
+        current_model = self._model_parameters_controller.get_model_type().name
+        self._algorithm_field.setCurrentText(current_model)
+        self._algorithm_field.setStyleSheet(self.enabled_input_stylesheet)
+        algorithm_layout.addWidget(self._algorithm_field)
+
+        # Reconnect the algorithm_field_changed_event method
+        self._algorithm_field.currentIndexChanged.connect(
+            self.algorithm_field_changed_event)
+
+        # Add algorithm layout to container layout
+        self._scroll_layout.addLayout(algorithm_layout)
+
+    def algorithm_field_changed_event(self) -> None:
+        """
+        Event handler for when the algorithm field is changed
+
+        :return: None
+        """
+        selected_model_type = self._algorithm_field.currentText()
+        model_type_enum = ModelType[selected_model_type]
+        self._model_parameters_controller.set_model_type(
+            model_type_enum)
+
+    def initialize_language_field(self) -> None:
+        """
+        Initialize the language field
+
+        :return: None
+        """
+        language_layout = QHBoxLayout()
+
+        # Add label
+        self._language_field = QComboBox()
+        language_label = QLabel("Taal corpus:")
+        language_label.setStyleSheet(f"font-size: 16px;"
+                                     f"color: black;"
+                                     f"font-family: {text_font};")
+        language_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
+                                    Qt.AlignmentFlag.AlignVCenter)
+        language_layout.addWidget(language_label)
+
+        # Add input field
+        self._language_field.setFixedWidth(100)
+        self._language_field.addItem("Nederlands")
+        self._language_field.addItem("Engels")
+
+        # Try to disconnect the algorithm_field_changed_event method, otherwise
+        # endless recursion
+        try:
+            self._language_field.currentIndexChanged.disconnect(
+                self.language_field_changed_event)
+        # Upon first initialization this is not necessary and will result in
+        # an error
+        except RuntimeError:
+            pass
+
+        self._language_field.setStyleSheet(self.enabled_input_stylesheet)
+        language_layout.addWidget(self._language_field)
+
+        # Reconnect the algorithm_field_changed_event method
+        self._language_field.currentIndexChanged.connect(
+            self.language_field_changed_event)
+
+        # Add algorithm layout to container layout
+        self._scroll_layout.addLayout(language_layout)
+
+    def language_field_changed_event(self) -> None:
+        """
+        Event handler for when the algorithm field is changed
+
+        :return: None
+        """
+        selected_model_type = self._language_field.currentText()
+        match selected_model_type:
+            case "Engels":
+                self._language_controller.set_language(
+                    SupportedLanguage.English)
+            case _:
+                self._language_controller.set_language(SupportedLanguage.Dutch)
+
+    def set_field_values_from_backend(self):
+        """
+        Get the parameter values from the backend and put them in the
+        text boxes in the frontend. The dropdown for the model type has already
+        been set in initialize_algorithm_field. If it was set here,
+        it would trigger the algorithm_changed event and cause an infinite
+        recursion.
+        :return: None
+        """
+
+        self._topic_amount_field.setText(
+            str(self._model_parameters_controller.get_model_n_topics()))
+        self._amount_of_words_field.setText(
+            str(self._model_parameters_controller.get_model_word_amount()))
+        current_language = self._language_controller.get_language()
+        match current_language:
+            case SupportedLanguage.Dutch:
+                self._language_field.setCurrentText("Nederlands")
+            case SupportedLanguage.English:
+                self._language_field.setCurrentText("Engels")
 
 
 """
