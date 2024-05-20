@@ -130,7 +130,7 @@ class NmfRunner(TopicRunner,
         """
         topic_word_distribution = self._model.get_topics()
 
-        # Binarize the topic-word distribution based on a set treshhold 0.01
+        # Binarize the topic-word distribution based on a set threshold 0.01
         # i.e. see if a word is related enough to a topic
         binary_topic_distribution = (topic_word_distribution >
                                      0.005).astype(int)
@@ -153,7 +153,7 @@ class NmfRunner(TopicRunner,
                 if sum_i + sum_j > 0:
                     dice_matrix[i, j] = 2 * intersection / (
                                 sum_i + sum_j)
-                # Deviding by zero is impossible, so make it 0
+                # Dividing by zero is impossible, so make it 0
                 else:
                     dice_matrix[i, j] = 0.0
 
@@ -168,7 +168,7 @@ class NmfRunner(TopicRunner,
         coherence_model = CoherenceModel(model=new_model,
                                          corpus=self._bags_of_words,
                                          dictionary=self._dictionary,
-                                         coherence='u_mass')
+                                         coherence="u_mass")
         coherence = coherence_model.get_coherence()
         return coherence
 
