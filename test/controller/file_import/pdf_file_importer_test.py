@@ -69,3 +69,9 @@ def test_generate_file(pdf_file_importer):
     assert file.metadata.date == 'D:20220101000000+00\'00\''
 
 
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

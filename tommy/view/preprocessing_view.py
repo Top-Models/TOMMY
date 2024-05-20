@@ -22,6 +22,8 @@ class PreprocessingView(QScrollArea):
 
         # Set reference to the controllers
         self._stopwords_controller = stopwords_controller
+        stopwords_controller.stopwords_model_changed_event.subscribe(
+            self._update_blacklist_textbox)
         self._synonyms_controller = synonyms_controller
 
         # Initialize widget properties
@@ -151,7 +153,7 @@ class PreprocessingView(QScrollArea):
         :return: None
         """
         input_text = self.blacklist_tab.toPlainText()
-        blacklist = set([word.lower() for word in input_text.split()])
+        blacklist = input_text.split()
         self._stopwords_controller.update_stopwords(blacklist)
 
     def update_synonyms(self) -> None:
@@ -175,10 +177,14 @@ class PreprocessingView(QScrollArea):
         input_text = self.ngrams_tab.toPlainText()
         # TODO: implement at a later point
 
+    def _update_blacklist_textbox(self, words: list[str]):
+        text = "\n".join(words)
+        self.blacklist_tab.setText(text)
+
 
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

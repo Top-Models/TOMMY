@@ -28,6 +28,11 @@ class CorpusController:
 
     @property
     def metadata_changed_event(self) -> EventHandler[[Metadata]]:
+        """
+        This event gets triggered every time the metadata of the corpus is
+        changed, so the UI can update itself to show the metadata
+        :return:
+        """
         return self._metadata_changed_event
 
     def __init__(self) -> None:
@@ -49,6 +54,14 @@ class CorpusController:
             self.on_input_folder_path_changed)
 
     def set_model_refs(self, corpus_model: CorpusModel) -> None:
+        """
+        Sets the reference to the corpus model
+        :param corpus_model: The corpus model
+        :return: None
+        """
+        self._corpus_model = corpus_model
+
+    def change_config_model_refs(self, corpus_model: CorpusModel) -> None:
         """
         Sets the reference to the corpus model
         :param corpus_model: The corpus model
@@ -173,6 +186,6 @@ class CorpusController:
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

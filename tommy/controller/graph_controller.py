@@ -25,6 +25,7 @@ from tommy.controller.visualizations.top_words_bar_plot_creator import (
 from tommy.controller.visualizations.word_cloud_creator import WordCloudCreator
 from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
+from tommy.controller.visualizations.k_value_creator import KValueCreator
 
 # Import exporters
 from tommy.controller.visualizations.nx_exporter import NxExporter
@@ -41,6 +42,7 @@ from tommy.controller.visualizations.visualization_input_datatypes import (
     VisInputData, ProcessedCorpus, MetadataCorpus)
 
 from tommy.datatypes.topics import TopicWithScores
+from tommy.model.topic_model import TopicModel
 from tommy.support.event_handler import EventHandler
 
 
@@ -57,6 +59,7 @@ class GraphController:
     # Visualization Creators
     VISUALIZATIONS: list[AbstractVisualization] = [
         DocumentWordCountCreator(),
+        KValueCreator(),
         CorrelationMatrixCreator(),
         WordTopicNetworkCreator(),
         DocumentTopicNetworkSummaryCreator(),
@@ -82,7 +85,7 @@ class GraphController:
 
     @property
     def possible_plots_changed_event(self) -> EventHandler[
-                list[PossibleVisualization]]:
+        list[PossibleVisualization]]:
         """Get event that triggers when the list of possible plots changes."""
         return self._possible_plots_changed_event
 
@@ -98,6 +101,10 @@ class GraphController:
         """
         return self._refresh_plots_event
 
+    @property
+    def has_topic_runner(self) -> bool:
+        return self._current_topic_runner is not None
+
     def __init__(self) -> None:
         """Initialize the graph-controller and its two publishers"""
         super().__init__()
@@ -106,17 +113,21 @@ class GraphController:
         self._topics_changed_event = EventHandler[None]()
         self._refresh_plots_event = EventHandler[None]()
 
-    def set_model_refs(self,
-                       topic_modelling_controller: TopicModellingController,
-                       ) -> None:
-        """Set reference to the TM controller and add self to its publisher"""
-        self._topic_modelling_controller = topic_modelling_controller
-        self._topic_modelling_controller.model_trained_event.subscribe(
-            self.on_topic_runner_complete)
-
-    def set_controller_refs(self,
-                            corpus_controller: CorpusController):
+    def set_controller_refs(
+            self,
+            topic_modelling_controller: TopicModellingController,
+            corpus_controller: CorpusController):
+        """
+        Set reference to the TM controller corpus controller and add self
+        to model trained event
+        """
         self._corpus_controller = corpus_controller
+        self._topic_modelling_controller = topic_modelling_controller
+
+        topic_modelling_controller.model_trained_event.subscribe(
+            self.on_topic_runner_complete)
+        topic_modelling_controller.topic_model_switched_event.subscribe(
+            self._on_config_switch)
 
     def set_selected_topic(self, topic_index: int | None) -> None:
         """
@@ -137,7 +148,7 @@ class GraphController:
         :return: the number of topics in the topic modelling results
         :raises RuntimeError: if the topic runner has not finished running yet.
         """
-        if self._current_topic_runner is None:
+        if not self.has_topic_runner:
             raise RuntimeError("Amount of topics requested before topic "
                                "runner has finished running")
         return self._current_topic_runner.get_n_topics()
@@ -264,7 +275,7 @@ class GraphController:
         """Returns a figure showing a text that a topic needs to be selected"""
         fig = matplotlib.pyplot.figure()
         matplotlib.pyplot.figtext(0.5, 0.5, "Selecteer een topic om "
-                                  "deze visualizatie te zien",
+                                            "deze visualizatie te zien",
                                   horizontalalignment='center',
                                   verticalalignment='center')
 
@@ -359,10 +370,13 @@ class GraphController:
         self._possible_plots_changed_event.publish(
             self._possible_visualizations)
 
+    def _on_config_switch(self, topic_runner: TopicRunner):
+        self.on_topic_runner_complete(topic_runner)
+
 
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

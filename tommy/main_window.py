@@ -83,6 +83,8 @@ class MainWindow(QMainWindow):
             self._controller.corpus_controller)
         self.model_params_view = ModelParamsView(
             self._controller.model_parameters_controller,
+            self._controller.language_controller,
+            self._controller.config_controller,
             self._controller)
         self.fetched_topics_view = FetchedTopicsView(
             self._controller.graph_controller,
@@ -125,6 +127,7 @@ class MainWindow(QMainWindow):
         """
 
         widget.setParent(self)
+
         widget.setGeometry(x, y, w, h)
         widget.show()
 
@@ -205,6 +208,6 @@ class MainWindow(QMainWindow):
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

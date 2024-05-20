@@ -9,7 +9,8 @@ from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 @pytest.fixture(scope='function')
 def lda_settings() -> LdaSettings:
     controller = Controller()
-    lda_settings = LdaSettings(controller.model_parameters_controller)
+    lda_settings = LdaSettings(controller.model_parameters_controller,
+                               controller.language_controller)
     return lda_settings
 
 
@@ -176,6 +177,6 @@ def test_toggle_auto_calculate_alpha_beta(lda_settings: LdaSettings,
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

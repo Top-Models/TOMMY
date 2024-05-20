@@ -1,3 +1,6 @@
+from typing import Dict
+
+from tommy.model.config_model import ConfigModel
 from tommy.support.event_handler import EventHandler
 from tommy.model.project_settings_model import ProjectSettingsModel
 
@@ -13,6 +16,47 @@ class ProjectSettingsController:
     @property
     def input_folder_path_changed_event(self) -> EventHandler[str]:
         return self._input_folder_path_changed_event
+
+    def add_configuration(self, name: str, config: ConfigModel) -> None:
+        """
+        Add a new configuration to the project settings model.
+        :param name: Name of the configuration
+        :param config: Configuration settings
+        """
+        # Add the configuration to the project settings model
+        self._project_settings_model.configs.append(config)
+        # Notify observers of the change
+        self.notify()
+
+    def delete_configuration(self, name: str, config: ConfigModel) -> None:
+        """
+        delete a configuration to the project settings model.
+        :param name: Name of the configuration
+        :param config: Configuration settings
+        """
+        # Add the configuration to the project settings model
+        self._project_settings_model.configs.remove(config)
+        # Notify observers of the change
+        self.notify()
+
+    def get_configurations(self) -> Dict[str, ConfigModel]:
+        """
+        Get all configurations from the project settings model.
+        :return: A dictionary of configurations
+        """
+        return {config.name: config for config in
+                self._project_settings_model.configs}
+
+    def get_configuration(self, name: str) -> ConfigModel:
+        """
+        Get a configuration by name from the project settings model.
+        :param name: Name of the configuration to retrieve
+        :return: The configuration model
+        """
+        for config in self._project_settings_model.configs:
+            if config.name == name:
+                return config
+        return None
 
     def __init__(self) -> None:
         """
@@ -51,6 +95,6 @@ class ProjectSettingsController:
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

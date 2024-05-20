@@ -3,6 +3,9 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget
 from pytestqt.qtbot import QtBot
 
+from tommy.controller.model_parameters_controller import (
+    ModelParametersController)
+from pytest_mock import mocker, MockerFixture
 from tommy.support.model_type import ModelType
 from tommy.view.settings_view.model_params_view import ModelParamsView
 from pytest_mock import mocker
@@ -12,8 +15,11 @@ from tommy.controller.controller import Controller
 @pytest.fixture(scope='function')
 def model_params_view(qtbot: QtBot) -> ModelParamsView:
     controller = Controller()
-    model_params_view = ModelParamsView(controller.model_parameters_controller,
-                                        controller)
+    model_params_view = ModelParamsView(
+        controller.model_parameters_controller,
+        controller.language_controller,
+        controller,
+        controller.config_controller)
     qtbot.addWidget(model_params_view)
     return model_params_view
 
@@ -28,13 +34,14 @@ def test_get_current_settings_view_returns_correct_settings_view(
     settings_view = model_params_view.get_current_settings_view()
 
     # Assert
-    assert settings_view == model_params_view.SETTINGS_VIEWS[ModelType.LDA]
+    assert (settings_view ==
+            model_params_view.algorithm_specific_settings_views[ModelType.LDA])
 
 
 def test_apply_button_clicked_not_all_fields_valid_does(
         model_params_view: ModelParamsView,
         qtbot: QtBot,
-        mocker: mocker):
+        mocker: MockerFixture):
     # Arrange
     mock_all_fields_valid = mocker.patch.object(
         model_params_view.get_current_settings_view(), "all_fields_valid")
@@ -50,7 +57,7 @@ def test_apply_button_clicked_not_all_fields_valid_does(
 def test_apply_button_clicked_calls_on_run_topic_modelling(
         model_params_view: ModelParamsView,
         qtbot: QtBot,
-        mocker: mocker):
+        mocker: MockerFixture):
     # Arrange
     mock_on_run_topic_modelling = mocker.Mock()
     model_params_view._controller.on_run_topic_modelling = (
@@ -66,6 +73,6 @@ def test_apply_button_clicked_calls_on_run_topic_modelling(
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """
