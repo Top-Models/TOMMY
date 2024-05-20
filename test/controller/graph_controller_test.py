@@ -200,16 +200,14 @@ def test_reset_graph_view_state(graph_controller: GraphController,
     assert graph_controller._current_topic_selected_id is None
 
 
-def test_visualizations_available(graph_controller: GraphController,
-                                  mocker: MockerFixture):
+def test_visualizations_available(graph_controller: GraphController):
     graph_controller._current_topic_runner = None
     assert not graph_controller.visualizations_available()
 
     topic_model = TopicModel()
     docs = [[f"doc{i}"] for i in
-            range(10)]  # Maak een iterabele lijst van lijsten
+            range(10)]
 
-    # Geen mocking van LdaRunner nodig als je de docs correct wilt doorgeven
     graph_controller._current_topic_runner = LdaRunner(topic_model, docs, 5)
 
     assert graph_controller.visualizations_available()
