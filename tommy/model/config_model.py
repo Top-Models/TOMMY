@@ -7,6 +7,7 @@ from tommy.controller.topic_modelling_runners.abstract_topic_runner import \
 from tommy.model.corpus_model import CorpusModel
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.model.stopwords_model import StopwordsModel
+from tommy.model.synonyms_model import SynonymsModel
 from tommy.model.topic_model import TopicModel
 
 
@@ -18,11 +19,12 @@ class ConfigModel:
         self.topic_model = TopicModel()
         if derive_from is None:
             self.stopwords_model = StopwordsModel()
+            self.synonyms_model = SynonymsModel()
             self.model_parameters_model = ModelParametersModel()
             self.corpus_model = CorpusModel()
         else:
-            self.stopwords_model = StopwordsModel(
-                derive_from.stopwords_model)
+            self.stopwords_model = StopwordsModel(derive_from.stopwords_model)
+            self.synonyms_model = SynonymsModel(derive_from.synonyms_model)
             self.model_parameters_model = ModelParametersModel(
                 derive_from.model_parameters_model)
             self.corpus_model = CorpusModel(

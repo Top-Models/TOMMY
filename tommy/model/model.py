@@ -19,7 +19,7 @@ class Model:
         first_config = ConfigModel()
         self.selected_config_name: str = Model.default_config_name
 
-        # add fist configuration to dictionary using the default config name
+        # Add fist configuration to dictionary using the default config name
         self.configs: dict[str, ConfigModel] = {
             Model.default_config_name: first_config}
 
@@ -30,6 +30,10 @@ class Model:
     @property
     def stopwords_model(self):
         return self.config_model.stopwords_model
+
+    @property
+    def synonyms_model(self):
+        return self.config_model.synonyms_model
 
     @property
     def model_parameters_model(self):

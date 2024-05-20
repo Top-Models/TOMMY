@@ -94,6 +94,7 @@ class Controller:
         self._topic_modelling_controller = TopicModellingController()
         self._stopwords_controller = StopwordsController(
             self._language_controller)
+        self._synonyms_controller = SynonymsController()
         self._preprocessing_controller = PreprocessingController(
             self._language_controller)
         self._corpus_controller = CorpusController()
@@ -144,11 +145,11 @@ class Controller:
             self._model.stopwords_model)
 
         self._synonyms_controller.set_model_refs(
-            self._models[model_index].synonyms_model)
+            self._model.synonyms_model)
 
         self._preprocessing_controller.set_model_refs(
-            self._models[model_index].stopwords_model,
-            self._models[model_index].synonyms_model)
+            self._model.stopwords_model,
+            self._model.synonyms_model)
 
         self._corpus_controller.set_model_refs(
             self._model.corpus_model)

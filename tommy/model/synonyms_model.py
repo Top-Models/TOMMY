@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 class SynonymsModel:
     """
     A class representing the dictionary of synonyms.
@@ -11,9 +14,12 @@ class SynonymsModel:
     def synonyms(self) -> dict[str, str]:
         return self._synonyms
 
-    def __init__(self) -> None:
+    def __init__(self, derive_from: SynonymsModel = None) -> None:
         """Initializes the synonyms model."""
-        self._synonyms = dict()
+        if derive_from is None:
+            self._synonyms = dict()
+        else:
+            self._synonyms = derive_from.synonyms.copy()
 
     def __len__(self) -> int:
         """Gets the number of synonyms."""
