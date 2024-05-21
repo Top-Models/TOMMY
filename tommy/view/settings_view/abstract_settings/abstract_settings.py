@@ -135,15 +135,17 @@ class AbstractSettings:
         config_management_container.setObjectName(
             "config_management_container")
         container_layout = QHBoxLayout()
+        container_layout.setContentsMargins(0, 0, 0, 0)
         config_management_container.setLayout(container_layout)
         config_management_container.setStyleSheet(f"""
             QWidget#config_management_container {{
                 background-color: white;
                 border: 2px solid {seco_col_blue};
                 border-radius: 5px;
-                padding: 0px;
             }}
         """)
+
+        # TODO: Also make label clickable
 
         # Add label to container
         self.config_management_label = QLabel(
@@ -153,8 +155,10 @@ class AbstractSettings:
             f"font-size: 14px;"
             f"color: black;"
             f"font-family: {text_font};"
-            f"border: none;"
+            f"border-top: 2px solid {seco_col_blue};"
+            f"border-bottom: 2px solid {seco_col_blue};"
             f"background-color: white;"
+            f"margin-left: 10px;"
         )
         self.config_management_label.setAlignment(
             Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
@@ -163,7 +167,9 @@ class AbstractSettings:
 
         # Add a horizontal spacer to push the button to the right
         spacer = QWidget()
-        spacer.setStyleSheet("background-color: white;")
+        spacer.setStyleSheet("background-color: white;"
+                             f"border-top: 2px solid {seco_col_blue};"
+                             f"border-bottom: 2px solid {seco_col_blue};")
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         container_layout.addWidget(spacer)
 
@@ -171,7 +177,7 @@ class AbstractSettings:
         self._config_management_button = QPushButton("⛭")
         self._config_management_button.setStyleSheet(f"""
             QPushButton {{
-                font-size: 26px;
+                font-size: 20px;
                 font-family: {text_font};
                 border-radius: 5px;
                 color: white;
