@@ -96,6 +96,25 @@ def test_display_plot_default(graph_view: GraphView):
     assert graph_view.layout.count() == 1
 
 
+def test_clear_plot(graph_view: GraphView):
+    """
+    Test if the plot is cleared correctly.
+    """
+    # Create a canvas
+    canvas = Figure()
+    canvas.add_subplot(111)
+
+    # Display the plot
+    graph_view.display_plot(canvas)
+
+    # Clear the plot
+    graph_view.clear_plot()
+
+    # Check if the plot was cleared
+    assert graph_view.layout.count() == 1
+    assert isinstance(graph_view.layout.itemAt(0).widget(), FigureCanvasQTAgg)
+
+
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.

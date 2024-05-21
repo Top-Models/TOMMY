@@ -76,6 +76,7 @@ class MainWindow(QMainWindow):
         self.graph_view = GraphView()
         self.plot_selection_view = PlotSelectionView(
             self._controller.graph_controller,
+            self._controller.config_controller,
             self.graph_view
         )
         self.imported_files_view = ImportedFilesView(
