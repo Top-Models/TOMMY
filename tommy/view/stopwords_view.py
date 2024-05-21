@@ -89,8 +89,6 @@ class StopwordsView(QScrollArea):
         # self.stopwords_tab.setStyleSheet(tab_style)
         self.blacklist_tab = QTextEdit()
         self.blacklist_tab.setStyleSheet(tab_style)
-        self.ngrams_tab = QTextEdit()
-        self.ngrams_tab.setStyleSheet(tab_style)
         self.synonym_tab = QTextEdit()
         self.synonym_tab.setStyleSheet(tab_style)
 
@@ -106,19 +104,16 @@ class StopwordsView(QScrollArea):
         # self.container.addTab(self.stopwords_tab, "Stopwords")
         self.container.addTab(self.blacklist_tab, "Blacklist")
         self.container.addTab(self.synonym_tab, "Synoniemen")
-        self.container.addTab(self.ngrams_tab, "N-grams")
 
         # Connect text changed event to update additional_stopwords
         # self.stopwords_tab.textChanged.connect(self.update_stopwords)
         self.blacklist_tab.textChanged.connect(self.update_blacklist)
         self.synonym_tab.textChanged.connect(self.update_synonyms)
-        self.ngrams_tab.textChanged.connect(self.update_ngrams)
 
         # Disable rich text
         # self.stopwords_tab.setAcceptRichText(False)
         self.blacklist_tab.setAcceptRichText(False)
         self.synonym_tab.setAcceptRichText(False)
-        self.ngrams_tab.setAcceptRichText(False)
 
     def update_blacklist(self) -> None:
         """
@@ -138,15 +133,6 @@ class StopwordsView(QScrollArea):
         :return: None
         """
         input_text = self.synonym_tab.toPlainText()
-        # TODO: implement at a later point
-
-    def update_ngrams(self) -> None:
-        """
-        Update ngrams set with the text from the ngrams tab.
-        should be updated to handle the right parsing.
-        :return: None
-        """
-        input_text = self.ngrams_tab.toPlainText()
         # TODO: implement at a later point
 
     def _update_blacklist_textbox(self, words: list[str]):
