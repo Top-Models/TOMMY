@@ -51,6 +51,12 @@ class PreprocessingController:
         self._pos_categories = {"NOUN", "PROPN", "ADJ", "ADV", "VERB"}
 
     def set_model_refs(self, stopwords_model: StopwordsModel):
+        """Set the reference to the stopwords model"""
+        self._stopwords_model = stopwords_model
+
+    def change_config_model_refs(self, stopwords_model: StopwordsModel):
+        """Change the reference to the stopwords model when the user
+        switches config"""
         self._stopwords_model = stopwords_model
 
     def process_text(self, text: str) -> list[str]:
@@ -85,6 +91,8 @@ class PreprocessingController:
 
         # TODO: fix "-"words and remove diacritical marks
         #  (i.e. character 'normalization')
+
+        # TODO: 6,7
 
         # 8 - stopword removal
         lemmas = self.filter_stopwords(lemmas)

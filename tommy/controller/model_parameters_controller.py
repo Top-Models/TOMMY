@@ -9,6 +9,9 @@ class ModelParametersController:
     modelling
     """
     _parameters_model: ModelParametersModel = None
+    # TODO: Not all parameters emit this event when changed
+    _params_model_changed_event: EventHandler[
+        ModelParametersModel] = EventHandler()
     _algorithm_changed_event: EventHandler[None]
 
     @property
@@ -25,6 +28,16 @@ class ModelParametersController:
                        parameters_model: ModelParametersModel) -> None:
         """Set the reference to the model-parameters-model"""
         self._parameters_model = parameters_model
+
+    def change_config_model_refs(self,
+                                 parameters_model: ModelParametersModel
+                                 ) -> None:
+        """
+        Set the reference to the model-parameters-model and
+        update the frontend
+        """
+        self._parameters_model = parameters_model
+        self._params_model_changed_event.publish(parameters_model)
 
     def set_model_word_amount(self, word_amount: int) -> None:
         """Set the amount of words to be displayed per topic"""
@@ -86,6 +99,10 @@ class ModelParametersController:
     def get_model_type(self) -> ModelType:
         """Return the type of topic modelling algorithm to be run"""
         return self._parameters_model.model_type
+
+    @property
+    def params_model_changed_event(self):
+        return self._params_model_changed_event
 
 
 """
