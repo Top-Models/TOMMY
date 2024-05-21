@@ -94,6 +94,9 @@ class Controller:
             self._project_settings_controller)
         self._graph_controller.set_controller_refs(self._corpus_controller)
         self._export_controller.set_controller_refs(self._graph_controller)
+        self._topic_modelling_controller.set_controller_refs(
+            self._stopwords_controller,
+            self._preprocessing_controller)
 
     def select_model(self, model_index: int) -> None:
         """

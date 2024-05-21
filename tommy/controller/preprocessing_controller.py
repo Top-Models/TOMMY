@@ -2,6 +2,7 @@ import os
 
 import spacy
 from spacy.tokens import Doc
+from nltk.tokenize import sent_tokenize
 
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.support.application_settings import application_settings
@@ -57,6 +58,11 @@ class PreprocessingController:
         tokens = self._nlp(text)
         tokens = self.process_tokens(tokens)
         return tokens
+
+    @staticmethod
+    def split_into_sentences(text: str) -> list[str]:
+        """Split the given text to a list of sentences."""
+        return sent_tokenize(text)
 
     def process_tokens(self, doc: Doc) -> list[str]:
         """

@@ -1,0 +1,193 @@
+from numpy import ndarray
+from sklearn.feature_extraction.text import CountVectorizer
+from bertopic import BERTopic
+from bertopic.vectorizers import ClassTfidfTransformer
+
+from tommy.controller.stopwords_controller import StopwordsController
+from tommy.controller.corpus_controller import RawFile
+from tommy.datatypes.topics import TopicWithScores
+from tommy.model.topic_model import TopicModel
+from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
+    TopicRunner)
+
+
+class BertopicRunner(TopicRunner):
+    """
+    BertopicRunner class for running the BERTopic topic modelling algorithm.
+    """
+
+    @property
+    def _model(self) -> BERTopic:
+        """get the bertopic model object saved in the topic_model"""
+        return self._topic_model.model['model']
+
+    @_model.setter
+    def _model(self, new_model: BERTopic) -> None:
+        """set the bertopic model object in the topic_model"""
+        self._topic_model.model['model'] = new_model
+
+    @property
+    def _topic_distr(self) -> ndarray:
+        """get the calculated topic distribtion over the documents"""
+        return self._topic_model.model["topic_distr"]
+
+    @_topic_distr.setter
+    def _topic_distr(self, new_topic_distr: ndarray) -> None:
+        """set the calculated topic distribtion over the documents"""
+        self._topic_model.model["topic_distr"] = new_topic_distr
+
+    # @property
+    # def _topic_token_distr(self):
+    #     """get the calculated distrution of tokens over topics"""
+    #     return self._topic_model.model["topic_token_distr"]
+    #
+    # @_topic_token_distr.setter
+    # def _topic_token_distr(self, new_topic_token_distr) -> None:
+    #     """set the calculated distrution of tokens over topics"""
+    #     self._topic_model.model["topic_token_distr"] = new_topic_token_distr
+
+    @property
+    def num_words_per_topic(self) -> int:
+        """the number of words that are calculated per topic"""
+        return self._topic_model.model['num_words_per_topic']
+
+    @property
+    def max_num_topics(self) -> int:
+        """the maximum number of topics that are calculated per topic"""
+        return self._topic_model.model['num_topics']
+
+    def __init__(self, topic_model: TopicModel,
+                 stopwords_controller: StopwordsController,
+                 num_topics: int,
+                 num_words_per_topic: int,
+                 docs: list[str],
+                 sentences: list[str]) -> None:
+        """
+        Initialize the BertopicRunner.
+        :param topic_model: reference to the topic model where the algorithm
+            and data should be saved
+        :param stopwords_controller: a reference to the stopwords controller to
+            extract the stopwords from
+        :param num_topics: the MAXIMUM number of topics to be returned from
+            the analysis
+        :param num_words_per_topic: the number of words per topic to be
+            calculated. Values between 10-20 advised due to computation time.
+        :return: None
+        """
+        super().__init__(topic_model=topic_model)
+        self._stopwords_controller = stopwords_controller
+
+        self._topic_model.model = {}
+        self._topic_model.model['num_words_per_topic'] = num_words_per_topic
+        self._topic_model.model['num_topics'] = num_topics
+
+        self.train_model(docs, sentences)
+
+    def get_n_topics(self) -> int:
+        """Returns the number of topics calculated by the model."""
+        return len([... for topic_words
+                    in self._model.get_topics().values()
+                    if topic_words])
+
+    def get_topic_with_scores(self, topic_id: int, n_words: int):
+        """
+        Return a topic object containing top n terms and their corresponding
+        score for the topic identified by the topic_index.
+        :param topic_id: the index of the requested topic
+        :param n_words: number of terms in the resulting topic object,
+            Note: BERTopic does not support top n queries
+        :return: topic object containing top n terms and their corresponding
+            scores
+        """
+        topics = [topic_words for topic_words
+                  in self._model.get_topics().values()
+                  if topic_words]
+
+        # type hint in BERTopic's get_topics() function is incorrect
+        # noinspection PyTypeChecker
+        return TopicWithScores(topic_id, topics[topic_id])
+
+    def get_topics_with_scores(self, n_words: int):
+        """
+        Return a list of topic objects containing top n terms and their
+        corresponding scores.
+        :param n_words: number of terms in the resulting topic objects,
+            Note: BERTopic does not support top n queries
+        :return: list of topic objects containing the top n terms and their
+            corresponding scores
+        """
+        # type hint in BERTopic's get_topics() function is incorrect
+        # noinspection PyTypeChecker
+        return [TopicWithScores(topic_id=topic_id,
+                                top_words_with_scores=topic_words)
+                for topic_id, topic_words
+                in enumerate(self._model.get_topics().values())
+                if topic_words]
+
+    def train_model(self, docs: list[str], sentences: list[str]) -> None:
+        """
+        Train the BERTopic model.
+        :param docs: list containing the raw bodies of files as
+            input data
+        :param sentences: list containing the raw bodies of files split into
+            sentences as training input
+        :return: None
+        """
+        print('Start training BERTopic model')#todo
+        import time
+        start_time = time.time()#todo
+
+        vectorizer_model = CountVectorizer(
+            stop_words=list(stopword for stopword
+                            in self._stopwords_controller.stopwords_model))
+        ctfidf_model = ClassTfidfTransformer(reduce_frequent_words=True)
+        self._model = BERTopic(
+            vectorizer_model=vectorizer_model, ctfidf_model=ctfidf_model,
+            top_n_words=self.num_words_per_topic, nr_topics=self.max_num_topics
+        ).fit(sentences)
+
+        # self._topic_distr, _ = self._model.approximate_distribution(sentences)
+
+        print("bert training time:", time.time() - start_time)#todo
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""
+
+if __name__ == "__main__": #todo
+    from tommy.controller.language_controller import LanguageController
+    languagec = LanguageController()
+    stopwords = StopwordsController(languagec)
+
+    from tommy.model.stopwords_model import StopwordsModel
+    stopwords_model = StopwordsModel()
+    stopwords.set_model_refs(stopwords_model)
+
+    topic_model = TopicModel()
+
+    num_topics = 3
+    num_words = 15
+    docs = list(" ".join("word"+c+str(max(50, min(n, 9000))) for n in range(10000)) for c
+                in "abcdefghijklmnopqrstuvwxyza")
+
+    from nltk.tokenize import sent_tokenize, word_tokenize
+    lists_of_sentences = map(
+        sent_tokenize,
+        docs)
+    from itertools import chain
+    from functools import reduce
+    sentences = list(reduce(chain, lists_of_sentences))
+    print(sentences[:20])
+    bert = BertopicRunner(topic_model, stopwords, num_topics, num_words, docs
+                          , sentences)
+
+    print(f"n_topics({num_topics})", bert.get_n_topics())
+    print(f"n_words({num_words})", bert.num_words_per_topic)
+
+    print("topics", bert.get_topics_with_scores(10))
+    for n in range(bert.get_n_topics()):
+        print(f"topic {n}:", bert.get_topic_with_scores(n, 9))

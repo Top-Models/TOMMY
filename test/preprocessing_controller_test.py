@@ -116,6 +116,16 @@ def test_process_tokens(preprocessing_controller_dutch, stopwords_model_dutch):
     assert "test" in tokens
 
 
+def test_split_into_sentences():
+    """Test the split_into_sentenced method of PreprocessingController."""
+    text = "Dit is een test zin. De vorige zin was een zin of zoiets."
+
+    sentences = PreprocessingController.split_into_sentences(text)
+
+    assert sentences == ["Dit is een test zin.",
+                         "De vorige zin was een zin of zoiets."]
+
+
 def test_filter_stopwords(preprocessing_controller_dutch,
                           stopwords_model_dutch):
     """

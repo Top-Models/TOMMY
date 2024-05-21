@@ -1,13 +1,20 @@
+from itertools import chain
+from functools import reduce
+
 from tommy.controller.model_parameters_controller import (
     ModelParametersController,
     ModelType)
 from tommy.controller.corpus_controller import CorpusController
+from tommy.controller.stopwords_controller import StopwordsController
+from tommy.controller.preprocessing_controller import PreprocessingController
 
 from tommy.model.topic_model import TopicModel
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
+from tommy.controller.topic_modelling_runners.bertopic_runner import \
+    BertopicRunner
 from tommy.support.event_handler import EventHandler
 
 
@@ -17,6 +24,8 @@ class TopicModellingController:
     train_model and supplies a topic runner object from which results can be
     extracted.
     """
+    _stopwords_controller: StopwordsController = None
+    _preprocessing_controller = None
     _model_parameters_controller: ModelParametersController = None
     _topic_model: TopicModel = None
     _corpus_controller: CorpusController = None
@@ -44,6 +53,13 @@ class TopicModellingController:
         self._topic_model = topic_model
         self._corpus_controller = corpus_controller
 
+    def set_controller_refs(self, stopwords_controller: StopwordsController,
+                            preprocessing_controller: PreprocessingController
+                            ) -> None:
+        """Set the reference to the stopwords and preprocessing controllers"""
+        self._stopwords_controller = stopwords_controller
+        self._preprocessing_controller = preprocessing_controller
+
     def train_model(self) -> None:
         """
         Trains the selected model from scratch on the currently loaded data
@@ -56,6 +72,8 @@ class TopicModellingController:
         match new_model_type:
             case ModelType.LDA:
                 self._train_lda()
+            case ModelType.BERTopic:
+                self._train_bert()
             case _:
                 raise NotImplementedError(
                     f"model type {new_model_type.name} is not supported by "
@@ -90,6 +108,33 @@ class TopicModellingController:
         self._topic_runner = LdaRunner(topic_model=self._topic_model,
                                        docs=corpus,
                                        num_topics=num_topics)
+
+    def _train_bert(self) -> None:
+        """
+        Retrieves the raw corpus and model parameters,
+        then runs the BERTopic model on the corpus and saves the topic runner.
+        :return: None
+        """
+        num_topics = self._model_parameters_controller.get_model_n_topics()
+        num_words_per_topic = (self._model_parameters_controller
+                               .get_model_word_amount())
+
+        raw_corpus = [document.body for document
+                      in self._corpus_controller.get_raw_bodies()]
+
+        # split every document into sentences and add all sentences to list
+        lists_of_sentences = map(
+            self._preprocessing_controller.split_into_sentences,
+            raw_corpus)
+        sentences = list(reduce(chain, lists_of_sentences))
+
+        self._topic_runner = BertopicRunner(
+            topic_model=self._topic_model,
+            stopwords_controller=self._stopwords_controller,
+            num_topics=num_topics,
+            num_words_per_topic=num_words_per_topic,
+            docs=raw_corpus,
+            sentences=sentences)
 
 
 """
