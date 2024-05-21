@@ -1,11 +1,17 @@
 from dataclasses import dataclass
 
+from gensim.corpora import Dictionary
+from gensim.models import LdaModel
+from gensim.models.nmf import Nmf
+
 
 @dataclass
 class TopicModel:
     """dataclass that holds the data and objects necessary to run a topic
     modelling algorithm"""
-    model: dict = None
+    model: LdaModel | Nmf = None
+    dictionary: Dictionary = None
+    corpus: list[list[tuple[int, int]]] = None
 
 
 """

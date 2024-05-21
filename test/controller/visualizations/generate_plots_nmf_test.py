@@ -5,7 +5,7 @@ import pickle
 from gensim import models, corpora
 
 from tommy.model.topic_model import TopicModel
-from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
+from tommy.controller.topic_modelling_runners.nmf_runner import NmfRunner
 
 from tommy.controller.visualizations.correlation_matrix_creator import (
     CorrelationMatrixCreator)
@@ -19,7 +19,6 @@ from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
 from tommy.controller.visualizations.document_topic_network_summary_creator \
     import DocumentTopicNetworkSummaryCreator
-from tommy.controller.visualizations.k_value_creator import KValueCreator
 
 
 # Test data directory
@@ -32,17 +31,17 @@ TEST_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),
 
 
 @pytest.fixture
-def lda_model():
+def nmf_model():
     # Load saved lda model which has 4 topics
-    path = os.path.join(TEST_DATA_DIR, 'test_lda_model', 'lda_model')
-    model = models.LdaModel.load(path)
+    path = os.path.join(TEST_DATA_DIR, 'test_nmf_model', 'nmf_model')
+    model = models.Nmf.load(path)
     return model
 
 
 @pytest.fixture
-def lda_model_dictionary():
+def nmf_model_dictionary():
     # Load id2word file of saved lda model
-    path = os.path.join(TEST_DATA_DIR, 'test_lda_model', 'lda_model.id2word')
+    path = os.path.join(TEST_DATA_DIR, 'test_nmf_model', 'nmf_model.id2word')
     dictionary = (corpora.Dictionary.load(path))
     return dictionary
 
@@ -59,20 +58,17 @@ def processed_files():
 
 
 @pytest.fixture
-def lda_runner(lda_model, lda_model_dictionary, processed_files, mocker):
+def nmf_runner(nmf_model, nmf_model_dictionary, mocker):
     topic_model = TopicModel()
 
     # Mock LdaRunner functions
-    mocker.patch.object(LdaRunner, 'train_model')
-    mocker.patch.object(LdaRunner, 'get_n_topics', return_value=4)
+    mocker.patch.object(NmfRunner, 'train_model')
+    mocker.patch.object(NmfRunner, 'get_n_topics', return_value=4)
 
     # Construct a mocked instance of LdaRunner
-    lda_runner = LdaRunner(topic_model, [], 0, 0)
-    lda_runner._model = lda_model
-    lda_runner._dictionary = lda_model_dictionary
-    docs = [document.body.body for document in processed_files]
-    lda_runner._bags_of_words = [lda_model_dictionary.doc2bow(tokens)
-                                 for tokens in docs]
+    lda_runner = NmfRunner(topic_model, [], 0, 0)
+    lda_runner._model = nmf_model
+    lda_runner._dictionary = nmf_model_dictionary
     return lda_runner
 
 
@@ -83,45 +79,39 @@ def metadata(processed_files):
     return metadata
 
 
-def test_generate_correlation_matrix(lda_runner):
+def test_generate_correlation_matrix(nmf_runner):
     correlation_matrix = CorrelationMatrixCreator()
-    figure = correlation_matrix._create_figure(lda_runner)
+    figure = correlation_matrix._create_figure(nmf_runner)
     assert figure
 
 
-def test_generate_document_word_count(lda_runner, metadata):
+def test_generate_document_word_count(nmf_runner, metadata):
     document_word_count = DocumentWordCountCreator()
-    figure = document_word_count._create_figure(lda_runner, metadata)
+    figure = document_word_count._create_figure(nmf_runner, metadata)
     assert figure
 
 
 @pytest.mark.parametrize("topic_id", [0, 1, 2, 3])
-def test_generate_top_words_bar_plot(lda_runner, topic_id):
+def test_generate_top_words_bar_plot(nmf_runner, topic_id):
     top_words_bar_plot = TopWordsBarPlotCreator()
-    figure = top_words_bar_plot._create_figure(lda_runner, topic_id)
+    figure = top_words_bar_plot._create_figure(nmf_runner, topic_id)
     assert figure
 
 
 @pytest.mark.parametrize("topic_id", [0, 1, 2, 3])
-def test_generate_word_cloud(lda_runner, topic_id):
+def test_generate_word_cloud(nmf_runner, topic_id):
     word_cloud_creator = WordCloudCreator()
-    figure = word_cloud_creator._create_figure(lda_runner, topic_id)
+    figure = word_cloud_creator._create_figure(nmf_runner, topic_id)
     assert figure
 
 
-def test_generate_word_topic_network(lda_runner):
+def test_generate_word_topic_network(nmf_runner):
     word_topic_network = WordTopicNetworkCreator()
-    figure = word_topic_network._create_figure(lda_runner)
+    figure = word_topic_network._create_figure(nmf_runner)
     assert figure
 
 
-def test_generate_document_topic_network_summary(lda_runner, processed_files):
+def test_generate_document_topic_network_summary(nmf_runner, processed_files):
     doc_topic_summary = DocumentTopicNetworkSummaryCreator()
-    figure = doc_topic_summary._create_figure(lda_runner, processed_files)
-    assert figure
-
-
-def test_generate_k_value_plot(lda_runner):
-    k_value_plot = KValueCreator()
-    figure = k_value_plot._create_figure(lda_runner)
+    figure = doc_topic_summary._create_figure(nmf_runner, processed_files)
     assert figure

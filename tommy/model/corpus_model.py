@@ -1,4 +1,6 @@
-from dataclasses import dataclass
+from __future__ import annotations
+
+from copy import copy
 
 from gensim.corpora import Dictionary
 
@@ -17,13 +19,17 @@ class CorpusModel:
     dictionary: Dictionary = None
     processed_corpus: ProcessedCorpus
 
-    def __init__(self):
+    def __init__(self, derive_from: CorpusModel = None):
         """
         Initialize the corpus model and create an empty instance of the
         ProcessedCorpus so files can be added to the processed corpus after
         pre-processing
         """
         self.processed_corpus = ProcessedCorpus()
+
+        if derive_from is not None:
+            self.metadata = copy(derive_from.metadata)
+            self.dictionary = copy(derive_from.dictionary)
 
 
 """

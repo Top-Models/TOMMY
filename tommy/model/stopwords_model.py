@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 from collections.abc import Iterable
 
@@ -26,10 +28,21 @@ class StopwordsModel:
     def extra_words(self) -> set[str]:
         return self._extra_words
 
-    def __init__(self) -> None:
+    @property
+    def extra_words_in_order(self) -> list[str]:
+        return self._extra_words_in_order
+
+    def __init__(self, derive_from: StopwordsModel = None) -> None:
         """Initializes the stopwords model."""
-        self._default_words = set()
-        self._extra_words = set()
+        if derive_from is None:
+            self._default_words = set()
+            self._extra_words = set()
+            self._extra_words_in_order = []
+        else:
+            self._default_words = derive_from.default_words.copy()
+            self._extra_words = derive_from.extra_words.copy()
+            self._extra_words_in_order = (
+                derive_from.extra_words_in_order.copy())
 
     def __len__(self) -> int:
         """Gets the number of stopwords."""
@@ -55,9 +68,11 @@ class StopwordsModel:
             # The argument is a string.
             if isinstance(arg, str):
                 self._extra_words.add(arg)
+                self._extra_words_in_order.append(arg)
             # The argument is an iterable.
             elif isinstance(arg, Iterable):
                 self._extra_words.update(arg)
+                self._extra_words_in_order.extend(arg)
             # The argument is of an unexpected type.
             else:
                 raise TypeError(
@@ -74,33 +89,32 @@ class StopwordsModel:
             # The argument is a string.
             if isinstance(arg, str):
                 self._extra_words.discard(arg)
+                self._extra_words_in_order.remove(arg)
+                self._extra_words_in_order = [
+                    i for i in self._extra_words_in_order if i != arg]
             # The argument is an iterable.
             elif isinstance(arg, Iterable):
                 self._extra_words.difference_update(arg)
+                self._extra_words_in_order = [
+                    i for i in self._extra_words_in_order if i not in arg]
             # The argument is of an unexpected type.
             else:
                 raise TypeError(
                     "Arguments must be strings or iterables of strings.")
 
-    def replace(self, *args: str | Iterable[str]) -> None:
+    def replace(self, word_set: set[str], words_in_order: list[str]) -> None:
         """
         Replace the extra stopwords with a new set of stopwords.
 
-        :param args: The new word(s) to replace the old ones with
+        :param word_set: The new words to replace the old ones with
+        :param words_in_order: The new words, but in the order that the user
+        supplied them. This is necessary to make sure the order stays the same
+        when switching config.
         :return: None
         """
         self._extra_words.clear()
-        for arg in args:
-            # The argument is a string.
-            if isinstance(arg, str):
-                self._extra_words.add(arg)
-            # The argument is an iterable.
-            elif isinstance(arg, Iterable):
-                self._extra_words.update(arg)
-            # The argument is of an unexpected type.
-            else:
-                raise TypeError(
-                    "Arguments must be strings or iterables of strings.")
+        self._extra_words = word_set
+        self._extra_words_in_order = words_in_order
 
 
 """
