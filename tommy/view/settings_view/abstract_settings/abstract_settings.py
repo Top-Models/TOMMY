@@ -1,13 +1,13 @@
 from PySide6.QtGui import QIntValidator, Qt
 from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, \
-    QVBoxLayout, QComboBox
+    QVBoxLayout, QComboBox, QPushButton, QWidget, QSizePolicy
 
+from tommy.controller.config_controller import ConfigController
 from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
-from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import text_font, seco_col_blue, \
-    disabled_gray, heading_font
+    disabled_gray, heading_font, hover_seco_col_blue
 from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
 
@@ -17,10 +17,12 @@ class AbstractSettings:
     Abstract class for settings view
     """
     _model_parameters_controller: ModelParametersController
+    _config_controller: ConfigController
     _scroll_layout: QVBoxLayout
 
     def __init__(self,
                  model_parameters_controller: ModelParametersController,
+                 config_controller: ConfigController,
                  language_controller: LanguageController):
         """
         Constructor for abstract settings
@@ -29,6 +31,7 @@ class AbstractSettings:
         """
         # Initialize controllers
         self._model_parameters_controller = model_parameters_controller
+        self._config_controller = config_controller
         self._language_controller = language_controller
 
         # Initialize stylesheet
@@ -46,6 +49,10 @@ class AbstractSettings:
                                           f"color: black;"
                                           f"border: 2px solid {seco_col_blue};"
                                           f"padding: 5px;")
+
+        # Initialize buttons
+        self.config_management_label = None
+        self._config_management_button = None
 
         # Initialize input fields
         self._algorithm_field = QComboBox()
@@ -66,6 +73,12 @@ class AbstractSettings:
         :return: None
         """
         self._scroll_layout = scroll_layout
+
+        # Config
+        self.initialize_config_management()
+        self.add_margin(10)
+
+        # General
         self.add_header_label("Algemeen", 17)
         self.initialize_algorithm_field()
         self.initialize_topic_amount_field()
@@ -108,6 +121,85 @@ class AbstractSettings:
         margin_label = QLabel("")
         margin_label.setFixedHeight(height)
         self._scroll_layout.addWidget(margin_label)
+
+    def initialize_config_management(self) -> None:
+        """
+        Initialize the config management button
+
+        :return: None
+        """
+        config_management_layout = QHBoxLayout()
+
+        # Add container widget
+        config_management_container = QWidget()
+        config_management_container.setObjectName(
+            "config_management_container")
+        container_layout = QHBoxLayout()
+        config_management_container.setLayout(container_layout)
+        config_management_container.setStyleSheet(f"""
+            QWidget#config_management_container {{
+                background-color: white;
+                border: 2px solid {seco_col_blue};
+                border-radius: 5px;
+                padding: 0px;
+            }}
+        """)
+
+        # Add label to container
+        self.config_management_label = QLabel(
+            self._config_controller.get_selected_configuration()
+        )
+        self.config_management_label.setStyleSheet(
+            f"font-size: 14px;"
+            f"color: black;"
+            f"font-family: {text_font};"
+            f"border: none;"
+            f"background-color: white;"
+        )
+        self.config_management_label.setAlignment(
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+        )
+        container_layout.addWidget(self.config_management_label)
+
+        # Add a horizontal spacer to push the button to the right
+        spacer = QWidget()
+        spacer.setStyleSheet("background-color: white;")
+        spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        container_layout.addWidget(spacer)
+
+        # Add button to container
+        self._config_management_button = QPushButton("⛭")
+        self._config_management_button.setStyleSheet(f"""
+            QPushButton {{
+                font-size: 26px;
+                font-family: {text_font};
+                border-radius: 5px;
+                color: white;
+                border: none;
+                padding: 5px 10px 5px 10px;
+                background-color: {seco_col_blue};
+            }}
+            QPushButton:hover {{
+                color: {seco_col_blue};
+                background-color: {hover_seco_col_blue};
+            }}
+        """)
+        self._config_management_button.clicked.connect(
+            self.config_management_button_clicked_event
+        )
+        container_layout.addWidget(self._config_management_button)
+
+        # Add config management layout to container layout
+        config_management_layout.addWidget(config_management_container)
+        self._scroll_layout.addLayout(config_management_layout)
+
+    def config_management_button_clicked_event(self) -> None:
+        """
+        Event handler for when the config management button is clicked
+
+        :return: None
+        """
+        pass
 
     def initialize_topic_amount_field(self) -> None:
         """

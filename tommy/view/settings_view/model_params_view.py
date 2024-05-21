@@ -49,12 +49,15 @@ class ModelParamsView(QScrollArea):
             ModelType, AbstractSettings] = {
             ModelType.LDA: LdaSettings(
                 self._model_parameters_controller,
+                self._config_controller,
                 language_controller),
             ModelType.BERTopic: BertSettings(
                 self._model_parameters_controller,
+                self._config_controller,
                 language_controller),
             ModelType.NMF: NmfSettings(
                 self._model_parameters_controller,
+                self._config_controller,
                 language_controller)
         }
 
