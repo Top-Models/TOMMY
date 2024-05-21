@@ -15,7 +15,7 @@ from tommy.controller.visualizations.nx_exporter_on_data import (
 
 
 class DocumentTopicNxExporter(
-        NxExporterOnData[ProcessedCorpus]):
+    NxExporterOnData[ProcessedCorpus]):
     """
     A class for constructing a network showing the topics and the
     number of documents that contain that topic for the topics in the given
@@ -23,7 +23,7 @@ class DocumentTopicNxExporter(
     nx.Graph.
     Note: this visualization is only to be used for exporting purposes
     """
-    _required_interfaces = [DocumentTopicsInterface]
+    _required_interfaces = [DocumentTopicsInterface, TopicRunner]
     name = 'Topics en documenten die daar ten minste 5% bij horen'
 
     @property
@@ -46,10 +46,9 @@ class DocumentTopicNxExporter(
         """
         return self.construct_doc_topic_network(topic_runner, data, 0.05)
 
-
     @staticmethod
     def construct_doc_topic_network(topic_runner:
-                                    TopicRunner | DocumentTopicsInterface,
+    TopicRunner | DocumentTopicsInterface,
                                     processed_files: ProcessedCorpus,
                                     minimum_probability: float
                                     ) -> nx.Graph:

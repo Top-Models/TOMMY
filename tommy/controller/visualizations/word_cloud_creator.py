@@ -17,7 +17,7 @@ class WordCloudCreator(AbstractVisualization):
     A class for constructing a word cloud for the topic in the given topic
     runner and returning it as a matplotlib figure.
     """
-    _required_interfaces = []
+    _required_interfaces = [TopicRunner]
     name = 'Woordenwolk'
     short_tab_name = 'Woordenwolk'
     vis_group = VisGroup.TOPIC
