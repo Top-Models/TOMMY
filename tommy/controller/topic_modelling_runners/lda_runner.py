@@ -1,5 +1,6 @@
 from collections.abc import Iterable
 
+import numpy as np
 from gensim.corpora.dictionary import Dictionary
 from gensim.models.ldamodel import LdaModel
 from gensim.models.coherencemodel import CoherenceModel
@@ -131,20 +132,42 @@ class LdaRunner(TopicRunner,
                 for (topic_id, words_with_scores)
                 in self._model.show_topics(formatted=False, num_words=n_words)]
 
-    def get_correlation_matrix(self, n_words_to_process: int) -> ndarray:
+    def get_correlation_matrix(self, **kwargs) -> ndarray:
         """
-        Get the array of distances (in the sense of similarity) between
-        different topics in the model.
-        :param n_words_to_process: The number of to take into account when
-            calculating the distance between topics.
-        :return: n_topic x n_topics matrix of floats between 0 and 1 where
-            entry i,j is the distance between topic i and topic j. Entry i,j is
-            close to 0 when topic i and topic j are similar and close to 1 when
-            topic i and topic j are very different
+        Calculate the topic correlation matrix.
+
+        :return: ndarray representing the correlation matrix of topics.
         """
-        return self._model.diff(self._model,
-                                distance='jaccard',
-                                num_words=n_words_to_process)[0]
+        topic_word_distribution = self._model.get_topics()
+
+        # Binarize the topic-word distribution based on a set threshold 0.01
+        # i.e. see if a word is related enough to a topic
+        binary_topic_distribution = (topic_word_distribution >
+                                     0.005).astype(int)
+
+        num_topics = binary_topic_distribution.shape[0]
+        dice_matrix = np.zeros((num_topics, num_topics))
+
+        # Compute the Dice-Sørensen coefficient for each pair of topics
+        for i in range(num_topics):
+            for j in range(num_topics):
+                # Check if intersection is 1 or 0
+                intersection = np.sum(
+                        binary_topic_distribution[i] *
+                        binary_topic_distribution[j])
+
+                sum_i = np.sum(binary_topic_distribution[i])
+                sum_j = np.sum(binary_topic_distribution[j])
+
+                # Fill in the formula
+                if sum_i + sum_j > 0:
+                    dice_matrix[i, j] = 2 * intersection / (
+                            sum_i + sum_j)
+                # Dividing by zero is impossible, so make it 0
+                else:
+                    dice_matrix[i, j] = 0.0
+
+        return dice_matrix
 
     def get_document_topics(self, doc, minimum_probability):
         bag_of_words = self._dictionary.doc2bow(doc)
