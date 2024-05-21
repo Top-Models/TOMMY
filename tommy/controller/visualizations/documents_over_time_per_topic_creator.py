@@ -1,6 +1,9 @@
 import matplotlib.figure
+import pandas as pd
 from matplotlib import pyplot as plt
+from matplotlib import dates as dts
 from matplotlib.ticker import MaxNLocator
+from datetime import datetime
 
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
@@ -13,12 +16,15 @@ from tommy.controller.visualizations.visualization_input_datatypes import (
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
 
+from tommy.support.constant_variables import plot_colors
+
+
 class DocumentsOverTimePerTopicCreator(AbstractVisualization):
     _required_interfaces = []
     name = 'Documenten over tijd'
     short_tab_name = 'Doc. over tijd'
     vis_group = VisGroup.TOPIC
-    needed_input_data = [VisInputData.PROCESSED_CORPUS]
+    needed_input_data = [VisInputData.TOPIC_ID, VisInputData.PROCESSED_CORPUS]
 
     def _create_figure(self,
                        topic_runner: TopicRunner | DocumentTopicsInterface,
@@ -27,9 +33,31 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
                        **kwargs
                        ) -> matplotlib.figure.Figure:
 
-        fig = plt.figure()
+        if topic_id is None:
+            raise ValueError("topic_id keyword argument is necessary in"
+                             " the documents_over_time_per_topic_creator")
 
-        years = [(document.metadata.date, document) for document in processed_corpus]
+        # Construct a plot and axes
+        fig, ax = plt.subplots()
 
+        dates = {"date": [],
+                 "probability": []}
+        for document in processed_corpus:
+            current_date = datetime.combine(document.metadata.date,
+                                            datetime.min.time())
+            topics = topic_runner.get_document_topics(document.body.body, 0.0)
+            current_probability = topics[topic_id][1]
+            dates["date"].append(current_date)
+            dates["probability"].append(current_probability)
+
+        df = pd.DataFrame(dates)
+        df = df.groupby("date", as_index=False).sum()
+        df = df.sort_values(by="date", ascending=True)
+        df = df.groupby([pd.Grouper(key='date', freq='ME')], as_index=False)[
+            "probability"].sum()
+
+        plt.plot(df["date"],
+                 df["probability"],
+                 color=plot_colors[topic_id % len(plot_colors)])
 
         return fig

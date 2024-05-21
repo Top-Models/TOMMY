@@ -1,5 +1,8 @@
 import matplotlib.figure
 from matplotlib import pyplot as plt
+import matplotlib.dates
+import pandas as pd
+from datetime import date, datetime
 from matplotlib.ticker import MaxNLocator
 
 from tommy.controller.result_interfaces.document_topics_interface import (
@@ -12,6 +15,8 @@ from tommy.controller.visualizations.visualization_input_datatypes import (
 
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
+
+from tommy.support.constant_variables import plot_colors
 
 
 class DocumentsOverTimeCreator(AbstractVisualization):
@@ -29,33 +34,30 @@ class DocumentsOverTimeCreator(AbstractVisualization):
                        ) -> matplotlib.figure.Figure:
 
         # Construct a plot and axes
-        figure, ax = plt.subplots()
+        fig, ax = plt.subplots()
 
-        years = [(document.metadata.date, document) for document in processed_corpus]
+        for topic_id in range(topic_runner.get_n_topics()):
+            dates = {"date": [],
+                     "probability": []}
+            for document in processed_corpus:
+                current_date = datetime.combine(document.metadata.date,
+                                                datetime.min.time())
+                topics = topic_runner.get_document_topics(document.body.body,
+                                                          0.0)
+                current_probability = topics[topic_id][1]
+                dates["date"].append(current_date)
+                dates["probability"].append(current_probability)
 
-        result = {}
+            df = pd.DataFrame(dates)
+            df = df.groupby("date", as_index=False).sum()
+            df = df.sort_values(by="date", ascending=True)
+            df = df.groupby([pd.Grouper(key='date', freq='ME')],
+                            as_index=False)["probability"].sum()
 
-        #for year in years:
-
-        #fjdks = [ for year in years]
-
-
-
-
-
-
-        topic_sum = [0] * topic_runner.get_n_topics()
-
-        for document_id, document in enumerate(processed_corpus):
-            document_topic = (
-                topic_runner.get_document_topics(document.body.body,
-                                                 0.0))
-            for (topic_id, probability) in document_topic:
-                topic_sum[topic_id] += probability
-
-        ax.plot(range(1, topic_runner.get_n_topics() + 1), topic_sum)
-
-        return figure
+            plt.plot(df["date"],
+                     df["probability"],
+                     color=plot_colors[topic_id % len(plot_colors)])
+        return fig
 
 
 
