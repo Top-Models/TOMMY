@@ -2,12 +2,10 @@ from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QPushButton, QInputDialog, QListWidget,
     QMessageBox, QListWidgetItem
 )
-from PySide6.QtGui import QIcon, QColor, QBrush
+
 from tommy.controller.config_controller import ConfigController
-from tommy.model.config_model import ConfigModel
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
-from tommy.support.constant_variables import text_font
 
 
 class ConfigView(QDialog):

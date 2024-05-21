@@ -7,9 +7,10 @@ from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
 from tommy.support.constant_variables import text_font, seco_col_blue, \
-    disabled_gray, heading_font, hover_seco_col_blue
+    disabled_gray, heading_font, hover_seco_col_blue, pressed_seco_col_blue
 from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
+from tommy.view.config_view import ConfigView
 
 
 class AbstractSettings:
@@ -145,8 +146,6 @@ class AbstractSettings:
             }}
         """)
 
-        # TODO: Also make label clickable
-
         # Add label to container
         self.config_management_label = QLabel(
             self._config_controller.get_selected_configuration()
@@ -185,13 +184,17 @@ class AbstractSettings:
                 padding: 5px 10px 5px 10px;
                 background-color: {seco_col_blue};
             }}
+            
             QPushButton:hover {{
-                color: {seco_col_blue};
                 background-color: {hover_seco_col_blue};
+            }}
+            
+            QPushButton:pressed {{
+                background-color: {pressed_seco_col_blue};
             }}
         """)
         self._config_management_button.clicked.connect(
-            self.config_management_button_clicked_event
+            self.open_config_management_widget
         )
         container_layout.addWidget(self._config_management_button)
 
@@ -199,13 +202,11 @@ class AbstractSettings:
         config_management_layout.addWidget(config_management_container)
         self._scroll_layout.addLayout(config_management_layout)
 
-    def config_management_button_clicked_event(self) -> None:
-        """
-        Event handler for when the config management button is clicked
-
-        :return: None
-        """
-        pass
+    def open_config_management_widget(self):
+        """Method to open the configuration management widget"""
+        config_management_widget = ConfigView(
+            self._config_controller, self._model_parameters_controller)
+        config_management_widget.exec()
 
     def initialize_topic_amount_field(self) -> None:
         """
