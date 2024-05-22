@@ -149,7 +149,6 @@ class GraphController:
 
     def clear_graphs(self, _):
         """Clear all graphs when the input folder path changes"""
-        print("Clearing graphs")
         self._delete_all_cached_plots()
         self._current_topic_runner = None
         self._calculate_possible_visualizations()
