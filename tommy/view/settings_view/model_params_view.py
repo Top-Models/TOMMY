@@ -298,7 +298,8 @@ class ModelParamsView(QScrollArea):
 
         QApplication.processEvents()
 
-        # Re-enable the apply button and restore its text when processing is complete
+        # Re-enable the apply button and restore its text 
+        # when processing is complete
         self.apply_button.setEnabled(True)
         self.apply_button.setText("Toepassen")
         self.apply_button.setStyleSheet(
