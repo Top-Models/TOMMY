@@ -27,26 +27,6 @@ class BertopicRunner(TopicRunner):
         self._topic_model.model['model'] = new_model
 
     @property
-    def _topic_distr(self) -> ndarray:
-        """get the calculated topic distribtion over the documents"""
-        return self._topic_model.model["topic_distr"]
-
-    @_topic_distr.setter
-    def _topic_distr(self, new_topic_distr: ndarray) -> None:
-        """set the calculated topic distribtion over the documents"""
-        self._topic_model.model["topic_distr"] = new_topic_distr
-
-    # @property
-    # def _topic_token_distr(self):
-    #     """get the calculated distrution of tokens over topics"""
-    #     return self._topic_model.model["topic_token_distr"]
-    #
-    # @_topic_token_distr.setter
-    # def _topic_token_distr(self, new_topic_token_distr) -> None:
-    #     """set the calculated distrution of tokens over topics"""
-    #     self._topic_model.model["topic_token_distr"] = new_topic_token_distr
-
-    @property
     def num_words_per_topic(self) -> int:
         """the number of words that are calculated per topic"""
         return self._topic_model.model['num_words_per_topic']
@@ -133,9 +113,9 @@ class BertopicRunner(TopicRunner):
             sentences as training input
         :return: None
         """
-        print('Start training BERTopic model')#todo
-        import time
-        start_time = time.time()#todo
+        # print('Start training BERTopic model')#todo
+        # import time
+        # start_time = time.time()#todo
 
         vectorizer_model = CountVectorizer(
             stop_words=list(stopword for stopword
@@ -146,9 +126,7 @@ class BertopicRunner(TopicRunner):
             top_n_words=self.num_words_per_topic, nr_topics=self.max_num_topics
         ).fit(sentences)
 
-        # self._topic_distr, _ = self._model.approximate_distribution(sentences)
-
-        print("bert training time:", time.time() - start_time)#todo
+        #print("bert training time:", time.time() - start_time)#todo
 
 
 """
@@ -157,37 +135,3 @@ at Utrecht University within the Software Project course.
 © Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """
-
-if __name__ == "__main__": #todo
-    from tommy.controller.language_controller import LanguageController
-    languagec = LanguageController()
-    stopwords = StopwordsController(languagec)
-
-    from tommy.model.stopwords_model import StopwordsModel
-    stopwords_model = StopwordsModel()
-    stopwords.set_model_refs(stopwords_model)
-
-    topic_model = TopicModel()
-
-    num_topics = 3
-    num_words = 15
-    docs = list(" ".join("word"+c+str(max(50, min(n, 9000))) for n in range(10000)) for c
-                in "abcdefghijklmnopqrstuvwxyza")
-
-    from nltk.tokenize import sent_tokenize, word_tokenize
-    lists_of_sentences = map(
-        sent_tokenize,
-        docs)
-    from itertools import chain
-    from functools import reduce
-    sentences = list(reduce(chain, lists_of_sentences))
-    print(sentences[:20])
-    bert = BertopicRunner(topic_model, stopwords, num_topics, num_words, docs
-                          , sentences)
-
-    print(f"n_topics({num_topics})", bert.get_n_topics())
-    print(f"n_words({num_words})", bert.num_words_per_topic)
-
-    print("topics", bert.get_topics_with_scores(10))
-    for n in range(bert.get_n_topics()):
-        print(f"topic {n}:", bert.get_topic_with_scores(n, 9))

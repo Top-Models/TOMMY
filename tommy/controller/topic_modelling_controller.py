@@ -15,8 +15,8 @@ from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
 from tommy.controller.topic_modelling_runners.nmf_runner import NmfRunner
-from tommy.controller.topic_modelling_runners.bertopic_runner import \
-    BertopicRunner
+from tommy.controller.topic_modelling_runners.bertopic_runner import (
+    BertopicRunner)
 from tommy.support.event_handler import EventHandler
 
 
@@ -172,7 +172,7 @@ class TopicModellingController:
             raw_corpus)
         sentences = list(reduce(chain, lists_of_sentences))
 
-        self._config_model._topic_runner = BertopicRunner(
+        self._config_model.topic_runner = BertopicRunner(
             topic_model=self._topic_model,
             stopwords_controller=self._stopwords_controller,
             num_topics=num_topics,

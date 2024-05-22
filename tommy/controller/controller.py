@@ -106,15 +106,13 @@ class Controller:
         self._corpus_controller.set_controller_refs(
             self._project_settings_controller)
         self._export_controller.set_controller_refs(self._graph_controller)
-        self._topic_modelling_controller.set_controller_refs(
-            self._stopwords_controller,
-            self._preprocessing_controller)
 
         self._graph_controller.set_controller_refs(
             self._topic_modelling_controller, self._corpus_controller)
 
         self._topic_modelling_controller.set_controller_refs(
-            self._model_parameters_controller, self._corpus_controller)
+            self._model_parameters_controller, self._corpus_controller,
+            self._stopwords_controller, self._preprocessing_controller)
 
         self._config_controller.config_switched_event.subscribe(
             self._update_config_model_references)
