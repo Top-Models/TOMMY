@@ -28,7 +28,7 @@ class ConfigView(QDialog):
         self.model_parameters_controller = model_parameters_controller
         self.setWindowTitle("Configuraties Beheer")
         self.setMaximumHeight(600)
-        self.setMinimumHeight(400)
+        self.setMinimumHeight(200)
         self.setMinimumWidth(300)
         self.setMaximumWidth(400)
 

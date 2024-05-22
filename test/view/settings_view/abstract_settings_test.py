@@ -11,7 +11,9 @@ from tommy.view.settings_view.abstract_settings.abstract_settings import \
 def abstract_settings() -> AbstractSettings:
     controller = Controller()
     abstract_settings = AbstractSettings(
-        controller.model_parameters_controller, controller.language_controller)
+        controller.model_parameters_controller,
+        controller.config_controller,
+        controller.language_controller)
     return abstract_settings
 
 
