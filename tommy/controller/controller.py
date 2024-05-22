@@ -98,7 +98,7 @@ class Controller:
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
         self._saving_loading_controller = SavingLoadingController()
-        self._config_controller = ConfigController()
+        self._config_controller = ConfigController(self._graph_controller)
         self._export_controller = ExportController()
 
     def _set_controller_references(self) -> None:

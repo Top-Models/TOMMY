@@ -312,8 +312,8 @@ class AbstractSettings:
         self._algorithm_field = QComboBox()
         self._algorithm_field.setFixedWidth(100)
         self._algorithm_field.addItem("LDA")
-        self._algorithm_field.addItem("BERTopic")
         self._algorithm_field.addItem("NMF")
+        self._algorithm_field.addItem("BERTopic")
 
         # Try to disconnect the algorithm_field_changed_event method, otherwise
         # endless recursion

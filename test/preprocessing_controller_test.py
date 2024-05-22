@@ -1,4 +1,5 @@
 import pytest
+import spacy.tokens
 
 from tommy.controller.language_controller import LanguageController
 from tommy.controller.stopwords_controller import StopwordsController
@@ -136,6 +137,24 @@ def test_filter_stopwords(preprocessing_controller_dutch,
 
     # Check if specific stopwords are removed
     assert "dit" not in filtered_tokens
+
+
+def test_n_gram_merging(preprocessing_controller_dutch,
+                        stopwords_model_dutch):
+    """
+    Test the n_gram_merging method of PreprocessingController.
+    """
+    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch)
+    tokens = "Hello Kitty is beter dan Ben Ten"
+    n_grams = preprocessing_controller_dutch._nlp(tokens)
+    assert isinstance(n_grams, spacy.tokens.Doc)
+
+    # Check whether the n_grams are merged
+    assert len(n_grams) == 5
+
+    # Check if specific n_grams are present
+    assert "Hello Kitty" in [token.text for token in n_grams]
+    assert "Ben Ten" in [token.text for token in n_grams]
 
 
 """
