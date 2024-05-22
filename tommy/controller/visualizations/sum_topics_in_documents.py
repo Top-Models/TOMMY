@@ -1,6 +1,7 @@
 import matplotlib.figure
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
+import pandas as pd
 
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
@@ -31,17 +32,19 @@ class SumTopicsInDocuments(AbstractVisualization):
         # Construct a plot and axes
         fig, ax = plt.subplots()
 
-        topic_sum = [0] * topic_runner.get_n_topics()
+        doc_info = {"topic_id": [],
+                    "probability": []}
 
-        for document_id, document in enumerate(processed_corpus):
-            document_topic = (
-                topic_runner.get_document_topics(document.body.body,
-                                                 0.0))
-            for (topic_id, probability) in document_topic:
-                topic_sum[topic_id] += probability
+        for document in processed_corpus:
+            topics = topic_runner.get_document_topics(document.body.body, 0.0)
+            for topic in topics:
+                doc_info["topic_id"].append(topic[0])
+                doc_info["probability"].append(topic[1])
 
-        plt.bar(range(1, topic_runner.get_n_topics() + 1), topic_sum)
-        fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+        df = pd.DataFrame(doc_info)
+        df = df.groupby(by="topic_id", as_index=False).sum()
+
+        plt.plot(df["topic_id"], df["probability"])
 
         return fig
 

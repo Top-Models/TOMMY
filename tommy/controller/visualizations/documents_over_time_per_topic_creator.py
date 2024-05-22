@@ -59,5 +59,8 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
         plt.plot(df["date"],
                  df["probability"],
                  color=plot_colors[topic_id % len(plot_colors)])
+        plt.title("Documenten over tijd topic {}".format(topic_id + 1))
+        plt.xlabel("Datum")
+        plt.ylabel("Som kansen")
 
         return fig
