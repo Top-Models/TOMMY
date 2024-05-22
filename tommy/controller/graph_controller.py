@@ -86,8 +86,8 @@ class GraphController:
     _possible_nx_exports: list[int] | None = None
 
     @property
-    def possible_plots_changed_event(self) -> EventHandler[
-        list[PossibleVisualization]]:
+    def possible_plots_changed_event(self) -> (
+            EventHandler[list[PossibleVisualization]]):
         """Get event that triggers when the list of possible plots changes."""
         return self._possible_plots_changed_event
 

@@ -14,8 +14,7 @@ from tommy.controller.visualizations.nx_exporter_on_data import (
     NxExporterOnData)
 
 
-class DocumentTopicNxExporter(
-    NxExporterOnData[ProcessedCorpus]):
+class DocumentTopicNxExporter(NxExporterOnData[ProcessedCorpus]):
     """
     A class for constructing a network showing the topics and the
     number of documents that contain that topic for the topics in the given
@@ -47,8 +46,8 @@ class DocumentTopicNxExporter(
         return self.construct_doc_topic_network(topic_runner, data, 0.05)
 
     @staticmethod
-    def construct_doc_topic_network(topic_runner:
-    TopicRunner | DocumentTopicsInterface,
+    def construct_doc_topic_network(topic_runner: TopicRunner
+                                                  | DocumentTopicsInterface,
                                     processed_files: ProcessedCorpus,
                                     minimum_probability: float
                                     ) -> nx.Graph:
