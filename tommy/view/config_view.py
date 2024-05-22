@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import QIcon, QColor, QBrush
 from tommy.controller.config_controller import ConfigController
+from tommy.controller.graph_controller import GraphController
 from tommy.model.config_model import ConfigModel
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
@@ -14,7 +15,8 @@ class ConfigView(QDialog):
     """Widget for managing configurations"""
 
     def __init__(self, config_controller: ConfigController,
-                 model_parameters_controller: ModelParametersController):
+                 model_parameters_controller: ModelParametersController) \
+            -> None:
         super().__init__()
         self.config_controller = config_controller
         self.model_parameters_controller = model_parameters_controller
@@ -69,7 +71,7 @@ class ConfigView(QDialog):
             }
         """)
 
-    def update_config_list(self):
+    def update_config_list(self) -> None:
         """Update the list of configurations"""
         self.config_list_widget.clear()
         configurations = self.config_controller.get_configuration_names()
@@ -80,13 +82,10 @@ class ConfigView(QDialog):
                 #  user that this is the selected config
                 item = QListWidgetItem(name)
                 self.config_list_widget.addItem(item)
-                # TODO: When the UI can display the currently selected
-                #  config, remove this print statement
-                print(f"The currently selected config is {name}")
             else:
                 self.config_list_widget.addItem(name)
 
-    def add_configuration(self):
+    def add_configuration(self) -> None:
         """Method to add a new configuration"""
         name, ok = QInputDialog.getText(self, "Voer Configuratie Naam In",
                                         "Naam:")
@@ -101,7 +100,7 @@ class ConfigView(QDialog):
                                     "De configuratie kon niet worden "
                                     "toegevoegd")
 
-    def delete_configuration(self):
+    def delete_configuration(self) -> None:
         """Method to delete a configuration"""
         selected_items = self.config_list_widget.selectedItems()
         if selected_items:
@@ -118,7 +117,7 @@ class ConfigView(QDialog):
                 if success:
                     self.update_config_list()
 
-    def load_configuration(self):
+    def load_configuration(self) -> None:
         """Method to load a configuration"""
         selected_items = self.config_list_widget.selectedItems()
         if selected_items:

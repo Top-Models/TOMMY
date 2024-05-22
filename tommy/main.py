@@ -45,6 +45,7 @@ if __name__ == "__main__":
     # Execute the application
     app.exec()
 
+
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.

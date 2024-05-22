@@ -382,6 +382,18 @@ class GraphController:
     def _on_config_switch(self, topic_runner: TopicRunner):
         self.on_topic_runner_complete(topic_runner)
 
+    def reset_graph_view_state(self) -> None:
+        """Reset the state of the graph view"""
+        self._current_topic_selected_id = None
+
+    def visualizations_available(self) -> bool:
+        """
+        Check if there are any visualizations available for the current topic
+        model.
+        :return: True if there are visualizations available, False otherwise
+        """
+        return self._current_topic_runner is not None
+
 
 """
 This program has been developed by students from the bachelor Computer Science
