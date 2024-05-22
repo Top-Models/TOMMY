@@ -28,33 +28,34 @@ class SavingLoadingController:
         """
         self._model = model
 
-    def save_settings_to_file(self) -> None:
+    def save_settings_to_file(self, filepath: str) -> None:
         """
-        Save the project settings to a new file in the 'settings' folder as 'ProjectSettings.json'.
+        Save the project settings to a new file specified by the filepath.
+        :param filepath: The filepath where the settings should be saved
         :return: None
         """
         settings_data = self._model.to_dict()
-
-        settings_folder_path = os.path.join(os.path.dirname(__file__), "..",
-                                            "settings")
-        os.makedirs(settings_folder_path,
-                    exist_ok=True)  # Create the 'settings' folder if it doesn't exist
-        file_path = os.path.join(settings_folder_path, "ProjectSettings.json")
-        with open(file_path, "w") as file:
+        #
+        # settings_folder_path = os.path.join(os.path.dirname(__file__), "..",
+        #                                     "settings")
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        # Create the folder if it doesn't exist
+        # file_path = os.path.join(settings_folder_path, "ProjectSettings.json")
+        with open(filepath, "w") as file:
             json.dump(settings_data, file, indent=4)
         QMessageBox.information(None, "Success",
                                 "Settings saved successfully.")
 
-    def load_settings_from_file(self) -> None:
+    def load_settings_from_file(self, filepath) -> None:
         """
         Load the project settings from a file.
         :return: None
         """
-        settings_folder_path = os.path.join(os.path.dirname(__file__), "..",
-                                            "settings")
-        file_path = os.path.join(settings_folder_path, "ProjectSettings.json")
-        if os.path.exists(file_path):
-            with open(file_path, "r") as file:
+        # settings_folder_path = os.path.join(os.path.dirname(__file__), "..",
+        #                                     "settings")
+        # file_path = os.path.join(settings_folder_path, "ProjectSettings.json")
+        if os.path.exists(filepath):
+            with open(filepath, "r") as file:
                 settings_data = json.load(file)
                 new_model = Model.from_dict(settings_data)
                 self._model_changed_event.publish(new_model)

@@ -181,9 +181,16 @@ class Controller:
         :param model: The new model
         :return: None
         """
+        old_input_folder_path = (
+            self._model.project_settings_model.input_folder_path)
         self._model = model
         self._update_config_model_references(model.config_model)
-        # TODO: load the files from the input folder
+        new_input_folder_path = model.project_settings_model.input_folder_path
+
+        # load input folder path if it wasn't already loaded
+        if old_input_folder_path != new_input_folder_path:
+            self._project_settings_controller.set_input_folder_path(
+                new_input_folder_path)
 
     def _update_config_model_references(self, config_model: ConfigModel):
         """When the user switches configuration, this event handler makes

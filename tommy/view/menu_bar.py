@@ -36,6 +36,7 @@ class MenuBar(QMenuBar):
         export_to_png_action = QAction("Exporteer grafieken (.png)", self)
         export_topic_words_action = QAction("Exporteer Topicdata (.csv)", self)
         save_settings_action = QAction("Instellingen opslaan", self)
+        save_settings_as_action = QAction("Instellingen opslaan als", self)
         load_settings_action = QAction("Instellingen laden", self)
 
         # Connect actions to event handlers
@@ -44,6 +45,7 @@ class MenuBar(QMenuBar):
         export_to_png_action.triggered.connect(self.export_to_png)
         export_topic_words_action.triggered.connect(self.export_topic_words)
         save_settings_action.triggered.connect(self.save_settings_to_file)
+        save_settings_as_action.triggered.connect(self.save_settings_as)
         load_settings_action.triggered.connect(
             self.load_settings_from_file)  # Connect to new method
 
@@ -51,6 +53,7 @@ class MenuBar(QMenuBar):
         file_menu = self.addMenu("Bestand")
         file_menu.addAction(import_input_folder_action)
         file_menu.addAction(save_settings_action)
+        file_menu.addAction(save_settings_as_action)
         file_menu.addAction(load_settings_action)
 
         # Add sub menu export_menu to menu bar
@@ -137,17 +140,30 @@ class MenuBar(QMenuBar):
 
     def save_settings_to_file(self) -> None:
         """
-        Save project settings to a file.
+        Save project settings to a file. If the file path is not already
+        known, the user is asked by calling save_settings_as instead.
         :return: None
         """
-        self._saving_loading_controller.save_settings_to_file()
+        # TODO: ask user for file path if not already known
+        self._saving_loading_controller.save_settings_to_file(
+            "./settings/ProjectSettings.json")
+
+    def save_settings_as(self) -> None:
+        """
+        Ask the user where to save the project settings and save them.
+        :return: None
+        """
+        # TODO: ask user for file path
+        self._saving_loading_controller.save_settings_to_file(
+            "./settings/ProjectSettings.json")
 
     def load_settings_from_file(self) -> None:
         """
         Load project settings from a file.
         :return: None
         """
-        self._saving_loading_controller.load_settings_from_file()
+        self._saving_loading_controller.load_settings_from_file(
+            "./settings/ProjectSettings.json")
 
 
 """
