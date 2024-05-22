@@ -1,11 +1,15 @@
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QPushButton, QInputDialog, QListWidget,
-    QMessageBox, QListWidgetItem
+    QMessageBox, QListWidgetItem, QLabel
 )
 
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
+from tommy.support.constant_variables import heading_font, prim_col_red, \
+    hover_prim_col_red, text_font, medium_light_gray, hover_medium_light_gray, \
+    pressed_medium_light_gray, selected_medium_light_gray
 
 
 class ConfigView(QDialog):
@@ -18,54 +22,93 @@ class ConfigView(QDialog):
         self.model_parameters_controller = model_parameters_controller
         self.setWindowTitle("Configuraties Beheer")
 
-        layout = QVBoxLayout()
+        self.layout = QVBoxLayout()
+        self.layout.setSpacing(0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+
+        # Initialize title label
+        self.title_label = None
+        self.initialize_title_label()
 
         # List widget to display configurations
         self.config_list_widget = QListWidget()
+        self.config_list_widget.setObjectName("list_widget")
         self.update_config_list()
-        layout.addWidget(self.config_list_widget)
+        self.layout.addWidget(self.config_list_widget)
 
         # Buttons for configuration management
         add_button = QPushButton("Configuratie Toevoegen")
         add_button.clicked.connect(self.add_configuration)
-        layout.addWidget(add_button)
+        self.layout.addWidget(add_button)
 
         delete_button = QPushButton("Configuratie Verwijderen")
         delete_button.clicked.connect(self.delete_configuration)
-        layout.addWidget(delete_button)
+        self.layout.addWidget(delete_button)
 
         load_button = QPushButton("Configuratie Laden")
         load_button.clicked.connect(self.load_configuration)
-        layout.addWidget(load_button)
+        self.layout.addWidget(load_button)
 
-        self.setLayout(layout)
+        self.setLayout(self.layout)
 
         # Apply the stylesheet
-        self.setStyleSheet("""
+        self.setStyleSheet(f"""
             background-color: white;
             font-size: 15px;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: '{text_font}', sans-serif;
             border: none;
         """)
 
         # Apply styling to the list widget
-        self.config_list_widget.setStyleSheet("""
-            QListWidget {
+        self.config_list_widget.setStyleSheet(f"""
+            QListWidget {{
                 background-color: #f2f2f2;
                 border: 1px solid #d9d9d9;
-            }
+            }}
 
-            QListWidget::item {
-                background-color: #ffffff;
-                padding: 5px;
-                border-bottom: 1px solid #d9d9d9;
-            }
+            QListWidget::item {{
+                font-family: {text_font};
+                font-size: 12px;
+                background-color: {medium_light_gray};
+                color: black;
+                margin: 5px;
+                padding: 3px;
+            }}
+            
+            QListWidget::item:hover {{
+                background-color: {hover_medium_light_gray};
+            }}
+            
+            QListWidget::item:hover {{
+                background-color: {pressed_medium_light_gray};
+            }}
 
-            QListWidget::item:selected {
-                background-color: #c1e2ff;
+            QListWidget::item:selected {{
+                background-color: {selected_medium_light_gray};
                 color: #333333;
-            }
+            }}
         """)
+
+    def initialize_title_label(self) -> None:
+        """
+        Initialize the title label.
+
+        :return: None
+        """
+        self.title_label = QLabel("Configuraties")
+        self.title_label.setStyleSheet(f"font-size: 13px;"
+                                       f"font-family: {heading_font};"
+                                       f"font-weight: bold;"
+                                       f"text-transform: uppercase;"
+                                       f"background-color: {prim_col_red};"
+                                       f"color: white;"
+                                       f"border-bottom: "
+                                       f"3px solid {hover_prim_col_red};")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
+                                      Qt.AlignmentFlag.AlignTop)
+        self.title_label.setContentsMargins(0, 0, 0, 0)
+        self.title_label.setFixedHeight(50)
+        self.layout.addWidget(self.title_label)
 
     def update_config_list(self):
         """Update the list of configurations"""
