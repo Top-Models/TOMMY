@@ -4,8 +4,8 @@ from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from pytest_mock import mocker, MockerFixture
 
-from tommy.controller.project_settings_controller import \
-    ProjectSettingsController
+from tommy.controller.project_settings_controller import (
+    ProjectSettingsController)
 from tommy.controller.topic_modelling_controller import (
     TopicModellingController)
 from tommy.controller.corpus_controller import (
