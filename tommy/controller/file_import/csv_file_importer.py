@@ -32,13 +32,12 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
         :return: bool: True if the file is compatible, False otherwise.
         """
         try:
-            with open(path, 'r', newline="", encoding='utf-8') as csvfile:
+            with open(path, 'r', newline="", encoding='utf-8-sig') as csvfile:
                 csv_reader = csv.DictReader(csvfile, delimiter=',')
 
                 # To check whether each mandatory header exists and is unique,
                 # we keep an array of occurrences of all mandatory headers
                 mandatory_fields_counts = [0] * len(self.mandatory_fields)
-
                 for header in csv_reader.fieldnames:
                     if header.lower() in self.mandatory_fields:
                         mandatory_fields_counts[self.mandatory_fields.index(
@@ -65,7 +64,7 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
         :param path: The string path to the CSV file.
         :return: File: A File object generated from each row of the CSV.
         """
-        with open(path, 'r', newline="", encoding='utf-8') as csvfile:
+        with open(path, 'r', newline="", encoding='utf-8-sig') as csvfile:
             reader = csv.DictReader(csvfile)
             reader.fieldnames = [str(header).lower() for header in
                                  reader.fieldnames]
@@ -73,6 +72,7 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
 
             row_index = 1  # Only used for debugging
             for row in reader:
+                # Remove empty fields
                 for key, value in row.items():
                     if value == "" or value.isspace():
                         del row[key]
@@ -108,7 +108,7 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                               length=len(file.get("body").split(" ")),
                               name=os.path.relpath(path).split(".")[0],
                               size=stat(path).st_size),
-            body=RawBody(body=file.get("body")))
+            body=RawBody(body=file.get("body").strip()))
 
 
 """

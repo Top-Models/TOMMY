@@ -44,7 +44,7 @@ class PreprocessingController:
             case _:
                 raise ValueError("Unsupported preprocessing language")
         self._nlp = nlp
-
+        self._nlp.add_pipe("merge_entities")
         # TODO: refine the entity set (i.e. "proper-noun filtering")
         self._entity_categories = {"PERSON", "FAC", "LAW", "TIME", "PERCENT",
                                    "MONEY", "QUANTITY", "ORDINAL", "CARDINAL"}
@@ -89,7 +89,7 @@ class PreprocessingController:
         # TODO: fine-grain abbreviation filtering (i.e. don't exclude
         #  every token under 4 characters)
 
-        # TODO: fix "-"words and remove diacritical marks
+        # TODO: fix "-" and "'" words and remove diacritical marks
         #  (i.e. character 'normalization')
 
         # TODO: 6,7
