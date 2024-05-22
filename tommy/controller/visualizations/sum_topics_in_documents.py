@@ -45,6 +45,7 @@ class SumTopicsInDocuments(AbstractVisualization):
         df = df.groupby(by="topic_id", as_index=False).sum()
 
         plt.plot(df["topic_id"], df["probability"])
+        plt.title("")
 
         return fig
 

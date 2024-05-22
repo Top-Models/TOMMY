@@ -63,4 +63,6 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
         plt.xlabel("Datum")
         plt.ylabel("Som kansen")
 
+        plt.xticks(rotation=30)
+
         return fig
