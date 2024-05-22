@@ -1,15 +1,21 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QPushButton, QInputDialog, QListWidget,
-    QMessageBox, QListWidgetItem, QLabel
+    QMessageBox, QListWidgetItem, QLabel, QHBoxLayout, QWidget
 )
 
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
-from tommy.support.constant_variables import heading_font, prim_col_red, \
-    hover_prim_col_red, text_font, medium_light_gray, hover_medium_light_gray, \
-    pressed_medium_light_gray, selected_medium_light_gray
+from tommy.support.constant_variables import (heading_font, prim_col_red,
+                                              hover_prim_col_red, text_font,
+                                              medium_light_gray,
+                                              hover_medium_light_gray,
+                                              pressed_medium_light_gray,
+                                              selected_medium_light_gray,
+                                              seco_col_blue,
+                                              hover_seco_col_blue,
+                                              pressed_seco_col_blue)
 
 
 class ConfigView(QDialog):
@@ -21,6 +27,10 @@ class ConfigView(QDialog):
         self.config_controller = config_controller
         self.model_parameters_controller = model_parameters_controller
         self.setWindowTitle("Configuraties Beheer")
+        self.setMaximumHeight(600)
+        self.setMinimumHeight(400)
+        self.setMinimumWidth(300)
+        self.setMaximumWidth(400)
 
         self.layout = QVBoxLayout()
         self.layout.setSpacing(0)
@@ -37,17 +47,44 @@ class ConfigView(QDialog):
         self.layout.addWidget(self.config_list_widget)
 
         # Buttons for configuration management
-        add_button = QPushButton("Configuratie Toevoegen")
+        self.buttons_container = QWidget()
+        self.buttons_layout = QHBoxLayout()
+        self.buttons_layout.setContentsMargins(0, 0, 0, 0)
+        self.buttons_layout.setSpacing(0)
+        self.buttons_container.setLayout(self.buttons_layout)
+        self.layout.addWidget(self.buttons_container)
+
+        button_stylesheet = f"""
+                        QPushButton {{
+                            background-color: {seco_col_blue};
+                            color: white;
+                            padding: 5px;
+                            margin: 5px;
+                        }}
+
+                        QPushButton:hover {{
+                            background-color: {hover_seco_col_blue};
+                        }}
+
+                        QPushButton:pressed {{
+                            background-color: {pressed_seco_col_blue};
+                        }}
+                    """
+
+        add_button = QPushButton("Toevoegen")
         add_button.clicked.connect(self.add_configuration)
-        self.layout.addWidget(add_button)
+        add_button.setStyleSheet(button_stylesheet)
+        self.buttons_layout.addWidget(add_button)
 
-        delete_button = QPushButton("Configuratie Verwijderen")
+        delete_button = QPushButton("Verwijderen")
         delete_button.clicked.connect(self.delete_configuration)
-        self.layout.addWidget(delete_button)
+        delete_button.setStyleSheet(button_stylesheet)
+        self.buttons_layout.addWidget(delete_button)
 
-        load_button = QPushButton("Configuratie Laden")
+        load_button = QPushButton("Laden")
         load_button.clicked.connect(self.load_configuration)
-        self.layout.addWidget(load_button)
+        load_button.setStyleSheet(button_stylesheet)
+        self.buttons_layout.addWidget(load_button)
 
         self.setLayout(self.layout)
 
@@ -121,9 +158,6 @@ class ConfigView(QDialog):
                 #  user that this is the selected config
                 item = QListWidgetItem(name)
                 self.config_list_widget.addItem(item)
-                # TODO: When the UI can display the currently selected
-                #  config, remove this print statement
-                print(f"The currently selected config is {name}")
             else:
                 self.config_list_widget.addItem(name)
 
