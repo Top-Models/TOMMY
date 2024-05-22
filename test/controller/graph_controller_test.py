@@ -4,6 +4,8 @@ from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from pytest_mock import mocker, MockerFixture
 
+from tommy.controller.project_settings_controller import \
+    ProjectSettingsController
 from tommy.controller.topic_modelling_controller import (
     TopicModellingController)
 from tommy.controller.corpus_controller import (
@@ -33,8 +35,10 @@ def graph_controller() -> GraphController:
 
     topic_modelling_controller = TopicModellingController()
     corpus_controller = CorpusController()
+    project_settings_controller = ProjectSettingsController()
     graph_controller.set_controller_refs(topic_modelling_controller,
-                                         corpus_controller)
+                                         corpus_controller,
+                                         project_settings_controller)
 
     return graph_controller
 
