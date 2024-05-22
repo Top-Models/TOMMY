@@ -17,7 +17,7 @@ class KValueCreator(AbstractVisualization):
     """
 
     """
-    _required_interfaces = [TopicCoherenceInterface]
+    _required_interfaces = [TopicCoherenceInterface, TopicRunner]
     name = 'K-waarde'
     short_tab_name = 'K-waarde'
     vis_group = VisGroup.MODEL
@@ -52,4 +52,3 @@ class KValueCreator(AbstractVisualization):
 
         plt.close()
         return fig
-

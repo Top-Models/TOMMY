@@ -6,6 +6,8 @@ import matplotlib.pyplot
 
 # Import controllers
 from tommy.controller.corpus_controller import CorpusController
+from tommy.controller.project_settings_controller import \
+    ProjectSettingsController
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.controller.topic_modelling_controller import (
@@ -84,8 +86,8 @@ class GraphController:
     _possible_nx_exports: list[int] | None = None
 
     @property
-    def possible_plots_changed_event(self) -> EventHandler[
-        list[PossibleVisualization]]:
+    def possible_plots_changed_event(self) -> (
+            EventHandler[list[PossibleVisualization]]):
         """Get event that triggers when the list of possible plots changes."""
         return self._possible_plots_changed_event
 
@@ -116,7 +118,8 @@ class GraphController:
     def set_controller_refs(
             self,
             topic_modelling_controller: TopicModellingController,
-            corpus_controller: CorpusController):
+            corpus_controller: CorpusController,
+            project_settings_controller: ProjectSettingsController) -> None:
         """
         Set reference to the TM controller corpus controller and add self
         to model trained event
@@ -128,6 +131,8 @@ class GraphController:
             self.on_topic_runner_complete)
         topic_modelling_controller.topic_model_switched_event.subscribe(
             self._on_config_switch)
+        project_settings_controller.input_folder_path_changed_event.subscribe(
+            self.clear_graphs)
 
     def set_selected_topic(self, topic_index: int | None) -> None:
         """
@@ -141,6 +146,15 @@ class GraphController:
 
         # trigger event to notify that plots may have changed
         self._refresh_plots_event.publish(None)
+
+    def clear_graphs(self, _):
+        """Clear all graphs when the input folder path changes"""
+        self._delete_all_cached_plots()
+        self._current_topic_runner = None
+        self._calculate_possible_visualizations()
+        self._topics_changed_event.publish(None)
+        self._possible_plots_changed_event.publish(
+            self._possible_visualizations)
 
     def get_number_of_topics(self) -> int:
         """
