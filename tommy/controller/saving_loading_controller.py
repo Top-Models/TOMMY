@@ -3,15 +3,20 @@ import os
 
 from PySide6.QtWidgets import QMessageBox
 
-from tommy.controller.config_controller import ConfigController
 from tommy.model.model import Model
+from tommy.support.event_handler import EventHandler
 
 
 class SavingLoadingController:
 
     def __init__(self):
         self._model: Model = None
-        self._config_controller: ConfigController = None
+        # event that is triggered when the model is changed
+        self._model_changed_event: EventHandler[Model] = EventHandler()
+
+    @property
+    def model_changed_event(self) -> EventHandler[Model]:
+        return self._model_changed_event
 
     # TODO: call set model refs and set controller refs and add them to the
     #  controller and model references test
@@ -22,14 +27,6 @@ class SavingLoadingController:
         :return: None
         """
         self._model = model
-
-    def set_controller_refs(self, config_controller: ConfigController) -> None:
-        """
-        Set the reference to the config controller
-        :param config_controller: The config controller
-        :return: None
-        """
-        self._config_controller = config_controller
 
     def save_settings_to_file(self) -> None:
         """
@@ -59,19 +56,8 @@ class SavingLoadingController:
         if os.path.exists(file_path):
             with open(file_path, "r") as file:
                 settings_data = json.load(file)
-                input_folder_path = settings_data.get("input_folder_path")
-                if input_folder_path:
-                    self._project_settings_model.input_folder_path = os.path.join(
-                        os.path.dirname(__file__), "..", "data",
-                        input_folder_path)
-                configs_data = settings_data.get("configs")
-                if configs_data:
-                    self._project_settings_model.configs.clear()
-                    for config_dict in configs_data:
-                        config = ConfigModel(config_dict["name"])
-                        config = ConfigModel.from_dict(config_dict)
-                        self._project_settings_model.configs.append(config)
-            self.notify()
+                new_model = Model.from_dict(settings_data)
+                self._model_changed_event.publish(new_model)
             QMessageBox.information(None, "Success",
                                     "Settings loaded successfully.")
         else:

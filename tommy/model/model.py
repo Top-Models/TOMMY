@@ -66,13 +66,13 @@ class Model:
         model = cls()
         model.project_settings_model.input_folder_path = model_dict[
             "input_folder_path"]
-        model.language_model.selectedLanguage = model_dict["language"]
+        model.language_model.selectedLanguage = (
+            SupportedLanguage.from_string(model_dict["language"]))
         configs_data = model_dict["configs"]
-        if configs_data:
-            model.configs.clear()
-            for name, config_dict in configs_data.items():
-                config = ConfigModel.from_dict(config_dict)
-                model.configs[name] = config
+        model.configs.clear()
+        for name, config_dict in configs_data.items():
+            config = ConfigModel.from_dict(config_dict)
+            model.configs[name] = config
         model.selected_config_name = model_dict["selected_config"]
         return model
 

@@ -138,8 +138,8 @@ class StopwordsModel:
         stopwords_model = cls()
         stopwords_model._default_words = set(
             stopwords_dict["default_stopwords"])
-        stopwords_model._extra_words_in_order = stopwords_dict[
-            "extra_stopwords"]
+        stopwords_model._extra_words_in_order = list(stopwords_dict[
+                                                         "extra_stopwords"])
         stopwords_model._extra_words = set(
             stopwords_model.extra_words_in_order)
         return stopwords_model

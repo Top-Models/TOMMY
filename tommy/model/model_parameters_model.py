@@ -56,8 +56,10 @@ class ModelParametersModel:
     @classmethod
     def from_dict(cls, model_parameters_dict: dict) -> ModelParametersModel:
         """
-        Create a ModelParametersModel instance from a dictionary representation.
-        :param model_parameters_dict: Dictionary representation of the model parameters
+        Create a ModelParametersModel instance from a dictionary
+        representation.
+        :param model_parameters_dict: Dictionary representation of the model
+        parameters
         :return: ModelParametersModel instance
         """
         model = cls()

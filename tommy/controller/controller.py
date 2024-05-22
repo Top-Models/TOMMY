@@ -120,6 +120,8 @@ class Controller:
 
         self._config_controller.config_switched_event.subscribe(
             self._update_config_model_references)
+        self._saving_loading_controller.model_changed_event.subscribe(
+            self._update_model_on_load)
 
     def _set_model_references(self) -> None:
         """
@@ -152,8 +154,10 @@ class Controller:
             self._model.project_settings_model)
 
         self._language_controller.set_model_refs(
-            self._model.language_model
-        )
+            self._model.language_model)
+
+        self._saving_loading_controller.set_model_refs(
+            self._model)
 
     def on_run_topic_modelling(self) -> None:
         """
@@ -170,6 +174,16 @@ class Controller:
 
         self._corpus_controller.set_processed_corpus(processed_files)
         self._topic_modelling_controller.train_model()
+
+    def _update_model_on_load(self, model: Model) -> None:
+        """
+        Update the model of the controller
+        :param model: The new model
+        :return: None
+        """
+        self._model = model
+        self._update_config_model_references(model.config_model)
+        # TODO: load the files from the input folder
 
     def _update_config_model_references(self, config_model: ConfigModel):
         """When the user switches configuration, this event handler makes
