@@ -56,7 +56,7 @@ class Model:
         return {
             "input_folder_path": self.project_settings_model.input_folder_path,
             "language": SupportedLanguage.to_string(
-                self.language_model.selectedLanguage),
+                self.language_model.selected_language),
             "configs": config_data,
             "selected_config": self.selected_config_name
         }
@@ -66,7 +66,7 @@ class Model:
         model = cls()
         model.project_settings_model.input_folder_path = model_dict[
             "input_folder_path"]
-        model.language_model.selectedLanguage = (
+        model.language_model.selected_language = (
             SupportedLanguage.from_string(model_dict["language"]))
         configs_data = model_dict["configs"]
         model.configs.clear()

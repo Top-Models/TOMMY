@@ -398,12 +398,8 @@ class AbstractSettings:
         :return: None
         """
         selected_model_type = self._language_field.currentText()
-        match selected_model_type:
-            case "Engels":
-                self._language_controller.set_language(
-                    SupportedLanguage.English)
-            case _:
-                self._language_controller.set_language(SupportedLanguage.Dutch)
+        self._language_controller.set_language(
+            SupportedLanguage.from_string(selected_model_type))
 
     def set_field_values_from_backend(self):
         """
@@ -414,17 +410,13 @@ class AbstractSettings:
         recursion.
         :return: None
         """
-
         self._topic_amount_field.setText(
             str(self._model_parameters_controller.get_model_n_topics()))
         self._amount_of_words_field.setText(
             str(self._model_parameters_controller.get_model_word_amount()))
         current_language = self._language_controller.get_language()
-        match current_language:
-            case SupportedLanguage.Dutch:
-                self._language_field.setCurrentText("Nederlands")
-            case SupportedLanguage.English:
-                self._language_field.setCurrentText("Engels")
+        self._language_field.setCurrentText(SupportedLanguage.to_string(
+            current_language))
 
 
 """

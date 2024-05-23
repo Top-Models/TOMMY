@@ -10,7 +10,12 @@ from tommy.support.event_handler import EventHandler
 class SavingLoadingController:
 
     def __init__(self):
+        # if a file is loaded or saved, the filepath is set so that the user
+        # doesn't have to specify the file path again when saving
+        self.filepath = None
+
         self._model: Model = None
+
         # event that is triggered when the model is changed
         self._model_changed_event: EventHandler[Model] = EventHandler()
 
@@ -22,7 +27,7 @@ class SavingLoadingController:
     #  controller and model references test
     def set_model_refs(self, model: Model) -> None:
         """
-        Set the reference to the model
+        Set the reference to the model.
         :param model: The model
         :return: None
         """
@@ -34,13 +39,9 @@ class SavingLoadingController:
         :param filepath: The filepath where the settings should be saved
         :return: None
         """
+        self.filepath = filepath
         settings_data = self._model.to_dict()
-        #
-        # settings_folder_path = os.path.join(os.path.dirname(__file__), "..",
-        #                                     "settings")
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        # Create the folder if it doesn't exist
-        # file_path = os.path.join(settings_folder_path, "ProjectSettings.json")
         with open(filepath, "w") as file:
             json.dump(settings_data, file, indent=4)
         QMessageBox.information(None, "Success",
@@ -51,9 +52,7 @@ class SavingLoadingController:
         Load the project settings from a file.
         :return: None
         """
-        # settings_folder_path = os.path.join(os.path.dirname(__file__), "..",
-        #                                     "settings")
-        # file_path = os.path.join(settings_folder_path, "ProjectSettings.json")
+        self.filepath = filepath
         if os.path.exists(filepath):
             with open(filepath, "r") as file:
                 settings_data = json.load(file)

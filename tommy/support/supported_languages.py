@@ -15,15 +15,15 @@ class SupportedLanguage(Enum):
         :return: The SupportedLanguage
         """
         match language:
-            case "Dutch":
+            case "Nederlands":
                 return SupportedLanguage.Dutch
-            case "English":
+            case "Engels":
                 return SupportedLanguage.English
             case _:
                 raise ValueError(f"Language {language} not recognized")
 
     @staticmethod
-    def to_string(language: 'SupportedLanguage') -> str:
+    def to_string(language: SupportedLanguage) -> str:
         """
         Convert a SupportedLanguage to a string.
         :param language: The SupportedLanguage to convert
@@ -31,8 +31,8 @@ class SupportedLanguage(Enum):
         """
         match language:
             case SupportedLanguage.Dutch:
-                return "Dutch"
+                return "Nederlands"
             case SupportedLanguage.English:
-                return "English"
+                return "Engels"
             case _:
                 raise ValueError(f"Language {language} not recognized")

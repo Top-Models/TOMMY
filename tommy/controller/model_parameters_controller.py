@@ -10,8 +10,7 @@ class ModelParametersController:
     """
     _parameters_model: ModelParametersModel = None
     # TODO: Not all parameters emit this event when changed
-    _params_model_changed_event: EventHandler[
-        ModelParametersModel] = EventHandler()
+    _params_model_changed_event: EventHandler[None] = EventHandler()
     _algorithm_changed_event: EventHandler[None]
 
     @property
@@ -37,7 +36,7 @@ class ModelParametersController:
         update the frontend
         """
         self._parameters_model = parameters_model
-        self._params_model_changed_event.publish(parameters_model)
+        self._params_model_changed_event.publish(None)
 
     def set_model_word_amount(self, word_amount: int) -> None:
         """Set the amount of words to be displayed per topic"""
@@ -101,7 +100,12 @@ class ModelParametersController:
         return self._parameters_model.model_type
 
     @property
-    def params_model_changed_event(self):
+    def params_model_changed_event(self) -> EventHandler[None]:
+        """
+        This event gets triggered when the model parameters model is changed
+        for example due to changing configs
+        :return: The event
+        """
         return self._params_model_changed_event
 
 

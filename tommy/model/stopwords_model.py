@@ -123,7 +123,6 @@ class StopwordsModel:
         :return: Dictionary representation of the stopwords
         """
         return {
-            "default_stopwords": list(self._default_words),
             "extra_stopwords": self._extra_words_in_order
         }
 
@@ -136,8 +135,6 @@ class StopwordsModel:
         :return: StopwordsModel instance
         """
         stopwords_model = cls()
-        stopwords_model._default_words = set(
-            stopwords_dict["default_stopwords"])
         stopwords_model._extra_words_in_order = list(stopwords_dict[
                                                          "extra_stopwords"])
         stopwords_model._extra_words = set(

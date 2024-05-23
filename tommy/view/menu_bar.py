@@ -144,26 +144,31 @@ class MenuBar(QMenuBar):
         known, the user is asked by calling save_settings_as instead.
         :return: None
         """
-        # TODO: ask user for file path if not already known
-        self._saving_loading_controller.save_settings_to_file(
-            "./settings/ProjectSettings.json")
+        if self._saving_loading_controller.filepath:
+            self._saving_loading_controller.save_settings_to_file(
+                self._saving_loading_controller.filepath)
+        else:
+            self.save_settings_as()
 
     def save_settings_as(self) -> None:
         """
         Ask the user where to save the project settings and save them.
         :return: None
         """
-        # TODO: ask user for file path
-        self._saving_loading_controller.save_settings_to_file(
-            "./settings/ProjectSettings.json")
+        dialog = QFileDialog.getSaveFileName(self, "Selecteer opslaglocatie",
+                                             filter="JSON files (*.json)")
+        if dialog[0]:
+            self._saving_loading_controller.save_settings_to_file(dialog[0])
 
     def load_settings_from_file(self) -> None:
         """
-        Load project settings from a file.
+        Load project settings from a file selected by the user.
         :return: None
         """
-        self._saving_loading_controller.load_settings_from_file(
-            "./settings/ProjectSettings.json")
+        dialog = QFileDialog.getOpenFileName(self, "Selecteer bestand",
+                                             filter="JSON files (*.json)")
+        if dialog[0]:
+            self._saving_loading_controller.load_settings_from_file(dialog[0])
 
 
 """

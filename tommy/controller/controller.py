@@ -183,11 +183,19 @@ class Controller:
         """
         old_input_folder_path = (
             self._model.project_settings_model.input_folder_path)
+        old_language = self._model.language_model.selected_language
+
         self._model = model
         self._update_config_model_references(model.config_model)
-        new_input_folder_path = model.project_settings_model.input_folder_path
+
+        # reload default stopwords if the language has changed
+        new_language = model.language_model.selected_language
+
+        if old_language != new_language:
+            self._language_controller.set_language(new_language)
 
         # load input folder path if it wasn't already loaded
+        new_input_folder_path = model.project_settings_model.input_folder_path
         if old_input_folder_path != new_input_folder_path:
             self._project_settings_controller.set_input_folder_path(
                 new_input_folder_path)
@@ -196,6 +204,7 @@ class Controller:
         """When the user switches configuration, this event handler makes
         sure that every controller gets a reference to the models of the
         currently selected config"""
+
         self._model_parameters_controller.change_config_model_refs(
             config_model.model_parameters_model)
 
@@ -211,6 +220,15 @@ class Controller:
 
         self._corpus_controller.change_config_model_refs(
             config_model.corpus_model)
+
+        self._config_controller.set_model_refs(self._model)
+
+        self._language_controller.set_model_refs(self._model.language_model)
+
+        self._saving_loading_controller.set_model_refs(self._model)
+
+        self._project_settings_controller.set_model_refs(
+            self._model.project_settings_model)
 
 
 """

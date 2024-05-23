@@ -1,19 +1,20 @@
 {
-    "input_folder_path": "..\\data\\csv_files",
-    "configs": [
-        {
-            "name": "Testconfig",
+    "input_folder_path": "C:\\Users\\meeso\\Documents\\Programming\\Software project\\interactive-topic-modeling\\tommy\\data/csv_files",
+    "language": "English",
+    "configs": {
+        "Config 1": {
+            "stopwords": {
+                "extra_stopwords": []
+            },
             "model_parameters": {
-                "n_topics": 3,
-                "model_type": 1
-            }
-        },
-        {
-            "name": "3test",
-            "model_parameters": {
-                "n_topics": 3,
-                "model_type": 1
+                "n_topics": 8,
+                "model_type": "LDA",
+                "word_amount": 10,
+                "alpha": 1.0,
+                "beta": 0.01,
+                "alpha_beta_custom_enabled": false
             }
         }
-    ]
+    },
+    "selected_config": "Config 1"
 }
