@@ -9,3 +9,14 @@ class BetterComboBox(QComboBox):
 
     def wheelEvent(self, event: QWheelEvent):
         event.ignore()
+
+    def set_current_text_without_signal(self, text: str):
+        """
+        Set the current text of the combo box without emitting the index
+        changed signal
+        :param text:
+        :return:
+        """
+        self.blockSignals(True)
+        self.setCurrentText(text)
+        self.blockSignals(False)

@@ -417,8 +417,8 @@ class AbstractSettings:
         self._amount_of_words_field.setText(
             str(self._model_parameters_controller.get_model_word_amount()))
         current_language = self._language_controller.get_language()
-        self._language_field.setCurrentText(SupportedLanguage.to_string(
-            current_language))
+        self._language_field.set_current_text_without_signal(
+            SupportedLanguage.to_string(current_language))
 
 
 """

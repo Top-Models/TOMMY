@@ -285,16 +285,11 @@ class ModelParamsView(QScrollArea):
         self.initialize_parameter_widgets()
 
     def _update_ui_on_model_params_switch(self, data: None) -> None:
-        print("update model params from model params")
         self.model_type_changed_event()
-        settings_view = self.algorithm_specific_settings_views[
-            self._model_parameters_controller.get_model_type()]
-        settings_view.set_text_on_config_change()
 
     def _update_ui_on_language_model_switch(self, data: None) -> None:
-        print("update model params from language")
         settings_view = self.get_current_settings_view()
-        settings_view.set_text_on_config_change()
+        settings_view.set_field_values_from_backend()
 
 
 """
