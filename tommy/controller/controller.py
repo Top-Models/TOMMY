@@ -182,28 +182,22 @@ class Controller:
 
     def _update_model_on_load(self, model: Model) -> None:
         """
-        Update the model of the controller
+        Update the model of the controller, update the references for the
+        other controllers and notify the frontend components of the new model
         :param model: The new model
         :return: None
         """
-        old_input_folder_path = (
-            self._model.project_settings_model.input_folder_path)
-        old_language = self._model.language_model.selected_language
-
         self._model = model
         self._set_model_references()
 
-        # reload default stopwords if the language has changed
+        # load default stopwords for the new language
         new_language = model.language_model.selected_language
+        self._language_controller.set_language(new_language)
 
-        if old_language != new_language:
-            self._language_controller.set_language(new_language)
-
-        # load input folder path if it wasn't already loaded
+        # load new input folder path
         new_input_folder_path = model.project_settings_model.input_folder_path
-        if old_input_folder_path != new_input_folder_path:
-            self._project_settings_controller.set_input_folder_path(
-                new_input_folder_path)
+        self._project_settings_controller.set_input_folder_path(
+            new_input_folder_path)
 
         self._notify_model_swapped()
 
