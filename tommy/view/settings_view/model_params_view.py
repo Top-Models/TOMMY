@@ -296,8 +296,6 @@ class ModelParamsView(QScrollArea):
         if current_view.all_fields_valid():
             self._controller.on_run_topic_modelling()
 
-        QApplication.processEvents()
-
         # Re-enable the apply button and restore its text 
         # when processing is complete
         self.apply_button.setEnabled(True)
@@ -318,7 +316,6 @@ class ModelParamsView(QScrollArea):
                             background-color: {pressed_seco_col_blue};
                         }}
                     """)
-
 
     def model_type_changed_event(self) -> None:
         """
