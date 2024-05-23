@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QWidget,
-                               QPushButton, QApplication)
+                               QPushButton, QApplication, QHBoxLayout)
 
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
@@ -10,7 +10,8 @@ from tommy.controller.model_parameters_controller import (
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
-    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray)
+    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray,
+    extra_light_gray, medium_light_gray, light_gray)
 from tommy.support.model_type import ModelType
 from tommy.view.config_view import ConfigView
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
@@ -62,17 +63,15 @@ class ModelParamsView(QScrollArea):
         self.setFixedWidth(250)
 
         # Apply stylesheet to model_params_display object
-        self.setStyleSheet(
-            """
-            QWidget#model_params_display {
-                border-bottom: 3px solid lightgrey;
-            }
+        self.setStyleSheet(f"""
+            QWidget#model_params_display {{
+                border-bottom: 3px solid lightgray;
+            }}
             
-            QWidget#model_params_display QWidget {
+            QWidget#model_params_display QWidget {{
                 background-color: rgba(230, 230, 230, 230);
-            }
-            """
-        )
+            }}
+            """)
 
         self.enabled_input_stylesheet = (f"background-color: white;"
                                          f"border-radius: 5px;"
@@ -111,6 +110,14 @@ class ModelParamsView(QScrollArea):
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidget(self.scroll_widget)
 
+        # Style the scroll area
+        self.scroll_area.setStyleSheet(f"""
+            QScrollArea {{
+                border: 0px;
+                border-bottom: 3px solid lightgray;
+            }}
+            """)
+
         # Initialize button widgets
         self.apply_button = None
 
@@ -118,7 +125,7 @@ class ModelParamsView(QScrollArea):
         self.config_management_button = None
 
         # Initialize button layout
-        self.button_layout = QVBoxLayout()
+        self.button_layout = QHBoxLayout()
         self.button_layout.setAlignment(Qt.AlignRight)
         self.layout.addWidget(self.scroll_area)
 
@@ -190,29 +197,29 @@ class ModelParamsView(QScrollArea):
     def initialize_config_button(self) -> None:
         """
         Initialize the button that opens the config view
-        TODO: Frontend people make this pretty
-        :return:
+
+        :return: None
         """
-        self.config_management_button = QPushButton("Beheer Configuraties")
+        self.config_management_button = QPushButton("Configuraties")
+        self.config_management_button.setFixedHeight(40)
         self.config_management_button.setStyleSheet(
             f"""
-                            QPushButton {{
-                                background-color: {seco_col_blue};
-                                color: white;
-                                border-radius: 5px;
-                                padding: 10px 20px;
-                                font-size: 14px;
-                                font-family: {text_font};
-                            }}
+            QPushButton {{
+                background-color: {seco_col_blue};
+                color: white;
+                padding: 10px 20px;
+                font-size: 14px;
+                font-family: {text_font};
+            }}
 
-                            QPushButton:hover {{
-                                background-color: {hover_seco_col_blue};
-                            }}
+            QPushButton:hover {{
+                background-color: {hover_seco_col_blue};
+            }}
 
-                            QPushButton:pressed {{
-                                background-color: {pressed_seco_col_blue};
-                            }}
-                            """
+            QPushButton:pressed {{
+                background-color: {pressed_seco_col_blue};
+            }}
+            """
         )
         self.config_management_button.clicked.connect(
             self.open_config_management_widget)
@@ -232,8 +239,8 @@ class ModelParamsView(QScrollArea):
             f"""
                 QPushButton {{
                     background-color: {seco_col_blue};
-                    border-radius: 5px;
                     color: white;
+                    margin-left: 5px;
                 }}
 
                 QPushButton:hover {{
@@ -251,7 +258,7 @@ class ModelParamsView(QScrollArea):
                                          alignment=Qt.AlignBottom)
 
         if self.button_layout not in self.scroll_layout.children():
-            self.scroll_layout.addLayout(self.button_layout, stretch=1)
+            self.layout.addLayout(self.button_layout, stretch=1)
 
     def get_current_settings_view(self) -> AbstractSettings:
         """
