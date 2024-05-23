@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QWheelEvent
-from PySide6.QtWidgets import QWidget, QComboBox
+from PySide6.QtWidgets import QComboBox
 
 
 class BetterComboBox(QComboBox):
