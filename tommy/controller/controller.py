@@ -211,20 +211,10 @@ class Controller:
         """When the user switches configuration, this event handler makes
         sure that every controller gets a reference to the models of the
         currently selected config"""
-
-        import time
-        start = time.time()
-
         self._model_parameters_controller.on_model_swap()
-        print(f"Time since mpc: {time.time() - start}")
         self._topic_modelling_controller.on_model_swap()
-        print(f"Time since tmc: {time.time() - start}")
         self._stopwords_controller.on_model_swap()
-        print(f"Time since sc: {time.time() - start}")
         self._language_controller.on_model_swap()
-
-        end = time.time()
-        print(f"Time taken: {end - start}")
 
 
 """
