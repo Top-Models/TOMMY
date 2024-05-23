@@ -36,6 +36,13 @@ class LanguageController:
         self._language_model = language_model
         self._change_language_event.publish(language_model.selected_language)
 
+    def change_config_model_refs(self, language_model: LanguageModel) -> None:
+        """
+        Set the reference to the language-model and update the frontend
+        """
+        self._language_model = language_model
+        self._language_model_changed_event.publish(None)
+
     def set_language(self, language: SupportedLanguage) -> None:
         """Set the language for the topic modelling"""
         self._language_model.selected_language = language

@@ -223,7 +223,8 @@ class Controller:
 
         self._config_controller.set_model_refs(self._model)
 
-        self._language_controller.set_model_refs(self._model.language_model)
+        self._language_controller.change_config_model_refs(
+            self._model.language_model)
 
         self._saving_loading_controller.set_model_refs(self._model)
 
