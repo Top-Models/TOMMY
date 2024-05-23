@@ -283,20 +283,20 @@ class ModelParamsView(QScrollArea):
         self.apply_button.setText("Laden...")
         self.apply_button.setStyleSheet(
             f"""
-                        QPushButton {{
-                            background-color: #808080;
-                            border-radius: 5px;
-                            color: white;
-                        }}
-
-                        QPushButton:hover {{
-                            background-color: {hover_seco_col_blue};
-                        }}
-
-                        QPushButton:pressed {{
-                            background-color: {pressed_seco_col_blue};
-                        }}
-                    """)
+                QPushButton {{
+                    background-color: #808080;
+                    color: white;
+                    margin-left: 5px;
+                }}
+    
+                QPushButton:hover {{
+                    background-color: {hover_seco_col_blue};
+                }}
+    
+                QPushButton:pressed {{
+                    background-color: {pressed_seco_col_blue};
+                }}
+            """)
 
         QApplication.processEvents()
 
@@ -309,20 +309,20 @@ class ModelParamsView(QScrollArea):
         self.apply_button.setText("Toepassen")
         self.apply_button.setStyleSheet(
             f"""
-                        QPushButton {{
-                            background-color: {seco_col_blue};
-                            border-radius: 5px;
-                            color: white;
-                        }}
+                QPushButton {{
+                    background-color: {seco_col_blue};
+                    color: white;
+                    margin-left: 5px;
+                }}
 
-                        QPushButton:hover {{
-                            background-color: {hover_seco_col_blue};
-                        }}
+                QPushButton:hover {{
+                    background-color: {hover_seco_col_blue};
+                }}
 
-                        QPushButton:pressed {{
-                            background-color: {pressed_seco_col_blue};
-                        }}
-                    """)
+                QPushButton:pressed {{
+                    background-color: {pressed_seco_col_blue};
+                }}
+            """)
 
     def model_type_changed_event(self) -> None:
         """
