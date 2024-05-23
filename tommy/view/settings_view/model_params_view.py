@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QWidget,
-                               QPushButton)
+                               QPushButton, QApplication)
 
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
@@ -232,6 +232,7 @@ class ModelParamsView(QScrollArea):
             f"""
                 QPushButton {{
                     background-color: {seco_col_blue};
+                    border-radius: 5px;
                     color: white;
                 }}
 
@@ -270,8 +271,51 @@ class ModelParamsView(QScrollArea):
         current_model_type = self._model_parameters_controller.get_model_type()
         current_view = self.algorithm_specific_settings_views[
             current_model_type]
+        # Disable the apply button and change its text to "Laden..."
+        self.apply_button.setEnabled(False)
+        self.apply_button.setText("Laden...")
+        self.apply_button.setStyleSheet(
+            f"""
+                        QPushButton {{
+                            background-color: #808080;
+                            border-radius: 5px;
+                            color: white;
+                        }}
+
+                        QPushButton:hover {{
+                            background-color: {hover_seco_col_blue};
+                        }}
+
+                        QPushButton:pressed {{
+                            background-color: {pressed_seco_col_blue};
+                        }}
+                    """)
+
+        QApplication.processEvents()
+
         if current_view.all_fields_valid():
             self._controller.on_run_topic_modelling()
+
+        # Re-enable the apply button and restore its text 
+        # when processing is complete
+        self.apply_button.setEnabled(True)
+        self.apply_button.setText("Toepassen")
+        self.apply_button.setStyleSheet(
+            f"""
+                        QPushButton {{
+                            background-color: {seco_col_blue};
+                            border-radius: 5px;
+                            color: white;
+                        }}
+
+                        QPushButton:hover {{
+                            background-color: {hover_seco_col_blue};
+                        }}
+
+                        QPushButton:pressed {{
+                            background-color: {pressed_seco_col_blue};
+                        }}
+                    """)
 
     def model_type_changed_event(self) -> None:
         """
