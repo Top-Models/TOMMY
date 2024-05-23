@@ -71,8 +71,6 @@ class PlotSelectionView(QTabWidget):
             self._create_tabs)
         self._graph_controller.refresh_plots_event.subscribe(
             lambda _: self._tab_clicked_event())
-        self._config_controller.config_switched_event.subscribe(
-            lambda _: self._config_changed_event())
         self._graph_view = graph_view
 
         # Initialize a dict from tab index to the corresponding visualization

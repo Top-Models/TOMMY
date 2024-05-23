@@ -9,9 +9,9 @@ from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
 from tommy.controller.visualizations.abstract_visualization import (
-        AbstractVisualization)
+    AbstractVisualization)
 from tommy.controller.visualizations.document_topic_nx_exporter import (
-        DocumentTopicNxExporter)
+    DocumentTopicNxExporter)
 from tommy.controller.visualizations.possible_visualization import VisGroup
 from tommy.controller.visualizations.visualization_input_datatypes import (
     VisInputData, ProcessedCorpus)
@@ -26,7 +26,7 @@ class DocumentTopicNetworkSummaryCreator(AbstractVisualization):
     topic runner and the given preprocessed documents; and returning it as a
     matplotlib figure.
     """
-    _required_interfaces = [DocumentTopicsInterface]
+    _required_interfaces = [DocumentTopicsInterface, TopicRunner]
     name = 'Topics en documenten die daar ten minste 5% bij horen'
     short_tab_name = 'Doc. Netwerk'
     vis_group = VisGroup.MODEL
@@ -124,7 +124,7 @@ class DocumentTopicNetworkSummaryCreator(AbstractVisualization):
 
     @staticmethod
     def _construct_doc_topic_network(topic_runner: TopicRunner
-                                     | DocumentTopicsInterface,
+                                                   | DocumentTopicsInterface,
                                      processed_files: ProcessedCorpus
                                      ) -> nx.Graph:
         """
