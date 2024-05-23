@@ -19,15 +19,11 @@ class ConfigModel:
         if derive_from is None:
             self.stopwords_model = StopwordsModel()
             self.model_parameters_model = ModelParametersModel()
-            self.corpus_model = CorpusModel()
         else:
             self.stopwords_model = StopwordsModel(
                 derive_from.stopwords_model)
             self.model_parameters_model = ModelParametersModel(
                 derive_from.model_parameters_model)
-            self.corpus_model = CorpusModel(
-                derive_from.corpus_model
-            )
 
     def to_dict(self):
         """

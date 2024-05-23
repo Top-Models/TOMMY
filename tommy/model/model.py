@@ -14,6 +14,7 @@ class Model:
         self.language_model: LanguageModel = LanguageModel()
         self.project_settings_model: ProjectSettingsModel = (
             ProjectSettingsModel())
+        self.corpus_model = CorpusModel()
 
         first_config = ConfigModel()
         self.selected_config_name: str = Model.default_config_name
@@ -33,10 +34,6 @@ class Model:
     @property
     def model_parameters_model(self):
         return self.config_model.model_parameters_model
-
-    @property
-    def corpus_model(self):
-        return self.config_model.corpus_model
 
     @property
     def topic_model(self):
