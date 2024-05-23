@@ -34,12 +34,13 @@ class StopwordsController:
         """Sets the reference to the stopwords model."""
         self._stopwords_model = stopwords_model
 
-    def change_config_model_refs(self, stopwords_model: StopwordsModel):
-        """Sets the reference to the stopwords model and updates the
-        frontend"""
-        self._stopwords_model = stopwords_model
+    def on_model_swap(self):
+        """
+        Notify the frontend that the stopwords model has changed
+        :return:
+        """
         self._stopwords_model_changed_event.publish(
-            stopwords_model.extra_words_in_order)
+            self._stopwords_model.extra_words_in_order)
 
     def load_default_stopwords(self, language: SupportedLanguage) -> None:
         """Load the default stopwords of the selected language"""

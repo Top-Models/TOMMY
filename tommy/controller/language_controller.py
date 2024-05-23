@@ -43,11 +43,10 @@ class LanguageController:
         """
         self._language_model = language_model
 
-    def change_config_model_refs(self, language_model: LanguageModel) -> None:
+    def on_model_swap(self) -> None:
         """
-        Set the reference to the language-model and update the frontend
+        Notify the frontend that the language model has changed
         """
-        self._language_model = language_model
         self._language_model_changed_event.publish(None)
 
     def set_language(self, language: SupportedLanguage) -> None:

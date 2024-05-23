@@ -50,18 +50,13 @@ class TopicModellingController:
         self._topic_model = topic_model
         self._config_model = config_model
 
-    def change_config_model_refs(self,
-                                 topic_model: TopicModel,
-                                 config_model: ConfigModel) -> None:
+    def on_model_swap(self) -> None:
         """
-        Set the references to the topic model when switching configs
+        Notify the graph controller that the topic model has changed
         :return: None
         """
-        # TODO: send event to view and other controllers that the
-        #  visualizations should change
-        self._topic_model = topic_model
-        self._config_model = config_model
-        self._topic_model_switched_event.publish(config_model.topic_runner)
+        self._topic_model_switched_event.publish(
+            self._config_model.topic_runner)
 
     def set_controller_refs(self,
                             parameters_controller: ModelParametersController,
@@ -132,9 +127,9 @@ class TopicModellingController:
         num_topics = self._model_parameters_controller.get_model_n_topics()
 
         self._config_model.topic_runner = NmfRunner(
-                topic_model=self._topic_model,
-                docs=corpus,
-                num_topics=num_topics)
+            topic_model=self._topic_model,
+            docs=corpus,
+            num_topics=num_topics)
 
 
 """        

@@ -119,7 +119,7 @@ class Controller:
             self._model_parameters_controller, self._corpus_controller)
 
         self._config_controller.config_switched_event.subscribe(
-            self._update_config_model_references)
+            self._update_model_on_config_switch)
         self._saving_loading_controller.model_changed_event.subscribe(
             self._update_model_on_load)
 
@@ -175,6 +175,11 @@ class Controller:
         self._corpus_controller.set_processed_corpus(processed_files)
         self._topic_modelling_controller.train_model()
 
+    def _update_model_on_config_switch(
+            self, config_model: ConfigModel) -> None:
+        self._set_model_references()
+        self._notify_model_swapped()
+
     def _update_model_on_load(self, model: Model) -> None:
         """
         Update the model of the controller
@@ -186,7 +191,7 @@ class Controller:
         old_language = self._model.language_model.selected_language
 
         self._model = model
-        self._update_config_model_references(model.config_model)
+        self._set_model_references()
 
         # reload default stopwords if the language has changed
         new_language = model.language_model.selected_language
@@ -200,36 +205,26 @@ class Controller:
             self._project_settings_controller.set_input_folder_path(
                 new_input_folder_path)
 
-    def _update_config_model_references(self, config_model: ConfigModel):
+        self._notify_model_swapped()
+
+    def _notify_model_swapped(self):
         """When the user switches configuration, this event handler makes
         sure that every controller gets a reference to the models of the
         currently selected config"""
 
-        self._model_parameters_controller.change_config_model_refs(
-            config_model.model_parameters_model)
+        import time
+        start = time.time()
 
-        self._topic_modelling_controller.change_config_model_refs(
-            config_model.topic_model,
-            self._model.config_model)
+        self._model_parameters_controller.on_model_swap()
+        print(f"Time since mpc: {time.time() - start}")
+        self._topic_modelling_controller.on_model_swap()
+        print(f"Time since tmc: {time.time() - start}")
+        self._stopwords_controller.on_model_swap()
+        print(f"Time since sc: {time.time() - start}")
+        self._language_controller.on_model_swap()
 
-        self._stopwords_controller.change_config_model_refs(
-            config_model.stopwords_model)
-
-        self._preprocessing_controller.change_config_model_refs(
-            config_model.stopwords_model)
-
-        self._corpus_controller.change_config_model_refs(
-            config_model.corpus_model)
-
-        self._config_controller.set_model_refs(self._model)
-
-        self._language_controller.change_config_model_refs(
-            self._model.language_model)
-
-        self._saving_loading_controller.set_model_refs(self._model)
-
-        self._project_settings_controller.set_model_refs(
-            self._model.project_settings_model)
+        end = time.time()
+        print(f"Time taken: {end - start}")
 
 
 """

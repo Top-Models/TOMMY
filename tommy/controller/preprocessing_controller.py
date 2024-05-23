@@ -53,11 +53,6 @@ class PreprocessingController:
         """Set the reference to the stopwords model"""
         self._stopwords_model = stopwords_model
 
-    def change_config_model_refs(self, stopwords_model: StopwordsModel):
-        """Change the reference to the stopwords model when the user
-        switches config"""
-        self._stopwords_model = stopwords_model
-
     def process_text(self, text: str) -> list[str]:
         """Preprocesses the given text to a list of tokens."""
         tokens = self._nlp(text)

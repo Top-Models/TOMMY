@@ -61,14 +61,6 @@ class CorpusController:
         """
         self._corpus_model = corpus_model
 
-    def change_config_model_refs(self, corpus_model: CorpusModel) -> None:
-        """
-        Sets the reference to the corpus model
-        :param corpus_model: The corpus model
-        :return: None
-        """
-        self._corpus_model = corpus_model
-
     def _read_files(self, path: str) -> Generator[RawFile, None, None]:
         """
         Yields the contents of all compatible files in a given directory
