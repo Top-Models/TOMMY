@@ -15,7 +15,6 @@ from tommy.controller.preprocessing_controller import PreprocessingController
 from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
-from tommy.controller.save_controller import SaveController
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.export_controller import ExportController
 from tommy.controller.language_controller import LanguageController
