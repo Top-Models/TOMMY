@@ -21,7 +21,7 @@ class CorrelationMatrixCreator(AbstractVisualization):
     correlation matrix plot for topics in the given topic runner and returning
     it as a matplotlib figure.
     """
-    _required_interfaces = [CorrelationMatrixInterface]
+    _required_interfaces = [CorrelationMatrixInterface, TopicRunner]
     name = 'Correlatiematrix topics'
     short_tab_name = 'Correlatie'
     vis_group = VisGroup.MODEL
