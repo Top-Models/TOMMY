@@ -26,15 +26,22 @@ class LanguageController:
 
     @property
     def change_language_event(self) -> EventHandler[SupportedLanguage]:
+        """
+        The event that is triggered when the language is changed
+        :return: The event
+        """
         return self._change_language_event
 
     def __init__(self) -> None:
         self._change_language_event = EventHandler[SupportedLanguage]()
 
     def set_model_refs(self, language_model: LanguageModel) -> None:
-        """Set the reference to the language-model"""
+        """
+        Set the reference to the language-model
+        :param language_model: The language model
+        :return: None
+        """
         self._language_model = language_model
-        self._change_language_event.publish(language_model.selected_language)
 
     def change_config_model_refs(self, language_model: LanguageModel) -> None:
         """
@@ -44,7 +51,12 @@ class LanguageController:
         self._language_model_changed_event.publish(None)
 
     def set_language(self, language: SupportedLanguage) -> None:
-        """Set the language for the topic modelling"""
+        """
+        Set the language of the corpus and notify the preprocessing pipeline
+        and stopwords that the language has changed
+        :param language: The new language
+        :return: None
+        """
         self._language_model.selected_language = language
         self._change_language_event.publish(language)
 
