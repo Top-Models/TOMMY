@@ -22,7 +22,8 @@ class ConfigView(QDialog):
     """Widget for managing configurations"""
 
     def __init__(self, config_controller: ConfigController,
-                 model_parameters_controller: ModelParametersController):
+                 model_parameters_controller: ModelParametersController) \
+            -> None:
         super().__init__()
         self.config_controller = config_controller
         self.model_parameters_controller = model_parameters_controller
@@ -161,7 +162,7 @@ class ConfigView(QDialog):
             else:
                 self.config_list_widget.addItem(name)
 
-    def add_configuration(self):
+    def add_configuration(self) -> None:
         """Method to add a new configuration"""
         name, ok = QInputDialog.getText(self, "Voer Configuratie Naam In",
                                         "Naam:")
@@ -176,7 +177,7 @@ class ConfigView(QDialog):
                                     "De configuratie kon niet worden "
                                     "toegevoegd")
 
-    def delete_configuration(self):
+    def delete_configuration(self) -> None:
         """Method to delete a configuration"""
         selected_items = self.config_list_widget.selectedItems()
         if selected_items:
@@ -193,7 +194,7 @@ class ConfigView(QDialog):
                 if success:
                     self.update_config_list()
 
-    def load_configuration(self):
+    def load_configuration(self) -> None:
         """Method to load a configuration"""
         selected_items = self.config_list_widget.selectedItems()
         if selected_items:

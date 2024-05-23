@@ -44,6 +44,14 @@ class GraphView(QWidget):
         # Add the canvas to the layout
         self.layout.addWidget(FigureCanvas(canvas.figure))
 
+    def clear_plot(self) -> None:
+        """
+        Clear the plot from the view.
+
+        :return: None
+        """
+        self.display_plot(matplotlib.figure.Figure())
+
 
 """
 This program has been developed by students from the bachelor Computer Science
