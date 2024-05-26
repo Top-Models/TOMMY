@@ -10,6 +10,8 @@ from tommy.support.constant_variables import (
     text_font, seco_col_blue, disabled_gray, heading_font)
 from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
+from tommy.view.settings_view.abstract_settings.better_combo_box import \
+    BetterComboBox
 
 
 class AbstractSettings:
@@ -48,8 +50,8 @@ class AbstractSettings:
                                           f"padding: 5px;")
 
         # Initialize input fields
-        self._algorithm_field = QComboBox()
-        self._language_field = QComboBox()
+        self._algorithm_field = BetterComboBox()
+        self._language_field = BetterComboBox()
         self._topic_amount_field = QLineEdit()
         self._amount_of_words_field = QLineEdit()
 
@@ -309,7 +311,7 @@ class AbstractSettings:
         algorithm_layout.addWidget(algorithm_label)
 
         # Add input field
-        self._algorithm_field = QComboBox()
+        self._algorithm_field = BetterComboBox()
         self._algorithm_field.setFixedWidth(100)
         self._algorithm_field.addItem("LDA")
         self._algorithm_field.addItem("NMF")
@@ -357,7 +359,7 @@ class AbstractSettings:
         language_layout = QHBoxLayout()
 
         # Add label
-        self._language_field = QComboBox()
+        self._language_field = BetterComboBox()
         language_label = QLabel("Taal corpus:")
         language_label.setStyleSheet(f"font-size: 16px;"
                                      f"color: black;"

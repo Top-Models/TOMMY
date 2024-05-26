@@ -18,7 +18,7 @@ class TopWordsBarPlotCreator(AbstractVisualization):
     A class for constructing a bar plot for a topics in the given topic runner
     and returning it as a matplotlib figure.
     """
-    _required_interfaces = []
+    _required_interfaces = [TopicRunner]
     name = 'Woorden met het hoogste gewicht'
     short_tab_name = 'Woordgewichten'
     vis_group = VisGroup.TOPIC
@@ -54,7 +54,7 @@ class TopWordsBarPlotCreator(AbstractVisualization):
         # Add margins and labels to the plot
         plt.margins(0.02)
         plt.xlabel("gewicht")
-        plt.title(f"Woorden met het hoogste gewicht topic {topic_id+1}")
+        plt.title(f"Woorden met het hoogste gewicht topic {topic_id + 1}")
 
         fig.figure.subplots_adjust(0.2, 0.2, 0.8, 0.8)
 

@@ -17,7 +17,7 @@ class WordTopicNetworkCreator(AbstractVisualization):
     A class for construct a word-topic network to plot the relations
     between topics and probable words and returning it as a matplotlib figure
     """
-    _required_interfaces = []
+    _required_interfaces = [TopicRunner]
     name = 'Topics en 15 meest voorkomende woorden'
     short_tab_name = 'Woord Netwerk'
     vis_group = VisGroup.MODEL
