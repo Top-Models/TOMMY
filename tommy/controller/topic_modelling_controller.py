@@ -163,6 +163,8 @@ class TopicModellingController:
         num_words_per_topic = (self._model_parameters_controller
                                .get_model_word_amount())
         bert_min_df = self._model_parameters_controller.get_bert_min_df()
+        bert_max_features = (self._model_parameters_controller.
+                             get_bert_max_features())
 
         raw_docs = [document.body for document
                     in self._corpus_controller.get_raw_bodies()]
@@ -181,7 +183,8 @@ class TopicModellingController:
             num_words_per_topic=num_words_per_topic,
             docs=raw_docs,
             sentences=sentences,
-            min_df=bert_min_df)
+            min_df=bert_min_df,
+            max_features=bert_max_features)
 
 
 """

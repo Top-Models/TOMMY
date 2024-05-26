@@ -2,6 +2,7 @@ import os
 
 import spacy
 from spacy.tokens import Doc
+import nltk
 from nltk.tokenize import sent_tokenize
 
 from tommy.model.stopwords_model import StopwordsModel
@@ -21,6 +22,12 @@ class PreprocessingController:
         self.language_controller = language_controller
         self.language_controller.change_language_event.subscribe(
             self.load_pipeline)
+
+        # download punkt, for splitting sentences if not installed already
+        try:
+            nltk.data.find('tokenizers/punkt')
+        except LookupError:
+            nltk.download('punkt')
 
     def load_pipeline(self, language: SupportedLanguage) -> None:
         nlp: spacy.Language

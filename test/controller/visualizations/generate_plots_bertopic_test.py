@@ -83,7 +83,8 @@ def bertopic_runner(raw_bodies, num_words, max_num_topics):
     sentences = list(reduce(chain, lists_of_sentences))
 
     bert = BertopicRunner(mock_topic_model, mock_stopwords_controller,
-                          max_num_topics, num_words, raw_bodies, sentences)
+                          max_num_topics, num_words, raw_bodies, sentences,
+                          0.1, 10_000)
 
     return bert
 

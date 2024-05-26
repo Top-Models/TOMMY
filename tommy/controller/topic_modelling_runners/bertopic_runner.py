@@ -42,7 +42,8 @@ class BertopicRunner(TopicRunner):
                  num_words_per_topic: int,
                  docs: list[str],
                  sentences: list[str],
-                 min_df: int | None) -> None:
+                 min_df: float | None,
+                 max_features: int | None) -> None:
         """
         Initialize the BertopicRunner.
         :param topic_model: reference to the topic model where the algorithm
@@ -53,7 +54,11 @@ class BertopicRunner(TopicRunner):
             the analysis
         :param num_words_per_topic: the number of words per topic to be
             calculated. Values between 10-20 advised due to computation time.
-        :param min_df: The minimal document frequency for a term to be included
+        :param min_df: The minimal document frequency for a term to be
+            included. I.E., the minimal ratio of the sentences in which te term
+            needs to occur
+        :param max_features: The maximum number of terms to be included in the
+            analysis
         :return: None
         """
         super().__init__(topic_model=topic_model)
@@ -63,7 +68,9 @@ class BertopicRunner(TopicRunner):
         self._topic_model.model['num_words_per_topic'] = num_words_per_topic
         self._topic_model.model['num_topics'] = num_topics
 
-        self.train_model(docs, sentences, min_df=min_df)
+        self.train_model(docs, sentences,
+                         min_df=min_df,
+                         max_features=max_features)
 
     def get_n_topics(self) -> int:
         """Returns the number of topics calculated by the model."""
@@ -107,22 +114,26 @@ class BertopicRunner(TopicRunner):
                 if topic_words]
 
     def train_model(self, docs: list[str], sentences: list[str],
-                    min_df: int | None) -> None:
+                    min_df: float | None,
+                    max_features: int | None) -> None:
         """
         Train the BERTopic model.
         :param docs: list containing the raw bodies of files as
             input data
         :param sentences: list containing the raw bodies of files split into
             sentences as training input
-        :param min_df: The minimal document frequency for a term to be included
+        :param min_df: The minimal document frequency for a term to be
+            included. I.E., the minimal ratio of the sentences in which te term
+            needs to occur
+        :param max_features: The maximum number of terms to be included in the
+            analysis
         :return: None
         """
-        print('Start training BERTopic model')#todo
-        import time
-        start_time = time.time()#todo
         hyperparams = {}
         if min_df is not None:
             hyperparams['min_df'] = min_df
+        if max_features is not None:
+            hyperparams['max_features'] = max_features
 
         vectorizer_model = CountVectorizer(
             ngram_range=(1, 3),
@@ -134,8 +145,6 @@ class BertopicRunner(TopicRunner):
             vectorizer_model=vectorizer_model, ctfidf_model=ctfidf_model,
             top_n_words=self.num_words_per_topic, nr_topics=self.max_num_topics
         ).fit(sentences)
-
-        print("bert training time:", time.time() - start_time)#todo
 
 
 """
