@@ -162,23 +162,26 @@ class TopicModellingController:
         num_topics = self._model_parameters_controller.get_model_n_topics()
         num_words_per_topic = (self._model_parameters_controller
                                .get_model_word_amount())
+        bert_min_df = self._model_parameters_controller.get_bert_min_df()
 
-        raw_corpus = [document.body for document
-                      in self._corpus_controller.get_raw_bodies()]
+        raw_docs = [document.body for document
+                    in self._corpus_controller.get_raw_bodies()]
 
-        # split every document into sentences and add all sentences to list
-        lists_of_sentences = map(
-            self._preprocessing_controller.split_into_sentences,
-            raw_corpus)
-        sentences = list(reduce(chain, lists_of_sentences))
-
+        # split every document into sentences and add all sentences to a list
+        sentences = list([
+            sentence
+            for split_document in
+            map(self._preprocessing_controller.split_into_sentences, raw_docs)
+            for sentence in split_document
+        ])
         self._config_model.topic_runner = BertopicRunner(
             topic_model=self._topic_model,
             stopwords_controller=self._stopwords_controller,
             num_topics=num_topics,
             num_words_per_topic=num_words_per_topic,
-            docs=raw_corpus,
-            sentences=sentences)
+            docs=raw_docs,
+            sentences=sentences,
+            min_df=bert_min_df)
 
 
 """

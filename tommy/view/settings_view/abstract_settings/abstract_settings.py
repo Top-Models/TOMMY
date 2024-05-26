@@ -1,13 +1,13 @@
 from PySide6.QtGui import QIntValidator, Qt
-from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, \
-    QVBoxLayout, QComboBox
+from PySide6.QtWidgets import (QLineEdit, QLabel, QHBoxLayout, QVBoxLayout,
+                               QComboBox)
 
 from tommy.controller.language_controller import LanguageController
-from tommy.controller.model_parameters_controller import \
-    ModelParametersController
+from tommy.controller.model_parameters_controller import (
+    ModelParametersController)
 from tommy.model.model_parameters_model import ModelParametersModel
-from tommy.support.constant_variables import text_font, seco_col_blue, \
-    disabled_gray, heading_font
+from tommy.support.constant_variables import (
+    text_font, seco_col_blue, disabled_gray, heading_font)
 from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
 

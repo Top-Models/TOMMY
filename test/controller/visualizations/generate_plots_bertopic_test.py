@@ -114,12 +114,6 @@ def test_generate_word_topic_network(bertopic_runner):
     assert figure
 
 
-# def test_generate_document_topic_network_summary(bertopic_runner, processed_files):
-#     doc_topic_summary = DocumentTopicNetworkSummaryCreator()
-#     figure = doc_topic_summary._create_figure(bertopic_runner, processed_files)
-#     assert figure
-
-
 def test_get_topic_words(bertopic_runner, max_num_topics, num_words):
     assert max_num_topics >= bertopic_runner.get_n_topics()
     assert num_words == bertopic_runner.num_words_per_topic

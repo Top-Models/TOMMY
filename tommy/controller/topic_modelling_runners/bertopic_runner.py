@@ -41,7 +41,8 @@ class BertopicRunner(TopicRunner):
                  num_topics: int,
                  num_words_per_topic: int,
                  docs: list[str],
-                 sentences: list[str]) -> None:
+                 sentences: list[str],
+                 min_df: int | None) -> None:
         """
         Initialize the BertopicRunner.
         :param topic_model: reference to the topic model where the algorithm
@@ -52,6 +53,7 @@ class BertopicRunner(TopicRunner):
             the analysis
         :param num_words_per_topic: the number of words per topic to be
             calculated. Values between 10-20 advised due to computation time.
+        :param min_df: The minimal document frequency for a term to be included
         :return: None
         """
         super().__init__(topic_model=topic_model)
@@ -61,7 +63,7 @@ class BertopicRunner(TopicRunner):
         self._topic_model.model['num_words_per_topic'] = num_words_per_topic
         self._topic_model.model['num_topics'] = num_topics
 
-        self.train_model(docs, sentences)
+        self.train_model(docs, sentences, min_df=min_df)
 
     def get_n_topics(self) -> int:
         """Returns the number of topics calculated by the model."""
@@ -104,29 +106,36 @@ class BertopicRunner(TopicRunner):
                 in enumerate(self._model.get_topics().values())
                 if topic_words]
 
-    def train_model(self, docs: list[str], sentences: list[str]) -> None:
+    def train_model(self, docs: list[str], sentences: list[str],
+                    min_df: int | None) -> None:
         """
         Train the BERTopic model.
         :param docs: list containing the raw bodies of files as
             input data
         :param sentences: list containing the raw bodies of files split into
             sentences as training input
+        :param min_df: The minimal document frequency for a term to be included
         :return: None
         """
-        # print('Start training BERTopic model')#todo
-        # import time
-        # start_time = time.time()#todo
+        print('Start training BERTopic model')#todo
+        import time
+        start_time = time.time()#todo
+        hyperparams = {}
+        if min_df is not None:
+            hyperparams['min_df'] = min_df
 
         vectorizer_model = CountVectorizer(
+            ngram_range=(1, 3),
             stop_words=list(stopword for stopword
-                            in self._stopwords_controller.stopwords_model))
+                            in self._stopwords_controller.stopwords_model),
+            **hyperparams)
         ctfidf_model = ClassTfidfTransformer(reduce_frequent_words=True)
         self._model = BERTopic(
             vectorizer_model=vectorizer_model, ctfidf_model=ctfidf_model,
             top_n_words=self.num_words_per_topic, nr_topics=self.max_num_topics
         ).fit(sentences)
 
-        #print("bert training time:", time.time() - start_time)#todo
+        print("bert training time:", time.time() - start_time)#todo
 
 
 """
