@@ -2,15 +2,22 @@ import pytest
 from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 
-from tommy.controller.controller import Controller
+from tommy.controller.model_parameters_controller import (
+    ModelParametersController)
+from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 
 
 @pytest.fixture(scope='function')
-def lda_settings() -> LdaSettings:
-    controller = Controller()
-    lda_settings = LdaSettings(controller.model_parameters_controller,
-                               controller.language_controller)
+def lda_settings(mocker) -> LdaSettings:
+    mock_language_controller = mocker.MagicMock()
+
+    model_parameters_model = ModelParametersModel()
+    model_parameters_controller = ModelParametersController()
+    model_parameters_controller.set_model_refs(model_parameters_model)
+
+    lda_settings = LdaSettings(model_parameters_controller,
+                               mock_language_controller)
     return lda_settings
 
 
