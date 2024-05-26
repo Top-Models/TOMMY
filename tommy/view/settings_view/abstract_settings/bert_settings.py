@@ -83,7 +83,7 @@ class BertSettings(AbstractSettings):
         min_term_freq_layout = QHBoxLayout()
 
         # Add label
-        min_df = QLabel("Min. Term Freq.:")
+        min_df = QLabel("Min. term freq.:")
         min_df.setStyleSheet(f"font-size: 16px;"
                              f"color: black;"
                              f"font-family: {text_font};")
