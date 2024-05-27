@@ -33,6 +33,9 @@ class ImportedFilesView(QWidget):
         corpus_controller.metadata_changed_event.subscribe(
             self.on_metadata_changed)
 
+        topic_modelling_controller.model_trained_event.subscribe(
+            lambda _: self.display_files())
+
         topic_modelling_controller.topic_document_correspondence_calculated_event.subscribe(
             self.on_topic_document_correspondence_changed)
 
@@ -144,8 +147,10 @@ class ImportedFilesView(QWidget):
         for i in reversed(range(0, self.scroll_layout.count())):
             self.scroll_layout.itemAt(i).widget().deleteLater()
 
+        sorted_files = sorted(self.metadata, key=lambda x: x.name)
+
         # Add the file labels to the layout
-        for file in self.metadata:
+        for file in sorted_files:
             file_label = FileLabel(file, self.scroll_area)
             file_label.clicked.connect(self.label_clicked)
             self.scroll_layout.addWidget(file_label)
@@ -164,8 +169,10 @@ class ImportedFilesView(QWidget):
         for i in reversed(range(0, self.scroll_layout.count())):
             self.scroll_layout.itemAt(i).widget().deleteLater()
 
+        sorted_files = sorted(self.processed_files, key=lambda x: x.topic_correspondence[index], reverse=True)
+
         # Add the file labels to the layout
-        for file in self.processed_files:
+        for file in sorted_files:
             file_label = FileLabel(file.metadata, self.scroll_area,
                                    topic_correspondence=
                                    file.topic_correspondence[index])
