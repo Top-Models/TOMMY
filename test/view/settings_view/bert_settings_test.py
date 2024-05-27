@@ -33,7 +33,8 @@ def bert_settings(mocker) -> BertSettings:
                           (locale.str(0.1), True),
                           (locale.str(0.5), True),
                           ("abc", False),
-                          ("0.1,2", False),
+                          ("0.1.2", False),
+                          ("0,1,2", False),
                           ("", True)])
 def test_validate_min_df(bert_settings: BertSettings,
                          text: str,
@@ -57,7 +58,7 @@ def test_validate_min_df(bert_settings: BertSettings,
                           (locale.str(912), True),
                           (locale.str(0.5), False),
                           ("abc", False),
-                          ("0.1,2", False),
+                          ("0,1,2.1.2", False),
                           ("", True)])
 def test_validate_max_features(bert_settings: BertSettings,
                                text: str,
