@@ -5,11 +5,17 @@ from PySide6.QtWidgets import (QLabel, QVBoxLayout, QScrollArea, QWidget,
 
 from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.file_import.metadata import Metadata
+from tommy.controller.file_import.processed_corpus import ProcessedCorpus
+from tommy.controller.file_import.processed_file import ProcessedFile
+from tommy.controller.topic_modelling_controller import TopicModellingController
 from tommy.support.constant_variables import (
     heading_font, prim_col_red,
     hover_prim_col_red)
 
 from tommy.view.imported_files_view.file_label import FileLabel
+from tommy.view.topic_view.topic_entity_component.topic_entity import \
+    TopicEntity
+from typing import List
 
 
 class ImportedFilesView(QWidget):
@@ -17,7 +23,8 @@ class ImportedFilesView(QWidget):
 
     fileClicked = Signal(object)
 
-    def __init__(self, corpus_controller: CorpusController) -> None:
+    def __init__(self, corpus_controller: CorpusController,
+                 topic_modelling_controller: TopicModellingController) -> None:
         """Initialize the ImportedFileDisplay"""
         super().__init__()
 
@@ -25,6 +32,9 @@ class ImportedFilesView(QWidget):
         self._corpus_controller = corpus_controller
         corpus_controller.metadata_changed_event.subscribe(
             self.on_metadata_changed)
+
+        topic_modelling_controller.topic_document_correspondence_calculated_event.subscribe(
+            self.on_topic_document_correspondence_changed)
 
         # Initialize widget properties
         self.setMinimumHeight(200)
@@ -54,8 +64,8 @@ class ImportedFilesView(QWidget):
         self.setSizePolicy(QSizePolicy.Policy.Expanding,
                            QSizePolicy.Policy.Expanding)
 
-        # { tab_name, files }
-        self.file_container = {}
+        self.metadata: List[Metadata] = []
+        self.processed_files: List[ProcessedFile] = []
         self.selected_label = None
         self.selected_file = None
 
@@ -96,7 +106,7 @@ class ImportedFilesView(QWidget):
 
         # Align the title label to the center
         self.title_widget.title_label.setAlignment(
-                Qt.AlignmentFlag.AlignCenter)
+            Qt.AlignmentFlag.AlignCenter)
         self.title_widget.title_label.setContentsMargins(50, 0, 0, 0)
 
         # Create the title button
@@ -123,19 +133,9 @@ class ImportedFilesView(QWidget):
         # Connect label click event to toggle_collapse method
         self.title_widget.title_button.mousePressEvent = self.toggle_collapse
 
-    def update_files(self, tab_name: str, metadata: [Metadata]) -> None:
+    def display_files(self) -> None:
         """
-        Fetch the metadata from the selected directory and store it in
-        file_container
-        :param tab_name: Name of the tab to update the files in
-        :param metadata: List of metadata of the files in this tab
-        :return: None
-        """
-        self.file_container[tab_name] = metadata
-
-    def display_files(self, tab_name: str) -> None:
-        """
-        Display the files in the layout
+        Display the metadata from files in the layout
         :return: None
         """
 
@@ -144,13 +144,31 @@ class ImportedFilesView(QWidget):
         for i in reversed(range(0, self.scroll_layout.count())):
             self.scroll_layout.itemAt(i).widget().deleteLater()
 
-        # Check if the tab name is in the file container
-        if tab_name not in self.file_container:
-            return
+        # Add the file labels to the layout
+        for file in self.metadata:
+            file_label = FileLabel(file, self.scroll_area)
+            file_label.clicked.connect(self.label_clicked)
+            self.scroll_layout.addWidget(file_label)
+
+    def display_files_for_topic(self, topic: TopicEntity) -> None:
+        """
+        Display the metadata from files in the layout
+        Sorted by topic document correspondence
+        :return: None
+        """
+
+        index = topic.index
+
+        # Clear the layout except for the title label
+        # Start from 1 to keep the title label
+        for i in reversed(range(0, self.scroll_layout.count())):
+            self.scroll_layout.itemAt(i).widget().deleteLater()
 
         # Add the file labels to the layout
-        for file in self.file_container[tab_name]:
-            file_label = FileLabel(file, self.scroll_area)
+        for file in self.processed_files:
+            file_label = FileLabel(file.metadata, self.scroll_area,
+                                   topic_correspondence=
+                                   file.topic_correspondence[index])
             file_label.clicked.connect(self.label_clicked)
             self.scroll_layout.addWidget(file_label)
 
@@ -183,15 +201,6 @@ class ImportedFilesView(QWidget):
 
         # Display the file stats
         self.fileClicked.emit(clicked_label)
-
-    def initialize_files_for_label(self, tab_name: str, files: list) -> None:
-        """
-        Initialize the files for the given label
-        :param tab_name: The name of the tab
-        :param files: The list of files
-        :return: None
-        """
-        self.file_container[tab_name] = files
 
     def toggle_collapse(self, clicked_header) -> None:
         """
@@ -235,17 +244,34 @@ class ImportedFilesView(QWidget):
             self.setMinimumHeight(200)
             self.setMaximumHeight(300)
 
-    def on_metadata_changed(self, metadata: [Metadata]) -> None:
+    def on_metadata_changed(self, metadata: List[Metadata]) -> None:
         """
-        Update the files tab. This saves and displays the files when the
-        metadata is updated.
+        Update the files tab with the current file metadata.
         :param metadata: The new list of metadata for the current tab
         :return: None
         """
-        # TODO: when the implementation of tabs is updated, it should no longer
-        #  hard-code the tab name
-        self.update_files("lda_model", metadata)
-        self.display_files("lda_model")
+
+        self.metadata = metadata
+        self.display_files()
+
+    def on_topic_document_correspondence_changed(self,
+                                                 processed_files: ProcessedCorpus) -> None:
+        """
+        Update stored topic document correspondence reference.
+        :param processed_files: The list of processed files
+        :return: None
+        """
+
+        self.processed_files = processed_files
+
+    def on_topic_selected(self, topic: TopicEntity) -> None:
+        """
+        Update the files tab including topic document correspondence.
+        :param topic: the current selected topic
+        :return: None
+        """
+
+        self.display_files_for_topic(topic)
 
 
 """

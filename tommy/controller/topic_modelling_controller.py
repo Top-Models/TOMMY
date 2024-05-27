@@ -1,3 +1,4 @@
+from tommy.controller.file_import.processed_corpus import ProcessedCorpus
 from tommy.controller.model_parameters_controller import (
     ModelParametersController,
     ModelType)
@@ -26,6 +27,9 @@ class TopicModellingController:
     _config_model: ConfigModel = None
     _corpus_controller: CorpusController = None
     _model_trained_event: EventHandler[TopicRunner] = None
+    _topic_model_switched_event: EventHandler[TopicRunner] = None
+    _topic_document_correspondence_calculated_event: \
+        EventHandler[ProcessedCorpus] = None
 
     @property
     def model_trained_event(self) -> EventHandler[TopicRunner]:
@@ -35,12 +39,18 @@ class TopicModellingController:
     def topic_model_switched_event(self) -> EventHandler[TopicRunner]:
         return self._topic_model_switched_event
 
+    @property
+    def topic_document_correspondence_calculated_event(self) -> (
+            EventHandler)[ProcessedCorpus]:
+        return self._topic_document_correspondence_calculated_event
+
     def __init__(self) -> None:
         """Initialize the publisher of the topic-modelling-controller"""
         super().__init__()
         self._model_trained_event = EventHandler[TopicRunner]()
-        self._topic_model_switched_event: EventHandler[TopicRunner] = (
-            EventHandler())
+        self._topic_model_switched_event = EventHandler[TopicRunner]()
+        self._topic_document_correspondence_calculated_event = (
+            EventHandler[ProcessedCorpus]())
 
     def set_model_refs(self,
                        topic_model: TopicModel,
@@ -111,6 +121,9 @@ class TopicModellingController:
             # Add edges from each document to all associated topics
             for (topic_id, topic_probability) in document_topic:
                 document.topic_correspondence[topic_id] = topic_probability
+
+        self._topic_document_correspondence_calculated_event.publish(
+            processed_files)
 
     def _train_lda(self) -> None:
         """
