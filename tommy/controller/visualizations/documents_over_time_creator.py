@@ -2,6 +2,7 @@ import matplotlib.figure
 from matplotlib import pyplot as plt
 import matplotlib.dates
 import pandas as pd
+import numpy as np
 from datetime import date, datetime
 from matplotlib.ticker import MaxNLocator
 
@@ -44,9 +45,12 @@ class DocumentsOverTimeCreator(AbstractVisualization):
                                                 datetime.min.time())
                 topics = topic_runner.get_document_topics(document.body.body,
                                                           0.0)
-                current_probability = topics[topic_id][1]
-                dates["date"].append(current_date)
-                dates["probability"].append(current_probability)
+
+                topic = [topic for topic in topics if topic[0] == topic_id]
+                if topic:
+                    current_probability = topic[0][1]
+                    dates["date"].append(current_date)
+                    dates["probability"].append(current_probability)
 
             df = pd.DataFrame(dates)
             df = df.groupby("date", as_index=False).sum()
@@ -54,14 +58,17 @@ class DocumentsOverTimeCreator(AbstractVisualization):
             df = df.groupby([pd.Grouper(key='date', freq='ME')],
                             as_index=False)["probability"].sum()
 
-            plt.plot(df["date"],
-                     df["probability"],
-                     color=plot_colors[topic_id % len(plot_colors)])
+            ax.plot(df["date"],
+                    df["probability"],
+                    color=plot_colors[topic_id % len(plot_colors)],
+                    label=topic_id + 1)
+
             plt.title("Documenten over tijd topic {}".format(topic_id + 1))
             plt.xlabel("Datum")
-            plt.ylabel("Som kansen")
-
+            plt.ylabel("Som gewichten")
             plt.xticks(rotation=30)
+
+            ax.legend()
 
         return fig
 
