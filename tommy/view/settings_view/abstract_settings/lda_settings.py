@@ -122,6 +122,9 @@ class LdaSettings(AbstractSettings):
         if not is_valid:
             self._alpha_value_input.setStyleSheet(
                 self.topic_input_layout_invalid)
+            self._alpha_value_input.setText("")
+            self._alpha_value_input.setPlaceholderText(
+                    "Moet groter zijn dan 0")
             return False
 
         self._alpha_value_input.setStyleSheet(self.enabled_input_stylesheet)
@@ -194,6 +197,9 @@ class LdaSettings(AbstractSettings):
         if not is_valid:
             self._beta_value_input.setStyleSheet(
                 self.topic_input_layout_invalid)
+            self._beta_value_input.setText("")
+            self._beta_value_input.setPlaceholderText(
+                    "Moet groter zijn dan 0")
             return False
 
         self._beta_value_input.setStyleSheet(self.enabled_input_stylesheet)
