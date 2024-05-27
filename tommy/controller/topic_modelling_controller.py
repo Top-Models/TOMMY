@@ -28,7 +28,7 @@ class TopicModellingController:
     _corpus_controller: CorpusController = None
     _model_trained_event: EventHandler[TopicRunner] = None
     _topic_model_switched_event: EventHandler[TopicRunner] = None
-    _topic_document_correspondence_calculated_event: \
+    _calculate_document_topics_event: \
         EventHandler[ProcessedCorpus] = None
 
     @property
@@ -40,16 +40,16 @@ class TopicModellingController:
         return self._topic_model_switched_event
 
     @property
-    def topic_document_correspondence_calculated_event(self) -> (
+    def calculate_topic_documents_event(self) -> (
             EventHandler)[ProcessedCorpus]:
-        return self._topic_document_correspondence_calculated_event
+        return self._calculate_document_topics_event
 
     def __init__(self) -> None:
         """Initialize the publisher of the topic-modelling-controller"""
         super().__init__()
         self._model_trained_event = EventHandler[TopicRunner]()
         self._topic_model_switched_event = EventHandler[TopicRunner]()
-        self._topic_document_correspondence_calculated_event = (
+        self._calculate_document_topics_event = (
             EventHandler[ProcessedCorpus]())
 
     def set_model_refs(self,
@@ -102,7 +102,7 @@ class TopicModellingController:
 
         self._model_trained_event.publish(self._config_model.topic_runner)
 
-    def calculate_topic_document_correspondence(self):
+    def calculate_document_topics(self):
         processed_files = self._corpus_controller.get_processed_corpus()
         # inherit both TopicRunner and DocumentTopicsInterface
         topic_runner: TopicRunner | DocumentTopicsInterface = (
@@ -122,7 +122,7 @@ class TopicModellingController:
             for (topic_id, topic_probability) in document_topic:
                 document.topic_correspondence[topic_id] = topic_probability
 
-        self._topic_document_correspondence_calculated_event.publish(
+        self._calculate_document_topics_event.publish(
             processed_files)
 
     def _train_lda(self) -> None:

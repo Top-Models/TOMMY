@@ -36,7 +36,7 @@ class ImportedFilesView(QWidget):
         topic_modelling_controller.model_trained_event.subscribe(
             lambda _: self.display_files())
 
-        topic_modelling_controller.topic_document_correspondence_calculated_event.subscribe(
+        topic_modelling_controller.calculate_topic_documents_event.subscribe(
             self.on_topic_document_correspondence_changed)
 
         # Initialize widget properties
