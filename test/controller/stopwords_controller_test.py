@@ -53,7 +53,6 @@ def test_stopwords_view_model_linkage(stopwords_controller, stopwords_view,
                                       stopwords_model, qtbot):
     """Test whether adding stopwords in the view updates the model."""
     # Set up the view and model
-    stopwords_view.show()
     stopwords_controller.set_model_refs(stopwords_model)
 
     # Add a stopword in the view

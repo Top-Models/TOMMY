@@ -13,7 +13,6 @@ rm -r "${OUTPUT_FOLDER}"
 
 echo "> Creating an application bundle for Tommy"
 
-#--add-data "${DATA_FOLDER_PATH}/csv_files/*.csv:./data" \
 pyinstaller \
 --noconfirm \
 --windowed \
@@ -40,9 +39,9 @@ create-dmg \
 "${DMG_FOLDER_PATH}" \
 "${SOURCE_FOLDER_PATH}"
 
-echo "> Signing the DMG file"
+#echo "> Signing the DMG file"
 
 # TODO: Fix the signing (maybe only necessary for the dmg file?)
 #codesign --force --verbose  --verify--timestamp --sign "Developer ID Application: TTT" "${DMG_FOLDER_PATH}"
 
-echo "> You can find the signed DMG file in the dist folder"
+echo "> You can find the DMG file in the dist folder"

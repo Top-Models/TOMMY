@@ -76,6 +76,7 @@ class MainWindow(QMainWindow):
         self.graph_view = GraphView()
         self.plot_selection_view = PlotSelectionView(
             self._controller.graph_controller,
+            self._controller.config_controller,
             self.graph_view
         )
         self.imported_files_view = ImportedFilesView(
@@ -83,6 +84,7 @@ class MainWindow(QMainWindow):
         self.model_params_view = ModelParamsView(
             self._controller.model_parameters_controller,
             self._controller.language_controller,
+            self._controller.config_controller,
             self._controller)
         self.fetched_topics_view = FetchedTopicsView(
             self._controller.graph_controller,
@@ -125,6 +127,7 @@ class MainWindow(QMainWindow):
         """
 
         widget.setParent(self)
+
         widget.setGeometry(x, y, w, h)
         widget.show()
 

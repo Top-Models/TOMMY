@@ -2,6 +2,7 @@ from tommy.controller.model_parameters_controller import (
     ModelParametersController,
     ModelType)
 from tommy.controller.corpus_controller import CorpusController
+from tommy.model.config_model import ConfigModel
 from tommy.controller.result_interfaces.document_topics_interface import \
     DocumentTopicsInterface
 
@@ -10,6 +11,7 @@ from tommy.model.topic_model import TopicModel
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
+from tommy.controller.topic_modelling_runners.nmf_runner import NmfRunner
 from tommy.support.event_handler import EventHandler
 
 
@@ -21,29 +23,52 @@ class TopicModellingController:
     """
     _model_parameters_controller: ModelParametersController = None
     _topic_model: TopicModel = None
+    _config_model: ConfigModel = None
     _corpus_controller: CorpusController = None
-    _topic_runner: TopicRunner = None
     _model_trained_event: EventHandler[TopicRunner] = None
 
     @property
     def model_trained_event(self) -> EventHandler[TopicRunner]:
         return self._model_trained_event
 
+    @property
+    def topic_model_switched_event(self) -> EventHandler[TopicRunner]:
+        return self._topic_model_switched_event
+
     def __init__(self) -> None:
         """Initialize the publisher of the topic-modelling-controller"""
         super().__init__()
         self._model_trained_event = EventHandler[TopicRunner]()
+        self._topic_model_switched_event: EventHandler[TopicRunner] = (
+            EventHandler())
 
-    def set_model_refs(self, parameters_controller: ModelParametersController,
+    def set_model_refs(self,
                        topic_model: TopicModel,
-                       corpus_controller: CorpusController) -> None:
+                       config_model: ConfigModel) -> None:
         """
-        Set the references to the parameters controller, topic model and
-        corpus controller.
+        Set the references to the topic model
         :return: None
         """
-        self._model_parameters_controller = parameters_controller
         self._topic_model = topic_model
+        self._config_model = config_model
+
+    def change_config_model_refs(self,
+                                 topic_model: TopicModel,
+                                 config_model: ConfigModel) -> None:
+        """
+        Set the references to the topic model when switching configs
+        :return: None
+        """
+        # TODO: send event to view and other controllers that the
+        #  visualizations should change
+        self._topic_model = topic_model
+        self._config_model = config_model
+        self._topic_model_switched_event.publish(config_model.topic_runner)
+
+    def set_controller_refs(self,
+                            parameters_controller: ModelParametersController,
+                            corpus_controller: CorpusController):
+        self._model_parameters_controller = parameters_controller
         self._corpus_controller = corpus_controller
 
     def train_model(self) -> None:
@@ -58,17 +83,21 @@ class TopicModellingController:
         match new_model_type:
             case ModelType.LDA:
                 self._train_lda()
+            case ModelType.NMF:
+                self._train_nmf()
             case _:
                 raise NotImplementedError(
                     f"model type {new_model_type.name} is not supported by "
                     f"topic modelling controller")
 
-        self._model_trained_event.publish(self._topic_runner)
+        self._model_trained_event.publish(self._config_model.topic_runner)
 
     def calculate_topic_document_correspondence(self):
         processed_files = self._corpus_controller.get_processed_corpus()
-        topic_runner: DocumentTopicsInterface = self._topic_runner # TODO: fix unsafe cast
-        topics_amount = self._topic_runner.get_n_topics()
+        # inherit both TopicRunner and DocumentTopicsInterface
+        topic_runner: TopicRunner | DocumentTopicsInterface = (
+            self._config_model.topic_runner) # TODO: fix unsafe cast
+        topics_amount = topic_runner.get_n_topics()
 
         for document_id, document in enumerate(processed_files):
             document_topic = (
@@ -100,19 +129,37 @@ class TopicModellingController:
             get_model_alpha_beta_custom_enabled())
 
         if alpha_beta_custom_enabled:
-            self._topic_runner = LdaRunner(topic_model=self._topic_model,
-                                           docs=corpus,
-                                           num_topics=num_topics,
-                                           alpha=alpha_value,
-                                           beta=beta_value)
+            self._config_model.topic_runner = LdaRunner(
+                topic_model=self._topic_model,
+                docs=corpus,
+                num_topics=num_topics,
+                alpha=alpha_value,
+                beta=beta_value)
             return
 
-        self._topic_runner = LdaRunner(topic_model=self._topic_model,
-                                       docs=corpus,
-                                       num_topics=num_topics)
+        self._config_model.topic_runner = LdaRunner(
+            topic_model=self._topic_model,
+            docs=corpus,
+            num_topics=num_topics)
+
+    def _train_nmf(self) -> None:
+        """
+        Retrieves the corpus and model parameters,
+        then runs the NMF model on the corpus and saves the topic runner.
+        :return: None
+        """
+        corpus = [document.body.body
+                  for document
+                  in self._corpus_controller.get_processed_corpus()]
+        num_topics = self._model_parameters_controller.get_model_n_topics()
+
+        self._config_model.topic_runner = NmfRunner(
+                topic_model=self._topic_model,
+                docs=corpus,
+                num_topics=num_topics)
 
 
-"""
+"""        
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
 © Copyright Utrecht University

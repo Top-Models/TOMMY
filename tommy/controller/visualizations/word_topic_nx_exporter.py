@@ -9,14 +9,13 @@ from tommy.controller.result_interfaces.document_topics_interface import (
 from tommy.controller.visualizations.nx_exporter import (NxExporter)
 
 
-class WordTopicNxExporter(
-        NxExporter):
+class WordTopicNxExporter(NxExporter):
     """
     A class for constructing a network showing the words and its relation to
     the topics for the given topic runner, returning it as an nx.Graph.
     Note: this visualization is only to be used for exporting purposes
     """
-    _required_interfaces = []
+    _required_interfaces = [TopicRunner]
     name = 'Topics en woorden die daarbij horen'
 
     def get_nx_graph(self,

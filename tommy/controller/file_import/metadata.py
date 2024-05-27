@@ -7,6 +7,7 @@ class Metadata:
     """
     Represents the metadata of a file with various attributes
     """
+    path: str
     name: str
     size: int
     length: int
@@ -15,7 +16,6 @@ class Metadata:
     title: str = None
     date: date = None
     url: str = None
-    path: str = None
 
 
 """

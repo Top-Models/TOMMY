@@ -131,7 +131,6 @@ if __name__ == "__main__":
 
     # Define the output CSV file
     csv_output_file = 'csv_files/Bodegravencsvdata.csv'
-    # csv_output_file = 'test.csv'
 
     all_data = process_rtf_folder(rtf_folder_path)
 

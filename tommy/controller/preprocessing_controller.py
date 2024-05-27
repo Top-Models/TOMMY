@@ -43,13 +43,19 @@ class PreprocessingController:
             case _:
                 raise ValueError("Unsupported preprocessing language")
         self._nlp = nlp
-
+        self._nlp.add_pipe("merge_entities")
         # TODO: refine the entity set (i.e. "proper-noun filtering")
         self._entity_categories = {"PERSON", "FAC", "LAW", "TIME", "PERCENT",
                                    "MONEY", "QUANTITY", "ORDINAL", "CARDINAL"}
         self._pos_categories = {"NOUN", "PROPN", "ADJ", "ADV", "VERB"}
 
     def set_model_refs(self, stopwords_model: StopwordsModel):
+        """Set the reference to the stopwords model"""
+        self._stopwords_model = stopwords_model
+
+    def change_config_model_refs(self, stopwords_model: StopwordsModel):
+        """Change the reference to the stopwords model when the user
+        switches config"""
         self._stopwords_model = stopwords_model
 
     def process_text(self, text: str) -> list[str]:
@@ -77,8 +83,10 @@ class PreprocessingController:
         # TODO: fine-grain abbreviation filtering (i.e. don't exclude
         #  every token under 4 characters)
 
-        # TODO: fix "-"words and remove diacritical marks
+        # TODO: fix "-" and "'" words and remove diacritical marks
         #  (i.e. character 'normalization')
+
+        # TODO: 6,7
 
         # 8 - stopword removal
         lemmas = self.filter_stopwords(lemmas)
