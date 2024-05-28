@@ -8,7 +8,9 @@ from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 def nmf_settings() -> NmfSettings:
     controller = Controller()
     abstract_settings = NmfSettings(
-        controller.model_parameters_controller, controller.language_controller)
+        controller.model_parameters_controller,
+        controller.config_controller,
+        controller.language_controller)
     return abstract_settings
 
 
