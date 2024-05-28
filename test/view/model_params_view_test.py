@@ -18,8 +18,8 @@ def model_params_view(qtbot: QtBot) -> ModelParamsView:
     model_params_view = ModelParamsView(
         controller.model_parameters_controller,
         controller.language_controller,
-        controller,
-        controller.config_controller)
+        controller.config_controller,
+        controller)
     qtbot.addWidget(model_params_view)
     return model_params_view
 

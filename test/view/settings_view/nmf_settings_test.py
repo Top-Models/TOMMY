@@ -9,12 +9,14 @@ from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 @pytest.fixture(scope='function')
 def nmf_settings(mocker) -> NmfSettings:
     mock_language_controller = mocker.MagicMock()
+    mock_config_controller = mocker.MagicMock()
 
     model_parameters_model = ModelParametersModel()
     model_parameters_controller = ModelParametersController()
     model_parameters_controller.set_model_refs(model_parameters_model)
 
     nmf_settings = NmfSettings(model_parameters_controller,
+                               mock_config_controller,
                                mock_language_controller)
     return nmf_settings
 

@@ -12,11 +12,13 @@ from tommy.view.settings_view.abstract_settings.abstract_settings import (
 @pytest.fixture(scope='function')
 def abstract_settings(mocker) -> AbstractSettings:
     mock_language_controller = mocker.MagicMock()
+    mock_config_controller = mocker.MagicMock()
 
     model_parameters_model = ModelParametersModel()
     model_parameters_controller = ModelParametersController()
     model_parameters_controller.set_model_refs(model_parameters_model)
     abstract_settings = AbstractSettings(model_parameters_controller,
+                                         mock_config_controller,
                                          mock_language_controller)
     return abstract_settings
 
@@ -213,7 +215,7 @@ def test_language_field_changed_event(abstract_settings: AbstractSettings,
     abstract_settings._language_controller = (
         language_controller)
 
-    # Mock the selction field
+    # Mock the selection field
     language_field = mocker.MagicMock()
     abstract_settings._language_field = language_field
 

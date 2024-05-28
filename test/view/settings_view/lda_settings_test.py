@@ -11,12 +11,14 @@ from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 @pytest.fixture(scope='function')
 def lda_settings(mocker) -> LdaSettings:
     mock_language_controller = mocker.MagicMock()
+    mock_config_controller = mocker.MagicMock()
 
     model_parameters_model = ModelParametersModel()
     model_parameters_controller = ModelParametersController()
     model_parameters_controller.set_model_refs(model_parameters_model)
 
     lda_settings = LdaSettings(model_parameters_controller,
+                               mock_config_controller,
                                mock_language_controller)
     return lda_settings
 

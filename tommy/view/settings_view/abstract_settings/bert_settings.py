@@ -22,13 +22,16 @@ class BertSettings(AbstractSettings):
 
     def __init__(self,
                  model_parameters_controller,
+                 config_controller,
                  language_controller: LanguageController):
         """
         Constructor for BERT settings
 
         :param model_parameters_controller: ModelParametersController
         """
-        super().__init__(model_parameters_controller, language_controller)
+        super().__init__(model_parameters_controller,
+                         config_controller,
+                         language_controller)
 
         self._min_df_input = QLineEdit()
         self._max_features_input = QLineEdit()
