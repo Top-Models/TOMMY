@@ -10,15 +10,13 @@ from tommy.controller.model_parameters_controller import (
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
-    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray,
-    extra_light_gray, medium_light_gray, light_gray)
+    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray)
 from tommy.support.model_type import ModelType
-from tommy.view.config_view import ConfigView
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
-from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.abstract_settings.bert_settings import (
     BertSettings)
+from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 
 
@@ -29,7 +27,7 @@ class ModelParamsView(QScrollArea):
                  language_controller: LanguageController,
                  config_controller: ConfigController,
                  controller: Controller) -> None:
-        """The initialization ot the ModelParamDisplay."""
+        """The initialization of the ModelParamDisplay."""
         super().__init__()
         self.setObjectName("model_params_display")
         self.setContentsMargins(0, 0, 0, 0)
@@ -48,29 +46,27 @@ class ModelParamsView(QScrollArea):
         # Initialize model settings
         self.algorithm_specific_settings_views: dict[
             ModelType, AbstractSettings] = {
-            ModelType.LDA: LdaSettings(
-                self._model_parameters_controller,
-                self._config_controller,
-                language_controller),
-            ModelType.BERTopic: BertSettings(
-                self._model_parameters_controller,
-                self._config_controller,
-                language_controller),
-            ModelType.NMF: NmfSettings(
-                self._model_parameters_controller,
-                self._config_controller,
-                language_controller)
+            ModelType.LDA: LdaSettings(self._model_parameters_controller,
+                                       self._config_controller,
+                                       language_controller),
+            ModelType.BERTopic: BertSettings(self._model_parameters_controller,
+                                             self._config_controller,
+                                             language_controller),
+            ModelType.NMF: NmfSettings(self._model_parameters_controller,
+                                       self._config_controller,
+                                       language_controller)
         }
 
         # Initialize widget properties
         self.setFixedWidth(250)
+        self.setMinimumHeight(400)
 
         # Apply stylesheet to model_params_display object
         self.setStyleSheet(f"""
             QWidget#model_params_display {{
                 border-bottom: 3px solid lightgray;
             }}
-            
+
             QWidget#model_params_display QWidget {{
                 background-color: rgba(230, 230, 230, 230);
             }}
@@ -127,6 +123,7 @@ class ModelParamsView(QScrollArea):
         # Initialize button layout
         self.button_layout = QHBoxLayout()
         self.button_layout.setAlignment(Qt.AlignRight)
+        self.button_layout.setSpacing(10)  # Consistent spacing between buttons
         self.layout.addWidget(self.scroll_area)
 
         # Initialize parameter widgets
@@ -145,8 +142,7 @@ class ModelParamsView(QScrollArea):
                                        f"text-transform: uppercase;"
                                        f"background-color: {prim_col_red};"
                                        f"color: white;"
-                                       f"border-bottom: "
-                                       f"3px solid {hover_prim_col_red};")
+                                       f"border-bottom: 3px solid {hover_prim_col_red};")
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
                                       Qt.AlignmentFlag.AlignTop)
         self.title_label.setContentsMargins(0, 0, 0, 0)
@@ -214,12 +210,14 @@ class ModelParamsView(QScrollArea):
             """)
         self.apply_button.clicked.connect(self.apply_button_clicked_event)
 
-        if self.apply_button not in self.button_layout.children():
+        if self.apply_button not in [self.button_layout.itemAt(i).widget() for
+                                     i in range(self.button_layout.count())]:
             self.button_layout.addWidget(self.apply_button,
                                          alignment=Qt.AlignBottom)
 
-        if self.button_layout not in self.scroll_layout.children():
-            self.layout.addLayout(self.button_layout, stretch=1)
+        if self.button_layout not in [self.layout.itemAt(i).layout() for i in
+                                      range(self.layout.count())]:
+            self.layout.addLayout(self.button_layout)
 
     def get_current_settings_view(self) -> AbstractSettings:
         """
@@ -249,11 +247,11 @@ class ModelParamsView(QScrollArea):
                     color: white;
                     margin-left: 5px;
                 }}
-    
+
                 QPushButton:hover {{
                     background-color: {hover_seco_col_blue};
                 }}
-    
+
                 QPushButton:pressed {{
                     background-color: {pressed_seco_col_blue};
                 }}
@@ -264,7 +262,7 @@ class ModelParamsView(QScrollArea):
         if current_view.all_fields_valid():
             self._controller.on_run_topic_modelling()
 
-        # Re-enable the apply button and restore its text 
+        # Re-enable the apply button and restore its text
         # when processing is complete
         self.apply_button.setEnabled(True)
         self.apply_button.setText("Toepassen")
