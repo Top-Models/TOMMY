@@ -15,13 +15,17 @@ class BertSettings(AbstractSettings):
     """
 
     def __init__(self,
-                 model_parameters_controller, language_controller: LanguageController):
+                 model_parameters_controller,
+                 config_controller,
+                 language_controller: LanguageController):
         """
         Constructor for BERT settings
 
         :param model_parameters_controller: ModelParametersController
         """
-        super().__init__(model_parameters_controller, language_controller)
+        super().__init__(model_parameters_controller,
+                         config_controller,
+                         language_controller)
 
     def initialize_parameter_widgets(self,
                                      scroll_layout: QVBoxLayout) -> None:

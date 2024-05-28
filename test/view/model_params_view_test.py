@@ -18,8 +18,8 @@ def model_params_view(qtbot: QtBot) -> ModelParamsView:
     model_params_view = ModelParamsView(
         controller.model_parameters_controller,
         controller.language_controller,
-        controller,
-        controller.config_controller)
+        controller.config_controller,
+        controller)
     qtbot.addWidget(model_params_view)
     return model_params_view
 
@@ -68,6 +68,27 @@ def test_apply_button_clicked_calls_on_run_topic_modelling(
 
     # Assert
     assert mock_on_run_topic_modelling.call_count == 1
+
+def test_apply_button_disabled_while_processing(
+        model_params_view: ModelParamsView, qtbot: QtBot, mocker: MockerFixture):
+    # Arrange
+    mock_all_fields_valid = mocker.patch.object(
+        model_params_view.get_current_settings_view(), "all_fields_valid")
+    mock_all_fields_valid.return_value = True
+
+    # Mock the controller method to simulate processing
+    mock_on_run_topic_modelling = mocker.Mock()
+    model_params_view._controller.on_run_topic_modelling = (
+        mock_on_run_topic_modelling)
+
+    # Act
+    qtbot.mouseClick(model_params_view.apply_button, Qt.LeftButton)
+
+    # Simulate processing completion
+    mock_on_run_topic_modelling.assert_called_once()
+    # Ensure that the button is re-enabled and its text is restored
+    assert model_params_view.apply_button.isEnabled() == True
+    assert model_params_view.apply_button.text() == "Toepassen"
 
 
 """

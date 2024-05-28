@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QWidget,
-                               QPushButton)
+                               QPushButton, QApplication)
 
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
@@ -51,12 +51,15 @@ class ModelParamsView(QScrollArea):
             ModelType, AbstractSettings] = {
             ModelType.LDA: LdaSettings(
                 self._model_parameters_controller,
+                self._config_controller,
                 language_controller),
             ModelType.BERTopic: BertSettings(
                 self._model_parameters_controller,
+                self._config_controller,
                 language_controller),
             ModelType.NMF: NmfSettings(
                 self._model_parameters_controller,
+                self._config_controller,
                 language_controller)
         }
 
@@ -116,9 +119,6 @@ class ModelParamsView(QScrollArea):
         # Initialize button widgets
         self.apply_button = None
 
-        # TODO: Frontend people make this pretty
-        self.config_management_button = None
-
         # Initialize button layout
         self.button_layout = QVBoxLayout()
         self.button_layout.setAlignment(Qt.AlignRight)
@@ -152,7 +152,6 @@ class ModelParamsView(QScrollArea):
         """
         Initialize the parameter widgets.
         """
-        self.initialize_config_button()
         current_view = self.get_current_settings_view()
         current_view.initialize_parameter_widgets(self.scroll_layout)
         current_view.set_field_values_from_backend()
@@ -183,44 +182,6 @@ class ModelParamsView(QScrollArea):
                     if sub_child.widget() is not None:
                         sub_child.widget().deleteLater()
 
-    def open_config_management_widget(self):
-        """Method to open the configuration management widget"""
-        config_management_widget = ConfigView(
-            self._config_controller, self._model_parameters_controller)
-        config_management_widget.exec()
-
-    def initialize_config_button(self) -> None:
-        """
-        Initialize the button that opens the config view
-        TODO: Frontend people make this pretty
-        :return:
-        """
-        self.config_management_button = QPushButton("Beheer Configuraties")
-        self.config_management_button.setStyleSheet(
-            f"""
-                            QPushButton {{
-                                background-color: {seco_col_blue};
-                                color: white;
-                                border-radius: 5px;
-                                padding: 10px 20px;
-                                font-size: 14px;
-                                font-family: {text_font};
-                            }}
-
-                            QPushButton:hover {{
-                                background-color: {hover_seco_col_blue};
-                            }}
-
-                            QPushButton:pressed {{
-                                background-color: {pressed_seco_col_blue};
-                            }}
-                            """
-        )
-        self.config_management_button.clicked.connect(
-            self.open_config_management_widget)
-        self.button_layout.addWidget(self.config_management_button,
-                                     alignment=Qt.AlignTop)
-
     def initialize_apply_button(self) -> None:
         """
         Initialize the apply button.
@@ -234,6 +195,7 @@ class ModelParamsView(QScrollArea):
             f"""
                 QPushButton {{
                     background-color: {seco_col_blue};
+                    border-radius: 5px;
                     color: white;
                 }}
 
@@ -272,8 +234,51 @@ class ModelParamsView(QScrollArea):
         current_model_type = self._model_parameters_controller.get_model_type()
         current_view = self.algorithm_specific_settings_views[
             current_model_type]
+        # Disable the apply button and change its text to "Laden..."
+        self.apply_button.setEnabled(False)
+        self.apply_button.setText("Laden...")
+        self.apply_button.setStyleSheet(
+            f"""
+                        QPushButton {{
+                            background-color: #808080;
+                            border-radius: 5px;
+                            color: white;
+                        }}
+
+                        QPushButton:hover {{
+                            background-color: {hover_seco_col_blue};
+                        }}
+
+                        QPushButton:pressed {{
+                            background-color: {pressed_seco_col_blue};
+                        }}
+                    """)
+
+        QApplication.processEvents()
+
         if current_view.all_fields_valid():
             self._controller.on_run_topic_modelling()
+
+        # Re-enable the apply button and restore its text 
+        # when processing is complete
+        self.apply_button.setEnabled(True)
+        self.apply_button.setText("Toepassen")
+        self.apply_button.setStyleSheet(
+            f"""
+                        QPushButton {{
+                            background-color: {seco_col_blue};
+                            border-radius: 5px;
+                            color: white;
+                        }}
+
+                        QPushButton:hover {{
+                            background-color: {hover_seco_col_blue};
+                        }}
+
+                        QPushButton:pressed {{
+                            background-color: {pressed_seco_col_blue};
+                        }}
+                    """)
 
     def model_type_changed_event(self) -> None:
         """

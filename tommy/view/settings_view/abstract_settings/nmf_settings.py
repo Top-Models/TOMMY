@@ -15,14 +15,17 @@ class NmfSettings(AbstractSettings):
     """
 
     def __init__(self,
-                 model_parameters_controller, 
+                 model_parameters_controller,
+                 config_controller,
                  language_controller: LanguageController):
         """
         Constructor for NMF settings
 
         :param model_parameters_controller: ModelParametersController
         """
-        super().__init__(model_parameters_controller, language_controller)
+        super().__init__(model_parameters_controller,
+                         config_controller,
+                         language_controller)
 
     def initialize_parameter_widgets(self,
                                      scroll_layout: QVBoxLayout) -> None:
