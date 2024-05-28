@@ -50,12 +50,15 @@ class ModelParamsView(QScrollArea):
             ModelType, AbstractSettings] = {
             ModelType.LDA: LdaSettings(
                 self._model_parameters_controller,
+                self._config_controller,
                 language_controller),
             ModelType.BERTopic: BertSettings(
                 self._model_parameters_controller,
+                self._config_controller,
                 language_controller),
             ModelType.NMF: NmfSettings(
                 self._model_parameters_controller,
+                self._config_controller,
                 language_controller)
         }
 
@@ -121,9 +124,6 @@ class ModelParamsView(QScrollArea):
         # Initialize button widgets
         self.apply_button = None
 
-        # TODO: Frontend people make this pretty
-        self.config_management_button = None
-
         # Initialize button layout
         self.button_layout = QHBoxLayout()
         self.button_layout.setAlignment(Qt.AlignRight)
@@ -157,7 +157,6 @@ class ModelParamsView(QScrollArea):
         """
         Initialize the parameter widgets.
         """
-        self.initialize_config_button()
         current_view = self.get_current_settings_view()
         current_view.initialize_parameter_widgets(self.scroll_layout)
         current_view.set_field_values_from_backend()
@@ -187,44 +186,6 @@ class ModelParamsView(QScrollArea):
                     sub_child = child.layout().takeAt(0)
                     if sub_child.widget() is not None:
                         sub_child.widget().deleteLater()
-
-    def open_config_management_widget(self):
-        """Method to open the configuration management widget"""
-        config_management_widget = ConfigView(
-            self._config_controller, self._model_parameters_controller)
-        config_management_widget.exec()
-
-    def initialize_config_button(self) -> None:
-        """
-        Initialize the button that opens the config view
-
-        :return: None
-        """
-        self.config_management_button = QPushButton("Configuraties")
-        self.config_management_button.setFixedHeight(40)
-        self.config_management_button.setStyleSheet(
-            f"""
-            QPushButton {{
-                background-color: {seco_col_blue};
-                color: white;
-                padding: 10px 20px;
-                font-size: 14px;
-                font-family: {text_font};
-            }}
-
-            QPushButton:hover {{
-                background-color: {hover_seco_col_blue};
-            }}
-
-            QPushButton:pressed {{
-                background-color: {pressed_seco_col_blue};
-            }}
-            """
-        )
-        self.config_management_button.clicked.connect(
-            self.open_config_management_widget)
-        self.button_layout.addWidget(self.config_management_button,
-                                     alignment=Qt.AlignTop)
 
     def initialize_apply_button(self) -> None:
         """

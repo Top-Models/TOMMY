@@ -19,13 +19,16 @@ class LdaSettings(AbstractSettings):
 
     def __init__(self,
                  model_parameters_controller,
+                 config_controller,
                  language_controller: LanguageController):
         """
         Constructor for LDA settings
 
         :param model_parameters_controller: ModelParametersController
         """
-        super().__init__(model_parameters_controller, language_controller)
+        super().__init__(model_parameters_controller,
+                         config_controller,
+                         language_controller)
 
         self._alpha_value_input = QLineEdit()
         self._beta_value_input = QLineEdit()
