@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import List
 
 from tommy.controller.file_import.processed_file import ProcessedFile
 
@@ -9,7 +8,7 @@ class ProcessedCorpus:
     """
     The ProcessedCorpus class is an iterable of ProcessedFile objects
     """
-    documents: List[ProcessedFile] = None
+    documents: list[ProcessedFile] = None
 
     def __iter__(self):
         """

@@ -1,5 +1,4 @@
 from tommy.model.model import Model
-from typing import List
 
 
 class SaveController:
@@ -7,7 +6,7 @@ class SaveController:
     def __init__(self) -> None:
         pass
 
-    def get_models(self) -> List[Model]:
+    def get_models(self) -> list[Model]:
         """
         Returns a list of the models in the current save.
         note: dummy implementation for now that only returns one new model.
