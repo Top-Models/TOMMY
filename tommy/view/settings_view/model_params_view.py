@@ -144,7 +144,8 @@ class ModelParamsView(QScrollArea):
                                        f"text-transform: uppercase;"
                                        f"background-color: {prim_col_red};"
                                        f"color: white;"
-                                       f"border-bottom: 3px solid {hover_prim_col_red};")
+                                       f"border-bottom: "
+                                       f"3px solid {hover_prim_col_red};")
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
                                       Qt.AlignmentFlag.AlignTop)
         self.title_label.setContentsMargins(0, 0, 0, 0)
@@ -185,12 +186,38 @@ class ModelParamsView(QScrollArea):
                     if sub_child.widget() is not None:
                         sub_child.widget().deleteLater()
 
+    def clear_layouts_from_button_layout(self) -> None:
+        """
+        Clear the layouts from the button layout.
+
+        :return: None
+        """
+        layout = self.button_layout
+
+        # While layout is not empty
+        while layout.count():
+            child = layout.takeAt(0)
+
+            # If there is a widget
+            if child.widget() is not None:
+                # Delete the widget
+                child.widget().deleteLater()
+
+            # If there is a layout
+            elif child.layout() is not None:
+                # Delete all widgets in the layout
+                while child.layout().count():
+                    sub_child = child.layout().takeAt(0)
+                    if sub_child.widget() is not None:
+                        sub_child.widget().deleteLater()
+
     def initialize_apply_button(self) -> None:
         """
         Initialize the apply button.
 
         :return: None
         """
+        self.clear_layouts_from_button_layout()
         self.apply_button = QPushButton("Toepassen")
         self.apply_button.setFixedHeight(40)
         self.apply_button.setStyleSheet(
