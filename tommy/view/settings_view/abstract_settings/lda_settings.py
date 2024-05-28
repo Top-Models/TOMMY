@@ -103,9 +103,7 @@ class LdaSettings(AbstractSettings):
         :return: None
         """
         alpha = self._alpha_value_input.text()
-        print(alpha)
         self._model_parameters_controller.set_model_alpha(float(alpha))
-        print(self._model_parameters_controller.get_model_alpha())
 
     def validate_alpha_field(self) -> bool:
         """
