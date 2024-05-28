@@ -59,7 +59,7 @@ class ModelParamsView(QScrollArea):
 
         # Initialize widget properties
         self.setFixedWidth(250)
-        self.setMinimumHeight(400)
+        self.setMinimumHeight(350)
 
         # Apply stylesheet to model_params_display object
         self.setStyleSheet(f"""
