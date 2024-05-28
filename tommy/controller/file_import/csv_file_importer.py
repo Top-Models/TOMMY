@@ -31,31 +31,26 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                      compatibility.
         :return: bool: True if the file is compatible, False otherwise.
         """
-        try:
-            with open(path, 'r', newline="", encoding='utf-8-sig') as csvfile:
-                csv_reader = csv.DictReader(csvfile, delimiter=',')
-
-                # To check whether each mandatory header exists and is unique,
-                # we keep an array of occurrences of all mandatory headers
-                mandatory_fields_counts = [0] * len(self.mandatory_fields)
-                for header in csv_reader.fieldnames:
-                    if header.lower() in self.mandatory_fields:
-                        mandatory_fields_counts[self.mandatory_fields.index(
-                            header.lower())] += 1
-
-                if mandatory_fields_counts == [1] * len(self.mandatory_fields):
-                    return True
-
-            print("Incorrect number of headers", mandatory_fields_counts)
+        if not path.endswith('.csv'):
             return False
 
-        except UnicodeDecodeError as e:
-            print(f"Error decoding file '{path}': {e}")
-            return False
+        headers = []
+        with open(path, 'r', newline="", encoding='utf-8-sig') as csvfile:
+            csv_reader = csv.DictReader(csvfile, delimiter=',')
+            headers = csv_reader.fieldnames
+            # To check whether each mandatory header exists and is unique,
+            # we keep an array of occurrences of all mandatory headers
+            mandatory_fields_counts = [0] * len(self.mandatory_fields)
+            for header in csv_reader.fieldnames:
+                if header.lower() in self.mandatory_fields:
+                    mandatory_fields_counts[self.mandatory_fields.index(
+                        header.lower())] += 1
 
-        except Exception as e:
-            print(f"Error reading file '{path}': {e}")
-            return False
+            if mandatory_fields_counts == [1] * len(self.mandatory_fields):
+                return True
+
+        raise ValueError("CSV bestand heeft niet alle verplichte headers, "
+                         f"of te veel headers. Headers: {headers}")
 
     def load_file(self, path: str) -> Generator[RawFile, None, None]:
         """

@@ -35,15 +35,8 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         if not path.endswith('.pdf'):
             return False
 
-        try:
-            with open(path, 'rb') as file:
-                PdfReader(file)
-        except Exception as e:
-            print(
-                f"Failed to check compatibility of file {path} due "
-                f"to error: {e}")
-            return False
-
+        with open(path, 'rb') as file:
+            PdfReader(file)
         return True
 
     def load_file(self, path: str) -> Generator[RawFile, None, None]:
@@ -86,19 +79,19 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
             mod_time = os.path.getmtime(path)
             file_date = datetime.fromtimestamp(mod_time)
         except Exception:
-            # If unable to get the modification time, use the current date
-            file_date = datetime.now()
+            # If unable to get the modification time, don't set a date
+            file_date = None
 
         return RawFile(
-                metadata=Metadata(author=metadata.get('/Author', None),
-                                  title=metadata.get('/Title', alt_title),
-                                  date=metadata.get('/ModDate', file_date),
-                                  path=os.path.relpath(path),
-                                  format="pdf",
-                                  length=len(file.split(" ")),
-                                  name=alt_title,
-                                  size=stat(path).st_size),
-                body=RawBody(body=file))
+            metadata=Metadata(author=metadata.get('/Author', None),
+                              title=metadata.get('/Title', alt_title),
+                              date=metadata.get('/ModDate', file_date),
+                              path=os.path.relpath(path),
+                              format="pdf",
+                              length=len(file.split(" ")),
+                              name=alt_title,
+                              size=stat(path).st_size),
+            body=RawBody(body=file))
 
 
 """
