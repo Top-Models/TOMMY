@@ -123,7 +123,9 @@ class ModelParamsView(QScrollArea):
         # Initialize button layout
         self.button_layout = QHBoxLayout()
         self.button_layout.setAlignment(Qt.AlignRight)
-        self.button_layout.setSpacing(10)  # Consistent spacing between buttons
+        self.button_layout.setSpacing(10)
+
+        # Add widgets to the layout
         self.layout.addWidget(self.scroll_area)
 
         # Initialize parameter widgets
@@ -190,14 +192,12 @@ class ModelParamsView(QScrollArea):
         :return: None
         """
         self.apply_button = QPushButton("Toepassen")
-        self.apply_button.setFixedWidth(100)
         self.apply_button.setFixedHeight(40)
         self.apply_button.setStyleSheet(
             f"""
                 QPushButton {{
                     background-color: {seco_col_blue};
                     color: white;
-                    margin-left: 5px;
                 }}
 
                 QPushButton:hover {{
@@ -209,15 +209,8 @@ class ModelParamsView(QScrollArea):
                 }}
             """)
         self.apply_button.clicked.connect(self.apply_button_clicked_event)
-
-        if self.apply_button not in [self.button_layout.itemAt(i).widget() for
-                                     i in range(self.button_layout.count())]:
-            self.button_layout.addWidget(self.apply_button,
-                                         alignment=Qt.AlignBottom)
-
-        if self.button_layout not in [self.layout.itemAt(i).layout() for i in
-                                      range(self.layout.count())]:
-            self.layout.addLayout(self.button_layout)
+        self.button_layout.addWidget(self.apply_button, stretch=1)
+        self.layout.addLayout(self.button_layout)
 
     def get_current_settings_view(self) -> AbstractSettings:
         """
@@ -271,7 +264,6 @@ class ModelParamsView(QScrollArea):
                 QPushButton {{
                     background-color: {seco_col_blue};
                     color: white;
-                    margin-left: 5px;
                 }}
 
                 QPushButton:hover {{
