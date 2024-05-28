@@ -1,6 +1,4 @@
 from dataclasses import dataclass
-from typing import Any
-
 from tommy.controller.file_import.metadata import Metadata
 from tommy.controller.file_import.processed_body import ProcessedBody
 
@@ -13,7 +11,7 @@ class ProcessedFile:
     """
     metadata: Metadata
     body: ProcessedBody
-    topic_correspondence: [float] = None
+    topic_correspondence: list[float] = None
 
 
 """

@@ -15,7 +15,6 @@ from tommy.support.constant_variables import (
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.topic_view.topic_entity_component.topic_entity import \
     TopicEntity
-from typing import List
 
 
 class ImportedFilesView(QWidget):
@@ -67,8 +66,8 @@ class ImportedFilesView(QWidget):
         self.setSizePolicy(QSizePolicy.Policy.Expanding,
                            QSizePolicy.Policy.Expanding)
 
-        self.metadata: List[Metadata] = []
-        self.processed_files: List[ProcessedFile] = []
+        self.metadata: list[Metadata] = []
+        self.processed_files: list[ProcessedFile] = []
         self.selected_label = None
         self.selected_file = None
 
@@ -251,7 +250,7 @@ class ImportedFilesView(QWidget):
             self.setMinimumHeight(200)
             self.setMaximumHeight(300)
 
-    def on_metadata_changed(self, metadata: List[Metadata]) -> None:
+    def on_metadata_changed(self, metadata: list[Metadata]) -> None:
         """
         Update the files tab with the current file metadata.
         :param metadata: The new list of metadata for the current tab
@@ -262,7 +261,8 @@ class ImportedFilesView(QWidget):
         self.display_files()
 
     def on_topic_document_correspondence_changed(self,
-                                                 processed_files: ProcessedCorpus) -> None:
+                                                 processed_files:
+                                                 ProcessedCorpus) -> None:
         """
         Update stored topic document correspondence reference.
         :param processed_files: The list of processed files

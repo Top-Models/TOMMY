@@ -102,25 +102,36 @@ class TopicModellingController:
 
         self._model_trained_event.publish(self._config_model.topic_runner)
 
-    def calculate_document_topics(self):
-        processed_files = self._corpus_controller.get_processed_corpus()
-        # inherit both TopicRunner and DocumentTopicsInterface
-        topic_runner: TopicRunner | DocumentTopicsInterface = (
-            self._config_model.topic_runner) # TODO: fix unsafe cast
-        topics_amount = topic_runner.get_n_topics()
+    def calculate_document_topics(self) -> None:
+        """
+        Calculate the topic correspondence for each document in the corpus
+        :return: None
+        """
 
-        for document_id, document in enumerate(processed_files):
-            document_topic = (
+        # Cancel if topic runner does not support document topic correspondence
+        if not isinstance(self._config_model.topic_runner,
+                          DocumentTopicsInterface):
+            print(f"topic runner {self._config_model.topic_runner} does not"
+                  f"support document topic correspondence and will not"
+                  f"calculate this")
+
+        topic_runner: TopicRunner | DocumentTopicsInterface = (
+            self._config_model.topic_runner)
+        topics_amount = topic_runner.get_n_topics()
+        processed_files = self._corpus_controller.get_processed_corpus()
+
+        for document in processed_files:
+            topic_correspondence = (
                 topic_runner.get_document_topics(document.body.body, 0.0))
 
-            if len(document_topic) != topics_amount:
-                print(f"Document {document_id} has {len(document_topic)} topics ")
+            if len(topic_correspondence) != topics_amount:
+                print(f"Document {document.metadata.name} has "
+                      f"{len(topic_correspondence)} topics "
+                      f"instead of {topics_amount}")
 
-            document.topic_correspondence = [0.0] * topics_amount
-
-            # Add edges from each document to all associated topics
-            for (topic_id, topic_probability) in document_topic:
-                document.topic_correspondence[topic_id] = topic_probability
+            # Create list of topic probabilities for each document
+            document.topic_correspondence = [probability for (_, probability)
+                                             in topic_correspondence]
 
         self._calculate_document_topics_event.publish(
             processed_files)
@@ -167,9 +178,9 @@ class TopicModellingController:
         num_topics = self._model_parameters_controller.get_model_n_topics()
 
         self._config_model.topic_runner = NmfRunner(
-                topic_model=self._topic_model,
-                docs=corpus,
-                num_topics=num_topics)
+            topic_model=self._topic_model,
+            docs=corpus,
+            num_topics=num_topics)
 
 
 """        
