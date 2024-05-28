@@ -10,6 +10,7 @@ from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 def lda_settings() -> LdaSettings:
     controller = Controller()
     lda_settings = LdaSettings(controller.model_parameters_controller,
+                               controller.config_controller,
                                controller.language_controller)
     return lda_settings
 
