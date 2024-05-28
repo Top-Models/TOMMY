@@ -1,25 +1,19 @@
 import pytest
 
-from tommy.controller.model_parameters_controller import (
-    ModelParametersController)
-from tommy.model.model_parameters_model import ModelParametersModel
+from tommy.controller.controller import Controller
 from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
-from tommy.view.settings_view.abstract_settings.abstract_settings import (
-    AbstractSettings)
+from tommy.view.settings_view.abstract_settings.abstract_settings import \
+    AbstractSettings
 
 
 @pytest.fixture(scope='function')
-def abstract_settings(mocker) -> AbstractSettings:
-    mock_language_controller = mocker.MagicMock()
-    mock_config_controller = mocker.MagicMock()
-
-    model_parameters_model = ModelParametersModel()
-    model_parameters_controller = ModelParametersController()
-    model_parameters_controller.set_model_refs(model_parameters_model)
-    abstract_settings = AbstractSettings(model_parameters_controller,
-                                         mock_config_controller,
-                                         mock_language_controller)
+def abstract_settings() -> AbstractSettings:
+    controller = Controller()
+    abstract_settings = AbstractSettings(
+        controller.model_parameters_controller,
+        controller.config_controller,
+        controller.language_controller)
     return abstract_settings
 
 

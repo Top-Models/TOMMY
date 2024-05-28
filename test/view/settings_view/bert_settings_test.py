@@ -1,12 +1,6 @@
 import pytest
-import locale
 
-from PySide6.QtCore import Qt
-from pytestqt.qtbot import QtBot
-
-from tommy.controller.model_parameters_controller import (
-    ModelParametersController)
-from tommy.model.model_parameters_model import ModelParametersModel
+from tommy.controller.controller import Controller
 from tommy.view.settings_view.abstract_settings.bert_settings import (
     BertSettings)
 from tommy.view.settings_view.abstract_settings.abstract_settings import (
@@ -14,24 +8,20 @@ from tommy.view.settings_view.abstract_settings.abstract_settings import (
 
 
 @pytest.fixture(scope='function')
-def bert_settings(mocker) -> BertSettings:
-    mock_language_controller = mocker.MagicMock()
-
-    model_parameters_model = ModelParametersModel()
-    model_parameters_controller = ModelParametersController()
-    model_parameters_controller.set_model_refs(model_parameters_model)
-
-    bert_settings = BertSettings(model_parameters_controller,
-                                 mock_language_controller)
+def bert_settings() -> BertSettings:
+    controller = Controller()
+    bert_settings = BertSettings(controller.model_parameters_controller,
+                                 controller.config_controller,
+                                 controller.language_controller)
     return bert_settings
 
 
 @pytest.mark.parametrize("text, expected",
-                         [(locale.str(-0.5), False),
-                          (locale.str(1.5), False),
-                          (locale.str(912), False),
-                          (locale.str(0.1), True),
-                          (locale.str(0.5), True),
+                         [("-0.5", False),
+                          ("1.5", False),
+                          ("912", False),
+                          ("0.1", True),
+                          ("0.5", True),
                           ("abc", False),
                           ("0.1.2", False),
                           ("0,1,2", False),
@@ -53,10 +43,10 @@ def test_validate_min_df(bert_settings: BertSettings,
 
 
 @pytest.mark.parametrize("text, expected",
-                         [(locale.str(-5), False),
-                          (locale.str(1.5), False),
-                          (locale.str(912), True),
-                          (locale.str(0.5), False),
+                         [("-5", False),
+                          ("1.5", False),
+                          ("912", True),
+                          ("0.5", False),
                           ("abc", False),
                           ("0,1,2.1.2", False),
                           ("", True)])

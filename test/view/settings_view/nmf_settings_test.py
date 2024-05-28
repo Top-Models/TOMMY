@@ -1,24 +1,17 @@
 import pytest
 
-from tommy.controller.model_parameters_controller import (
-    ModelParametersController)
-from tommy.model.model_parameters_model import ModelParametersModel
+from tommy.controller.controller import Controller
 from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 
 
 @pytest.fixture(scope='function')
-def nmf_settings(mocker) -> NmfSettings:
-    mock_language_controller = mocker.MagicMock()
-    mock_config_controller = mocker.MagicMock()
-
-    model_parameters_model = ModelParametersModel()
-    model_parameters_controller = ModelParametersController()
-    model_parameters_controller.set_model_refs(model_parameters_model)
-
-    nmf_settings = NmfSettings(model_parameters_controller,
-                               mock_config_controller,
-                               mock_language_controller)
-    return nmf_settings
+def nmf_settings() -> NmfSettings:
+    controller = Controller()
+    abstract_settings = NmfSettings(
+        controller.model_parameters_controller,
+        controller.config_controller,
+        controller.language_controller)
+    return abstract_settings
 
 
 @pytest.mark.parametrize("validate_topic_input, validate_word_input",

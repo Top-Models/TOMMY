@@ -1,5 +1,5 @@
-import locale
-
+from PySide6.QtCore import QRegularExpression as QRegExp
+from PySide6.QtGui import QRegularExpressionValidator as QRegExpValidator
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (QHBoxLayout, QLabel, QLineEdit, QVBoxLayout)
@@ -19,6 +19,8 @@ class BertSettings(AbstractSettings):
 
     MAX_N_TERMS_MIN_VALUE = 1
     MAX_N_TERMS_MAX_VALUE = 1_000_000_000
+
+    float_regex = QRegExp(r"^[0-9]+(\.[0-9]+)?$")
 
     def __init__(self,
                  model_parameters_controller,
@@ -98,7 +100,7 @@ class BertSettings(AbstractSettings):
         self._min_df_input = QLineEdit()
         self._min_df_input.setFixedWidth(100)
         self._min_df_input.setStyleSheet(self.layout_valid)
-
+        self._min_df_input.setValidator(QRegExpValidator(self.float_regex))
         self._min_df_input.setPlaceholderText(f"{self.MIN_DF_MIN_VALUE:.1f} .."
                                               f" {self.MIN_DF_MAX_VALUE:.2f}")
         self._min_df_input.setStyleSheet(self.layout_valid)
@@ -114,7 +116,7 @@ class BertSettings(AbstractSettings):
         """Save the value from the min_df field in the backend model"""
         new_min_df_value = (None if (self._min_df_input.text() == "" or
                                      not self.validate_min_df_field())
-                            else locale.atof(self._min_df_input.text()))
+                            else float(self._min_df_input.text()))
 
         self._model_parameters_controller.set_bert_min_df(new_min_df_value)
 
@@ -128,7 +130,7 @@ class BertSettings(AbstractSettings):
 
         # Check if min_df is a valid float between the min and max
         try:
-            min_df = locale.atof(self._min_df_input.text())
+            min_df = float(self._min_df_input.text())
             is_valid = self.MIN_DF_MIN_VALUE <= min_df <= self.MIN_DF_MAX_VALUE
         except ValueError:
             is_valid = self._min_df_input.text() == ""
@@ -214,7 +216,7 @@ class BertSettings(AbstractSettings):
         """
         super().set_field_values_from_backend()
         min_df = self._model_parameters_controller.get_bert_min_df()
-        self._min_df_input.setText(locale.str(min_df)
+        self._min_df_input.setText(str(min_df)
                                    if min_df is not None
                                    else "")
         max_feat = self._model_parameters_controller.get_bert_max_features()
