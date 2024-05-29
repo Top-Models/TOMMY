@@ -64,12 +64,6 @@ class WordCloudCreator(AbstractVisualization):
                                color_func=color_func).
                      generate_from_frequencies(word_to_score_dict))
 
-        wordcloud = (WordCloud(width=800,
-                               height=400,
-                               background_color='white',
-                               color_func=color_func).
-                     generate_from_frequencies(word_to_score_dict))
-
         # Construct a word cloud
         fig = plt.figure()
         plt.title("Woordenwolk topic {}".format(topic_id + 1))
