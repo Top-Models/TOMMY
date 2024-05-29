@@ -114,11 +114,6 @@ class NmfRunner(TopicRunner,
             topic_correspondence = (
                 self.get_document_topics(document.body.body, 0.0))
 
-            if len(topic_correspondence) != n_topics:
-                print(f"Document {document.metadata.name} has "
-                      f"{len(topic_correspondence)} topics "
-                      f"instead of {n_topics}")
-
             probabilities = [0.0] * n_topics
 
             # Create list of topic probabilities for each document
