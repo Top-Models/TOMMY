@@ -32,7 +32,7 @@ TEST_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),
 
 @pytest.fixture
 def nmf_model():
-    # Load saved lda model which has 4 topics
+    # Load saved nmf model which has 4 topics
     path = os.path.join(TEST_DATA_DIR, 'test_nmf_model', 'nmf_model')
     model = models.Nmf.load(path)
     return model
@@ -40,7 +40,7 @@ def nmf_model():
 
 @pytest.fixture
 def nmf_model_dictionary():
-    # Load id2word file of saved lda model
+    # Load id2word file of saved nmf model
     path = os.path.join(TEST_DATA_DIR, 'test_nmf_model', 'nmf_model.id2word')
     dictionary = (corpora.Dictionary.load(path))
     return dictionary
@@ -61,11 +61,11 @@ def processed_files():
 def nmf_runner(nmf_model, nmf_model_dictionary, mocker):
     topic_model = TopicModel()
 
-    # Mock LdaRunner functions
+    # Mock NmfRunner functions
     mocker.patch.object(NmfRunner, 'train_model')
     mocker.patch.object(NmfRunner, 'get_n_topics', return_value=4)
 
-    # Construct a mocked instance of LdaRunner
+    # Construct a mocked instance of NmfRunner
     lda_runner = NmfRunner(topic_model, [], 0, 0)
     lda_runner._model = nmf_model
     lda_runner._dictionary = nmf_model_dictionary
