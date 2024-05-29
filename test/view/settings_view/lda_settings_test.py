@@ -15,7 +15,6 @@ def lda_settings() -> LdaSettings:
     return lda_settings
 
 
-
 def test_alpha_input_editing_finished_event_enabled(lda_settings: LdaSettings,
                                                     qtbot: QtBot,
                                                     mocker):

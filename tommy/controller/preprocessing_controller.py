@@ -72,10 +72,17 @@ class PreprocessingController:
         tokens = self.process_tokens(tokens)
         return tokens
 
-    @staticmethod
-    def split_into_sentences(text: str) -> list[str]:
+    def split_into_sentences(self, text: str) -> list[str]:
         """Split the given text to a list of sentences."""
-        return sent_tokenize(text)
+        match self.language_controller.get_language():
+            case SupportedLanguage.Dutch:
+                lang = 'dutch'
+            case SupportedLanguage.English:
+                lang = 'english'
+            case _:
+                raise ValueError("Current language is not supported by NLTK"
+                                 " sentence splitter.")
+        return sent_tokenize(text, language=lang)
 
     def process_tokens(self, doc: Doc) -> list[str]:
         """

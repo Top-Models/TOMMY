@@ -15,12 +15,13 @@ class BertSettings(AbstractSettings):
     Class for BERT settings
     """
     MIN_DF_MIN_VALUE = 0.0
-    MIN_DF_MAX_VALUE = 0.96
+    MIN_DF_MAX_VALUE = 0.8
 
     MAX_N_TERMS_MIN_VALUE = 1
     MAX_N_TERMS_MAX_VALUE = 1_000_000_000
 
     float_regex = QRegExp(r"^[0-9]+(\.[0-9]+)?$")
+    int_regex = QRegExp(r"^[0-9]+$")
 
     def __init__(self,
                  model_parameters_controller,
@@ -163,10 +164,9 @@ class BertSettings(AbstractSettings):
         self._max_features_input.setStyleSheet(self.layout_valid)
         # QIntValidator prevents user from typing
         # anything that isn't an integer
-        self._max_features_input.setValidator(
-            QIntValidator(self.MAX_N_TERMS_MIN_VALUE,
-                          self.MAX_N_TERMS_MAX_VALUE))
-        self._max_features_input.setPlaceholderText("b.v.: 100_000")
+        self._max_features_input.setValidator(QRegExpValidator(self.int_regex))
+
+        self._max_features_input.setPlaceholderText("b.v.: 100000")
         self._max_features_input.setStyleSheet(self.layout_valid)
         self._max_features_input.setAlignment(Qt.AlignmentFlag.AlignLeft)
         max_features_layout.addWidget(self._max_features_input)

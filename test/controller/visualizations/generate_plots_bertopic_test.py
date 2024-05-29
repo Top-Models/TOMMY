@@ -6,7 +6,9 @@ from unittest.mock import MagicMock
 import pytest
 import pickle
 
+from tommy.controller.language_controller import LanguageController
 from tommy.controller.preprocessing_controller import PreprocessingController
+from tommy.model.language_model import LanguageModel
 from tommy.model.topic_model import TopicModel
 from tommy.controller.topic_modelling_runners.bertopic_runner import (
     BertopicRunner)
@@ -24,7 +26,7 @@ from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
 from tommy.controller.visualizations.document_topic_network_summary_creator \
     import DocumentTopicNetworkSummaryCreator
-
+from tommy.support.supported_languages import SupportedLanguage
 
 # Test data directory
 TEST_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),
@@ -67,7 +69,22 @@ def max_num_topics():
 
 
 @pytest.fixture(scope="module")
-def bertopic_runner(raw_bodies, num_words, max_num_topics):
+def language_controller_dutch():
+    language_controller = MagicMock()
+    language_controller.get_language.return_value = SupportedLanguage.Dutch
+    return language_controller
+
+
+@pytest.fixture(scope="module")
+def preprocessing_controller_dutch(language_controller_dutch):
+    controller = PreprocessingController(language_controller_dutch)
+    controller.load_pipeline(SupportedLanguage.Dutch)
+    return controller
+
+
+@pytest.fixture(scope="module")
+def bertopic_runner(raw_bodies, num_words, max_num_topics,
+                    preprocessing_controller_dutch):
     mock_stopwords_controller = MagicMock()
     mock_stopwords_controller.stopwords_model.return_value = ["de",
                                                               "het",
@@ -78,7 +95,7 @@ def bertopic_runner(raw_bodies, num_words, max_num_topics):
     mock_topic_model = MagicMock()
 
     lists_of_sentences = map(
-        PreprocessingController.split_into_sentences,
+        preprocessing_controller_dutch.split_into_sentences,
         raw_bodies)
     sentences = list(reduce(chain, lists_of_sentences))
 
@@ -89,24 +106,29 @@ def bertopic_runner(raw_bodies, num_words, max_num_topics):
     return bert
 
 
+@pytest.fixture(scope="module")
+def actual_n_topics(bertopic_runner):
+    return bertopic_runner.get_n_topics()
+
+
 def test_generate_document_word_count(bertopic_runner, metadata):
     document_word_count = DocumentWordCountCreator()
     figure = document_word_count._create_figure(bertopic_runner, metadata)
     assert figure
 
 
-@pytest.mark.parametrize("topic_id", [0])
-def test_generate_top_words_bar_plot(bertopic_runner, topic_id):
-    top_words_bar_plot = TopWordsBarPlotCreator()
-    figure = top_words_bar_plot._create_figure(bertopic_runner, topic_id)
-    assert figure
+def test_generate_top_words_bar_plot(bertopic_runner, actual_n_topics):
+    for topic_id in range(actual_n_topics):
+        top_words_bar_plot = TopWordsBarPlotCreator()
+        figure = top_words_bar_plot._create_figure(bertopic_runner, topic_id)
+        assert figure
 
 
-@pytest.mark.parametrize("topic_id", [0])
-def test_generate_word_cloud(bertopic_runner, topic_id):
-    word_cloud_creator = WordCloudCreator()
-    figure = word_cloud_creator._create_figure(bertopic_runner, topic_id)
-    assert figure
+def test_generate_word_cloud(bertopic_runner, actual_n_topics):
+    for topic_id in range(actual_n_topics):
+        word_cloud_creator = WordCloudCreator()
+        figure = word_cloud_creator._create_figure(bertopic_runner, topic_id)
+        assert figure
 
 
 def test_generate_word_topic_network(bertopic_runner):
