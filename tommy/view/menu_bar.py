@@ -1,7 +1,7 @@
 import os
 
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QMenuBar, QWidget, QFileDialog
+from PySide6.QtWidgets import QMenuBar, QWidget, QFileDialog, QMessageBox
 
 from tommy.controller.export_controller import ExportController
 from tommy.controller.project_settings_controller import \
@@ -145,7 +145,7 @@ class MenuBar(QMenuBar):
         :return: None
         """
         if self._saving_loading_controller.filepath:
-            self._saving_loading_controller.save_settings_to_file(
+            self._save_settings_and_show_dialog(
                 self._saving_loading_controller.filepath)
         else:
             self.save_settings_as()
@@ -158,7 +158,22 @@ class MenuBar(QMenuBar):
         dialog = QFileDialog.getSaveFileName(self, "Selecteer opslaglocatie",
                                              filter="JSON files (*.json)")
         if dialog[0]:
-            self._saving_loading_controller.save_settings_to_file(dialog[0])
+            self._save_settings_and_show_dialog(dialog[0])
+
+    def _save_settings_and_show_dialog(self, filepath) -> None:
+        """
+        Save the project settings to a file and show a dialog to show the
+        user whether file saving succeeded or not.
+        :param filepath: The filepath where the settings should be saved
+        :return: None
+        """
+        if self._saving_loading_controller.save_settings_to_file(filepath):
+            QMessageBox.information(self, "Project opgeslagen",
+                                    "Het project is succesvol opgeslagen.")
+        else:
+            QMessageBox.critical(self, "Fout",
+                                 "Er is een fout opgetreden bij het opslaan "
+                                 "van het project.")
 
     def load_settings_from_file(self) -> None:
         """
@@ -168,7 +183,14 @@ class MenuBar(QMenuBar):
         dialog = QFileDialog.getOpenFileName(self, "Selecteer bestand",
                                              filter="JSON files (*.json)")
         if dialog[0]:
-            self._saving_loading_controller.load_settings_from_file(dialog[0])
+            if self._saving_loading_controller.load_settings_from_file(
+                    dialog[0]):
+                QMessageBox.information(self, "Project geladen",
+                                        "Het project is succesvol geladen.")
+            else:
+                QMessageBox.critical(self, "Fout",
+                                     "Er is een fout opgetreden bij het "
+                                     "laden van het project.")
 
 
 """
