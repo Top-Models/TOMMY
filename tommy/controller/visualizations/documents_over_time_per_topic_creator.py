@@ -20,7 +20,7 @@ from tommy.support.constant_variables import plot_colors
 
 
 class DocumentsOverTimePerTopicCreator(AbstractVisualization):
-    _required_interfaces = []
+    _required_interfaces = [TopicRunner]
     name = 'Documenten over tijd'
     short_tab_name = 'Doc. over tijd'
     vis_group = VisGroup.TOPIC
@@ -43,24 +43,30 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
         dates = {"date": [],
                  "probability": []}
         for document in processed_corpus:
-            current_date = datetime.combine(document.metadata.date,
-                                            datetime.min.time())
-            topics = topic_runner.get_document_topics(document.body.body, 0.0)
+            if (document.metadata.date is not None):
+                current_date = datetime.combine(document.metadata.date,
+                                                datetime.min.time())
+                topics = topic_runner.get_document_topics(document.body.body,
+                                                          0.0)
 
-            topic = [topic for topic in topics if topic[0] == topic_id]
-            if topic:
-                current_probability = topic[0][1]
+                topic = [topic for topic in topics if topic[0] == topic_id]
+                if topic:
+                    current_probability = topic[0][1]
+                else:
+                    current_probability = 0.0
                 dates["date"].append(current_date)
                 dates["probability"].append(current_probability)
+
+        if all([dates[i] == [] for i in dates]):
+            return self._get_no_dates_available_screen()
 
         df = pd.DataFrame(dates)
         df = df.groupby("date", as_index=False).sum()
         df = df.sort_values(by="date", ascending=True)
-        df = df.groupby([pd.Grouper(key='date', freq='ME')], as_index=False)[
-            "probability"].sum()
+        grouped_df = self._group_df(df)
 
-        ax.plot(df["date"],
-                df["probability"],
+        ax.plot(grouped_df["date"],
+                grouped_df["probability"],
                 color=plot_colors[topic_id % len(plot_colors)])
 
         plt.title("Documenten over tijd topic {}".format(topic_id + 1))
@@ -69,3 +75,30 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
         plt.xticks(rotation=30)
 
         return fig
+
+    @staticmethod
+    def _get_no_dates_available_screen() -> matplotlib.figure.Figure:
+        """Returns a figure showing a text that a topic needs to be selected"""
+        fig = plt.figure()
+        plt.figtext(0.5,
+                    0.5,
+                    "Er zijn geen datums in de dataset om te laten zien",
+                    horizontalalignment='center',
+                    verticalalignment='center')
+
+        fig.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+        plt.close()
+        return fig
+
+    @staticmethod
+    def _group_df(df: pd.DataFrame) -> pd.DataFrame:
+        offsets = ["6ME", "2ME", "ME", "2W", "W", "D", "6h", "h", "min"]
+
+        for offset in offsets:
+            new_df = df.groupby([pd.Grouper(key='date', freq=offset)],
+                                as_index=False)["probability"].sum()
+            if new_df.shape[0] >= 12:
+                return new_df
+
+        return df.groupby([pd.Grouper(key='date', freq="ME")],
+                          as_index=False)["probability"].sum()

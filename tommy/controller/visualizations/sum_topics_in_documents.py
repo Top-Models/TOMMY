@@ -14,10 +14,12 @@ from tommy.controller.visualizations.visualization_input_datatypes import (
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
 
+from tommy.support.constant_variables import plot_colors
+
 
 class SumTopicsInDocuments(AbstractVisualization):
 
-    _required_interfaces = []
+    _required_interfaces = [TopicRunner]
     name = 'Topics in documenten'
     short_tab_name = 'Topics in doc.'
     vis_group = VisGroup.MODEL
@@ -44,7 +46,7 @@ class SumTopicsInDocuments(AbstractVisualization):
         df = pd.DataFrame(doc_info)
         df = df.groupby(by="topic_id", as_index=False).sum()
 
-        plt.bar(df["topic_id"] + 1, df["probability"], color="darkblue")
+        plt.bar(df["topic_id"] + 1, df["probability"], color=plot_colors)
         plt.title("Verdeling topics over documenten")
         plt.xlabel("Topic")
         plt.ylabel("Som kansen")

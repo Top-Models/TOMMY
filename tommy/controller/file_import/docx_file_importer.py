@@ -71,8 +71,8 @@ class DocxFileImporter(file_importer_base.FileImporterBase):
             mod_time = os.path.getmtime(path)
             file_date = datetime.fromtimestamp(mod_time)
         except Exception:
-            # If unable to get the modification time, use the current date
-            file_date = datetime.now()
+            # If unable to get the modification time, use None
+            file_date = None
 
         return RawFile(
             metadata=Metadata(author=None,

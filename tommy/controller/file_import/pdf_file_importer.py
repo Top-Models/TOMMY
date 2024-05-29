@@ -68,8 +68,7 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
 
         yield self.generate_file(text, path, metadata)
 
-    @staticmethod
-    def generate_file(file: str, path, metadata) -> RawFile:
+    def generate_file(self, file: str, path, metadata) -> RawFile:
         """
         Generates a File object from a PDF page.
 
@@ -81,18 +80,12 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         """
 
         alt_title = os.path.basename(path).replace('.pdf', '')
-
-        try:
-            mod_time = os.path.getmtime(path)
-            file_date = datetime.fromtimestamp(mod_time)
-        except Exception:
-            # If unable to get the modification time, use the current date
-            file_date = datetime.now()
+        print(metadata.creation_date)
 
         return RawFile(
                 metadata=Metadata(author=metadata.get('/Author', None),
                                   title=metadata.get('/Title', alt_title),
-                                  date=metadata.get('/ModDate', file_date),
+                                  date=metadata.creation_date,
                                   path=os.path.relpath(path),
                                   format="pdf",
                                   length=len(file.split(" ")),
