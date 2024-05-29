@@ -1,3 +1,5 @@
+from random import random
+
 import matplotlib.figure
 from matplotlib import pyplot as plt
 from wordcloud import WordCloud
@@ -10,6 +12,7 @@ from tommy.datatypes.topics import TopicWithScores
 from tommy.controller.visualizations.possible_visualization import VisGroup
 from tommy.controller.visualizations.visualization_input_datatypes import (
     VisInputData, TopicID)
+from tommy.support.constant_variables import emma_colors
 
 
 class WordCloudCreator(AbstractVisualization):
@@ -29,13 +32,13 @@ class WordCloudCreator(AbstractVisualization):
                        **kwargs) -> matplotlib.figure.Figure:
         """
         Construct a wordcloud matplotlib figure for the requested topics in the
-        given topic runner
-        :param topic_runner: The topic model to construct the plot for
-        :param topic_id: The id of the topic to create the word cloud for
+        given topic runner.
+        :param topic_runner: The topic model to construct the plot for.
+        :param topic_id: The id of the topic to create the word cloud for.
         :return: A wordcloud on words in the topic where the size of the words
             is determined by how much they align with the topic. The colors on
             the word cloud do not convey information about the words.
-        :raises ValueError: If the topic_id argument is None
+        :raises ValueError: If the topic_id argument is None.
         """
         if topic_id is None:
             raise ValueError("topic_id keyword argument is necessary in"
@@ -44,10 +47,28 @@ class WordCloudCreator(AbstractVisualization):
         topic = topic_runner.get_topic_with_scores(topic_id, 30)
         word_to_score_dict = dict(topic.top_words_with_scores)
 
+        # Normalize the scores to be in range [0, 1]
+        max_score = max(word_to_score_dict.values())
+        min_score = min(word_to_score_dict.values())
+        normalized_scores = {word: (score - min_score) / (max_score - min_score)
+                             for word, score in word_to_score_dict.items()}
+
+        # Define a color function that returns a random color
+        def color_func(word, font_size, position, orientation,
+                       random_state=None, **kwargs):
+            return emma_colors[int(random() * len(emma_colors))]
+
         wordcloud = (WordCloud(width=800,
                                height=400,
-                               background_color='white').
-                     generate_from_frequencies(dict(word_to_score_dict)))
+                               background_color='white',
+                               color_func=color_func).
+                     generate_from_frequencies(word_to_score_dict))
+
+        wordcloud = (WordCloud(width=800,
+                               height=400,
+                               background_color='white',
+                               color_func=color_func).
+                     generate_from_frequencies(word_to_score_dict))
 
         # Construct a word cloud
         fig = plt.figure()
