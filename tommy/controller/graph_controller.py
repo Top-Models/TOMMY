@@ -245,6 +245,9 @@ class GraphController:
                              f'{vis_index} available')
 
         vis_creator = self.VISUALIZATIONS[vis_index]
+
+        # TODO: return the type of selected creator as well for GraphView
+
         return self._run_visualization_creator(vis_creator,
                                                override_topic=override_topic)
 

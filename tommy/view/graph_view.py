@@ -41,6 +41,13 @@ class GraphView(QWidget):
         # Set the DPI for the canvas
         canvas.figure.set_dpi(100)
 
+        # TODO: Make sure to adjust the size based on the plot type
+        # Add new argument to display_plot to specify the plot type
+
+        # Adjust size of figure
+        canvas.figure.subplots_adjust(left=0.2, right=0.8,
+                                      top=0.85, bottom=0.25)
+
         # Add the canvas to the layout
         self.layout.addWidget(FigureCanvas(canvas.figure))
 

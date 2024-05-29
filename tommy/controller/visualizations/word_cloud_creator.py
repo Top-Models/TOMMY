@@ -63,7 +63,6 @@ class WordCloudCreator(AbstractVisualization):
         plt.title("Woordenwolk topic {}".format(topic_id + 1))
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis('off')
-        plt.tight_layout(pad=0)
 
         fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
 
