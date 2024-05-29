@@ -78,14 +78,12 @@ class ModelParamsView(QScrollArea):
         )
 
         self.enabled_input_stylesheet = (f"background-color: white;"
-                                         f"border-radius: 5px;"
                                          f"font-size: 14px;"
                                          f"font-family: {text_font};"
                                          f"color: black;"
                                          f"border: 2px solid {seco_col_blue};"
                                          f"padding: 5px;")
         self.disabled_input_stylesheet = (f"background-color: {disabled_gray};"
-                                          f"border-radius: 5px;"
                                           f"font-size: 14px;"
                                           f"font-family: {text_font};"
                                           f"color: black;"
@@ -193,7 +191,6 @@ class ModelParamsView(QScrollArea):
             f"""
                 QPushButton {{
                     background-color: {seco_col_blue};
-                    border-radius: 5px;
                     color: white;
                 }}
 
@@ -239,7 +236,6 @@ class ModelParamsView(QScrollArea):
             f"""
                         QPushButton {{
                             background-color: #808080;
-                            border-radius: 5px;
                             color: white;
                         }}
 
@@ -263,20 +259,19 @@ class ModelParamsView(QScrollArea):
         self.apply_button.setText("Toepassen")
         self.apply_button.setStyleSheet(
             f"""
-                        QPushButton {{
-                            background-color: {seco_col_blue};
-                            border-radius: 5px;
-                            color: white;
-                        }}
+                QPushButton {{
+                    background-color: {seco_col_blue};
+                    color: white;
+                }}
 
-                        QPushButton:hover {{
-                            background-color: {hover_seco_col_blue};
-                        }}
+                QPushButton:hover {{
+                    background-color: {hover_seco_col_blue};
+                }}
 
-                        QPushButton:pressed {{
-                            background-color: {pressed_seco_col_blue};
-                        }}
-                    """)
+                QPushButton:pressed {{
+                    background-color: {pressed_seco_col_blue};
+                }}
+            """)
 
     def model_type_changed_event(self) -> None:
         """
