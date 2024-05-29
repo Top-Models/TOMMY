@@ -14,12 +14,13 @@ class FileLabel(QLabel):
 
     clicked = Signal(object)
 
-    def __init__(self, file_metadata: Metadata, parent=None, **kwargs) -> None:
+    def __init__(self, file_metadata: Metadata, parent=None,
+                 topic_correspondence: float = None) -> None:
         """
         Method to initialize the FileLabel object
         :param file_metadata: The metadata of a file
         :param parent: The QT parent
-        :param kwargs: topic_correspondence optional float
+        :param topic_correspondence: optional correspondence with topic
         """
 
         super().__init__(file_metadata.name, parent)
@@ -44,7 +45,6 @@ class FileLabel(QLabel):
         self.selected = False
 
         # If provided, set the correspondence with the current selected topic
-        topic_correspondence = kwargs.get('topic_correspondence', None)
         if topic_correspondence is not None:
             self.setText(f"{str(topic_correspondence)[:4]}% - {self.file.name}")
 

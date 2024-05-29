@@ -4,6 +4,8 @@ from gensim.corpora import Dictionary
 from gensim.models import LdaModel
 from gensim.models.nmf import Nmf
 
+from tommy.support.types import Document_topics
+
 
 @dataclass
 class TopicModel:
@@ -12,6 +14,7 @@ class TopicModel:
     model: LdaModel | Nmf = None
     dictionary: Dictionary = None
     corpus: list[list[tuple[int, int]]] = None
+    document_topics: Document_topics = None
 
 
 """

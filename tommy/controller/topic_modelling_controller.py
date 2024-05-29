@@ -1,3 +1,5 @@
+from typing import Iterable
+
 from tommy.controller.file_import.processed_corpus import ProcessedCorpus
 from tommy.controller.model_parameters_controller import (
     ModelParametersController,
@@ -14,6 +16,7 @@ from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
 from tommy.controller.topic_modelling_runners.nmf_runner import NmfRunner
 from tommy.support.event_handler import EventHandler
+from tommy.support.types import Document_topics, Processed_body
 
 
 class TopicModellingController:
@@ -29,7 +32,7 @@ class TopicModellingController:
     _model_trained_event: EventHandler[TopicRunner] = None
     _topic_model_switched_event: EventHandler[TopicRunner] = None
     _calculate_document_topics_event: \
-        EventHandler[ProcessedCorpus] = None
+        EventHandler[Document_topics] = None
 
     @property
     def model_trained_event(self) -> EventHandler[TopicRunner]:
@@ -41,7 +44,7 @@ class TopicModellingController:
 
     @property
     def calculate_topic_documents_event(self) -> (
-            EventHandler)[ProcessedCorpus]:
+            EventHandler)[Document_topics]:
         return self._calculate_document_topics_event
 
     def __init__(self) -> None:
@@ -50,7 +53,7 @@ class TopicModellingController:
         self._model_trained_event = EventHandler[TopicRunner]()
         self._topic_model_switched_event = EventHandler[TopicRunner]()
         self._calculate_document_topics_event = (
-            EventHandler[ProcessedCorpus]())
+            EventHandler[Document_topics]())
 
     def set_model_refs(self,
                        topic_model: TopicModel,
@@ -101,40 +104,8 @@ class TopicModellingController:
                     f"topic modelling controller")
 
         self._model_trained_event.publish(self._config_model.topic_runner)
-
-    def calculate_document_topics(self) -> None:
-        """
-        Calculate the topic correspondence for each document in the corpus
-        :return: None
-        """
-
-        # Cancel if topic runner does not support document topic correspondence
-        if not isinstance(self._config_model.topic_runner,
-                          DocumentTopicsInterface):
-            print(f"topic runner {self._config_model.topic_runner} does not"
-                  f"support document topic correspondence and will not"
-                  f"calculate this")
-
-        topic_runner: TopicRunner | DocumentTopicsInterface = (
-            self._config_model.topic_runner)
-        topics_amount = topic_runner.get_n_topics()
-        processed_files = self._corpus_controller.get_processed_corpus()
-
-        for document in processed_files:
-            topic_correspondence = (
-                topic_runner.get_document_topics(document.body.body, 0.0))
-
-            if len(topic_correspondence) != topics_amount:
-                print(f"Document {document.metadata.name} has "
-                      f"{len(topic_correspondence)} topics "
-                      f"instead of {topics_amount}")
-
-            # Create list of topic probabilities for each document
-            document.topic_correspondence = [probability for (_, probability)
-                                             in topic_correspondence]
-
         self._calculate_document_topics_event.publish(
-            processed_files)
+            self._topic_model.document_topics)
 
     def _train_lda(self) -> None:
         """
@@ -142,9 +113,7 @@ class TopicModellingController:
         then runs the LDA model on the corpus and saves the topic runner.
         :return: None
         """
-        corpus = [document.body.body
-                  for document
-                  in self._corpus_controller.get_processed_corpus()]
+        corpus = self._corpus_controller.get_processed_corpus()
         num_topics = self._model_parameters_controller.get_model_n_topics()
         alpha_value = self._model_parameters_controller.get_model_alpha()
         beta_value = self._model_parameters_controller.get_model_beta()
@@ -155,7 +124,7 @@ class TopicModellingController:
         if alpha_beta_custom_enabled:
             self._config_model.topic_runner = LdaRunner(
                 topic_model=self._topic_model,
-                docs=corpus,
+                processed_corpus=corpus,
                 num_topics=num_topics,
                 alpha=alpha_value,
                 beta=beta_value)
@@ -163,7 +132,7 @@ class TopicModellingController:
 
         self._config_model.topic_runner = LdaRunner(
             topic_model=self._topic_model,
-            docs=corpus,
+            processed_corpus=corpus,
             num_topics=num_topics)
 
     def _train_nmf(self) -> None:
@@ -172,14 +141,12 @@ class TopicModellingController:
         then runs the NMF model on the corpus and saves the topic runner.
         :return: None
         """
-        corpus = [document.body.body
-                  for document
-                  in self._corpus_controller.get_processed_corpus()]
+        corpus = self._corpus_controller.get_processed_corpus()
         num_topics = self._model_parameters_controller.get_model_n_topics()
 
         self._config_model.topic_runner = NmfRunner(
             topic_model=self._topic_model,
-            docs=corpus,
+            processed_corpus=corpus,
             num_topics=num_topics)
 
 

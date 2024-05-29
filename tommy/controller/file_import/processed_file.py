@@ -11,7 +11,6 @@ class ProcessedFile:
     """
     metadata: Metadata
     body: ProcessedBody
-    topic_correspondence: list[float] = None
 
 
 """

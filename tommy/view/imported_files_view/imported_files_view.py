@@ -11,6 +11,7 @@ from tommy.controller.topic_modelling_controller import TopicModellingController
 from tommy.support.constant_variables import (
     heading_font, prim_col_red,
     hover_prim_col_red)
+from tommy.support.types import Document_topics
 
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.topic_view.topic_entity_component.topic_entity import \
@@ -36,7 +37,7 @@ class ImportedFilesView(QWidget):
             lambda _: self.display_files())
 
         topic_modelling_controller.calculate_topic_documents_event.subscribe(
-            self.on_topic_document_correspondence_changed)
+            self.on_document_topics_calculated)
 
         # Initialize widget properties
         self.setMinimumHeight(200)
@@ -67,7 +68,7 @@ class ImportedFilesView(QWidget):
                            QSizePolicy.Policy.Expanding)
 
         self.metadata: list[Metadata] = []
-        self.processed_files: list[ProcessedFile] = []
+        self.document_topics: Document_topics = []
         self.selected_label = None
         self.selected_file = None
 
@@ -168,13 +169,13 @@ class ImportedFilesView(QWidget):
         for i in reversed(range(0, self.scroll_layout.count())):
             self.scroll_layout.itemAt(i).widget().deleteLater()
 
-        sorted_files = sorted(self.processed_files, key=lambda x: x.topic_correspondence[index], reverse=True)
+        sorted_files = sorted(self.document_topics, key=lambda x: x[1][index], reverse=True)
 
         # Add the file labels to the layout
-        for file in sorted_files:
-            file_label = FileLabel(file.metadata, self.scroll_area,
+        for (metadata, topic_correspondence) in sorted_files:
+            file_label = FileLabel(metadata, self.scroll_area,
                                    topic_correspondence=
-                                   file.topic_correspondence[index])
+                                   topic_correspondence[index])
             file_label.clicked.connect(self.label_clicked)
             self.scroll_layout.addWidget(file_label)
 
@@ -260,16 +261,15 @@ class ImportedFilesView(QWidget):
         self.metadata = metadata
         self.display_files()
 
-    def on_topic_document_correspondence_changed(self,
-                                                 processed_files:
-                                                 ProcessedCorpus) -> None:
+    def on_document_topics_calculated(self,
+                                      document_topics: Document_topics) -> None:
         """
         Update stored topic document correspondence reference.
-        :param processed_files: The list of processed files
+        :param document_topics: The list of documents related to topics
         :return: None
         """
 
-        self.processed_files = processed_files
+        self.document_topics = document_topics
 
     def on_topic_selected(self, topic: TopicEntity) -> None:
         """

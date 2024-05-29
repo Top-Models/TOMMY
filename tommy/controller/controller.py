@@ -170,7 +170,6 @@ class Controller:
 
         self._corpus_controller.set_processed_corpus(processed_files)
         self._topic_modelling_controller.train_model()
-        self._topic_modelling_controller.calculate_document_topics()
 
     def _update_config_model_references(self, config_model: ConfigModel):
         """When the user switches configuration, this event handler makes
