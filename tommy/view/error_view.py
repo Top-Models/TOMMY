@@ -13,6 +13,7 @@ class ErrorView(QMessageBox):
 
     def __init__(self, error_description: str, errors: list[str], *args,
                  **kwargs):
+        """Create a new error popup"""
         super().__init__(*args, **kwargs)
 
         # Initialize window properties
