@@ -1,5 +1,6 @@
 import matplotlib.figure
 from matplotlib import pyplot as plt
+from matplotlib.ticker import MaxNLocator, AutoMinorLocator
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
@@ -45,7 +46,7 @@ class TopWordsBarPlotCreator(AbstractVisualization):
                                                    n_words=15)
 
         # Construct a horizontal bar plot
-        fig = plt.figure()
+        fig, ax = plt.subplots()
         plt.barh(topic.top_words,
                  topic.word_scores,
                  color=plot_colors[topic_id % len(plot_colors)])
@@ -55,6 +56,18 @@ class TopWordsBarPlotCreator(AbstractVisualization):
         plt.margins(0.02)
         plt.xlabel("gewicht")
         plt.title(f"Woorden met het hoogste gewicht topic {topic_id + 1}")
+
+        # Use MaxNLocator to ensure the number of ticks is manageable
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True, nbins=10))
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True, nbins=10))
+
+        # Use AutoMinorLocator to add minor ticks
+        ax.xaxis.set_minor_locator(AutoMinorLocator())
+        ax.yaxis.set_minor_locator(AutoMinorLocator())
+
+        # Rotate tick labels to prevent overlapping
+        plt.xticks(rotation=45)
+        plt.yticks(rotation=45)
 
         fig.figure.subplots_adjust(0.2, 0.2, 0.8, 0.8)
 

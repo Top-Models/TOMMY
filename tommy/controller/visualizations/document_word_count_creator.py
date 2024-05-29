@@ -1,5 +1,6 @@
 import matplotlib.figure
 from matplotlib import pyplot as plt
+from matplotlib.ticker import MaxNLocator, AutoMinorLocator
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
@@ -44,7 +45,7 @@ class DocumentWordCountCreator(AbstractVisualization):
         document_counts = [file.length for file in metadata_corpus]
 
         # Construct a histogram
-        fig = plt.figure()
+        fig, ax = plt.subplots()
         plt.hist(document_counts, bins=150, color="darkblue")
 
         # Add margins and labels to the plot
@@ -52,6 +53,18 @@ class DocumentWordCountCreator(AbstractVisualization):
         plt.xlabel("aantal woorden per document")
         plt.ylabel("aantal documenten")
         plt.title("Distributie aantal woorden per document")
+
+        # Use MaxNLocator to ensure the number of ticks is manageable
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True, nbins=10))
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True, nbins=10))
+
+        # Use AutoMinorLocator to add minor ticks
+        ax.xaxis.set_minor_locator(AutoMinorLocator())
+        ax.yaxis.set_minor_locator(AutoMinorLocator())
+
+        # Rotate tick labels to prevent overlapping
+        plt.xticks(rotation=45)
+        plt.yticks(rotation=45)
 
         fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
 

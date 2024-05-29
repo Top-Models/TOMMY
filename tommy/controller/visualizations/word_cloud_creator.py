@@ -47,12 +47,6 @@ class WordCloudCreator(AbstractVisualization):
         topic = topic_runner.get_topic_with_scores(topic_id, 30)
         word_to_score_dict = dict(topic.top_words_with_scores)
 
-        # Normalize the scores to be in range [0, 1]
-        max_score = max(word_to_score_dict.values())
-        min_score = min(word_to_score_dict.values())
-        normalized_scores = {word: (score - min_score) / (max_score - min_score)
-                             for word, score in word_to_score_dict.items()}
-
         # Define a color function that returns a random color
         def color_func(word, font_size, position, orientation,
                        random_state=None, **kwargs):
