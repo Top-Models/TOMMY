@@ -21,6 +21,7 @@ def gensim_lda_model():
     # Instantiate the model
     model = LdaRunner(topic_model=mock_topic_model,
                       processed_corpus=processed_corpus,
+                      current_corpus_version_id=0,
                       num_topics=num_topics)
 
     return model

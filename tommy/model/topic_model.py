@@ -15,6 +15,7 @@ class TopicModel:
     dictionary: Dictionary = None
     corpus: list[list[tuple[int, int]]] = None
     document_topics: Document_topics = None
+    used_corpus_version_id: int = None
 
 
 """

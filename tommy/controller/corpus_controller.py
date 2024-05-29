@@ -26,6 +26,7 @@ class CorpusController:
     _project_settings_controller: ProjectSettingsController = None
     fileParsers: GenericFileImporter = GenericFileImporter()
     _metadata_changed_event: EventHandler[[Metadata]] = None
+    corpus_version_id: int = -1
 
     @property
     def metadata_changed_event(self) -> EventHandler[[Metadata]]:
@@ -69,6 +70,8 @@ class CorpusController:
         :return: None
         """
         self._corpus_model = corpus_model
+        self.extract_and_store_metadata(self._project_settings_controller
+                                        .get_input_folder_path())
 
     def _read_files(self, path: str) -> Generator[RawFile, None, None]:
         """
@@ -108,11 +111,23 @@ class CorpusController:
         :param input_folder_path: The new path to the input folder
         :return: None
         """
+        self.corpus_version_id += 1
+
+        self.extract_and_store_metadata(input_folder_path)
+        self._metadata_changed_event.publish(self._corpus_model.metadata)
+
+    def extract_and_store_metadata(self, input_folder_path: str) -> None:
+        """
+        Gets the metadata from all files in the directory specified by the
+        project settings and stores it in the corpus model
+
+        :param input_folder_path: The new path to the input folder
+        :return: None
+        """
         files = self._read_files(input_folder_path)
         metadata = [file.metadata for file in files]
 
         self._corpus_model.metadata = metadata
-        self._metadata_changed_event.publish(metadata)
 
     def get_metadata(self) -> list[Metadata]:
         """

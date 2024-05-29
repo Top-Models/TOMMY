@@ -218,7 +218,7 @@ def test_visualizations_available(graph_controller: GraphController):
         ProcessedFile(None, ProcessedBody([f"doc{i}"])) for i in range(10)]
 
     graph_controller._current_topic_runner = LdaRunner(topic_model,
-                                                       processed_corpus, 5)
+                                                       processed_corpus, 0, 5)
 
     assert graph_controller.visualizations_available()
 

@@ -62,6 +62,7 @@ class NmfRunner(TopicRunner,
 
     def __init__(self, topic_model: TopicModel,
                  processed_corpus: ProcessedCorpus,
+                 current_corpus_version_id: int,
                  num_topics: int,
                  random_seed=STANDARD_RANDOM_SEED) -> None:
         """
@@ -69,11 +70,13 @@ class NmfRunner(TopicRunner,
         :param topic_model: Reference to the topic model where the algorithm
             and data should be saved.
         :param processed_corpus: The processed corpus
+        :param current_corpus_version_id: The version identifier of the corpus
+            that is used in training
         :param num_topics: Number of topics to the model.
         :param random_seed: Seed for reproducibility, defaults to 42.
         :return: None
         """
-        super().__init__(topic_model=topic_model)
+        super().__init__(topic_model, current_corpus_version_id)
 
         self._num_topics = num_topics
         self._random_seed = random_seed
