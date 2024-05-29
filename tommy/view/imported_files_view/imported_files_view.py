@@ -278,6 +278,11 @@ class ImportedFilesView(QWidget):
         :return: None
         """
 
+        if not self.document_topics:
+            print("No document topics correspondence was calculated, skipping"
+                  "displaying files for topic.")
+            return
+
         self.display_files_for_topic(topic)
 
 
