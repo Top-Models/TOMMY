@@ -57,7 +57,11 @@ class ModelParametersModel:
             "word_amount": self.word_amount,
             "alpha": self.alpha,
             "beta": self.beta,
-            "alpha_beta_custom_enabled": self.alpha_beta_custom_enabled
+            "alpha_beta_custom_enabled": self.alpha_beta_custom_enabled,
+            "bert_min_df": "None" if self.bert_min_df is None else
+            self.bert_min_df,
+            "bert_max_features": "None" if self.bert_max_features is None
+            else self.bert_max_features
         }
 
     @classmethod
@@ -78,6 +82,12 @@ class ModelParametersModel:
         model.beta = model_parameters_dict["beta"]
         model.alpha_beta_custom_enabled = model_parameters_dict[
             "alpha_beta_custom_enabled"]
+        model.bert_min_df = (
+            None if model_parameters_dict["bert_min_df"] == "None"
+            else model_parameters_dict["bert_min_df"])
+        model.bert_max_features = (
+            None if model_parameters_dict["bert_max_features"] == "None"
+            else model_parameters_dict["bert_max_features"])
         return model
 
 
