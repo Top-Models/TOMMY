@@ -58,6 +58,19 @@ class ExportController:
 
             nx.write_gexf(graph_with_colors, new_path)
 
+    def export_graphs(self, path: str) -> None:
+        """"
+        Exports graphs to png file for all available visualizations
+        :param path: path to the folder where to save the png files
+        :return: None
+        """
+        graph_exports = self._graph_controller.get_all_visualizations()
+
+        for i in range(len(graph_exports)):
+            new_path = os.path.join(path, f"{i}.png")
+            figure, _ = graph_exports[i]
+            figure.savefig(new_path)
+
     def export_topic_words_csv(self, path: str) -> None:
         """
         Export words related to topics to a CSV file.
