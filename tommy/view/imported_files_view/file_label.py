@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QMouseEvent, QPainter, QColor
+from PySide6.QtGui import QMouseEvent, QPainter, QColor, QFont
 from PySide6.QtWidgets import QLabel, QSizePolicy
 
 from tommy.controller.file_import.metadata import Metadata
@@ -27,18 +27,12 @@ class FileLabel(QLabel):
         self.file = file_metadata
         self.topic_correspondence = topic_correspondence
 
-        if file_metadata.title is not None:
-            self.setText(file_metadata.title)
-        else:
-            self.setText(file_metadata.name)
-
-        self.setMaximumHeight(label_height)
         self.setStyleSheet(f"font-family: {text_font};"
                            f"font-size: 12px;"
                            f"background-color: {medium_light_gray};"
                            f"color: black;"
                            f"margin: 0px;"
-                           f"padding: 3px;")
+                           f"padding: 2px 3px 6px 3px;")
         self.setAlignment(Qt.AlignmentFlag.AlignLeft |
                           Qt.AlignmentFlag.AlignTop)
         self.setSizePolicy(QSizePolicy.Policy.Expanding,
@@ -47,8 +41,25 @@ class FileLabel(QLabel):
 
         # If provided, set the correspondence with the current selected topic
         if topic_correspondence is not None:
-            self.setText(f"{str(100 * topic_correspondence)[:4]}% - "
-                         f"{self.file.name}")
+            self.set_formatted_text()
+        else:
+            self.setText(file_metadata.title or file_metadata.name)
+
+    def set_formatted_text(self):
+        """
+        Set the text of the label with the topic correspondence percentage in blue.
+        """
+
+        file_text = self.file.title or self.file.name
+
+        correspondence_text = f'{str(self.topic_correspondence * 100)[:4]}%'
+        percentage_text = (f'<span style="color: {seco_col_blue};'
+                           f'font-weight: bold;">'
+                           f'{correspondence_text}</span>')
+
+        # Pad the percentage with spaces to align titles
+        spaces = '&nbsp;' * (8 - len(correspondence_text))
+        self.setText(f'{percentage_text}{spaces}{file_text}')
 
     def enterEvent(self, event):
         """
@@ -63,7 +74,7 @@ class FileLabel(QLabel):
                                f"{hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 3px;")
+                               f"padding: 2px 3px 6px 3px;")
 
     def leaveEvent(self, event):
         """
@@ -77,7 +88,7 @@ class FileLabel(QLabel):
                                f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 3px;")
+                               f"padding: 2px 3px 6px 3px;")
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         """
@@ -92,7 +103,7 @@ class FileLabel(QLabel):
                                f"{pressed_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 3px;")
+                               f"padding: 2px 3px 6px 3px;")
         else:
             self.deselect()
 
@@ -110,7 +121,7 @@ class FileLabel(QLabel):
                                f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 3px;")
+                               f"padding: 2px 3px 6px 3px;")
         except RuntimeError:
             pass
 
@@ -127,7 +138,7 @@ class FileLabel(QLabel):
                                f"{pressed_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 3px;")
+                               f"padding: 2px 3px 6px 3px;")
         except RuntimeError:
             pass
 
@@ -143,21 +154,31 @@ class FileLabel(QLabel):
                                f"background-color: {hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 3px;")
+                               f"padding: 2px 3px 6px 3px;")
         self.clicked.emit(self)
         super().mouseReleaseEvent(event)
 
     def paintEvent(self, event) -> None:
         """
-        Add a green bar to the label, sized to the document topic correspondence
+        Add a green bar to the label, sized to the document topic correspondence.
         :param event: The paint event
         :return: None
         """
         super().paintEvent(event)
+
+        bar_height = 5
+
+        # Bottom gray bar (always visible)
+        painter = QPainter(self)
+        bar_width = self.width()
+        painter.fillRect(0, self.height() - bar_height, bar_width,
+                         bar_height, QColor(hover_medium_light_gray))
+        painter.end()
+
+        # Blue topic correspondence bar (visible when topic selected)
         if self.topic_correspondence is not None:
             painter = QPainter(self)
             bar_width = int(self.width() * self.topic_correspondence)
-            bar_height = 7
             painter.fillRect(0, self.height() - bar_height, bar_width,
                              bar_height, QColor(seco_col_blue))
             painter.end()
@@ -169,3 +190,4 @@ at Utrecht University within the Software Project course.
 © Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """
+
