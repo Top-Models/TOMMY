@@ -77,8 +77,8 @@ def language_controller_dutch():
 
 @pytest.fixture(scope="module")
 def preprocessing_controller_dutch(language_controller_dutch):
-    controller = PreprocessingController(language_controller_dutch)
-    controller.load_pipeline(SupportedLanguage.Dutch)
+    controller = PreprocessingController()
+    controller.set_controller_refs(language_controller_dutch)
     return controller
 
 
@@ -99,7 +99,7 @@ def bertopic_runner(raw_bodies, num_words, max_num_topics,
         raw_bodies)
     sentences = list(reduce(chain, lists_of_sentences))
 
-    bert = BertopicRunner(mock_topic_model, mock_stopwords_controller,
+    bert = BertopicRunner(mock_topic_model, mock_stopwords_controller, 0,
                           max_num_topics, num_words, raw_bodies, sentences,
                           0.1, 10_000)
 
@@ -144,4 +144,3 @@ def test_get_topic_words(bertopic_runner, max_num_topics, num_words):
     for n in range(bertopic_runner.get_n_topics()):
         assert (bertopic_runner.get_topic_with_scores(n, num_words).n_words
                 == num_words)
-

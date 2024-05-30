@@ -156,11 +156,11 @@ class TopicModellingController:
         num_topics = self._model_parameters_controller.get_model_n_topics()
 
         self._config_model.topic_runner = NmfRunner(
-                topic_model=self._topic_model,
-                docs=corpus,
-                current_corpus_version_id=
-                self._corpus_controller.corpus_version_id,
-                num_topics=num_topics)
+            topic_model=self._topic_model,
+            docs=corpus,
+            current_corpus_version_id=
+            self._corpus_controller.corpus_version_id,
+            num_topics=num_topics)
 
     def _train_bert(self) -> None:
         """
@@ -188,6 +188,8 @@ class TopicModellingController:
         self._config_model.topic_runner = BertopicRunner(
             topic_model=self._topic_model,
             stopwords_controller=self._stopwords_controller,
+            current_corpus_version_id=
+            self._corpus_controller.corpus_version_id,
             num_topics=num_topics,
             num_words_per_topic=num_words_per_topic,
             docs=raw_docs,

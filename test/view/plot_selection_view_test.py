@@ -62,9 +62,16 @@ def test_create_tabs_from_publisher(plot: Figure,
                                     plot_selection_view: PlotSelectionView,
                                     input_visualizations:
                                     list[PossibleVisualization],
-                                    expected_visualization_count):
-    # Mock graph_retrieval from graph_controller
-    plot_selection_view._graph_controller.get_visualization = lambda _: plot
+                                    expected_visualization_count,
+                                    mocker):
+    # Define a mock function for get_visualization
+    def mock_get_visualization(_):
+        return plot, "plot_type"
+
+    # Patch the get_visualization method with the mock
+    mocker.patch.object(plot_selection_view._graph_controller,
+                        'get_visualization',
+                        side_effect=mock_get_visualization)
 
     # Act - trigger event and send possible visualizations
     plot_selection_view._graph_controller.possible_plots_changed_event.publish(
@@ -102,10 +109,12 @@ def test_tab_clicked_event(plot: Figure,
                            index_to_click: int, expected_index_of_plot: int):
     requested_plots = []
     # Mock graph_retrieval from graph_controller and graph view
-    plot_selection_view._graph_controller.get_visualization = \
-        (lambda
-             plot_index: requested_plots.append(plot_index))
-    plot_selection_view._graph_view.display_plot = lambda _: "mock_display"
+    plot_selection_view._graph_controller.get_visualization = (
+        lambda plot_index: (plot, "plot_type") if requested_plots.append(
+            plot_index) is None else None
+    )
+
+    plot_selection_view._graph_view.display_plot = lambda x, y: "mock_display"
 
     # Create tabs and clear callback list again
     plot_selection_view._graph_controller.possible_plots_changed_event.publish(
@@ -145,10 +154,12 @@ def test_remove_all_tabs(plot: Figure,
                          input_visualizations: list[PossibleVisualization]):
     requested_plots = []
     # Mock graph_retrieval from graph_controller and graph view
-    plot_selection_view._graph_controller.get_visualization = (lambda
-                                                                   plot_index: requested_plots.append(
-        plot_index))
-    plot_selection_view._graph_view.display_plot = lambda _: "mock_display"
+    plot_selection_view._graph_controller.get_visualization = (
+        lambda plot_index: (plot, "plot_type") if requested_plots.append(
+            plot_index) is None else None
+    )
+
+    plot_selection_view._graph_view.display_plot = lambda x, y: "mock_display"
 
     # Create tabs and clear callback list again
     plot_selection_view._graph_controller.possible_plots_changed_event.publish(
@@ -182,10 +193,18 @@ def test_remove_all_tabs(plot: Figure,
                          ])
 def test_add_spacer_tab(plot: Figure,
                         plot_selection_view: PlotSelectionView,
-                        input_visualizations: list[PossibleVisualization]):
-    # Mock graph_retrieval from graph_controller and graph view
-    plot_selection_view._graph_controller.get_visualization = (lambda _: plot)
-    plot_selection_view._graph_view.display_plot = lambda _: "mock_display"
+                        input_visualizations: list[PossibleVisualization],
+                        mocker):
+    # Define a mock function for get_visualization
+    def mock_get_visualization(_):
+        return plot, "plot_type"
+
+    # Patch the get_visualization method with the mock
+    mocker.patch.object(plot_selection_view._graph_controller,
+                        'get_visualization',
+                        side_effect=mock_get_visualization)
+
+    plot_selection_view._graph_view.display_plot = lambda x, y: "mock_display"
 
     # Create tabs and count initial tabs
     plot_selection_view._graph_controller.possible_plots_changed_event.publish(
@@ -219,10 +238,18 @@ def test_add_spacer_tab(plot: Figure,
                          ])
 def test_add_multiple_tabs(plot: Figure,
                            plot_selection_view: PlotSelectionView,
-                           input_visualizations: list[PossibleVisualization]):
-    # Mock graph_retrieval from graph_controller and graph view
-    plot_selection_view._graph_controller.get_visualization = (lambda _: plot)
-    plot_selection_view._graph_view.display_plot = lambda _: "mock_display"
+                           input_visualizations: list[PossibleVisualization],
+                           mocker):
+    # Define a mock function for get_visualization
+    def mock_get_visualization(_):
+        return plot, "plot_type"
+
+    # Patch the get_visualization method with the mock
+    mocker.patch.object(plot_selection_view._graph_controller,
+                        'get_visualization',
+                        side_effect=mock_get_visualization)
+
+    plot_selection_view._graph_view.display_plot = lambda x, y: "mock_display"
 
     # Create tabs and count initial tabs
     plot_selection_view._graph_controller.possible_plots_changed_event.publish(
@@ -267,8 +294,16 @@ def test_config_changed_event_with_visualizations(
         mocker: MockerFixture):
     plot_selection_view._graph_controller.visualizations_available = (
         mocker.Mock(return_value=True))
-    plot_selection_view._graph_controller.get_visualization = (
-        lambda _: plot)
+
+    # Define a mock function for get_visualization
+    def mock_get_visualization(_):
+        return plot, "plot_type"
+
+    # Patch the get_visualization method with the mock
+    mocker.patch.object(plot_selection_view._graph_controller,
+                        'get_visualization',
+                        side_effect=mock_get_visualization)
+
     display_plot_mock = mocker.patch.object(
         plot_selection_view._graph_view,
         "display_plot")
@@ -294,7 +329,7 @@ def test_config_changed_event_with_visualizations(
     plot_selection_view._config_changed_event()
 
     # Assert - check if the visualization is displayed
-    display_plot_mock.assert_called_with(plot)
+    display_plot_mock.assert_called_with(plot, "plot_type")
 
 
 """
