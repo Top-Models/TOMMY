@@ -66,8 +66,7 @@ class TopWordsBarPlotCreator(AbstractVisualization):
         ax.yaxis.set_minor_locator(AutoMinorLocator())
 
         # Rotate tick labels to prevent overlapping
-        plt.xticks(rotation=45)
-        plt.yticks(rotation=45)
+        plt.xticks(rotation=30)
 
         fig.figure.subplots_adjust(0.2, 0.2, 0.8, 0.8)
 
