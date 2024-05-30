@@ -71,6 +71,22 @@ def test_stopwords_path(stopwords_controller):
                          "stopwords", "English.txt"))
 
 
+def test_stopwords_loaded_on_start():
+    controller = Controller()
+    loaded_stopwords = (controller.stopwords_controller.stopwords_model
+                        .default_words.copy())
+
+    assert len(loaded_stopwords) > 0
+
+    controller.stopwords_controller.load_default_stopwords(
+        controller.language_controller.get_language())
+
+    newly_loaded_stopwords = (controller.stopwords_controller.stopwords_model
+                              .default_words.copy())
+
+    assert loaded_stopwords == newly_loaded_stopwords
+
+
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.

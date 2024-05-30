@@ -146,6 +146,11 @@ def test_n_gram_merging(preprocessing_controller_dutch,
     assert "Ben Ten" in [token.text for token in n_grams]
 
 
+def test_preprocessing_pipeline_loaded_on_start():
+    controller = Controller()
+    assert controller._preprocessing_controller._nlp is not None
+
+
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
