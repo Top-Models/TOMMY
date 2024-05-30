@@ -204,6 +204,8 @@ class TopicModellingController:
         self._config_model.topic_runner = BertopicRunner(
             topic_model=self._topic_model,
             stopwords_controller=self._stopwords_controller,
+            current_corpus_version_id=
+            self._corpus_controller.corpus_version_id,
             num_topics=num_topics,
             num_words_per_topic=num_words_per_topic,
             docs=raw_docs,
@@ -212,7 +214,7 @@ class TopicModellingController:
             max_features=bert_max_features)
 
 
-"""        
+"""
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
 © Copyright Utrecht University

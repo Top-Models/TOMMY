@@ -38,6 +38,7 @@ class BertopicRunner(TopicRunner):
 
     def __init__(self, topic_model: TopicModel,
                  stopwords_controller: StopwordsController,
+                 current_corpus_version_id: int,
                  num_topics: int,
                  num_words_per_topic: int,
                  docs: list[str],
@@ -50,6 +51,8 @@ class BertopicRunner(TopicRunner):
             and data should be saved
         :param stopwords_controller: a reference to the stopwords controller to
             extract the stopwords from
+        :param current_corpus_version_id: The version identifier of the corpus
+            that is used in training
         :param num_topics: the MAXIMUM number of topics to be returned from
             the analysis
         :param num_words_per_topic: the number of words per topic to be
@@ -61,7 +64,7 @@ class BertopicRunner(TopicRunner):
             analysis
         :return: None
         """
-        super().__init__(topic_model=topic_model)
+        super().__init__(topic_model, current_corpus_version_id)
         self._stopwords_controller = stopwords_controller
 
         self._topic_model.model = {}
