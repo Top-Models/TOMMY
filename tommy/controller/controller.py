@@ -199,6 +199,10 @@ class Controller:
 
         # load new input folder path
         new_input_folder_path = model.project_settings_model.input_folder_path
+        print("---- controller sets input folder path ----")
+        print(f"New path: {new_input_folder_path}")
+        import os
+        print(f"Exists: {os.path.exists(new_input_folder_path)}")
         self._project_settings_controller.set_input_folder_path(
             new_input_folder_path)
 
