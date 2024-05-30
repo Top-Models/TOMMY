@@ -114,6 +114,7 @@ class GraphController:
             list[PossibleVisualization]]()
         self._topics_changed_event = EventHandler[None]()
         self._refresh_plots_event = EventHandler[None]()
+        self._topic_names = {}
 
     def set_controller_refs(
             self,
@@ -155,6 +156,15 @@ class GraphController:
         self._topics_changed_event.publish(None)
         self._possible_plots_changed_event.publish(
             self._possible_visualizations)
+
+    def set_topic_name(self, topic_id: int, name: str) -> None:
+        """Set the name of a topic identified by topic_id."""
+        self._topic_names[topic_id] = name
+        print(self._topic_names)
+
+    def get_topic_name(self, topic_id: int) -> str:
+        """Get the name of a topic identified by topic_id."""
+        return self._topic_names.get(topic_id, f"Topic {topic_id}")
 
     def get_number_of_topics(self) -> int:
         """

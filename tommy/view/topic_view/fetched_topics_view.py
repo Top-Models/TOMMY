@@ -90,6 +90,20 @@ class FetchedTopicsView(QScrollArea):
         topic_entity = TopicEntity(topic_name, topic_words, index)
         topic_entity.clicked.connect(self._on_topic_clicked)
         topic_entity.wordClicked.connect(self._on_word_clicked)
+        topic_entity.nameChanged.connect(self._on_topic_name_changed)
+
+    def _on_topic_name_changed(self, index: int,  new_name: str) -> None:
+        """
+        Event handler for when a topic name is changed
+        :param new_name: The new name of the topic
+        :return: None
+        """
+        # You can handle the name change here
+        if self._graph_controller.has_topic_runner:
+            # Determine the index of the topic based on the sender
+            topic_entity = self.sender()
+            if isinstance(topic_entity, TopicEntity):
+                self._graph_controller.set_topic_name(index, new_name)
 
     def _display_topics(self, tab_name: str) -> None:
         """
@@ -112,6 +126,7 @@ class FetchedTopicsView(QScrollArea):
             topic_entity = TopicEntity(topic_name, topic_words, index)
             topic_entity.wordClicked.connect(self._on_word_clicked)
             topic_entity.clicked.connect(self._on_topic_clicked)
+            topic_entity.nameChanged.connect(self._on_topic_name_changed)
             self.layout.addWidget(topic_entity)
 
     def remove_tab_from_container(self, tab_name: str) -> None:
