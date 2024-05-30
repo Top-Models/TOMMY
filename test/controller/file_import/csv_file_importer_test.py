@@ -25,7 +25,8 @@ def test_compatible_file(csv_file_importer):
 
     # Test incompatible CSV file
     incompatible_path = os.path.join(TEST_DATA_DIR, 'incorrect.csv')
-    assert csv_file_importer.compatible_file(incompatible_path) is False
+    with pytest.raises(ValueError) as exception_info:
+        csv_file_importer.compatible_file(incompatible_path)
 
 
 def test_load_file(csv_file_importer):
