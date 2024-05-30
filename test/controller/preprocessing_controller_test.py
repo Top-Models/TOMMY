@@ -13,16 +13,32 @@ from tommy.support.supported_languages import SupportedLanguage
 
 
 @pytest.fixture
-def preprocessing_controller_dutch():
+def language_controller_dutch(mocker: MockerFixture):
+    language_controller = LanguageController()
+    mocker.patch.object(language_controller, "get_language",
+                        return_value=SupportedLanguage.Dutch)
+    return language_controller
+
+
+@pytest.fixture
+def language_controller_english(mocker: MockerFixture):
+    language_controller = LanguageController()
+    mocker.patch.object(language_controller, "get_language",
+                        return_value=SupportedLanguage.English)
+    return language_controller
+
+
+@pytest.fixture
+def preprocessing_controller_dutch(language_controller_dutch):
     controller = PreprocessingController()
-    controller.load_pipeline(SupportedLanguage.Dutch)
+    controller.set_controller_refs(language_controller_dutch)
     return controller
 
 
 @pytest.fixture
-def preprocessing_controller_english():
+def preprocessing_controller_english(language_controller_english):
     controller = PreprocessingController()
-    controller.load_pipeline(SupportedLanguage.English)
+    controller.set_controller_refs(language_controller_english)
     return controller
 
 
