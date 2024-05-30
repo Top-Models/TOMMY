@@ -1,5 +1,5 @@
 {
-    "input_folder_path": "..\\test\\test_data\\test_pdf_files\\correct_files",
+    "input_folder_path": "../test/test_data/test_pdf_files/correct_files",
     "language": "Engels",
     "configs": {
         "Config 1": {

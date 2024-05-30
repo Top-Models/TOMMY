@@ -51,7 +51,9 @@ class Model:
         for name, config in self.configs.items():
             config_data[name] = config.to_dict()
         return {
-            "input_folder_path": self.project_settings_model.input_folder_path,
+            "input_folder_path":
+                self.project_settings_model.input_folder_path.replace("\\",
+                                                                      "/"),
             "language": SupportedLanguage.to_string(
                 self.language_model.selected_language),
             "configs": config_data,
