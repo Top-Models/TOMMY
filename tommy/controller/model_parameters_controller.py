@@ -100,6 +100,30 @@ class ModelParametersController:
         """Return the type of topic modelling algorithm to be run"""
         return self._parameters_model.model_type
 
+    def set_bert_min_df(self, min_df: float | None) -> None:
+        """
+        Set the value of the minimum frequency of a term in the BERTopic
+        algorithm
+        :param min_df: new value of min_df
+        """
+        self._parameters_model.bert_min_df = min_df
+
+    def get_bert_min_df(self) -> float | None:
+        """Return the minimum frequency of a term in BERTopic"""
+        return self._parameters_model.bert_min_df
+
+    def set_bert_max_features(self, max_features: int | None) -> None:
+        """
+        Set the value of the minimum frequency of a term in the BERTopic
+        algorithm
+        :param max_features: new value of min_df
+        """
+        self._parameters_model.bert_max_features = max_features
+
+    def get_bert_max_features(self) -> int | None:
+        """Return the maximum number of terms in the BERTopic matrix"""
+        return self._parameters_model.bert_max_features
+
     @property
     def params_model_changed_event(self):
         return self._params_model_changed_event

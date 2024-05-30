@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from bertopic import BERTopic
 from gensim.corpora import Dictionary
 from gensim.models import LdaModel
 from gensim.models.nmf import Nmf
@@ -9,7 +10,7 @@ from gensim.models.nmf import Nmf
 class TopicModel:
     """dataclass that holds the data and objects necessary to run a topic
     modelling algorithm"""
-    model: LdaModel | Nmf = None
+    model: LdaModel | Nmf | BERTopic = None
     dictionary: Dictionary = None
     corpus: list[list[tuple[int, int]]] = None
     used_corpus_version_id: int = None
