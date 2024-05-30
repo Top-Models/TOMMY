@@ -1,4 +1,5 @@
 import pytest
+from pytest_mock import MockerFixture
 
 from tommy.controller.controller import Controller
 from tommy.support.model_type import ModelType
@@ -7,9 +8,15 @@ from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
 
 
+@pytest.fixture
+def controller(mocker: MockerFixture):
+    with mocker.patch('tommy.controller.preprocessing_controller'
+                      '.PreprocessingController.load_pipeline'):
+        return Controller()
+
+
 @pytest.fixture(scope='function')
-def abstract_settings() -> AbstractSettings:
-    controller = Controller()
+def abstract_settings(controller) -> AbstractSettings:
     abstract_settings = AbstractSettings(
         controller.model_parameters_controller,
         controller.config_controller,

@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytest
+from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.controller import Controller
@@ -11,9 +12,16 @@ from tommy.view.topic_view.topic_entity_component.topic_entity import \
     TopicEntity
 
 
+@pytest.fixture
+def controller(mocker: MockerFixture):
+    with mocker.patch('tommy.controller.preprocessing_controller'
+                      '.PreprocessingController.load_pipeline'):
+        return Controller()
+
+
 @pytest.fixture(scope='function')
-def selected_information_view(qtbot: QtBot) -> SelectedInformationView:
-    controller = Controller()
+def selected_information_view(qtbot: QtBot, controller) -> (
+        SelectedInformationView):
     selected_information_view = SelectedInformationView(
         controller.graph_controller,
         controller.model_parameters_controller)

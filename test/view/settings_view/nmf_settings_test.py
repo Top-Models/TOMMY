@@ -1,12 +1,19 @@
 import pytest
+from pytest_mock import MockerFixture
 
 from tommy.controller.controller import Controller
 from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 
 
+@pytest.fixture
+def controller(mocker: MockerFixture):
+    with mocker.patch('tommy.controller.preprocessing_controller'
+                      '.PreprocessingController.load_pipeline'):
+        return Controller()
+
+
 @pytest.fixture(scope='function')
-def nmf_settings() -> NmfSettings:
-    controller = Controller()
+def nmf_settings(controller) -> NmfSettings:
     abstract_settings = NmfSettings(
         controller.model_parameters_controller,
         controller.config_controller,

@@ -1,14 +1,21 @@
 import pytest
 from PySide6.QtCore import Qt
+from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.controller import Controller
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 
 
+@pytest.fixture
+def controller(mocker: MockerFixture):
+    with mocker.patch('tommy.controller.preprocessing_controller'
+                      '.PreprocessingController.load_pipeline'):
+        return Controller()
+
+
 @pytest.fixture(scope='function')
-def lda_settings() -> LdaSettings:
-    controller = Controller()
+def lda_settings(controller) -> LdaSettings:
     lda_settings = LdaSettings(controller.model_parameters_controller,
                                controller.config_controller,
                                controller.language_controller)

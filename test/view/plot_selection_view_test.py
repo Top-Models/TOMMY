@@ -12,6 +12,13 @@ from tommy.view.plot_selection_view import (PlotSelectionView,
 from tommy.view.graph_view import GraphView
 
 
+@pytest.fixture
+def controller(mocker: MockerFixture):
+    with mocker.patch('tommy.controller.preprocessing_controller'
+                      '.PreprocessingController.load_pipeline'):
+        return Controller()
+
+
 @pytest.fixture(scope='function')
 def plot() -> Figure:
     canvas = Figure()
@@ -21,8 +28,7 @@ def plot() -> Figure:
 
 
 @pytest.fixture(scope='function')
-def plot_selection_view(qtbot: QtBot) -> PlotSelectionView:
-    controller = Controller()
+def plot_selection_view(qtbot: QtBot, controller) -> PlotSelectionView:
     plot_selection_view = PlotSelectionView(
         controller.graph_controller,
         controller.config_controller,

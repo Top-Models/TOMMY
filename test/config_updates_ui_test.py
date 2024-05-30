@@ -1,4 +1,5 @@
 import pytest
+from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.config_controller import ConfigController
@@ -14,8 +15,10 @@ from tommy.view.stopwords_view import StopwordsView
 
 
 @pytest.fixture
-def controller() -> Controller:
-    return Controller()
+def controller(mocker: MockerFixture):
+    with mocker.patch('tommy.controller.preprocessing_controller'
+                      '.PreprocessingController.load_pipeline'):
+        return Controller()
 
 
 @pytest.fixture

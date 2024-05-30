@@ -10,8 +10,10 @@ from tommy.controller.controller import Controller
 
 
 @pytest.fixture
-def controller():
-    return Controller()
+def controller(mocker: MockerFixture):
+    with mocker.patch('tommy.controller.preprocessing_controller'
+                      '.PreprocessingController.load_pipeline'):
+        return Controller()
 
 
 @pytest.fixture
