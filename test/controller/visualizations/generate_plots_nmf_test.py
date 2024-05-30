@@ -19,6 +19,13 @@ from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
 from tommy.controller.visualizations.document_topic_network_summary_creator \
     import DocumentTopicNetworkSummaryCreator
+from tommy.controller.visualizations.k_value_creator import KValueCreator
+from tommy.controller.visualizations.documents_over_time_creator import (
+    DocumentsOverTimeCreator)
+from tommy.controller.visualizations.documents_over_time_per_topic_creator \
+    import DocumentsOverTimePerTopicCreator
+from tommy.controller.visualizations.sum_topics_in_documents import (
+    SumTopicsInDocuments)
 
 
 # Test data directory
@@ -58,7 +65,7 @@ def processed_files():
 
 
 @pytest.fixture
-def nmf_runner(nmf_model, nmf_model_dictionary, mocker):
+def nmf_runner(nmf_model, nmf_model_dictionary, processed_files, mocker):
     topic_model = TopicModel()
 
     # Mock NmfRunner functions
@@ -66,10 +73,13 @@ def nmf_runner(nmf_model, nmf_model_dictionary, mocker):
     mocker.patch.object(NmfRunner, 'get_n_topics', return_value=4)
 
     # Construct a mocked instance of NmfRunner
-    lda_runner = NmfRunner(topic_model, [], 0, 0)
-    lda_runner._model = nmf_model
-    lda_runner._dictionary = nmf_model_dictionary
-    return lda_runner
+    nmf_runner = NmfRunner(topic_model, [], 0, 0)
+    nmf_runner._model = nmf_model
+    nmf_runner._dictionary = nmf_model_dictionary
+    docs = [document.body.body for document in processed_files]
+    nmf_runner._bags_of_words = [nmf_model_dictionary.doc2bow(tokens)
+                                 for tokens in docs]
+    return nmf_runner
 
 
 @pytest.fixture
@@ -114,4 +124,35 @@ def test_generate_word_topic_network(nmf_runner):
 def test_generate_document_topic_network_summary(nmf_runner, processed_files):
     doc_topic_summary = DocumentTopicNetworkSummaryCreator()
     figure = doc_topic_summary._create_figure(nmf_runner, processed_files)
+    assert figure
+
+
+def test_generate_k_value_plot(nmf_runner):
+    k_value_plot = KValueCreator()
+    figure = k_value_plot._create_figure(nmf_runner)
+    assert figure
+
+
+def test_generate_documents_over_time_plot(nmf_runner, processed_files):
+    documents_over_time_plot = DocumentsOverTimeCreator()
+    figure = documents_over_time_plot._create_figure(nmf_runner,
+                                                     processed_files)
+    assert figure
+
+
+@pytest.mark.parametrize("topic_id", [0, 1, 2, 3])
+def test_generate_documents_over_time_per_topic_plot(nmf_runner,
+                                                     processed_files,
+                                                     topic_id):
+    documents_over_time_per_topic_plot = DocumentsOverTimePerTopicCreator()
+    figure = documents_over_time_per_topic_plot._create_figure(nmf_runner,
+                                                               topic_id,
+                                                               processed_files)
+    assert figure
+
+
+def test_generate_sum_topics_in_documents_plot(nmf_runner, processed_files):
+    sum_topics_in_documents_plot = SumTopicsInDocuments()
+    figure = sum_topics_in_documents_plot._create_figure(nmf_runner,
+                                                         processed_files)
     assert figure

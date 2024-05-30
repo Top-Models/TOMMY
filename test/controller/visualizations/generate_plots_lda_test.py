@@ -20,6 +20,12 @@ from tommy.controller.visualizations.word_topic_network_creator import (
 from tommy.controller.visualizations.document_topic_network_summary_creator \
     import DocumentTopicNetworkSummaryCreator
 from tommy.controller.visualizations.k_value_creator import KValueCreator
+from tommy.controller.visualizations.documents_over_time_creator import (
+    DocumentsOverTimeCreator)
+from tommy.controller.visualizations.documents_over_time_per_topic_creator \
+    import DocumentsOverTimePerTopicCreator
+from tommy.controller.visualizations.sum_topics_in_documents import (
+    SumTopicsInDocuments)
 
 
 # Test data directory
@@ -124,4 +130,29 @@ def test_generate_document_topic_network_summary(lda_runner, processed_files):
 def test_generate_k_value_plot(lda_runner):
     k_value_plot = KValueCreator()
     figure = k_value_plot._create_figure(lda_runner)
+    assert figure
+
+
+def test_generate_documents_over_time_plot(lda_runner, processed_files):
+    documents_over_time_plot = DocumentsOverTimeCreator()
+    figure = documents_over_time_plot._create_figure(lda_runner,
+                                                     processed_files)
+    assert figure
+
+
+@pytest.mark.parametrize("topic_id", [0, 1, 2, 3])
+def test_generate_documents_over_time_per_topic_plot(lda_runner,
+                                                     processed_files,
+                                                     topic_id):
+    documents_over_time_per_topic_plot = DocumentsOverTimePerTopicCreator()
+    figure = documents_over_time_per_topic_plot._create_figure(lda_runner,
+                                                               topic_id,
+                                                               processed_files)
+    assert figure
+
+
+def test_generate_sum_topics_in_documents_plot(lda_runner, processed_files):
+    sum_topics_in_documents_plot = SumTopicsInDocuments()
+    figure = sum_topics_in_documents_plot._create_figure(lda_runner,
+                                                         processed_files)
     assert figure

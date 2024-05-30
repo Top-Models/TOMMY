@@ -91,8 +91,13 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
         return fig
 
     @staticmethod
+    def _get_valid_offsets() -> list[str]:
+        return ["YE", "6ME", "2ME", "ME", "2W", "W", "D", "6h", "h", "min",
+                "s"]
+
+    @staticmethod
     def _group_df(df: pd.DataFrame) -> pd.DataFrame:
-        offsets = ["6ME", "2ME", "ME", "2W", "W", "D", "6h", "h", "min"]
+        offsets = DocumentsOverTimePerTopicCreator._get_valid_offsets()
 
         for offset in offsets:
             new_df = df.groupby([pd.Grouper(key='date', freq=offset)],
