@@ -76,13 +76,13 @@ class DocumentTopicNetworkSummaryCreator(AbstractVisualization):
             else:
                 first_neighbor = list(graph.neighbors(node[0]))[0]
                 node_sizes.append(graph[node[0]][first_neighbor]["weight"]
-                                  * scaling_factor * 10)
+                                  * scaling_factor * 6.9)
 
         node_colors = [node[1] if node[1] is not None else "black"
                        for node in nodes]
 
         edge_colors = [graph[u][v]["color"] for (u, v) in edges]
-        edge_width = [(graph[u][v]["weight"]) * scaling_factor
+        edge_width = [(graph[u][v]["weight"]) * scaling_factor * 0.69
                       for u, v in edges]
 
         # Calculate the shortest paths using dijkstra's algorithm
