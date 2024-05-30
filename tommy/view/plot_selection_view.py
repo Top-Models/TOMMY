@@ -91,7 +91,6 @@ class PlotSelectionView(QTabWidget):
         new_plot, plot_type = self._graph_controller.get_visualization(
             new_possible_vis.index)
 
-        # TODO: Add a new argument to display_plot to specify the plot type
         self._graph_view.display_plot(new_plot, plot_type)
 
     def _tab_clicked_event(self) -> None:
@@ -111,7 +110,6 @@ class PlotSelectionView(QTabWidget):
         new_plot, plot_type = self._graph_controller.get_visualization(
             new_possible_vis.index)
 
-        # TODO: Add a new argument to display_plot to specify the plot type
         self._graph_view.display_plot(new_plot, plot_type)
 
     def _create_tabs(self, possible_vis_list: list[PossibleVisualization]

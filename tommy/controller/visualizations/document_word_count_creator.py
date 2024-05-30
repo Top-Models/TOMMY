@@ -12,6 +12,7 @@ from tommy.controller.visualizations.visualization_input_datatypes import (
     VisInputData, MetadataCorpus)
 
 from tommy.datatypes.topics import Topic, TopicWithScores
+from tommy.support.constant_variables import prim_col_red
 
 
 class DocumentWordCountCreator(AbstractVisualization):
@@ -46,7 +47,7 @@ class DocumentWordCountCreator(AbstractVisualization):
 
         # Construct a histogram
         fig, ax = plt.subplots()
-        plt.hist(document_counts, bins=150, color="darkblue")
+        plt.hist(document_counts, bins=150, color=f"{prim_col_red}")
 
         # Add margins and labels to the plot
         plt.margins(x=0.02)
