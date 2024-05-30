@@ -52,8 +52,8 @@ class WordCloudCreator(AbstractVisualization):
                        random_state=None, **kwargs):
             return emma_colors[int(random() * len(emma_colors))]
 
-        wordcloud = (WordCloud(width=800,
-                               height=400,
+        wordcloud = (WordCloud(width=1800,
+                               height=900,
                                background_color='white',
                                color_func=color_func).
                      generate_from_frequencies(word_to_score_dict))

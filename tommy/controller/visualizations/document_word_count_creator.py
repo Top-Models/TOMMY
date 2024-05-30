@@ -4,14 +4,11 @@ from matplotlib.ticker import MaxNLocator, AutoMinorLocator
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.visualizations.abstract_visualization import (
-        AbstractVisualization)
+    AbstractVisualization)
 from tommy.controller.visualizations.possible_visualization import VisGroup
 from tommy.controller.visualizations.visualization_input_datatypes import (
     VisInputData, MetadataCorpus)
-
-from tommy.datatypes.topics import Topic, TopicWithScores
 from tommy.support.constant_variables import prim_col_red
 
 
@@ -51,8 +48,8 @@ class DocumentWordCountCreator(AbstractVisualization):
 
         # Add margins and labels to the plot
         plt.margins(x=0.02)
-        plt.xlabel("aantal woorden per document")
-        plt.ylabel("aantal documenten")
+        plt.xlabel("Aantal woorden per document")
+        plt.ylabel("Aantal documenten")
         plt.title("Distributie aantal woorden per document")
 
         # Use MaxNLocator to ensure the number of ticks is manageable

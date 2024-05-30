@@ -54,7 +54,7 @@ class TopWordsBarPlotCreator(AbstractVisualization):
 
         # Add margins and labels to the plot
         plt.margins(0.02)
-        plt.xlabel("gewicht")
+        plt.xlabel("Gewicht")
         plt.title(f"Woorden met het hoogste gewicht topic {topic_id + 1}")
 
         # Use MaxNLocator to ensure the number of ticks is manageable
