@@ -26,6 +26,9 @@ def _resize_plot_for_type(canvas: matplotlib.figure.Figure,
     elif visualization_type == "Woordgewichten":
         canvas.figure.subplots_adjust(left=0.2, right=0.8,
                                       top=0.85, bottom=0.25)
+    elif visualization_type == "Correlatie":
+        canvas.figure.subplots_adjust(left=0.2, right=0.8,
+                                      top=0.80, bottom=0.2)
 
 
 class GraphView(QWidget):
