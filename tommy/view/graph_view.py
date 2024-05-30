@@ -5,6 +5,29 @@ from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as
 import matplotlib.figure
 
 
+def _resize_plot_for_type(canvas: matplotlib.figure.Figure,
+                          visualization_type: str) -> None:
+    """
+    Resize the plot for the given type of visualization.
+
+    :param canvas: The canvas to display
+    :param visualization_type: The type of the visualization
+    :return: None
+    """
+    if visualization_type == "Woordaantal":
+        canvas.figure.subplots_adjust(left=0.2, right=0.8,
+                                      top=0.85, bottom=0.25)
+    elif visualization_type == "K-waarde":
+        canvas.figure.subplots_adjust(left=0.2, right=0.8,
+                                      top=0.85, bottom=0.25)
+    elif visualization_type == "Woord Netwerk":
+        canvas.figure.subplots_adjust(left=0.05, right=0.95,
+                                      top=0.95, bottom=0.05)
+    elif visualization_type == "Woordgewichten":
+        canvas.figure.subplots_adjust(left=0.2, right=0.8,
+                                      top=0.85, bottom=0.25)
+
+
 class GraphView(QWidget):
     """A class for displaying the graphs made by the graph-controller"""
 
@@ -24,11 +47,14 @@ class GraphView(QWidget):
         self.setMinimumHeight(350)
         self.setLayout(self.layout)
 
-    def display_plot(self, canvas: matplotlib.figure.Figure) -> None:
+    def display_plot(self,
+                     canvas: matplotlib.figure.Figure,
+                     visualization_type: str) -> None:
         """
         Display the plots for the given tab.
 
         :param canvas: The canvas to display
+        :param visualization_type: The type of the visualization
         :return: None
         """
 
@@ -41,12 +67,8 @@ class GraphView(QWidget):
         # Set the DPI for the canvas
         canvas.figure.set_dpi(100)
 
-        # TODO: Make sure to adjust the size based on the plot type
-        # Add new argument to display_plot to specify the plot type
-
-        # Adjust size of figure
-        canvas.figure.subplots_adjust(left=0.2, right=0.8,
-                                      top=0.85, bottom=0.25)
+        # Resize the plot for the given type
+        _resize_plot_for_type(canvas, visualization_type)
 
         # Add the canvas to the layout
         self.layout.addWidget(FigureCanvas(canvas.figure))
@@ -57,7 +79,8 @@ class GraphView(QWidget):
 
         :return: None
         """
-        self.display_plot(matplotlib.figure.Figure())
+        self.display_plot(matplotlib.figure.Figure(),
+                          visualization_type="")
 
 
 """
