@@ -56,8 +56,7 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
                 for page in pdf.pages:
                     text += page.extract_text()
         except Exception as e:
-            print(f"Failed to load file {path} due to error: {e}")
-            return
+            raise Exception(f"kon niet correct gelezen worden: {e}")
 
         yield self.generate_file(text, path, metadata)
 

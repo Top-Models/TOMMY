@@ -168,7 +168,6 @@ def test_stopwords_remove_list(stopwords, request):
     Test removing a list of words from stop words.
     """
     stopword_list = request.getfixturevalue(stopwords)
-    print(type(stopword_list))
     n = len(stopword_list)
     stopword_list.add(["hoimam", "hoipap", "hoibroer"])
     assert "hoimam" in stopword_list

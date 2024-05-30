@@ -72,14 +72,10 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                     if value == "" or value.isspace():
                         del row[key]
 
-                try:
-                    yield self.generate_file(row, path)
-                except KeyError as e:
-                    print("Failed to load row {} in file {},"
-                          " reason: {}".format(row_index, path, e))
+                yield self.generate_file(row, path, row_index)
                 row_index += 1
 
-    def generate_file(self, file: dict, path) -> RawFile:
+    def generate_file(self, file: dict, path, row_index) -> RawFile:
         """
         Generates a File object from a CSV row.
 
@@ -90,7 +86,8 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
         """
         for key in self.mandatory_fields:
             if key not in file or file[key] is None:
-                raise KeyError(key)
+                raise KeyError(f"er is een probleem opgetreden op rij "
+                               f"{row_index}", key)
 
         file_date: str = file.get("date")
         if file_date is not None and not file_date.isspace():
