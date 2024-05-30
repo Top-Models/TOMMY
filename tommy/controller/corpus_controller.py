@@ -114,9 +114,8 @@ class CorpusController:
         :return: None
         """
         files = self._read_files(input_folder_path)
-        print(f"The files are: {files}")
         metadata = [file.metadata for file in files]
-        print(f"The metadata is: {metadata}")
+
         self._corpus_model.metadata = metadata
 
     def get_metadata(self) -> list[Metadata]:
