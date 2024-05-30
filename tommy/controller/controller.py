@@ -85,7 +85,10 @@ class Controller:
         self._set_controller_references()
 
     def _initialize_components(self):
-        """Initialize all sub-components"""
+        """
+        Initialize all sub-controllers
+        :return: None
+        """
         self._model_parameters_controller = ModelParametersController()
         self._language_controller = LanguageController()
         self._graph_controller = GraphController()
@@ -118,15 +121,19 @@ class Controller:
             self._model_parameters_controller, self._corpus_controller,
             self._stopwords_controller, self._preprocessing_controller)
 
+        self._preprocessing_controller.set_controller_refs(
+            self.language_controller)
+
+        self._stopwords_controller.set_controller_refs(
+            self.language_controller)
+
+        self._config_controller.set_controller_refs(self._graph_controller)
+
+        # subscribe methods of Controller to events from sub-controllers
         self._config_controller.config_switched_event.subscribe(
             self._update_model_on_config_switch)
         self._saving_loading_controller.model_changed_event.subscribe(
             self._update_model_on_load)
-        self._preprocessing_controller.set_controller_refs(
-            self.language_controller)
-        self._stopwords_controller.set_controller_refs(
-            self.language_controller)
-        self._config_controller.set_controller_refs(self._graph_controller)
 
     def _set_model_references(self) -> None:
         """
@@ -173,7 +180,16 @@ class Controller:
         self._topic_modelling_controller.train_model()
 
     def _update_model_on_config_switch(
-            self, config_model: ConfigModel) -> None:
+            self, data: ConfigModel) -> None:
+        """
+        When the user switches configuration, this event handler makes sure
+        that every controller gets a reference to the models of the currently
+        selected config. It then asks the controllers to notify the frontend
+        components of the new model.
+        :param data: unused parameter, since the selected config
+        model can be accessed using the model
+        :return:
+        """
         self._set_model_references()
         self._notify_model_swapped()
 
@@ -198,10 +214,13 @@ class Controller:
 
         self._notify_model_swapped()
 
-    def _notify_model_swapped(self):
-        """When the user switches configuration, this event handler makes
+    def _notify_model_swapped(self) -> None:
+        """
+        When the user switches configuration, this event handler makes
         sure that every controller gets a reference to the models of the
-        currently selected config"""
+        currently selected config
+        :return: None
+        """
         self._model_parameters_controller.on_model_swap()
         self._topic_modelling_controller.on_model_swap()
         self._stopwords_controller.on_model_swap()
