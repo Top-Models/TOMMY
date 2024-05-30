@@ -48,7 +48,7 @@ def test_generate_file(csv_file_importer):
     }
     csv_path = os.path.join(TEST_DATA_DIR, 'correct.csv')
 
-    raw_file = csv_file_importer.generate_file(file_data, csv_path)
+    raw_file = csv_file_importer.generate_file(file_data, csv_path, 1)
 
     assert raw_file.metadata.title == "Bedreiging Complotdenker door Spanje uitgezet naar NL"
     assert raw_file.metadata.date == date(2021, 8, 24)
