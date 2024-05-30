@@ -46,7 +46,8 @@ class FileLabel(QLabel):
 
         # If provided, set the correspondence with the current selected topic
         if topic_correspondence is not None:
-            self.setText(f"{str(topic_correspondence)[:4]}% - {self.file.name}")
+            self.setText(f"{str(100*topic_correspondence)[:4]}% - "
+                         f"{self.file.name}")
 
     def enterEvent(self, event):
         """
