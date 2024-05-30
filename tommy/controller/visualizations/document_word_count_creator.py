@@ -1,16 +1,15 @@
 import matplotlib.figure
 from matplotlib import pyplot as plt
+from matplotlib.ticker import MaxNLocator, AutoMinorLocator
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.visualizations.abstract_visualization import (
-        AbstractVisualization)
+    AbstractVisualization)
 from tommy.controller.visualizations.possible_visualization import VisGroup
 from tommy.controller.visualizations.visualization_input_datatypes import (
     VisInputData, MetadataCorpus)
-
-from tommy.datatypes.topics import Topic, TopicWithScores
+from tommy.support.constant_variables import prim_col_red
 
 
 class DocumentWordCountCreator(AbstractVisualization):
@@ -44,14 +43,25 @@ class DocumentWordCountCreator(AbstractVisualization):
         document_counts = [file.length for file in metadata_corpus]
 
         # Construct a histogram
-        fig = plt.figure()
-        plt.hist(document_counts, bins=150, color="darkblue")
+        fig, ax = plt.subplots()
+        plt.hist(document_counts, bins=150, color=f"{prim_col_red}")
 
         # Add margins and labels to the plot
         plt.margins(x=0.02)
-        plt.xlabel("aantal woorden per document")
-        plt.ylabel("aantal documenten")
+        plt.xlabel("Aantal woorden per document")
+        plt.ylabel("Aantal documenten")
         plt.title("Distributie aantal woorden per document")
+
+        # Use MaxNLocator to ensure the number of ticks is manageable
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True, nbins=10))
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True, nbins=10))
+
+        # Use AutoMinorLocator to add minor ticks
+        ax.xaxis.set_minor_locator(AutoMinorLocator())
+        ax.yaxis.set_minor_locator(AutoMinorLocator())
+
+        # Rotate tick labels to prevent overlapping
+        plt.xticks(rotation=30)
 
         fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
 

@@ -27,7 +27,7 @@ class WordTopicNxExporter(NxExporter):
         :param topic_runner: The topic runner to extract topic data from
         :return: nx graph representing a word-topic network plot
         """
-        return self.construct_word_topic_network(topic_runner, 50)
+        return self.construct_word_topic_network(topic_runner, 25)
 
     @staticmethod
     def construct_word_topic_network(topic_runner: TopicRunner
