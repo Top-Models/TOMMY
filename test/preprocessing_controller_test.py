@@ -1,6 +1,7 @@
 import pytest
 import spacy.tokens
 
+from tommy.controller.controller import Controller
 from tommy.controller.language_controller import LanguageController
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.model.language_model import LanguageModel
@@ -10,31 +11,22 @@ from tommy.support.supported_languages import SupportedLanguage
 
 
 @pytest.fixture
-def language_controller():
-    language_controller = LanguageController()
-    language_controller.set_model_refs(LanguageModel())
-    return language_controller
-
-
-@pytest.fixture
-def preprocessing_controller_dutch(language_controller):
-    controller = PreprocessingController(language_controller)
+def preprocessing_controller_dutch():
+    controller = PreprocessingController()
     controller.load_pipeline(SupportedLanguage.Dutch)
     return controller
 
 
 @pytest.fixture
-def preprocessing_controller_english(language_controller):
-    controller = PreprocessingController(language_controller)
+def preprocessing_controller_english():
+    controller = PreprocessingController()
     controller.load_pipeline(SupportedLanguage.English)
     return controller
 
 
 @pytest.fixture
 def stopwords_model_dutch():
-    language_controller = LanguageController()
-    language_controller.set_model_refs(LanguageModel())
-    stopwords_controller = StopwordsController(language_controller)
+    stopwords_controller = StopwordsController()
     stopwords_controller.set_model_refs(StopwordsModel())
     stopwords_controller.load_default_stopwords(SupportedLanguage.Dutch)
     return stopwords_controller.stopwords_model
@@ -42,9 +34,7 @@ def stopwords_model_dutch():
 
 @pytest.fixture
 def stopwords_model_english():
-    language_controller = LanguageController()
-    language_controller.set_model_refs(LanguageModel())
-    stopwords_controller = StopwordsController(language_controller)
+    stopwords_controller = StopwordsController()
     stopwords_controller.set_model_refs(StopwordsModel())
     stopwords_controller.load_default_stopwords(SupportedLanguage.English)
     return stopwords_controller.stopwords_model

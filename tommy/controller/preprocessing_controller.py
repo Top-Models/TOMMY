@@ -14,12 +14,10 @@ class PreprocessingController:
     _stopwords_model: StopwordsModel = None
     _enable_pos: bool
 
-    def __init__(self, language_controller: LanguageController) -> None:
+    def __init__(self) -> None:
         self._nlp = None
         self._enable_pos: bool
-        self.language_controller = language_controller
-        self.language_controller.change_language_event.subscribe(
-            self.load_pipeline)
+        self.language_controller = None
 
     def load_pipeline(self, language: SupportedLanguage) -> None:
         nlp: spacy.Language
@@ -52,6 +50,13 @@ class PreprocessingController:
     def set_model_refs(self, stopwords_model: StopwordsModel):
         """Set the reference to the stopwords model"""
         self._stopwords_model = stopwords_model
+
+    def set_controller_refs(self, language_controller: LanguageController):
+        """Set the reference to the language controller"""
+        self.language_controller = language_controller
+        self.language_controller.change_language_event.subscribe(
+            self.load_pipeline)
+        self.load_pipeline(self.language_controller.get_language())
 
     def process_text(self, text: str) -> list[str]:
         """Preprocesses the given text to a list of tokens."""

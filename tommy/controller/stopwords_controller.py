@@ -23,16 +23,21 @@ class StopwordsController:
     def stopwords_model(self) -> StopwordsModel:
         return self._stopwords_model
 
-    def __init__(self, language_controller: LanguageController) -> None:
+    def __init__(self) -> None:
         """Initializes the stopwords controller, and load the stopwords of
         the selected language"""
-        self._language_controller = language_controller
-        self._language_controller.change_language_event.subscribe(
-            self.load_default_stopwords)
+        self._language_controller = None
 
     def set_model_refs(self, stopwords_model: StopwordsModel):
         """Sets the reference to the stopwords model."""
         self._stopwords_model = stopwords_model
+
+    def set_controller_refs(self, language_controller: LanguageController):
+        """Sets the reference to the language controller."""
+        self._language_controller = language_controller
+        language_controller.change_language_event.subscribe(
+            self.load_default_stopwords)
+        self.load_default_stopwords(language_controller.get_language())
 
     def on_model_swap(self):
         """

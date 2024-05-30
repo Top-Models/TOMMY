@@ -90,14 +90,12 @@ class Controller:
         self._language_controller = LanguageController()
         self._graph_controller = GraphController()
         self._topic_modelling_controller = TopicModellingController()
-        self._stopwords_controller = StopwordsController(
-            self._language_controller)
-        self._preprocessing_controller = PreprocessingController(
-            self._language_controller)
+        self._stopwords_controller = StopwordsController()
+        self._preprocessing_controller = PreprocessingController()
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
         self._saving_loading_controller = SavingLoadingController()
-        self._config_controller = ConfigController(self._graph_controller)
+        self._config_controller = ConfigController()
         self._export_controller = ExportController()
 
     def _set_controller_references(self) -> None:
@@ -122,6 +120,11 @@ class Controller:
             self._update_model_on_config_switch)
         self._saving_loading_controller.model_changed_event.subscribe(
             self._update_model_on_load)
+        self._preprocessing_controller.set_controller_refs(
+            self.language_controller)
+        self._stopwords_controller.set_controller_refs(
+            self.language_controller)
+        self._config_controller.set_controller_refs(self._graph_controller)
 
     def _set_model_references(self) -> None:
         """
@@ -209,6 +212,7 @@ class Controller:
         self._topic_modelling_controller.on_model_swap()
         self._stopwords_controller.on_model_swap()
         self._language_controller.on_model_swap()
+        self.corpus_controller.on_model_swap()
 
 
 """

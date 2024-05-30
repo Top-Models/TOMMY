@@ -62,15 +62,14 @@ class CorpusController:
         """
         self._corpus_model = corpus_model
 
-    def change_config_model_refs(self, corpus_model: CorpusModel) -> None:
+    def on_model_swap(self) -> None:
         """
-        Sets the reference to the corpus model
-        :param corpus_model: The corpus model
+        Get the metadata again if the model has been swapped by either
+        loading or switching config
         :return: None
         """
-        self._corpus_model = corpus_model
-        self.extract_and_store_metadata(self._project_settings_controller
-                                        .get_input_folder_path())
+        # self.extract_and_store_metadata(self._project_settings_controller
+        #                                 .get_input_folder_path())
 
     def _read_files(self, path: str) -> Generator[RawFile, None, None]:
         """

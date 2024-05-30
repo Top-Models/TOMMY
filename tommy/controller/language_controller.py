@@ -42,7 +42,6 @@ class LanguageController:
         :return: None
         """
         self._language_model = language_model
-        self._change_language_event.publish(language_model.selected_language)
 
     def on_model_swap(self) -> None:
         """
