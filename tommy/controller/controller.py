@@ -212,7 +212,6 @@ class Controller:
         self._topic_modelling_controller.on_model_swap()
         self._stopwords_controller.on_model_swap()
         self._language_controller.on_model_swap()
-        self.corpus_controller.on_model_swap()
 
 
 """

@@ -62,15 +62,6 @@ class CorpusController:
         """
         self._corpus_model = corpus_model
 
-    def on_model_swap(self) -> None:
-        """
-        Get the metadata again if the model has been swapped by either
-        loading or switching config
-        :return: None
-        """
-        # self.extract_and_store_metadata(self._project_settings_controller
-        #                                 .get_input_folder_path())
-
     def _read_files(self, path: str) -> Generator[RawFile, None, None]:
         """
         Yields the contents of all compatible files in a given directory
