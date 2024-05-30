@@ -11,14 +11,27 @@ class TopicRunner(ABC):
     """
     _topic_model: TopicModel
 
-    def __init__(self, topic_model: TopicModel) -> None:
+    @property
+    def used_corpus_version_id(self) -> int | None:
+        """Get the version id of the corpus that was used in the analysis"""
+        return self._topic_model.used_corpus_version_id
+
+    @used_corpus_version_id.setter
+    def used_corpus_version_id(self, corpus_version_id: int) -> None:
+        """set the version id of the corpus that was used in the analysis"""
+        self._topic_model.used_corpus_version_id = corpus_version_id
+
+    def __init__(self, topic_model: TopicModel,
+                 used_corpus_version_id: int) -> None:
         """
         Sets the topic_model property.
         :param topic_model: reference to the topic model where data should be
             saved
+        :param used_corpus_version_id: The used corpus version id
         :return: None
         """
         self._topic_model = topic_model
+        self.used_corpus_version_id = used_corpus_version_id
 
     @abstractmethod
     def get_n_topics(self) -> int:

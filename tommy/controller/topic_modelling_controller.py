@@ -1,8 +1,13 @@
+from itertools import chain
+from functools import reduce
+
 from tommy.controller.model_parameters_controller import (
     ModelParametersController,
     ModelType)
 from tommy.controller.corpus_controller import CorpusController
 from tommy.model.config_model import ConfigModel
+from tommy.controller.stopwords_controller import StopwordsController
+from tommy.controller.preprocessing_controller import PreprocessingController
 
 from tommy.model.topic_model import TopicModel
 
@@ -10,6 +15,8 @@ from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
 from tommy.controller.topic_modelling_runners.nmf_runner import NmfRunner
+from tommy.controller.topic_modelling_runners.bertopic_runner import (
+    BertopicRunner)
 from tommy.support.event_handler import EventHandler
 
 
@@ -19,6 +26,8 @@ class TopicModellingController:
     train_model and supplies a topic runner object from which results can be
     extracted.
     """
+    _stopwords_controller: StopwordsController = None
+    _preprocessing_controller = None
     _model_parameters_controller: ModelParametersController = None
     _topic_model: TopicModel = None
     _config_model: ConfigModel = None
@@ -59,15 +68,28 @@ class TopicModellingController:
         """
         # TODO: send event to view and other controllers that the
         #  visualizations should change
+        # if the topic runner ran on an outdated corpus, we delete it.
+        if (config_model.topic_runner is not None
+                and config_model.topic_model.used_corpus_version_id
+                != self._corpus_controller.corpus_version_id):
+            config_model.topic_runner = None
+
         self._topic_model = topic_model
         self._config_model = config_model
+
         self._topic_model_switched_event.publish(config_model.topic_runner)
 
     def set_controller_refs(self,
                             parameters_controller: ModelParametersController,
-                            corpus_controller: CorpusController):
+                            corpus_controller: CorpusController,
+                            stopwords_controller: StopwordsController,
+                            preprocessing_controller: PreprocessingController
+                            ) -> None:
+        """Set the reference to the needed controllers"""
         self._model_parameters_controller = parameters_controller
         self._corpus_controller = corpus_controller
+        self._stopwords_controller = stopwords_controller
+        self._preprocessing_controller = preprocessing_controller
 
     def train_model(self) -> None:
         """
@@ -81,6 +103,8 @@ class TopicModellingController:
         match new_model_type:
             case ModelType.LDA:
                 self._train_lda()
+            case ModelType.BERTopic:
+                self._train_bert()
             case ModelType.NMF:
                 self._train_nmf()
             case _:
@@ -110,6 +134,8 @@ class TopicModellingController:
             self._config_model.topic_runner = LdaRunner(
                 topic_model=self._topic_model,
                 docs=corpus,
+                current_corpus_version_id=
+                self._corpus_controller.corpus_version_id,
                 num_topics=num_topics,
                 alpha=alpha_value,
                 beta=beta_value)
@@ -118,6 +144,8 @@ class TopicModellingController:
         self._config_model.topic_runner = LdaRunner(
             topic_model=self._topic_model,
             docs=corpus,
+            current_corpus_version_id=
+            self._corpus_controller.corpus_version_id,
             num_topics=num_topics)
 
     def _train_nmf(self) -> None:
@@ -134,10 +162,45 @@ class TopicModellingController:
         self._config_model.topic_runner = NmfRunner(
                 topic_model=self._topic_model,
                 docs=corpus,
+                current_corpus_version_id=
+                self._corpus_controller.corpus_version_id,
                 num_topics=num_topics)
 
+    def _train_bert(self) -> None:
+        """
+        Retrieves the raw corpus and model parameters,
+        then runs the BERTopic model on the corpus and saves the topic runner.
+        :return: None
+        """
+        num_topics = self._model_parameters_controller.get_model_n_topics()
+        num_words_per_topic = (self._model_parameters_controller
+                               .get_model_word_amount())
+        bert_min_df = self._model_parameters_controller.get_bert_min_df()
+        bert_max_features = (self._model_parameters_controller.
+                             get_bert_max_features())
 
-"""        
+        raw_docs = [document.body for document
+                    in self._corpus_controller.get_raw_bodies()]
+
+        # split every document into sentences and add all sentences to a list
+        sentences = list([
+            sentence
+            for split_document in
+            map(self._preprocessing_controller.split_into_sentences, raw_docs)
+            for sentence in split_document
+        ])
+        self._config_model.topic_runner = BertopicRunner(
+            topic_model=self._topic_model,
+            stopwords_controller=self._stopwords_controller,
+            num_topics=num_topics,
+            num_words_per_topic=num_words_per_topic,
+            docs=raw_docs,
+            sentences=sentences,
+            min_df=bert_min_df,
+            max_features=bert_max_features)
+
+
+"""
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
 © Copyright Utrecht University

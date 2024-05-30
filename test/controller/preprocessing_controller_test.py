@@ -1,4 +1,6 @@
 import pytest
+from pytest_mock import mocker, MockerFixture
+
 import spacy.tokens
 
 from tommy.controller.language_controller import LanguageController
@@ -10,22 +12,33 @@ from tommy.support.supported_languages import SupportedLanguage
 
 
 @pytest.fixture
-def language_controller():
+def language_controller_dutch(mocker):
     language_controller = LanguageController()
     language_controller.set_model_refs(LanguageModel())
+    mocker.patch.object(language_controller, "get_language",
+                        return_value=SupportedLanguage.Dutch)
     return language_controller
 
 
 @pytest.fixture
-def preprocessing_controller_dutch(language_controller):
-    controller = PreprocessingController(language_controller)
+def language_controller_english(mocker):
+    language_controller = LanguageController()
+    language_controller.set_model_refs(LanguageModel())
+    mocker.patch.object(language_controller, "get_language",
+                        return_value=SupportedLanguage.English)
+    return language_controller
+
+
+@pytest.fixture
+def preprocessing_controller_dutch(language_controller_dutch):
+    controller = PreprocessingController(language_controller_dutch)
     controller.load_pipeline(SupportedLanguage.Dutch)
     return controller
 
 
 @pytest.fixture
-def preprocessing_controller_english(language_controller):
-    controller = PreprocessingController(language_controller)
+def preprocessing_controller_english(language_controller_english):
+    controller = PreprocessingController(language_controller_english)
     controller.load_pipeline(SupportedLanguage.English)
     return controller
 
@@ -114,6 +127,41 @@ def test_process_tokens(preprocessing_controller_dutch, stopwords_model_dutch):
 
     # Check if specific tokens are present
     assert "test" in tokens
+
+
+@pytest.mark.parametrize("input_text, sentences", [
+    ("This is a sentence is a test. Testing is so much fun.",
+     ["This is a sentence is a test.", "Testing is so much fun."]),
+    ("It becomes more difficult when you add abbreviations, e.g., "
+     "things like that. I.E., I don't have much faith, but it might work.",
+     ["It becomes more difficult when you add abbreviations, e.g., "
+      "things like that.",
+      "I.E., I don't have much faith, but it might work."])
+])
+def test_split_into_sentences_english(preprocessing_controller_english,
+                                      input_text, sentences):
+    """Test the split_into_sentenced method of PreprocessingController."""
+    result_sentences = preprocessing_controller_english.split_into_sentences(
+        input_text)
+
+    assert result_sentences == sentences
+
+
+@pytest.mark.parametrize("input_text, sentences", [
+    ("Dit is een test zin. De vorige zin was een zin of zoiets.",
+     ["Dit is een test zin.", "De vorige zin was een zin of zoiets."]),
+    ("Deze zin is tricky, want er zit b.v. een afkorting in. "
+     "Hopelijk is een getal zoals 9.2 niet te ingewikkeld",
+     ["Deze zin is tricky, want er zit b.v. een afkorting in.",
+      "Hopelijk is een getal zoals 9.2 niet te ingewikkeld"])
+])
+def test_split_into_sentences_dutch(preprocessing_controller_dutch,
+                                    input_text, sentences):
+    """Test the split_into_sentenced method of PreprocessingController."""
+    result_sentences = preprocessing_controller_dutch.split_into_sentences(
+        input_text)
+
+    assert result_sentences == sentences
 
 
 def test_filter_stopwords(preprocessing_controller_dutch,

@@ -6,11 +6,13 @@ from gensim.corpora import Dictionary
 from tommy.controller.file_import.generic_file_importer import (
     GenericFileImporter)
 from tommy.controller.file_import.metadata import Metadata
+from tommy.controller.file_import.processed_body import ProcessedBody
 from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.file_import.raw_body import RawBody
 from tommy.controller.file_import.raw_file import RawFile
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
+from tommy.controller.preprocessing_controller import PreprocessingController
 from tommy.support.event_handler import EventHandler
 from tommy.model.corpus_model import CorpusModel
 from tommy.view.error_view import ErrorView
@@ -24,8 +26,10 @@ class CorpusController:
 
     _corpus_model: CorpusModel = None
     _project_settings_controller: ProjectSettingsController = None
+    _preprocessing_controller: PreprocessingController = None
     fileParsers: GenericFileImporter = GenericFileImporter()
     _metadata_changed_event: EventHandler[[Metadata]] = None
+    corpus_version_id: int = -1
 
     @property
     def metadata_changed_event(self) -> EventHandler[[Metadata]]:
@@ -43,14 +47,18 @@ class CorpusController:
 
     def set_controller_refs(self,
                             project_settings_controller:
-                            ProjectSettingsController) -> None:
+                            ProjectSettingsController,
+                            preprocessing_controller:
+                            PreprocessingController) -> None:
         """
         Sets the reference to the project settings controller, 
         and subscribes to the publisher of project settings
         :param project_settings_controller: the project settings controller
+        :param preprocessing_controller: the preprocessing controller
         :return: None
         """
         self._project_settings_controller = project_settings_controller
+        self._preprocessing_controller = preprocessing_controller
         project_settings_controller.input_folder_path_changed_event.subscribe(
             self.on_input_folder_path_changed)
 
@@ -69,6 +77,8 @@ class CorpusController:
         :return: None
         """
         self._corpus_model = corpus_model
+        self.extract_and_store_metadata(self._project_settings_controller
+                                        .get_input_folder_path())
 
     def _read_files(self, path: str, show_error: bool) -> Generator[RawFile,
     None, None]:
@@ -128,11 +138,23 @@ class CorpusController:
         :param input_folder_path: The new path to the input folder
         :return: None
         """
+        self.corpus_version_id += 1
+
+        self.extract_and_store_metadata(input_folder_path)
+        self._metadata_changed_event.publish(self._corpus_model.metadata)
+
+    def extract_and_store_metadata(self, input_folder_path: str) -> None:
+        """
+        Gets the metadata from all files in the directory specified by the
+        project settings and stores it in the corpus model
+
+        :param input_folder_path: The new path to the input folder
+        :return: None
+        """
         files = self._read_files(input_folder_path, True)
         metadata = [file.metadata for file in files]
 
         self._corpus_model.metadata = metadata
-        self._metadata_changed_event.publish(metadata)
 
     def get_metadata(self) -> list[Metadata]:
         """
@@ -170,17 +192,19 @@ class CorpusController:
 
         :return: The pre-processed files and a reference to their metadata
         """
+        if self._corpus_model.processed_corpus.documents is None:
+            self.preprocess_corpus()
+
         return self._corpus_model.processed_corpus
 
-    def set_processed_corpus(self, corpus: list[ProcessedFile]) -> None:
-        """
-        Set the processed corpus using a list
+    def preprocess_corpus(self) -> None:
+        """Preprocessed the corpus and save it in the corpus model"""
+        processed_files = [ProcessedFile(doc.metadata, ProcessedBody(
+            self._preprocessing_controller.process_text(doc.body.body)))
+                           for
+                           doc in self.get_raw_files()]
 
-        :param corpus: List of pre-processed files in a bag-of-words
-        representation
-        :return: None
-        """
-        self._corpus_model.processed_corpus.documents = corpus
+        self._corpus_model.processed_corpus.documents = processed_files
 
     def get_dictionary(self) -> Dictionary:
         """
