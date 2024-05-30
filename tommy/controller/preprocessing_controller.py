@@ -3,7 +3,7 @@ import os
 import spacy
 from spacy.tokens import Doc
 import nltk
-from nltk.tokenize import sent_tokenize
+import nltk.data
 
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.support.application_settings import application_settings
@@ -23,11 +23,27 @@ class PreprocessingController:
         self.language_controller.change_language_event.subscribe(
             self.load_pipeline)
 
-        # download punkt, for splitting sentences if not installed already
+        # load punkt tokenizers for splitting sentences
+        self._dutch_sent_tokenizer = self._load_nltk_sent_tokenizer(
+            "dutch.pickle")
+        self._english_sent_tokenizer = self._load_nltk_sent_tokenizer(
+            "english.pickle")
+
+    @staticmethod
+    def _load_nltk_sent_tokenizer(*path_parts) -> nltk.PunktSentenceTokenizer:
+        """
+        Load a sentence tokenizer from nltk from the preprocessing data folder
+        :param path_parts: Components of the path to the desired tokenizer,
+            e.g., "dutch.pickle"
+        """
+        fpath = f"file:///{os.path.join(
+                           application_settings.preprocessing_data_folder,
+                           "nltk_downloads", "tokenizers_punkt", *path_parts)}"
         try:
-            nltk.data.find('tokenizers/punkt')
+            tokenizer = nltk.data.load(fpath)
         except LookupError:
-            nltk.download('punkt')
+            raise LookupError(f"Could not load nltk tokenizer at path {fpath}")
+        return tokenizer
 
     def load_pipeline(self, language: SupportedLanguage) -> None:
         nlp: spacy.Language
@@ -76,13 +92,13 @@ class PreprocessingController:
         """Split the given text to a list of sentences."""
         match self.language_controller.get_language():
             case SupportedLanguage.Dutch:
-                lang = 'dutch'
+                tokenizer = self._dutch_sent_tokenizer
             case SupportedLanguage.English:
-                lang = 'english'
+                tokenizer = self._english_sent_tokenizer
             case _:
                 raise ValueError("Current language is not supported by NLTK"
                                  " sentence splitter.")
-        return sent_tokenize(text, language=lang)
+        return tokenizer.tokenize(text)
 
     def process_tokens(self, doc: Doc) -> list[str]:
         """
