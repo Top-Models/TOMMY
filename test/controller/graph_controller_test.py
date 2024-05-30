@@ -212,7 +212,7 @@ def test_visualizations_available(graph_controller: GraphController):
     docs = [[f"doc{i}"] for i in
             range(10)]
 
-    graph_controller._current_topic_runner = LdaRunner(topic_model, docs, 5)
+    graph_controller._current_topic_runner = LdaRunner(topic_model, docs, 0, 5)
 
     assert graph_controller.visualizations_available()
 

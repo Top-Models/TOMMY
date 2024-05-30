@@ -55,6 +55,14 @@ class TopicModellingController:
         Notify the graph controller that the topic model has changed
         :return: None
         """
+        # TODO: send event to view and other controllers that the
+        #  visualizations should change
+        # if the topic runner ran on an outdated corpus, we delete it.
+        if (self._config_model.topic_runner is not None
+                and self._config_model.topic_model.used_corpus_version_id
+                != self._corpus_controller.corpus_version_id):
+            self._config_model.topic_runner = None
+
         self._topic_model_switched_event.publish(
             self._config_model.topic_runner)
 
@@ -105,6 +113,8 @@ class TopicModellingController:
             self._config_model.topic_runner = LdaRunner(
                 topic_model=self._topic_model,
                 docs=corpus,
+                current_corpus_version_id=
+                self._corpus_controller.corpus_version_id,
                 num_topics=num_topics,
                 alpha=alpha_value,
                 beta=beta_value)
@@ -113,6 +123,8 @@ class TopicModellingController:
         self._config_model.topic_runner = LdaRunner(
             topic_model=self._topic_model,
             docs=corpus,
+            current_corpus_version_id=
+            self._corpus_controller.corpus_version_id,
             num_topics=num_topics)
 
     def _train_nmf(self) -> None:
@@ -127,9 +139,11 @@ class TopicModellingController:
         num_topics = self._model_parameters_controller.get_model_n_topics()
 
         self._config_model.topic_runner = NmfRunner(
-            topic_model=self._topic_model,
-            docs=corpus,
-            num_topics=num_topics)
+                topic_model=self._topic_model,
+                docs=corpus,
+                current_corpus_version_id=
+                self._corpus_controller.corpus_version_id,
+                num_topics=num_topics)
 
 
 """        

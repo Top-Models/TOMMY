@@ -384,7 +384,8 @@ class GraphController:
         self._possible_plots_changed_event.publish(
             self._possible_visualizations)
 
-    def _on_config_switch(self, topic_runner: TopicRunner):
+    def _on_config_switch(self, topic_runner: TopicRunner | None):
+        """Save and publish new topic runner on config switch"""
         self.on_topic_runner_complete(topic_runner)
 
     def reset_graph_view_state(self) -> None:

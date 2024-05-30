@@ -61,6 +61,7 @@ class NmfRunner(TopicRunner,
 
     def __init__(self, topic_model: TopicModel,
                  docs: Iterable[list[str]],
+                 current_corpus_version_id: int,
                  num_topics: int,
                  random_seed=STANDARD_RANDOM_SEED) -> None:
         """
@@ -69,11 +70,13 @@ class NmfRunner(TopicRunner,
             and data should be saved.
         :param docs: Generator returning the preprocessed lists of words as
             training input
+        :param current_corpus_version_id: The version identifier of the corpus
+            that is used in training
         :param num_topics: Number of topics to the model.
         :param random_seed: Seed for reproducibility, defaults to 42.
         :return: None
         """
-        super().__init__(topic_model=topic_model)
+        super().__init__(topic_model, current_corpus_version_id)
 
         # clear location where model and dictionary will be stored
         self.docs = docs

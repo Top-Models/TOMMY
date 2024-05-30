@@ -21,6 +21,8 @@ class StopwordsView(QScrollArea):
 
         # Initialize widget properties
         self.setFixedWidth(250)
+        self.setMinimumHeight(200)
+        self.setMaximumHeight(300)
         self.setContentsMargins(0, 0, 0, 0)
         self.setStyleSheet(f"""        
                 QTabWidget {{

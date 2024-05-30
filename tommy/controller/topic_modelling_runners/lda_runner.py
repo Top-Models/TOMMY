@@ -63,6 +63,7 @@ class LdaRunner(TopicRunner,
     def __init__(self,
                  topic_model: TopicModel,
                  docs: Iterable[list[str]],
+                 current_corpus_version_id: int,
                  num_topics: int,
                  alpha: float = None,
                  beta: float = None,
@@ -71,13 +72,15 @@ class LdaRunner(TopicRunner,
         Initialize the GensimLdaModel.
         :param topic_model: Reference to the topic model where the algorithm
             and data should be saved.
-        :param docs: Generator returning the preprocessed lists of words as
+        :param docs: Iterable returning the preprocessed lists of words as
             training input
+        :param current_corpus_version_id: The version identifier of the corpus
+            that is used in training
         :param num_topics: Number of topics to the model.
         :param random_seed: Seed for reproducibility, defaults to 42.
         :return: None
         """
-        super().__init__(topic_model=topic_model)
+        super().__init__(topic_model, current_corpus_version_id)
 
         # clear location where model and dictionary will be stored
         self.docs = docs

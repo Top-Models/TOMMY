@@ -13,6 +13,7 @@ def gensim_lda_model():
     # Instantiate the model
     model = LdaRunner(topic_model=mock_topic_model,
                       docs=term_lists,
+                      current_corpus_version_id=0,
                       num_topics=num_topics)
 
     return model

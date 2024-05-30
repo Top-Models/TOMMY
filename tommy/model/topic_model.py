@@ -12,6 +12,7 @@ class TopicModel:
     model: LdaModel | Nmf = None
     dictionary: Dictionary = None
     corpus: list[list[tuple[int, int]]] = None
+    used_corpus_version_id: int = None
 
 
 """
