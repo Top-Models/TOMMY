@@ -224,12 +224,34 @@ def test_load_project_updates_bert_parameter_view(
     # load bert test project
     controller.saving_loading_controller.load_settings_from_file(
         "../test/test_data/test_save_files/test load bert project.json")
+
+    # check if correct settings view is loaded
     bert_settings_view: BertSettings = (
         model_params_view.algorithm_specific_settings_views)[
         ModelType.BERTopic]
     assert model_params_view.get_current_settings_view() is bert_settings_view
 
+    # check if the fields are updated correctly
     assert bert_settings_view._min_df_input.text() == "0.1"
+    assert bert_settings_view._max_features_input.text() == "100"
+
+
+def test_load_project_updates_bert_parameter_view_when_none(
+        model_params_view: ModelParamsView,
+        controller: Controller):
+    # load bert test project
+    controller.saving_loading_controller.load_settings_from_file(
+        "../test/test_data/test_save_files/test load bert project none "
+        "parameters.json")
+
+    # check if correct settings view is loaded
+    bert_settings_view: BertSettings = (
+        model_params_view.algorithm_specific_settings_views)[
+        ModelType.BERTopic]
+    assert model_params_view.get_current_settings_view() is bert_settings_view
+
+    # check that input field is empty, because the value is None
+    assert bert_settings_view._min_df_input.text() == ""
     assert bert_settings_view._max_features_input.text() == ""
 
 

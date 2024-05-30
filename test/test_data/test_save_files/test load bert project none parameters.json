@@ -13,8 +13,8 @@
                 "alpha": 1.0,
                 "beta": 0.01,
                 "alpha_beta_custom_enabled": false,
-                "bert_min_df": 0.1,
-                "bert_max_features": 100
+                "bert_min_df": "None",
+                "bert_max_features": "None"
             }
         }
     },
