@@ -108,7 +108,8 @@ class Controller:
         :return: None
         """
         self._corpus_controller.set_controller_refs(
-            self._project_settings_controller)
+            self._project_settings_controller,
+            self._preprocessing_controller)
         self._export_controller.set_controller_refs(self._graph_controller)
 
         self._graph_controller.set_controller_refs(
@@ -116,7 +117,8 @@ class Controller:
             self.project_settings_controller)
 
         self._topic_modelling_controller.set_controller_refs(
-            self._model_parameters_controller, self._corpus_controller)
+            self._model_parameters_controller, self._corpus_controller,
+            self._stopwords_controller, self._preprocessing_controller)
 
         self._config_controller.config_switched_event.subscribe(
             self._update_config_model_references)
@@ -161,14 +163,6 @@ class Controller:
         and using the current model parameters
         :return: None
         """
-        raw_files = self._corpus_controller.get_raw_files()
-
-        # todo: move running the preprocessing to corpus_controller
-        processed_files = [ProcessedFile(doc.metadata, ProcessedBody(
-            self._preprocessing_controller.process_text(doc.body.body))) for
-                           doc in raw_files]
-
-        self._corpus_controller.set_processed_corpus(processed_files)
         self._topic_modelling_controller.train_model()
 
     def _update_config_model_references(self, config_model: ConfigModel):

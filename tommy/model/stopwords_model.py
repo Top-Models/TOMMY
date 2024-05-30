@@ -52,7 +52,6 @@ class StopwordsModel:
         """Checks if the set of stopwords contains a word."""
         return word in self._default_words or word in self._extra_words
 
-    # TODO: probably deprecated
     def __iter__(self) -> Iterable[str]:
         """Returns an iterable of stopwords."""
         return iter(self._default_words | self._extra_words)

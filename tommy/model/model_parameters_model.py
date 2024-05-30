@@ -13,6 +13,8 @@ class ModelParametersModel:
     default_alpha: float = 1.0
     default_beta: float = 0.01
     default_alpha_beta_custom_enabled: bool = False
+    default_bert_min_df: float | None = None
+    default_bert_max_features: int | None = None
 
     def __init__(self, derive_from: ModelParametersModel = None):
         """
@@ -30,6 +32,9 @@ class ModelParametersModel:
             self.beta: float = ModelParametersModel.default_beta
             self.alpha_beta_custom_enabled: bool = (
                 ModelParametersModel.default_alpha_beta_custom_enabled)
+            self.bert_min_df = ModelParametersModel.default_bert_min_df
+            self.bert_max_features = (ModelParametersModel.
+                                      default_bert_max_features)
         else:
             self.n_topics = derive_from.n_topics
             self.model_type = derive_from.model_type
@@ -38,6 +43,8 @@ class ModelParametersModel:
             self.beta = derive_from.beta
             self.alpha_beta_custom_enabled = (
                 derive_from.alpha_beta_custom_enabled)
+            self.bert_min_df = derive_from.bert_min_df
+            self.bert_max_features = derive_from.bert_max_features
 
 
 """

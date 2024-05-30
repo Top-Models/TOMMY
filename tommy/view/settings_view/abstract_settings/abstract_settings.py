@@ -1,13 +1,14 @@
 from PySide6.QtGui import QIntValidator, Qt
-from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, \
-    QVBoxLayout, QComboBox, QPushButton, QWidget, QSizePolicy
+from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, QVBoxLayout, \
+    QWidget, QSizePolicy, QPushButton
 
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.language_controller import LanguageController
-from tommy.controller.model_parameters_controller import \
-    ModelParametersController
-from tommy.support.constant_variables import text_font, seco_col_blue, \
-    disabled_gray, heading_font, hover_seco_col_blue, pressed_seco_col_blue
+from tommy.controller.model_parameters_controller import (
+    ModelParametersController)
+from tommy.support.constant_variables import (
+    text_font, seco_col_blue, disabled_gray, heading_font, hover_seco_col_blue,
+    pressed_seco_col_blue)
 from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
 from tommy.view.settings_view.abstract_settings.better_combo_box import \
