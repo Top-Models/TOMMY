@@ -47,6 +47,7 @@ label_height = 25
 plot_colors = [prim_col_red, sec_col_yellow, seco_col_blue, sec_col_purple,
                '#E16402', '#80E49E', '#B90CA4', '#409AED', '#475E3E', '#8072BD'
                ]
+emma_colors = [prim_col_red, seco_col_blue, sec_col_orange, sec_col_purple]
 
 """
 This program has been developed by students from the bachelor Computer Science
