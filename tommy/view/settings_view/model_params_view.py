@@ -10,7 +10,8 @@ from tommy.controller.model_parameters_controller import (
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
-    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray)
+    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray,
+    extra_light_gray, scrollbar_style)
 from tommy.support.model_type import ModelType
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
@@ -115,7 +116,7 @@ class ModelParamsView(QScrollArea):
                 border: 0px;
                 border-bottom: 3px solid lightgray;
             }}
-            """)
+            """ + scrollbar_style)
 
         # Initialize button widgets
         self.apply_button = None

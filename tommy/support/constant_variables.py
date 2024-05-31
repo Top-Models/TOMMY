@@ -49,6 +49,34 @@ plot_colors = [prim_col_red, sec_col_yellow, seco_col_blue, sec_col_purple,
                ]
 emma_colors = [prim_col_red, seco_col_blue, sec_col_orange, sec_col_purple]
 
+# Scrollbar style
+scrollbar_style = f"""
+    QScrollBar:vertical {{
+        border: 0px;
+        background: {extra_light_gray};
+        width: 10px;
+        margin: 0px 0px 0px 0px;
+    }}
+    
+    QScrollBar::handle:vertical {{
+        background: rgba(0, 0, 0, 0.2);
+        min-height: 20px;
+    }}
+    
+    
+    QScrollBar::add-line:vertical {{
+        height: 0px;
+    }}
+    
+    QScrollBar::sub-line:vertical {{
+        height: 0px;
+    }}
+    
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{
+        height: 0px;
+    }}
+"""
+
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
