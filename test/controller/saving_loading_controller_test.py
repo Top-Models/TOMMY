@@ -49,7 +49,9 @@ def stopwords_view(controller: Controller, qtbot: QtBot) -> StopwordsView:
 @pytest.fixture
 def imported_files_view(controller: Controller,
                         qtbot: QtBot) -> ImportedFilesView:
-    imported_files_view = ImportedFilesView(controller.corpus_controller)
+    imported_files_view = (
+        ImportedFilesView(controller.corpus_controller,
+                          controller.topic_modelling_controller))
     qtbot.addWidget(imported_files_view)
     return imported_files_view
 
@@ -295,13 +297,13 @@ def test_load_project_updates_imported_files_view(
     metadata = controller.corpus_controller._corpus_model.metadata
 
     # check if the file_container contains the correct metadata
-    file_container = imported_files_view.file_container["lda_model"]
-    assert len(file_container) == 2
-    assert file_container == metadata
+    files_view_metadata = imported_files_view.metadata
+    assert len(files_view_metadata) == 2
+    assert files_view_metadata == metadata
 
     # check if the files are displayed correctly
     assert imported_files_view.scroll_layout.count() == 2
-    assert (imported_files_view.scroll_layout.itemAt(0).widget().text() ==
-            "kattenverhaaltje 1")
-    assert (imported_files_view.scroll_layout.itemAt(1).widget().text() ==
-            "kattenverhaaltje 2")
+    scroll_layout_filenames = [imported_files_view.scroll_layout.itemAt(i)
+                               .widget().text() for i in range(2)]
+    assert sorted(scroll_layout_filenames) == ["kattenverhaaltje 1",
+                                               "kattenverhaaltje 2"]
