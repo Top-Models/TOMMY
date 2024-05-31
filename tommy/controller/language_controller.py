@@ -46,6 +46,7 @@ class LanguageController:
     def on_model_swap(self) -> None:
         """
         Notify the frontend that the language model has changed
+        :return: None
         """
         self._language_model_changed_event.publish(None)
 
