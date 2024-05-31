@@ -192,7 +192,7 @@ class Controller:
         components of the new model.
         :param data: unused parameter, since the selected config
         model can be accessed using the model
-        :return:
+        :return: None
         """
         self._set_model_references()
         self._notify_model_swapped()
