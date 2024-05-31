@@ -10,7 +10,7 @@ from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.topic_modelling_controller import TopicModellingController
 from tommy.support.constant_variables import (
     heading_font, prim_col_red,
-    hover_prim_col_red)
+    hover_prim_col_red, scrollbar_style)
 from tommy.support.types import Document_topics
 
 from tommy.view.imported_files_view.file_label import FileLabel
@@ -61,6 +61,7 @@ class ImportedFilesView(QWidget):
         self.scroll_layout = QVBoxLayout(self.scroll_widget)
         self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.scroll_area.setWidget(self.scroll_widget)
+        self.scroll_area.setStyleSheet(scrollbar_style)
         self.layout.addWidget(self.scroll_area)
 
         self.scroll_area.setVisible(True)
@@ -262,8 +263,9 @@ class ImportedFilesView(QWidget):
         self.metadata = metadata
         self.display_files()
 
-    def on_document_topics_calculated(self,
-                                      document_topics: Document_topics) -> None:
+    def on_document_topics_calculated(
+            self,
+            document_topics: Document_topics) -> None:
         """
         Update stored topic document correspondence reference.
         :param document_topics: The list of documents related to topics
