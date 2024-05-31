@@ -169,7 +169,8 @@ class ImportedFilesView(QWidget):
         for i in reversed(range(0, self.scroll_layout.count())):
             self.scroll_layout.itemAt(i).widget().deleteLater()
 
-        sorted_files = sorted(self.document_topics, key=lambda x: x[1][index], reverse=True)
+        sorted_files = sorted(self.document_topics, key=lambda x: x[1][index],
+                              reverse=True)
 
         # Add the file labels to the layout
         for (metadata, topic_correspondence) in sorted_files:

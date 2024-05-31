@@ -48,7 +48,8 @@ class FileLabel(QLabel):
 
     def set_formatted_text(self):
         """
-        Set the text of the label with the topic correspondence percentage in blue.
+        Set the text of the label with the
+        topic correspondence percentage in blue.
         """
 
         file_text = self.file.title or self.file.name
@@ -161,7 +162,8 @@ class FileLabel(QLabel):
 
     def paintEvent(self, event) -> None:
         """
-        Add a green bar to the label, sized to the document topic correspondence.
+        Add a green bar to the label
+        sized to the document topic correspondence
         :param event: The paint event
         :return: None
         """
