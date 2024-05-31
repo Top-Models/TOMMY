@@ -162,7 +162,8 @@ class FileLabel(QLabel):
 
     def paintEvent(self, event) -> None:
         """
-        Add a green bar to the label, sized to the document topic correspondence
+        Add a green bar to the label
+        sized to the document topic correspondence
         :param event: The paint event
         :return: None
         """
