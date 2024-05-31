@@ -75,12 +75,14 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                 yield self.generate_file(row, path, row_index)
                 row_index += 1
 
-    def generate_file(self, file: dict, path, row_index) -> RawFile:
+    def generate_file(self, file: dict, path: str, row_index: int) -> RawFile:
         """
         Generates a File object from a CSV row.
 
         :param file: A dictionary representing a row of CSV data.
         :param path: The string path to the CSV file.
+        :param row_index: The index of the row in the csv file. Used for
+        debugging and error presentation to the user.
         :return: A RawFile object generated from the CSV row
         containing metadata and the raw text of the file.
         """

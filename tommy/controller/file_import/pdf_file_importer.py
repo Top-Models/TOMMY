@@ -1,4 +1,4 @@
-from pypdf import PdfReader
+from pypdf import PdfReader, DocumentInformation
 import os.path
 from os import stat
 from typing import Generator
@@ -61,7 +61,8 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         yield self.generate_file(text, path, metadata)
 
     @staticmethod
-    def generate_file(file: str, path, metadata) -> RawFile:
+    def generate_file(file: str, path: str, metadata: DocumentInformation) -> (
+            RawFile):
         """
         Generates a File object from a PDF page.
 
