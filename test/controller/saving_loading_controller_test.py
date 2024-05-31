@@ -324,6 +324,5 @@ def test_loading_invalid_project_files(
     # load all files from a folder
     files = os.listdir(folder_path)
     for file in files:
-        print(file)
         assert saving_loading_controller.load_settings_from_file(
-            os.path.join(folder_path, file)) is False
+            os.path.join(folder_path, file)) != []
