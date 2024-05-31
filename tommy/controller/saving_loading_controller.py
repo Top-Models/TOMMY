@@ -5,6 +5,17 @@ from tommy.model.model import Model
 from tommy.support.event_handler import EventHandler
 
 
+def dict_raise_on_duplicates(ordered_pairs):
+    """Reject duplicate keys."""
+    d = {}
+    for k, v in ordered_pairs:
+        if k in d:
+            raise ValueError(f"duplicate key: {k}")
+        else:
+            d[k] = v
+    return d
+
+
 class SavingLoadingController:
 
     def __init__(self):
@@ -53,16 +64,21 @@ class SavingLoadingController:
         :return: None
         """
         self.filepath = filepath
+        if not os.path.exists(filepath):
+            return False
         try:
-            if os.path.exists(filepath):
-                with open(filepath, "r") as file:
-                    settings_data = json.load(file)
-                    new_model = Model.from_dict(settings_data)
-                    self._model_changed_event.publish(new_model)
-                return True
+            with (open(filepath, "r") as file):
+                settings_data = (
+                    json.load(file,
+                              object_pairs_hook=dict_raise_on_duplicates))
+                new_model = Model.from_dict(settings_data)
+                self._model_changed_event.publish(new_model)
+            return True
         except json.JSONDecodeError:
             return False
         except OSError:
             return False
         except KeyError:
+            return False
+        except ValueError:
             return False

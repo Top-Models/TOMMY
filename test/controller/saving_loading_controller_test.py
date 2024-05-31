@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from pytestqt.qtbot import QtBot
 
@@ -307,3 +309,21 @@ def test_load_project_updates_imported_files_view(
                                .widget().text() for i in range(2)]
     assert sorted(scroll_layout_filenames) == ["kattenverhaaltje 1",
                                                "kattenverhaaltje 2"]
+
+
+def test_loading_invalid_project_files(
+        saving_loading_controller: SavingLoadingController):
+    """
+    Test if the loading of invalid files returns False
+    Files are invalid if they are not json files, if they do not contain all
+    necessary fields or if they contain invalid values
+    :param saving_loading_controller:
+    :return:
+    """
+    folder_path = "../test/test_data/test_save_files/invalid_save_files"
+    # load all files from a folder
+    files = os.listdir(folder_path)
+    for file in files:
+        print(file)
+        assert saving_loading_controller.load_settings_from_file(
+            os.path.join(folder_path, file)) is False
