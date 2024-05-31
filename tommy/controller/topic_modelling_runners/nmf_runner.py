@@ -106,7 +106,12 @@ class NmfRunner(TopicRunner,
     def calculate_document_topics(self,
                                   processed_corpus: ProcessedCorpus,
                                   topic_model: TopicModel) -> None:
-
+        """
+        Calculate the topic probabilities for each document in the corpus.
+        :param processed_corpus: The processed corpus
+        :param topic_model: The topic model to save the results in
+        :return:
+        """
         topic_model.document_topics = []
         n_topics = self.get_n_topics()
 
