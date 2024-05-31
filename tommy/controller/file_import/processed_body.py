@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
 
+from tommy.support.types import Processed_body
+
 
 @dataclass
 class ProcessedBody:
@@ -8,7 +10,7 @@ class ProcessedBody:
     The ProcessedBody class contains a bag of words representation of a
     document after pre-processing.
     """
-    body: Any
+    body: Processed_body
 
 
 """

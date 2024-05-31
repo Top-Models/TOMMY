@@ -1,5 +1,4 @@
 import os
-from typing import List
 
 from tommy.model.config_model import ConfigModel
 from tommy.model.model_parameters_model import ModelParametersModel

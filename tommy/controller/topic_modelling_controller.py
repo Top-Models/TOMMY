@@ -1,11 +1,15 @@
+from typing import Iterable
 from itertools import chain
 from functools import reduce
 
+from tommy.controller.file_import.processed_corpus import ProcessedCorpus
 from tommy.controller.model_parameters_controller import (
     ModelParametersController,
     ModelType)
 from tommy.controller.corpus_controller import CorpusController
 from tommy.model.config_model import ConfigModel
+from tommy.controller.result_interfaces.document_topics_interface import \
+    DocumentTopicsInterface
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.controller.preprocessing_controller import PreprocessingController
 
@@ -18,6 +22,7 @@ from tommy.controller.topic_modelling_runners.nmf_runner import NmfRunner
 from tommy.controller.topic_modelling_runners.bertopic_runner import (
     BertopicRunner)
 from tommy.support.event_handler import EventHandler
+from tommy.support.types import Document_topics, Processed_body
 
 
 class TopicModellingController:
@@ -33,6 +38,9 @@ class TopicModellingController:
     _config_model: ConfigModel = None
     _corpus_controller: CorpusController = None
     _model_trained_event: EventHandler[TopicRunner] = None
+    _topic_model_switched_event: EventHandler[TopicRunner] = None
+    _calculate_document_topics_event: \
+        EventHandler[Document_topics] = None
 
     @property
     def model_trained_event(self) -> EventHandler[TopicRunner]:
@@ -42,12 +50,18 @@ class TopicModellingController:
     def topic_model_switched_event(self) -> EventHandler[TopicRunner]:
         return self._topic_model_switched_event
 
+    @property
+    def calculate_topic_documents_event(self) -> (
+            EventHandler)[Document_topics]:
+        return self._calculate_document_topics_event
+
     def __init__(self) -> None:
         """Initialize the publisher of the topic-modelling-controller"""
         super().__init__()
         self._model_trained_event = EventHandler[TopicRunner]()
-        self._topic_model_switched_event: EventHandler[TopicRunner] = (
-            EventHandler())
+        self._topic_model_switched_event = EventHandler[TopicRunner]()
+        self._calculate_document_topics_event = (
+            EventHandler[Document_topics]())
 
     def set_model_refs(self,
                        topic_model: TopicModel,
@@ -113,6 +127,8 @@ class TopicModellingController:
                     f"topic modelling controller")
 
         self._model_trained_event.publish(self._config_model.topic_runner)
+        self._calculate_document_topics_event.publish(
+            self._topic_model.document_topics)
 
     def _train_lda(self) -> None:
         """
@@ -120,9 +136,7 @@ class TopicModellingController:
         then runs the LDA model on the corpus and saves the topic runner.
         :return: None
         """
-        corpus = [document.body.body
-                  for document
-                  in self._corpus_controller.get_processed_corpus()]
+        corpus = self._corpus_controller.get_processed_corpus()
         num_topics = self._model_parameters_controller.get_model_n_topics()
         alpha_value = self._model_parameters_controller.get_model_alpha()
         beta_value = self._model_parameters_controller.get_model_beta()
@@ -133,7 +147,7 @@ class TopicModellingController:
         if alpha_beta_custom_enabled:
             self._config_model.topic_runner = LdaRunner(
                 topic_model=self._topic_model,
-                docs=corpus,
+                processed_corpus=corpus,
                 current_corpus_version_id=
                 self._corpus_controller.corpus_version_id,
                 num_topics=num_topics,
@@ -143,7 +157,7 @@ class TopicModellingController:
 
         self._config_model.topic_runner = LdaRunner(
             topic_model=self._topic_model,
-            docs=corpus,
+            processed_corpus=corpus,
             current_corpus_version_id=
             self._corpus_controller.corpus_version_id,
             num_topics=num_topics)
@@ -154,17 +168,15 @@ class TopicModellingController:
         then runs the NMF model on the corpus and saves the topic runner.
         :return: None
         """
-        corpus = [document.body.body
-                  for document
-                  in self._corpus_controller.get_processed_corpus()]
+        corpus = self._corpus_controller.get_processed_corpus()
         num_topics = self._model_parameters_controller.get_model_n_topics()
 
         self._config_model.topic_runner = NmfRunner(
-            topic_model=self._topic_model,
-            docs=corpus,
-            current_corpus_version_id=
-            self._corpus_controller.corpus_version_id,
-            num_topics=num_topics)
+                topic_model=self._topic_model,
+                processed_corpus=corpus,
+                current_corpus_version_id=
+                self._corpus_controller.corpus_version_id,
+                num_topics=num_topics)
 
     def _train_bert(self) -> None:
         """

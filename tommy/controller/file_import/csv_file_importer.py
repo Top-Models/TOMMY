@@ -1,7 +1,7 @@
 import csv
 import os.path
 from os import stat
-from typing import List, Generator
+from typing import Generator
 from datetime import date
 
 from tommy.controller.file_import import file_importer_base
@@ -14,7 +14,7 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
     """
     Handles importing of csv files
     """
-    mandatory_fields: List[str] = ['body']
+    mandatory_fields: list[str] = ['body']
 
     def __init__(self) -> None:
         """
