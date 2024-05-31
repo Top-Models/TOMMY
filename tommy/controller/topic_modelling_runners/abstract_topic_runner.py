@@ -30,6 +30,8 @@ class TopicRunner(ABC):
         :param used_corpus_version_id: The used corpus version id
         :return: None
         """
+        topic_model.document_topics = None
+        topic_model.corpus = None
         self._topic_model = topic_model
         self.used_corpus_version_id = used_corpus_version_id
 

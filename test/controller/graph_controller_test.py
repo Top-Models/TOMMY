@@ -4,6 +4,9 @@ from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from pytest_mock import mocker, MockerFixture
 
+from tommy.controller.file_import.processed_body import ProcessedBody
+from tommy.controller.file_import.processed_corpus import ProcessedCorpus
+from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.controller.topic_modelling_controller import (
@@ -209,10 +212,13 @@ def test_visualizations_available(graph_controller: GraphController):
     assert not graph_controller.visualizations_available()
 
     topic_model = TopicModel()
-    docs = [[f"doc{i}"] for i in
-            range(10)]
 
-    graph_controller._current_topic_runner = LdaRunner(topic_model, docs, 0, 5)
+    processed_corpus = ProcessedCorpus()
+    processed_corpus.documents = [
+        ProcessedFile(None, ProcessedBody([f"doc{i}"])) for i in range(10)]
+
+    graph_controller._current_topic_runner = LdaRunner(topic_model,
+                                                       processed_corpus, 0, 5)
 
     assert graph_controller.visualizations_available()
 
