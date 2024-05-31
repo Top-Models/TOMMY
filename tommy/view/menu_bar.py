@@ -1,7 +1,8 @@
 import os
 
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QMenuBar, QMenu, QWidget, QFileDialog
+from PySide6.QtWidgets import QMenuBar, QMenu, QWidget, QFileDialog, \
+    QHBoxLayout, QSpacerItem, QLabel, QSizePolicy
 
 from tommy.controller.export_controller import ExportController
 from tommy.controller.project_settings_controller import (
@@ -47,6 +48,22 @@ class MenuBar(QMenuBar):
         export_menu.addAction(export_to_gexf_action)
         export_menu.addAction(export_to_png_action)
         export_menu.addAction(export_topic_words_action)
+
+        # Add the QLabel for the copyright notice
+        copyright_label = QLabel("© Utrecht University (ICS)")
+        copyright_label.setStyleSheet(f"""
+            background-color: {prim_col_red};
+            color: {extra_light_gray};
+            font-family: {text_font};
+        """)
+
+        # Create a layout for the menu bar and add the label to the right
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(0, 0, 10, 0)
+        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding,
+                                         QSizePolicy.Minimum))
+        layout.addWidget(copyright_label)
+        self.setLayout(layout)
 
         # Set style
         self.setStyleSheet(f"""
