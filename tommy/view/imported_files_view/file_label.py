@@ -26,6 +26,7 @@ class FileLabel(QLabel):
         super().__init__(file_metadata.name, parent)
         self.file = file_metadata
         self.topic_correspondence = topic_correspondence
+        self.setFixedHeight(label_height)
 
         self.setStyleSheet(f"font-family: {text_font};"
                            f"font-size: 12px;"
