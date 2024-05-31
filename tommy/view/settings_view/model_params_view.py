@@ -42,7 +42,9 @@ class ModelParamsView(QScrollArea):
 
         # Subscribe to the event when the config changes
         self._model_parameters_controller.params_model_changed_event.subscribe(
-            self._update_model_params)
+            self._update_ui_on_model_params_switch)
+        language_controller.language_model_changed_event.subscribe(
+            self._update_ui_on_language_model_switch)
 
         # Initialize model settings
         self.algorithm_specific_settings_views: dict[
@@ -310,10 +312,12 @@ class ModelParamsView(QScrollArea):
         self.clear_layouts_from_scroll_layout()
         self.initialize_parameter_widgets()
 
-    def _update_model_params(self, data: ModelParametersModel):
+    def _update_ui_on_model_params_switch(self, data: None) -> None:
         self.model_type_changed_event()
-        settings_view = self.algorithm_specific_settings_views[data.model_type]
-        settings_view.set_text_on_config_change()
+
+    def _update_ui_on_language_model_switch(self, data: None) -> None:
+        settings_view = self.get_current_settings_view()
+        settings_view.set_field_values_from_backend()
 
 
 """

@@ -15,9 +15,9 @@ class ConfigController:
 
     _model: Model = None
 
-    def __init__(self, graph_controller: GraphController):
+    def __init__(self):
         self._config_switched_event: EventHandler[ConfigModel] = EventHandler()
-        self._graph_controller = graph_controller
+        self._graph_controller = None
 
     def set_model_refs(self, model: Model) -> None:
         """
@@ -27,6 +27,14 @@ class ConfigController:
         :return: None
         """
         self._model = model
+
+    def set_controller_refs(self, graph_controller: GraphController) -> None:
+        """
+        Set a reference to the graph controller
+        :param graph_controller: The graph controller
+        :return: None
+        """
+        self._graph_controller = graph_controller
 
     def switch_configuration(self, name: str) -> bool:
         """

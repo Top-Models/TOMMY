@@ -68,6 +68,7 @@ class MainWindow(QMainWindow):
         # Initialize the menu bar
         self.setMenuBar(MenuBar(self,
                                 self._controller.project_settings_controller,
+                                self._controller.saving_loading_controller,
                                 self._controller.export_controller))
 
         # Create widgets

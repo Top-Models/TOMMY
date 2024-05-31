@@ -16,8 +16,8 @@ def test_controller_refs(controller: Controller):
     preprocessing_controller = controller._preprocessing_controller
     corpus_controller = controller.corpus_controller
     project_settings_controller = controller.project_settings_controller
-    save_controller = controller._save_controller
     config_controller = controller.config_controller
+    saving_loading_controller = controller.saving_loading_controller
 
     assert (corpus_controller._project_settings_controller is
             project_settings_controller)
@@ -47,8 +47,8 @@ def helper_check_model_refs(controller: Controller):
     preprocessing_controller = controller._preprocessing_controller
     corpus_controller = controller.corpus_controller
     project_settings_controller = controller.project_settings_controller
-    save_controller = controller._save_controller
     config_controller = controller.config_controller
+    saving_loading_controller = controller.saving_loading_controller
 
     model = controller._model
     corpus_model = model.corpus_model
@@ -74,4 +74,6 @@ def helper_check_model_refs(controller: Controller):
     assert (preprocessing_controller._stopwords_model is
             stopwords_model)
 
-    assert (corpus_controller._corpus_model is corpus_model)
+    assert corpus_controller._corpus_model is corpus_model
+
+    assert saving_loading_controller._model is model
