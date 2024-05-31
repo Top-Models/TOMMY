@@ -1,4 +1,6 @@
 import os
+import zipfile
+
 import pytest
 from datetime import datetime, timedelta
 
@@ -35,7 +37,8 @@ def test_corrupted_file(docx_file_importer):
     corrupted_path = os.path.join(TEST_DATA_DIR,
                                   'corrupt_files',
                                   'hondenverhaaltje 1.docx')
-    assert not docx_file_importer.compatible_file(corrupted_path)
+    with pytest.raises(zipfile.BadZipFile) as exception_info:
+        docx_file_importer.compatible_file(corrupted_path)
 
 
 def test_load_file(docx_file_importer):
