@@ -294,7 +294,7 @@ class AbstractSettings:
                 self.topic_input_layout_invalid)
             self._topic_amount_field.setText("")
             self._topic_amount_field.setPlaceholderText(
-                "Moet tussen 1 en 999 liggen")
+                "1 - 999")
         return valid_input
 
     def get_topic_amount(self) -> int:
@@ -372,10 +372,10 @@ class AbstractSettings:
             self._amount_of_words_field.setPlaceholderText("")
         else:
             self._amount_of_words_field.setStyleSheet(
-                self.disabled_input_stylesheet)
+                self.topic_input_layout_invalid)
             self._amount_of_words_field.setText("")
             self._amount_of_words_field.setPlaceholderText(
-                "Moet tussen 1 en 999 liggen")
+                "1 - 999")
         return valid_input
 
     def get_amount_of_words(self) -> int:
