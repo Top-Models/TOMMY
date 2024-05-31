@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import date
+from datetime import datetime
 
 
 @dataclass
@@ -13,7 +13,7 @@ class Metadata:
     format: str
     author: str = None
     title: str = None
-    date: date = None
+    date: datetime = None
     url: str = None
     path: str = None
 

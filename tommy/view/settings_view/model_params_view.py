@@ -74,14 +74,12 @@ class ModelParamsView(QScrollArea):
             """)
 
         self.enabled_input_stylesheet = (f"background-color: white;"
-                                         f"border-radius: 5px;"
                                          f"font-size: 14px;"
                                          f"font-family: {text_font};"
                                          f"color: black;"
                                          f"border: 2px solid {seco_col_blue};"
                                          f"padding: 5px;")
         self.disabled_input_stylesheet = (f"background-color: {disabled_gray};"
-                                          f"border-radius: 5px;"
                                           f"font-size: 14px;"
                                           f"font-family: {text_font};"
                                           f"color: black;"
@@ -263,11 +261,11 @@ class ModelParamsView(QScrollArea):
         self.apply_button.setText("Laden...")
         self.apply_button.setStyleSheet(
             f"""
-                QPushButton {{
-                    background-color: #808080;
-                    color: white;
-                    margin-left: 5px;
-                }}
+                        QPushButton {{
+                            background-color: #808080;
+                            color: white;
+                            margin-left: 5px;
+                        }}
 
                 QPushButton:hover {{
                     background-color: {hover_seco_col_blue};

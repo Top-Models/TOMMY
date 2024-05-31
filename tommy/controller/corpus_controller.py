@@ -16,6 +16,7 @@ from tommy.controller.project_settings_controller import (
 from tommy.controller.preprocessing_controller import PreprocessingController
 from tommy.support.event_handler import EventHandler
 from tommy.model.corpus_model import CorpusModel
+from tommy.view.error_view import ErrorView
 
 
 class CorpusController:
@@ -80,7 +81,8 @@ class CorpusController:
         self.extract_and_store_metadata(self._project_settings_controller
                                         .get_input_folder_path())
 
-    def _read_files(self, path: str) -> Generator[RawFile, None, None]:
+    def _read_files(self, path: str, show_error: bool) -> Generator[RawFile,
+    None, None]:
         """
         Yields the contents of all compatible files in a given directory
         and all its subdirectories.
@@ -89,14 +91,33 @@ class CorpusController:
         :return: A generator yielding File
         objects
         """
+        errors = []
+
         for root, dirs, files in os.walk(path):
             for file in files:
                 if file.startswith('.'):
                     continue
+                try:
+                    yield from self.fileParsers.import_file(
+                        os.path.join(root,
+                                     file))
+                except NotImplementedError as e:
+                    errors.append(f"{file} bestaat uit een niet ondersteund "
+                                  f"file format. pad: "
+                                  f"{os.path.join(root, file)}")
 
-                yield from self.fileParsers.import_file(
-                    os.path.join(root,
-                                 file))
+                except UnicodeDecodeError as e:
+                    errors.append(f"Dit bestand kon niet worden gedecodeerd: "
+                                  f"{file}. Probleem: {e}")
+
+                except Exception as e:
+                    errors.append(f"er is een probleem opgetreden bij het "
+                                  f"laden van dit bestand: "
+                                  f" {file}. Probleem: {e}")
+
+        if show_error and errors:
+            ErrorView("Er is een probleem opgetreden bij het importeren "
+                      "van de volgende bestanden:", errors)
 
     def _read_files_from_input_folder(self) -> Generator[RawFile, None, None]:
         """
@@ -107,7 +128,7 @@ class CorpusController:
         file contents and their metadata.
         """
         path = self._project_settings_controller.get_input_folder_path()
-        return self._read_files(path)
+        return self._read_files(path, False)
 
     def on_input_folder_path_changed(self, input_folder_path: str) -> None:
         """
@@ -131,7 +152,7 @@ class CorpusController:
         :param input_folder_path: The new path to the input folder
         :return: None
         """
-        files = self._read_files(input_folder_path)
+        files = self._read_files(input_folder_path, True)
         metadata = [file.metadata for file in files]
 
         self._corpus_model.metadata = metadata

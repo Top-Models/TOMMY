@@ -95,7 +95,6 @@ def test_process_text_english(preprocessing_controller_english,
     text = "This is a test sentence token2."
     tokens = preprocessing_controller_english.process_text(text)
     assert isinstance(tokens, list)
-    print(tokens)
     # Check the expected number of tokens
     assert len(tokens) == 3
 
