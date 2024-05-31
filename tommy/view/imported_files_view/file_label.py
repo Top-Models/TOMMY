@@ -14,8 +14,15 @@ class FileLabel(QLabel):
 
     clicked = Signal(object)
 
-    def __init__(self, file_metadata: Metadata, parent=None) -> None:
-        """Method to initialize the FileLabel object"""
+    def __init__(self, file_metadata: Metadata, parent=None,
+                 topic_correspondence: float = None) -> None:
+        """
+        Method to initialize the FileLabel object
+        :param file_metadata: The metadata of a file
+        :param parent: The QT parent
+        :param topic_correspondence: optional correspondence with topic
+        """
+
         super().__init__(file_metadata.name, parent)
         self.file = file_metadata
 
@@ -36,6 +43,11 @@ class FileLabel(QLabel):
         self.setSizePolicy(QSizePolicy.Policy.Expanding,
                            QSizePolicy.Policy.Preferred)
         self.selected = False
+
+        # If provided, set the correspondence with the current selected topic
+        if topic_correspondence is not None:
+            self.setText(f"{str(100*topic_correspondence)[:4]}% - "
+                         f"{self.file.name}")
 
     def enterEvent(self, event):
         """

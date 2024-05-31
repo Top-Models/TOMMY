@@ -51,6 +51,10 @@ class Controller:
         return self._corpus_controller
 
     @property
+    def topic_modelling_controller(self) -> TopicModellingController:
+        return self._topic_modelling_controller
+
+    @property
     def project_settings_controller(self) -> ProjectSettingsController:
         return self._project_settings_controller
 

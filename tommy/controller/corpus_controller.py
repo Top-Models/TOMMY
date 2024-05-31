@@ -7,6 +7,7 @@ from tommy.controller.file_import.generic_file_importer import (
     GenericFileImporter)
 from tommy.controller.file_import.metadata import Metadata
 from tommy.controller.file_import.processed_body import ProcessedBody
+from tommy.controller.file_import.processed_corpus import ProcessedCorpus
 from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.file_import.raw_body import RawBody
 from tommy.controller.file_import.raw_file import RawFile
@@ -154,7 +155,7 @@ class CorpusController:
         """
         return self._read_files_from_input_folder()
 
-    def get_processed_corpus(self) -> Iterable[ProcessedFile]:
+    def get_processed_corpus(self) -> ProcessedCorpus:
         """
         Get an iterable of the processed corpus. Only works after
         pre-processing has been completed.

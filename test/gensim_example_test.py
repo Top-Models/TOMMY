@@ -1,5 +1,9 @@
 import pytest
 from PySide6.QtCore import Qt
+
+from tommy.controller.file_import.processed_body import ProcessedBody
+from tommy.controller.file_import.processed_corpus import ProcessedCorpus
+from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
 from tommy.model.topic_model import TopicModel
 
@@ -8,11 +12,15 @@ from tommy.model.topic_model import TopicModel
 def gensim_lda_model():
     # Prepare sample term lists and other required parameters
     term_lists = [["word1", "word2", "word3"], ["word4", "word5", "word6"]]
+    processed_corpus = ProcessedCorpus()
+    processed_corpus.documents = [
+        ProcessedFile(None, ProcessedBody(words)) for words in term_lists]
+
     num_topics = 2
     mock_topic_model = TopicModel()
     # Instantiate the model
     model = LdaRunner(topic_model=mock_topic_model,
-                      docs=term_lists,
+                      processed_corpus=processed_corpus,
                       current_corpus_version_id=0,
                       num_topics=num_topics)
 
