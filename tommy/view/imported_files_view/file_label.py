@@ -32,7 +32,7 @@ class FileLabel(QLabel):
                            f"background-color: {medium_light_gray};"
                            f"color: black;"
                            f"margin: 0px;"
-                           f"padding: 2px 3px 6px 3px;")
+                           f"padding: 2px 3px 4px 3px;")
         self.setAlignment(Qt.AlignmentFlag.AlignLeft |
                           Qt.AlignmentFlag.AlignTop)
         self.setSizePolicy(QSizePolicy.Policy.Expanding,
@@ -74,7 +74,7 @@ class FileLabel(QLabel):
                                f"{hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 2px 3px 6px 3px;")
+                               f"padding: 2px 3px 4px 3px;")
 
     def leaveEvent(self, event):
         """
@@ -88,7 +88,7 @@ class FileLabel(QLabel):
                                f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 2px 3px 6px 3px;")
+                               f"padding: 2px 3px 4px 3px;")
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         """
@@ -103,7 +103,7 @@ class FileLabel(QLabel):
                                f"{pressed_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 2px 3px 6px 3px;")
+                               f"padding: 2px 3px 4px 3px;")
         else:
             self.deselect()
 
@@ -121,7 +121,7 @@ class FileLabel(QLabel):
                                f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 2px 3px 6px 3px;")
+                               f"padding: 2px 3px 4px 3px;")
         except RuntimeError:
             pass
 
@@ -138,7 +138,7 @@ class FileLabel(QLabel):
                                f"{pressed_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 2px 3px 6px 3px;")
+                               f"padding: 2px 3px 4px 3px;")
         except RuntimeError:
             pass
 
@@ -154,7 +154,7 @@ class FileLabel(QLabel):
                                f"background-color: {hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
-                               f"padding: 2px 3px 6px 3px;")
+                               f"padding: 2px 3px 4px 3px;")
         self.clicked.emit(self)
         super().mouseReleaseEvent(event)
 
@@ -166,7 +166,7 @@ class FileLabel(QLabel):
         """
         super().paintEvent(event)
 
-        bar_height = 5
+        bar_height = 4
 
         # Bottom gray bar (always visible)
         painter = QPainter(self)
