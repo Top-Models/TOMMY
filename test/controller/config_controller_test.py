@@ -7,13 +7,12 @@ from test.controller.controller_model_references_test import (
     helper_check_model_refs)
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
+from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture
-def controller(mocker: MockerFixture):
-    with mocker.patch('tommy.controller.preprocessing_controller'
-                      '.PreprocessingController.load_pipeline'):
-        return Controller()
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture
