@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from pytestqt.qtbot import QtBot
 
@@ -8,6 +10,8 @@ from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
 from tommy.view.imported_files_view.imported_files_view import \
     ImportedFilesView
+from tommy.view.settings_view.abstract_settings.bert_settings import \
+    BertSettings
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 from tommy.view.settings_view.model_params_view import ModelParamsView
@@ -47,7 +51,9 @@ def stopwords_view(controller: Controller, qtbot: QtBot) -> StopwordsView:
 @pytest.fixture
 def imported_files_view(controller: Controller,
                         qtbot: QtBot) -> ImportedFilesView:
-    imported_files_view = ImportedFilesView(controller.corpus_controller)
+    imported_files_view = (
+        ImportedFilesView(controller.corpus_controller,
+                          controller.topic_modelling_controller))
     qtbot.addWidget(imported_files_view)
     return imported_files_view
 
@@ -70,6 +76,9 @@ def test_load_project(saving_loading_controller: SavingLoadingController,
             .get_model_alpha_beta_custom_enabled() is False)
     assert controller.model_parameters_controller.get_model_alpha() == 1.0
     assert controller.model_parameters_controller.get_model_beta() == 0.01
+    assert controller.model_parameters_controller.get_bert_min_df() == 0.1
+    assert (controller.model_parameters_controller.get_bert_max_features()
+            == 100)
     assert (controller.stopwords_controller.stopwords_model
             .extra_words_in_order == ["misschien"])
 
@@ -83,6 +92,9 @@ def test_load_project(saving_loading_controller: SavingLoadingController,
             .get_model_alpha_beta_custom_enabled() is True)
     assert controller.model_parameters_controller.get_model_alpha() == 13.0
     assert controller.model_parameters_controller.get_model_beta() == 0.02
+    assert controller.model_parameters_controller.get_bert_min_df() is None
+    assert (controller.model_parameters_controller.get_bert_max_features() is
+            None)
     assert (controller.stopwords_controller.stopwords_model
             .extra_words_in_order == ["ja", "tommy"])
 
@@ -99,6 +111,8 @@ def test_save_then_load_project(
      .set_model_alpha_beta_custom_enabled(True))
     controller.model_parameters_controller.set_model_alpha(2.0)
     controller.model_parameters_controller.set_model_beta(0.2)
+    controller.model_parameters_controller.set_bert_min_df(0.1)
+    controller.model_parameters_controller.set_bert_max_features(100)
     controller.stopwords_controller.update_stopwords(["hallootjes",
                                                       "goeiedagdag"])
 
@@ -111,6 +125,8 @@ def test_save_then_load_project(
      .set_model_alpha_beta_custom_enabled(False))
     controller.model_parameters_controller.set_model_alpha(1.0)
     controller.model_parameters_controller.set_model_beta(0.01)
+    controller.model_parameters_controller.set_bert_min_df(None)
+    controller.model_parameters_controller.set_bert_max_features(None)
     controller.stopwords_controller.update_stopwords(["kan", "niet", "meer"])
 
     # save parameters
@@ -123,6 +139,7 @@ def test_save_then_load_project(
     controller.model_parameters_controller.set_model_n_topics(7)
     controller.config_controller.add_configuration("Nog een andere config")
     controller.model_parameters_controller.set_model_type(ModelType.LDA)
+    controller.model_parameters_controller.set_bert_min_df(0.2)
     controller.stopwords_controller.update_stopwords(["nog", "meer", "woord"])
     controller.config_controller.delete_configuration("Config 1")
 
@@ -143,6 +160,9 @@ def test_save_then_load_project(
             .get_model_alpha_beta_custom_enabled() is False)
     assert controller.model_parameters_controller.get_model_alpha() == 1.0
     assert controller.model_parameters_controller.get_model_beta() == 0.01
+    assert controller.model_parameters_controller.get_bert_min_df() is None
+    assert (controller.model_parameters_controller.get_bert_max_features() is
+            None)
     assert (controller.stopwords_controller.stopwords_model
             .extra_words_in_order == ["kan", "niet", "meer"])
 
@@ -156,6 +176,9 @@ def test_save_then_load_project(
             .get_model_alpha_beta_custom_enabled() is True)
     assert controller.model_parameters_controller.get_model_alpha() == 2.0
     assert controller.model_parameters_controller.get_model_beta() == 0.2
+    assert controller.model_parameters_controller.get_bert_min_df() == 0.1
+    assert (controller.model_parameters_controller.get_bert_max_features() ==
+            100)
     assert (controller.stopwords_controller.stopwords_model
             .extra_words_in_order == ["hallootjes", "goeiedagdag"])
 
@@ -171,7 +194,7 @@ def test_load_project_updates_parameter_view(
     nmf_settings_view: NmfSettings = (
         model_params_view.algorithm_specific_settings_views)[
         ModelType.NMF]
-    assert (model_params_view.get_current_settings_view() is nmf_settings_view)
+    assert model_params_view.get_current_settings_view() is nmf_settings_view
 
     # check if the fields are updated correctly
     assert nmf_settings_view._topic_amount_field.text() == "4"
@@ -186,7 +209,7 @@ def test_load_project_updates_parameter_view(
     lda_settings_view: LdaSettings = (
         model_params_view.algorithm_specific_settings_views)[
         ModelType.LDA]
-    assert (model_params_view.get_current_settings_view() is lda_settings_view)
+    assert model_params_view.get_current_settings_view() is lda_settings_view
 
     # check if the fields are updated correctly
     assert lda_settings_view._topic_amount_field.text() == "6"
@@ -197,6 +220,43 @@ def test_load_project_updates_parameter_view(
             False)
     assert lda_settings_view._alpha_value_input.text() == "13.0"
     assert lda_settings_view._beta_value_input.text() == "0.02"
+
+
+def test_load_project_updates_bert_parameter_view(
+        model_params_view: ModelParamsView,
+        controller: Controller):
+    # load bert test project
+    controller.saving_loading_controller.load_settings_from_file(
+        "../test/test_data/test_save_files/test load bert project.json")
+
+    # check if correct settings view is loaded
+    bert_settings_view: BertSettings = (
+        model_params_view.algorithm_specific_settings_views)[
+        ModelType.BERTopic]
+    assert model_params_view.get_current_settings_view() is bert_settings_view
+
+    # check if the fields are updated correctly
+    assert bert_settings_view._min_df_input.text() == "0.1"
+    assert bert_settings_view._max_features_input.text() == "100"
+
+
+def test_load_project_updates_bert_parameter_view_when_none(
+        model_params_view: ModelParamsView,
+        controller: Controller):
+    # load bert test project
+    controller.saving_loading_controller.load_settings_from_file(
+        "../test/test_data/test_save_files/test load bert project none "
+        "parameters.json")
+
+    # check if correct settings view is loaded
+    bert_settings_view: BertSettings = (
+        model_params_view.algorithm_specific_settings_views)[
+        ModelType.BERTopic]
+    assert model_params_view.get_current_settings_view() is bert_settings_view
+
+    # check that input field is empty, because the value is None
+    assert bert_settings_view._min_df_input.text() == ""
+    assert bert_settings_view._max_features_input.text() == ""
 
 
 def test_load_project_updates_stopwords_view(
@@ -239,13 +299,30 @@ def test_load_project_updates_imported_files_view(
     metadata = controller.corpus_controller._corpus_model.metadata
 
     # check if the file_container contains the correct metadata
-    file_container = imported_files_view.file_container["lda_model"]
-    assert len(file_container) == 2
-    assert file_container == metadata
+    files_view_metadata = imported_files_view.metadata
+    assert len(files_view_metadata) == 2
+    assert files_view_metadata == metadata
 
     # check if the files are displayed correctly
     assert imported_files_view.scroll_layout.count() == 2
-    assert (imported_files_view.scroll_layout.itemAt(0).widget().text() ==
-            "kattenverhaaltje 1")
-    assert (imported_files_view.scroll_layout.itemAt(1).widget().text() ==
-            "kattenverhaaltje 2")
+    scroll_layout_filenames = [imported_files_view.scroll_layout.itemAt(i)
+                               .widget().text() for i in range(2)]
+    assert sorted(scroll_layout_filenames) == ["kattenverhaaltje 1",
+                                               "kattenverhaaltje 2"]
+
+
+def test_loading_invalid_project_files(
+        saving_loading_controller: SavingLoadingController):
+    """
+    Test if the loading of invalid files returns False
+    Files are invalid if they are not json files, if they do not contain all
+    necessary fields or if they contain invalid values
+    :param saving_loading_controller:
+    :return:
+    """
+    folder_path = "../test/test_data/test_save_files/invalid_save_files"
+    # load all files from a folder
+    files = os.listdir(folder_path)
+    for file in files:
+        assert saving_loading_controller.load_settings_from_file(
+            os.path.join(folder_path, file)) != []

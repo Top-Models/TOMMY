@@ -63,16 +63,35 @@ class Model:
     @classmethod
     def from_dict(cls, model_dict: dict) -> Model:
         model = cls()
+
         model.project_settings_model.input_folder_path = model_dict[
             "input_folder_path"]
+        if not isinstance(model.project_settings_model.input_folder_path, str):
+            raise ValueError(
+                "Input folder path should be a string, but is not")
+
         model.language_model.selected_language = (
             SupportedLanguage.from_string(model_dict["language"]))
+
         configs_data = model_dict["configs"]
+
+        # add all configs to the model
         model.configs.clear()
         for name, config_dict in configs_data.items():
             config = ConfigModel.from_dict(config_dict)
+            if name == "":
+                raise ValueError("Config name cannot be empty")
+            if name in model.configs:
+                raise ValueError(f"Multiple configs found with name '{name}'")
             model.configs[name] = config
         model.selected_config_name = model_dict["selected_config"]
+
+        # check if the selected config name is in the configs,
+        # which automatically checks that there is at least one config
+        if model.selected_config_name not in model.configs:
+            raise ValueError(
+                f"Selected config name '{model.selected_config_name}' not "
+                f"found in configs")
         return model
 
 

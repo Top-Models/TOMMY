@@ -5,6 +5,17 @@ from tommy.model.model import Model
 from tommy.support.event_handler import EventHandler
 
 
+def dict_raise_on_duplicates(ordered_pairs):
+    """Reject duplicate keys."""
+    d = {}
+    for k, v in ordered_pairs:
+        if k in d:
+            raise ValueError(f"duplicate key: {k}")
+        else:
+            d[k] = v
+    return d
+
+
 class SavingLoadingController:
 
     def __init__(self):
@@ -31,7 +42,7 @@ class SavingLoadingController:
         """
         self._model = model
 
-    def save_settings_to_file(self, filepath: str) -> bool:
+    def save_settings_to_file(self, filepath: str) -> list[str]:
         """
         Save the project settings to a new file specified by the filepath.
         :param filepath: The filepath where the settings should be saved
@@ -43,26 +54,36 @@ class SavingLoadingController:
             os.makedirs(os.path.dirname(filepath), exist_ok=True)
             with open(filepath, "w") as file:
                 json.dump(settings_data, file, indent=4)
-            return True
-        except OSError:
-            return False
+            return []
+        except OSError as e:
+            return [f"Er is een fout opgetreden bij het opslaan van het "
+                    f"bestand:\n{filepath}.\nProbleem:\n{repr(e)}"]
 
-    def load_settings_from_file(self, filepath) -> bool:
+    def load_settings_from_file(self, filepath) -> list[str]:
         """
         Load the project settings from a file.
         :return: None
         """
         self.filepath = filepath
+        if not os.path.exists(filepath):
+            return [f"Dit pad bestaat niet:\n{filepath}"]
         try:
-            if os.path.exists(filepath):
-                with open(filepath, "r") as file:
-                    settings_data = json.load(file)
-                    new_model = Model.from_dict(settings_data)
-                    self._model_changed_event.publish(new_model)
-                return True
-        except json.JSONDecodeError:
-            return False
-        except OSError:
-            return False
-        except KeyError:
-            return False
+            with (open(filepath, "r") as file):
+                settings_data = (
+                    json.load(file,
+                              object_pairs_hook=dict_raise_on_duplicates))
+                new_model = Model.from_dict(settings_data)
+                self._model_changed_event.publish(new_model)
+            return []
+        except json.JSONDecodeError as e:
+            return [f"Dit bestand is geen geldig JSON bestand:\n"
+                    f"{filepath}\nProbleem:\n{repr(e)}"]
+        except OSError as e:
+            return [f"Er is een fout opgetreden bij het openen van het "
+                    f"bestand:\n{filepath}\nProbleem:\n{repr(e)}"]
+        except KeyError as e:
+            return [f"Een of meer parameters missen. Bestand:\
+            n{filepath}\nProbleem:\n{repr(e)}"]
+        except ValueError as e:
+            return [f"Dit bestand bevat geen geldige project "
+                    f"instellingen:\n{filepath}\nProbleem:\n{repr(e)}"]

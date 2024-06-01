@@ -9,6 +9,7 @@ from tommy.controller.project_settings_controller import \
 from tommy.controller.saving_loading_controller import SavingLoadingController
 from tommy.support.constant_variables import (
     prim_col_red, dark_prim_col_red, extra_light_gray, text_font)
+from tommy.view.error_view import ErrorView
 
 
 class MenuBar(QMenuBar):
@@ -47,7 +48,7 @@ class MenuBar(QMenuBar):
         save_settings_action.triggered.connect(self.save_settings_to_file)
         save_settings_as_action.triggered.connect(self.save_settings_as)
         load_settings_action.triggered.connect(
-            self.load_settings_from_file)  # Connect to new method
+            self._load_settings_from_file)  # Connect to new method
 
         # Create menu bar
         file_menu = self.addMenu("Bestand")
@@ -167,15 +168,16 @@ class MenuBar(QMenuBar):
         :param filepath: The filepath where the settings should be saved
         :return: None
         """
-        if self._saving_loading_controller.save_settings_to_file(filepath):
+        errors = self._saving_loading_controller.save_settings_to_file(
+            filepath)
+        if not errors:
             QMessageBox.information(self, "Project opgeslagen",
                                     "Het project is succesvol opgeslagen.")
         else:
-            QMessageBox.critical(self, "Fout",
-                                 "Er is een fout opgetreden bij het opslaan "
-                                 "van het project.")
+            ErrorView("Er is een fout opgetreden bij het opslaan van het "
+                      "project.", errors)
 
-    def load_settings_from_file(self) -> None:
+    def _load_settings_from_file(self) -> None:
         """
         Load project settings from a file selected by the user.
         :return: None
@@ -183,14 +185,14 @@ class MenuBar(QMenuBar):
         dialog = QFileDialog.getOpenFileName(self, "Selecteer bestand",
                                              filter="JSON files (*.json)")
         if dialog[0]:
-            if self._saving_loading_controller.load_settings_from_file(
-                    dialog[0]):
+            errors = self._saving_loading_controller.load_settings_from_file(
+                dialog[0])
+            if not errors:
                 QMessageBox.information(self, "Project geladen",
                                         "Het project is succesvol geladen.")
             else:
-                QMessageBox.critical(self, "Fout",
-                                     "Er is een fout opgetreden bij het "
-                                     "laden van het project.")
+                ErrorView("Er is een fout opgetreden bij het laden van het "
+                          "project.", errors)
 
 
 """

@@ -10,6 +10,8 @@ from tommy.support.constant_variables import (
     text_font, seco_col_blue, disabled_gray, heading_font, hover_seco_col_blue,
     pressed_seco_col_blue)
 from tommy.support.model_type import ModelType
+from tommy.support.parameter_limits import num_topics_min_value, \
+    num_topics_max_value, amount_of_words_min_value, amount_of_words_max_value
 from tommy.support.supported_languages import SupportedLanguage
 from tommy.view.settings_view.abstract_settings.better_combo_box import \
     BetterComboBox
@@ -250,7 +252,8 @@ class AbstractSettings:
         self._topic_amount_field.setStyleSheet(self.topic_input_layout_valid)
         # QIntValidator prevents user from typing
         # anything that isn't an integer
-        self._topic_amount_field.setValidator(QIntValidator(1, 999))
+        self._topic_amount_field.setValidator(QIntValidator(
+            num_topics_min_value, num_topics_max_value))
         self._topic_amount_field.setPlaceholderText("Voer aantal topics in")
         self._topic_amount_field.setStyleSheet(self.topic_input_layout_valid)
         self._topic_amount_field.setAlignment(Qt.AlignmentFlag.AlignLeft)
@@ -280,7 +283,8 @@ class AbstractSettings:
         valid_input = True
         try:
             num_topics = int(topic_input_text)
-            if num_topics < 1 or num_topics > 999:
+            if (num_topics < num_topics_min_value or num_topics >
+                    num_topics_max_value):
                 valid_input = False
         except ValueError:
             valid_input = False
@@ -294,7 +298,7 @@ class AbstractSettings:
                 self.topic_input_layout_invalid)
             self._topic_amount_field.setText("")
             self._topic_amount_field.setPlaceholderText(
-                "Moet tussen 1 en 999 liggen")
+                f"{num_topics_min_value} - {num_topics_max_value}")
         return valid_input
 
     def get_topic_amount(self) -> int:
@@ -334,7 +338,8 @@ class AbstractSettings:
         self._amount_of_words_field.setStyleSheet(
             self.enabled_input_stylesheet)
         self._amount_of_words_field.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        self._amount_of_words_field.setValidator(QIntValidator(1, 999))
+        self._amount_of_words_field.setValidator(QIntValidator(
+            amount_of_words_min_value, amount_of_words_max_value))
         self._amount_of_words_field.editingFinished.connect(
             self.amount_of_words_field_editing_finished_event)
         topic_words_layout.addWidget(self._amount_of_words_field)
@@ -361,7 +366,8 @@ class AbstractSettings:
         valid_input = True
         try:
             num_words = int(topic_words_input_text)
-            if num_words < 1 or num_words > 999:
+            if (num_words < amount_of_words_min_value or num_words >
+                    amount_of_words_max_value):
                 valid_input = False
         except ValueError:
             valid_input = False
@@ -372,10 +378,10 @@ class AbstractSettings:
             self._amount_of_words_field.setPlaceholderText("")
         else:
             self._amount_of_words_field.setStyleSheet(
-                self.disabled_input_stylesheet)
+                self.topic_input_layout_invalid)
             self._amount_of_words_field.setText("")
             self._amount_of_words_field.setPlaceholderText(
-                "Moet tussen 1 en 999 liggen")
+                f"{amount_of_words_min_value} - {amount_of_words_max_value}")
         return valid_input
 
     def get_amount_of_words(self) -> int:

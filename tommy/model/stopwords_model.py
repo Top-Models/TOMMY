@@ -136,6 +136,12 @@ class StopwordsModel:
         stopwords_model = cls()
         stopwords_model._extra_words_in_order = list(stopwords_dict[
                                                          "extra_stopwords"])
+
+        for word in stopwords_model._extra_words_in_order:
+            if not isinstance(word, str):
+                raise ValueError(
+                    "Extra stopwords should be strings, but are not")
+
         stopwords_model._extra_words = set(
             stopwords_model.extra_words_in_order)
         return stopwords_model

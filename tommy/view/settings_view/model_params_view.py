@@ -10,7 +10,8 @@ from tommy.controller.model_parameters_controller import (
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
-    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray)
+    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray,
+    extra_light_gray, scrollbar_style)
 from tommy.support.model_type import ModelType
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
@@ -75,14 +76,12 @@ class ModelParamsView(QScrollArea):
             """)
 
         self.enabled_input_stylesheet = (f"background-color: white;"
-                                         f"border-radius: 5px;"
                                          f"font-size: 14px;"
                                          f"font-family: {text_font};"
                                          f"color: black;"
                                          f"border: 2px solid {seco_col_blue};"
                                          f"padding: 5px;")
         self.disabled_input_stylesheet = (f"background-color: {disabled_gray};"
-                                          f"border-radius: 5px;"
                                           f"font-size: 14px;"
                                           f"font-family: {text_font};"
                                           f"color: black;"
@@ -117,7 +116,7 @@ class ModelParamsView(QScrollArea):
                 border: 0px;
                 border-bottom: 3px solid lightgray;
             }}
-            """)
+            """ + scrollbar_style)
 
         # Initialize button widgets
         self.apply_button = None
@@ -264,11 +263,11 @@ class ModelParamsView(QScrollArea):
         self.apply_button.setText("Laden...")
         self.apply_button.setStyleSheet(
             f"""
-                QPushButton {{
-                    background-color: #808080;
-                    color: white;
-                    margin-left: 5px;
-                }}
+                        QPushButton {{
+                            background-color: #808080;
+                            color: white;
+                            margin-left: 5px;
+                        }}
 
                 QPushButton:hover {{
                     background-color: {hover_seco_col_blue};

@@ -6,6 +6,8 @@ from PySide6.QtWidgets import (QHBoxLayout, QLabel, QLineEdit, QVBoxLayout)
 
 from tommy.controller.language_controller import LanguageController
 from tommy.support.constant_variables import text_font, seco_col_blue
+from tommy.support.parameter_limits import min_df_min_value, min_df_max_value, \
+    max_features_min_value, max_features_max_value
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
 
@@ -14,12 +16,6 @@ class BertSettings(AbstractSettings):
     """
     Class for BERT settings
     """
-    MIN_DF_MIN_VALUE = 0.0
-    MIN_DF_MAX_VALUE = 0.8
-
-    MAX_N_TERMS_MIN_VALUE = 1
-    MAX_N_TERMS_MAX_VALUE = 1_000_000_000
-
     float_regex = QRegExp(r"^[0-9]+(\.[0-9]+)?$")
     int_regex = QRegExp(r"^[0-9]+$")
 
@@ -102,8 +98,8 @@ class BertSettings(AbstractSettings):
         self._min_df_input.setFixedWidth(100)
         self._min_df_input.setStyleSheet(self.layout_valid)
         self._min_df_input.setValidator(QRegExpValidator(self.float_regex))
-        self._min_df_input.setPlaceholderText(f"{self.MIN_DF_MIN_VALUE:.1f} .."
-                                              f" {self.MIN_DF_MAX_VALUE:.2f}")
+        self._min_df_input.setPlaceholderText(f"{min_df_min_value:.1f} .."
+                                              f" {min_df_max_value:.2f}")
         self._min_df_input.setStyleSheet(self.layout_valid)
         self._min_df_input.setAlignment(Qt.AlignmentFlag.AlignLeft)
         min_term_freq_layout.addWidget(self._min_df_input)
@@ -132,7 +128,7 @@ class BertSettings(AbstractSettings):
         # Check if min_df is a valid float between the min and max
         try:
             min_df = float(self._min_df_input.text())
-            is_valid = self.MIN_DF_MIN_VALUE <= min_df <= self.MIN_DF_MAX_VALUE
+            is_valid = min_df_min_value <= min_df <= min_df_max_value
         except ValueError:
             is_valid = self._min_df_input.text() == ""
 
@@ -195,8 +191,8 @@ class BertSettings(AbstractSettings):
         # Check if beta is a valid integer between the min and max
         try:
             max_features = int(self._max_features_input.text())
-            is_valid = (self.MAX_N_TERMS_MIN_VALUE <= max_features
-                        <= self.MAX_N_TERMS_MAX_VALUE)
+            is_valid = (max_features_min_value <= max_features
+                        <= max_features_max_value)
         except ValueError:
             is_valid = self._max_features_input.text() == ""
 
