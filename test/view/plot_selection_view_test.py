@@ -10,13 +10,12 @@ from tommy.view.plot_selection_view import (PlotSelectionView,
                                             PossibleVisualization,
                                             VisGroup)
 from tommy.view.graph_view import GraphView
+from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture
-def controller(mocker: MockerFixture):
-    with mocker.patch('tommy.controller.preprocessing_controller'
-                      '.PreprocessingController.load_pipeline'):
-        return Controller()
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture(scope='function')

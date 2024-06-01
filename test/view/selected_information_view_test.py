@@ -10,13 +10,12 @@ from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.selected_information_view import SelectedInformationView
 from tommy.view.topic_view.topic_entity_component.topic_entity import \
     TopicEntity
+from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture
-def controller(mocker: MockerFixture):
-    with mocker.patch('tommy.controller.preprocessing_controller'
-                      '.PreprocessingController.load_pipeline'):
-        return Controller()
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture(scope='function')

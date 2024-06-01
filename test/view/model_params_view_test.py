@@ -10,13 +10,12 @@ from tommy.support.model_type import ModelType
 from tommy.view.settings_view.model_params_view import ModelParamsView
 from pytest_mock import mocker
 from tommy.controller.controller import Controller
+from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture
-def controller(mocker: MockerFixture):
-    with mocker.patch('tommy.controller.preprocessing_controller'
-                      '.PreprocessingController.load_pipeline'):
-        return Controller()
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture(scope='function')
