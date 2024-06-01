@@ -16,12 +16,12 @@ from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 from tommy.view.settings_view.model_params_view import ModelParamsView
 from tommy.view.stopwords_view import StopwordsView
+from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture
-def controller() -> Controller:
-    controller = Controller()
-    return controller
+def controller(controller_no_pipeline) -> Controller:
+    return controller_no_pipeline
 
 
 @pytest.fixture
