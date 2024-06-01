@@ -1,14 +1,13 @@
 import pytest
 from pytest_mock import MockerFixture
 
+from test.helper_fixtures import controller_no_pipeline
 from tommy.controller.controller import Controller
 
 
 @pytest.fixture
-def controller(mocker: MockerFixture):
-    with mocker.patch('tommy.controller.preprocessing_controller'
-                      '.PreprocessingController.load_pipeline'):
-        return Controller()
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 def test_controller_refs(controller: Controller):
