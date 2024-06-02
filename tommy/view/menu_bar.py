@@ -29,7 +29,8 @@ class MenuBar(QMenuBar):
 
         # Create actions
         import_input_folder_action = QAction("Selecteer input folder", self)
-        export_to_gexf_action = QAction("Exporteer naar Graph Exchange XML Format (.gexf)", self)
+        export_to_gexf_action = QAction("Exporteer naar Graph Exchange XML "
+                                        "Format (.gexf)", self)
         export_to_png_action = QAction("Exporteer grafieken (.png)", self)
         export_topic_words_action = QAction("Exporteer Topicdata (.csv)", self)
         info_action = QAction("Over Tommy", self)
@@ -144,12 +145,14 @@ class AboutDialog(QDialog):
     def __init__(self, parent: QWidget = None) -> None:
         super().__init__(parent)
         self.setWindowTitle("Over")
-        self.setFixedSize(350, 150)
+        self.setMinimumSize(350, 150)
 
         layout = QVBoxLayout()
         label = QLabel("""
         <div style='text-align: center;'>
-            <p>This program has been developed by students from the bachelor Computer Science at Utrecht University within the Software Project course.</p>
+            <p>This program has been developed by students from the bachelor 
+            Computer Science at Utrecht University within the Software 
+            Project course.</p>
             <p>© Copyright Utrecht University<br/>
             (Department of Information and Computing Sciences)</p>
         </div>
