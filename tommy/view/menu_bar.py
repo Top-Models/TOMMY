@@ -1,7 +1,9 @@
 import os
 
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QMenuBar, QWidget, QFileDialog, QMessageBox
+from PySide6.QtWidgets import QMenuBar, QMenu, QWidget, QFileDialog, \
+    QHBoxLayout, QSpacerItem, QLabel, QSizePolicy, QDialog, QVBoxLayout, \
+    QMessageBox
 
 from tommy.controller.export_controller import ExportController
 from tommy.controller.project_settings_controller import \
@@ -39,6 +41,7 @@ class MenuBar(QMenuBar):
         save_settings_action = QAction("Instellingen opslaan", self)
         save_settings_as_action = QAction("Instellingen opslaan als", self)
         load_settings_action = QAction("Instellingen laden", self)
+        info_action = QAction("Over Tommy", self)
 
         # Connect actions to event handlers
         import_input_folder_action.triggered.connect(self.import_input_folder)
@@ -49,6 +52,7 @@ class MenuBar(QMenuBar):
         save_settings_as_action.triggered.connect(self.save_settings_as)
         load_settings_action.triggered.connect(
             self._load_settings_from_file)  # Connect to new method
+        info_action.triggered.connect(self.show_about_dialog)
 
         # Create menu bar
         file_menu = self.addMenu("Bestand")
@@ -62,6 +66,10 @@ class MenuBar(QMenuBar):
         export_menu.addAction(export_to_gexf_action)
         export_menu.addAction(export_to_png_action)
         export_menu.addAction(export_topic_words_action)
+
+        # Create help bar
+        help_menu = self.addMenu("Help")
+        help_menu.addAction(info_action)
 
         # Set style
         self.setStyleSheet(f"""
@@ -151,6 +159,14 @@ class MenuBar(QMenuBar):
         else:
             self.save_settings_as()
 
+    def show_about_dialog(self) -> None:
+        """
+        Show the About dialog.
+        :return: None
+        """
+        about_dialog = AboutDialog(self)
+        about_dialog.exec_()
+
     def save_settings_as(self) -> None:
         """
         Ask the user where to save the project settings and save them.
@@ -193,6 +209,27 @@ class MenuBar(QMenuBar):
             else:
                 ErrorView("Er is een fout opgetreden bij het laden van het "
                           "project.", errors)
+
+
+class AboutDialog(QDialog):
+    def __init__(self, parent: QWidget = None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("Over")
+        self.setMinimumSize(350, 150)
+
+        layout = QVBoxLayout()
+        label = QLabel("""
+        <div style='text-align: center;'>
+            <p>This program has been developed by students from the bachelor 
+            Computer Science at Utrecht University within the Software 
+            Project course.</p>
+            <p>© Copyright Utrecht University<br/>
+            (Department of Information and Computing Sciences)</p>
+        </div>
+        """)
+        label.setWordWrap(True)
+        layout.addWidget(label)
+        self.setLayout(layout)
 
 
 """
