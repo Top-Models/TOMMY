@@ -201,7 +201,7 @@ class FetchedTopicsView(QScrollArea):
 
 
 class FlowLayout(QLayout):
-    def __init__(self, parent=None, margin=0, spacing=-1):
+    def __init__(self, parent=None, margin=3, spacing=-1):
         super().__init__(parent)
 
         if parent is not None:
