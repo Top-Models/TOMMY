@@ -143,16 +143,17 @@ class MenuBar(QMenuBar):
 class AboutDialog(QDialog):
     def __init__(self, parent: QWidget = None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("About")
-        self.setFixedSize(300, 200)
+        self.setWindowTitle("Over")
+        self.setFixedSize(350, 150)
 
         layout = QVBoxLayout()
         label = QLabel("""
-This program has been developed by students from the bachelor Computer Science
-at Utrecht University within the Software Project course.
-© Copyright Utrecht University
-(Department of Information and Computing Sciences)
-                        """)
+        <div style='text-align: center;'>
+            <p>This program has been developed by students from the bachelor Computer Science at Utrecht University within the Software Project course.</p>
+            <p>© Copyright Utrecht University<br/>
+            (Department of Information and Computing Sciences)</p>
+        </div>
+        """)
         label.setWordWrap(True)
         layout.addWidget(label)
         self.setLayout(layout)
