@@ -2,7 +2,7 @@ import os
 
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMenuBar, QMenu, QWidget, QFileDialog, \
-    QHBoxLayout, QSpacerItem, QLabel, QSizePolicy
+    QHBoxLayout, QSpacerItem, QLabel, QSizePolicy, QDialog, QVBoxLayout
 
 from tommy.controller.export_controller import ExportController
 from tommy.controller.project_settings_controller import (
@@ -32,12 +32,14 @@ class MenuBar(QMenuBar):
         export_to_gexf_action = QAction("Exporteer naar Graph Exchange XML Format (.gexf)", self)
         export_to_png_action = QAction("Exporteer grafieken (.png)", self)
         export_topic_words_action = QAction("Exporteer Topicdata (.csv)", self)
+        info_action = QAction("Over Tommy", self)
 
         # Connect actions to event handlers
         import_input_folder_action.triggered.connect(self.import_input_folder)
         export_to_gexf_action.triggered.connect(self.export_to_gexf)
         export_to_png_action.triggered.connect(self.export_to_png)
         export_topic_words_action.triggered.connect(self.export_topic_words)
+        info_action.triggered.connect(self.show_about_dialog)
 
         # Create menu bar
         file_menu = self.addMenu("Bestand")
@@ -49,21 +51,9 @@ class MenuBar(QMenuBar):
         export_menu.addAction(export_to_png_action)
         export_menu.addAction(export_topic_words_action)
 
-        # Add the QLabel for the copyright notice
-        copyright_label = QLabel("© Utrecht University (ICS)")
-        copyright_label.setStyleSheet(f"""
-            background-color: {prim_col_red};
-            color: {extra_light_gray};
-            font-family: {text_font};
-        """)
-
-        # Create a layout for the menu bar and add the label to the right
-        layout = QHBoxLayout(self)
-        layout.setContentsMargins(0, 0, 10, 0)
-        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding,
-                                         QSizePolicy.Minimum))
-        layout.addWidget(copyright_label)
-        self.setLayout(layout)
+        # Create help bar
+        help_menu = self.addMenu("Help")
+        help_menu.addAction(info_action)
 
         # Set style
         self.setStyleSheet(f"""
@@ -140,6 +130,32 @@ class MenuBar(QMenuBar):
         if dialog[0]:
             export_path = dialog[0]
             self._export_controller.export_topic_words_csv(export_path)
+
+    def show_about_dialog(self) -> None:
+        """
+        Show the About dialog.
+        :return: None
+        """
+        about_dialog = AboutDialog(self)
+        about_dialog.exec_()
+
+
+class AboutDialog(QDialog):
+    def __init__(self, parent: QWidget = None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("About")
+        self.setFixedSize(300, 200)
+
+        layout = QVBoxLayout()
+        label = QLabel("""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+                        """)
+        label.setWordWrap(True)
+        layout.addWidget(label)
+        self.setLayout(layout)
 
 
 """
