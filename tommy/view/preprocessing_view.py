@@ -25,6 +25,8 @@ class PreprocessingView(QScrollArea):
         stopwords_controller.stopwords_model_changed_event.subscribe(
             self._update_blacklist_textbox)
         self._synonyms_controller = synonyms_controller
+        synonyms_controller.synonyms_model_changed_event.subscribe(
+            self._update_synonym_textbox)
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -115,11 +117,14 @@ class PreprocessingView(QScrollArea):
 
         self.blacklist_tab = QTextEdit()
         self.blacklist_tab.setStyleSheet(tab_style)
+        self.blacklist_tab.setLineWrapMode(QTextEdit.NoWrap)
+        self.blacklist_tab.setPlaceholderText(
+            "woord\nwoord\netc.")
         self.synonym_tab = QTextEdit()
         self.synonym_tab.setStyleSheet(tab_style)
         self.synonym_tab.setLineWrapMode(QTextEdit.NoWrap)
         self.synonym_tab.setPlaceholderText(
-            "woord synoniem\nwoord synoniem\netc...")
+            "woord synoniem\nwoord synoniem\netc.")
 
         # Set container as the focal point
         self.setWidget(self.container)
@@ -159,7 +164,7 @@ class PreprocessingView(QScrollArea):
         :return: None
         """
         input_text = self.synonym_tab.toPlainText()
-        lines = input_text.split('\n')
+        lines = input_text.lower().split('\n')
         synonyms = {words[0]: words[1] for words
                     in map(str.split, lines) if len(words) == 2}
         self._synonyms_controller.update_synonyms(synonyms)
@@ -167,6 +172,10 @@ class PreprocessingView(QScrollArea):
     def _update_blacklist_textbox(self, words: list[str]):
         text = "\n".join(words)
         self.blacklist_tab.setText(text)
+
+    def _update_synonym_textbox(self, synonyms: dict[str, str]):
+        text = "\n".join([f"{key} {value}" for key, value in synonyms.items()])
+        self.synonym_tab.setText(text)
 
 
 """

@@ -104,6 +104,7 @@ class Controller:
         self._graph_controller = GraphController()
         self._topic_modelling_controller = TopicModellingController()
         self._stopwords_controller = StopwordsController()
+        self._synonyms_controller = SynonymsController()
         self._preprocessing_controller = PreprocessingController()
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
@@ -129,7 +130,8 @@ class Controller:
 
         self._topic_modelling_controller.set_controller_refs(
             self._model_parameters_controller, self._corpus_controller,
-            self._stopwords_controller, self._preprocessing_controller)
+            self._stopwords_controller, self._synonyms_controller,
+            self._preprocessing_controller)
 
         self._preprocessing_controller.set_controller_refs(
             self.language_controller)
@@ -238,6 +240,7 @@ class Controller:
         self._model_parameters_controller.on_model_swap()
         self._topic_modelling_controller.on_model_swap()
         self._stopwords_controller.on_model_swap()
+        self._synonyms_controller.on_model_swap()
         self._language_controller.on_model_swap()
 
 

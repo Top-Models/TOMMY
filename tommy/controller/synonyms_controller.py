@@ -1,9 +1,20 @@
 from tommy.model.synonyms_model import SynonymsModel
+from tommy.support.event_handler import EventHandler
 
 
 class SynonymsController:
     """A class that handles all synonym related functionality."""
     _synonyms_model: SynonymsModel = None
+    _synonyms_model_changed_event: EventHandler[dict[str, str]] = (
+        EventHandler())
+
+    @property
+    def synonyms_model_changed_event(self) -> EventHandler[dict[str, str]]:
+        """
+        This event gets triggered when the stopwords model is changed due
+        to the user switching config
+        """
+        return self._synonyms_model_changed_event
 
     @property
     def stopwords_model(self) -> SynonymsModel:
@@ -16,6 +27,11 @@ class SynonymsController:
     def set_model_refs(self, synonyms_model: SynonymsModel):
         """Sets the reference to the synonyms model."""
         self._synonyms_model = synonyms_model
+
+    def on_model_swap(self):
+        """Notify the frontend that the stopwords model has changed."""
+        self._synonyms_model_changed_event.publish(
+            self._synonyms_model.synonyms)
 
     def update_synonyms(self, synonyms: dict[str, str]) -> None:
         """
