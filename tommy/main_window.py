@@ -75,9 +75,12 @@ class MainWindow(QMainWindow):
         self.splitter.addWidget(self.right_container)
 
         # Adjust size policies and minimum widths
-        self.left_container.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
-        self.right_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
-        self.center_container.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.left_container.setSizePolicy(QSizePolicy.Fixed,
+                                          QSizePolicy.Expanding)
+        self.right_container.setSizePolicy(QSizePolicy.Minimum,
+                                           QSizePolicy.Expanding)
+        self.center_container.setSizePolicy(QSizePolicy.Expanding,
+                                            QSizePolicy.Expanding)
 
         self.layout.addWidget(self.splitter)
 

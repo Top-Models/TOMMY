@@ -19,7 +19,8 @@ class FetchedTopicsView(QScrollArea):
 
     def __init__(self,
                  graph_controller: GraphController,
-                 model_parameters_controller: ModelParametersController) -> None:
+                 model_parameters_controller: ModelParametersController) \
+            -> None:
         """Initialize the FetchedTopicDisplay widget."""
         super().__init__()
 
@@ -45,7 +46,8 @@ class FetchedTopicsView(QScrollArea):
         # Initialize layout for scroll area
         self.scroll_area = QWidget()
         self.scroll_area.setObjectName("scroll_area")
-        self.scroll_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.scroll_area.setSizePolicy(QSizePolicy.Expanding,
+                                       QSizePolicy.Expanding)
         self.layout = FlowLayout(self.scroll_area)
         self.layout.setAlignment(Qt.AlignCenter | Qt.AlignTop)
 
@@ -201,7 +203,7 @@ class FetchedTopicsView(QScrollArea):
 
 
 class FlowLayout(QLayout):
-    def __init__(self, parent=None, margin=3, spacing=-1):
+    def __init__(self, parent=None, margin=3, spacing=5):
         super().__init__(parent)
 
         if parent is not None:
