@@ -9,8 +9,7 @@ class ProjectSettingsModel:
 
     def __init__(self) -> None:
         # Set input_folder_path to "data" by default
-        self.input_folder_path: str = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)), "data/csv_files")
+        self.input_folder_path: str = os.path.join("data", "csv_files")
 
 
 """

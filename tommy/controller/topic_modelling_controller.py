@@ -89,25 +89,21 @@ class TopicModellingController:
         self._topic_model = topic_model
         self._config_model = config_model
 
-    def change_config_model_refs(self,
-                                 topic_model: TopicModel,
-                                 config_model: ConfigModel) -> None:
+    def on_model_swap(self) -> None:
         """
-        Set the references to the topic model when switching configs
+        Notify the graph controller that the topic model has changed
         :return: None
         """
         # TODO: send event to view and other controllers that the
         #  visualizations should change
         # if the topic runner ran on an outdated corpus, we delete it.
-        if (config_model.topic_runner is not None
-                and config_model.topic_model.used_corpus_version_id
+        if (self._config_model.topic_runner is not None
+                and self._config_model.topic_model.used_corpus_version_id
                 != self._corpus_controller.corpus_version_id):
-            config_model.topic_runner = None
+            self._config_model.topic_runner = None
 
-        self._topic_model = topic_model
-        self._config_model = config_model
-
-        self._topic_model_switched_event.publish(config_model.topic_runner)
+        self._topic_model_switched_event.publish(
+            self._config_model.topic_runner)
 
     def set_controller_refs(self,
                             parameters_controller: ModelParametersController,

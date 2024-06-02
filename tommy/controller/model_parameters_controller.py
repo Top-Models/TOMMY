@@ -10,8 +10,7 @@ class ModelParametersController:
     """
     _parameters_model: ModelParametersModel = None
     # TODO: Not all parameters emit this event when changed
-    _params_model_changed_event: EventHandler[
-        ModelParametersModel] = EventHandler()
+    _params_model_changed_event: EventHandler[None] = EventHandler()
     _algorithm_changed_event: EventHandler[None]
 
     @property
@@ -29,18 +28,19 @@ class ModelParametersController:
         """Set the reference to the model-parameters-model"""
         self._parameters_model = parameters_model
 
-    def change_config_model_refs(self,
-                                 parameters_model: ModelParametersModel
-                                 ) -> None:
+    def on_model_swap(self) -> None:
         """
-        Set the reference to the model-parameters-model and
-        update the frontend
+        Notify the frontend that the model parameters model has changed
+        :return: None
         """
-        self._parameters_model = parameters_model
-        self._params_model_changed_event.publish(parameters_model)
+        self._params_model_changed_event.publish(None)
 
     def set_model_word_amount(self, word_amount: int) -> None:
-        """Set the amount of words to be displayed per topic"""
+        """
+        Set the amount of words to be displayed per topic
+        :param word_amount: the amount of words to be displayed per topic
+        :return: None
+        """
         self._parameters_model.word_amount = word_amount
 
     def get_model_word_amount(self) -> int:
@@ -125,7 +125,12 @@ class ModelParametersController:
         return self._parameters_model.bert_max_features
 
     @property
-    def params_model_changed_event(self):
+    def params_model_changed_event(self) -> EventHandler[None]:
+        """
+        This event gets triggered when the model parameters model is changed
+        for example due to changing configs
+        :return: The event
+        """
         return self._params_model_changed_event
 
 

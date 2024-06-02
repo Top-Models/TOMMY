@@ -77,8 +77,8 @@ def language_controller_dutch():
 
 @pytest.fixture(scope="module")
 def preprocessing_controller_dutch(language_controller_dutch):
-    controller = PreprocessingController(language_controller_dutch)
-    controller.load_pipeline(SupportedLanguage.Dutch)
+    controller = PreprocessingController()
+    controller.set_controller_refs(language_controller_dutch)
     return controller
 
 

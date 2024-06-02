@@ -16,12 +16,10 @@ class PreprocessingController:
     _stopwords_model: StopwordsModel = None
     _enable_pos: bool
 
-    def __init__(self, language_controller: LanguageController) -> None:
+    def __init__(self) -> None:
         self._nlp = None
         self._enable_pos: bool
-        self.language_controller = language_controller
-        self.language_controller.change_language_event.subscribe(
-            self.load_pipeline)
+        self.language_controller = None
 
         # load punkt tokenizers for splitting sentences
         self._dutch_sent_tokenizer = self._load_nltk_sent_tokenizer(
@@ -77,10 +75,12 @@ class PreprocessingController:
         """Set the reference to the stopwords model"""
         self._stopwords_model = stopwords_model
 
-    def change_config_model_refs(self, stopwords_model: StopwordsModel):
-        """Change the reference to the stopwords model when the user
-        switches config"""
-        self._stopwords_model = stopwords_model
+    def set_controller_refs(self, language_controller: LanguageController):
+        """Set the reference to the language controller"""
+        self.language_controller = language_controller
+        self.language_controller.change_language_event.subscribe(
+            self.load_pipeline)
+        self.load_pipeline(self.language_controller.get_language())
 
     def process_text(self, text: str) -> list[str]:
         """Preprocesses the given text to a list of tokens."""

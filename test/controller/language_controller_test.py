@@ -29,9 +29,6 @@ def test_change_language_event(language_controller, mocker: mocker):
     assert change_language_event.call_count == 2
     language_controller.set_language(SupportedLanguage.Dutch)
     assert change_language_event.call_count == 3
-    new_language_model = LanguageModel()
-    language_controller.set_model_refs(new_language_model)
-    assert change_language_event.call_count == 4
 
 
 def test_update_language(language_controller):
