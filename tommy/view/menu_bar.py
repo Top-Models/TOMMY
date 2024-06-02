@@ -2,7 +2,8 @@ import os
 
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMenuBar, QMenu, QWidget, QFileDialog, \
-    QHBoxLayout, QSpacerItem, QLabel, QSizePolicy, QDialog, QVBoxLayout
+    QHBoxLayout, QSpacerItem, QLabel, QSizePolicy, QDialog, QVBoxLayout, \
+    QMessageBox
 
 from tommy.controller.export_controller import ExportController
 from tommy.controller.project_settings_controller import \
@@ -157,6 +158,7 @@ class MenuBar(QMenuBar):
                 self._saving_loading_controller.filepath)
         else:
             self.save_settings_as()
+
     def show_about_dialog(self) -> None:
         """
         Show the About dialog.
@@ -207,7 +209,6 @@ class MenuBar(QMenuBar):
             else:
                 ErrorView("Er is een fout opgetreden bij het laden van het "
                           "project.", errors)
-
 
 
 class AboutDialog(QDialog):
