@@ -1,3 +1,4 @@
+from tommy.controller.saving_loading_controller import SavingLoadingController
 from tommy.model.config_model import ConfigModel
 from tommy.model.model import Model
 
@@ -14,7 +15,6 @@ from tommy.controller.preprocessing_controller import PreprocessingController
 from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
-from tommy.controller.save_controller import SaveController
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.export_controller import ExportController
 from tommy.controller.language_controller import LanguageController
@@ -51,6 +51,10 @@ class Controller:
         return self._corpus_controller
 
     @property
+    def topic_modelling_controller(self) -> TopicModellingController:
+        return self._topic_modelling_controller
+
+    @property
     def project_settings_controller(self) -> ProjectSettingsController:
         return self._project_settings_controller
 
@@ -59,7 +63,7 @@ class Controller:
         return self._language_controller
 
     _project_settings_controller: ProjectSettingsController
-    _save_controller: SaveController
+    _saving_loading_controller: SavingLoadingController
 
     _export_controller: ExportController
     _language_controller: LanguageController
@@ -72,6 +76,10 @@ class Controller:
     def config_controller(self) -> ConfigController:
         return self._config_controller
 
+    @property
+    def saving_loading_controller(self):
+        return self._saving_loading_controller
+
     def __init__(self) -> None:
         """Initialize the main controller and its sub-controllers."""
         self._initialize_components()
@@ -81,19 +89,20 @@ class Controller:
         self._set_controller_references()
 
     def _initialize_components(self):
-        """Initialize all sub-components"""
+        """
+        Initialize all sub-controllers
+        :return: None
+        """
         self._model_parameters_controller = ModelParametersController()
         self._language_controller = LanguageController()
         self._graph_controller = GraphController()
         self._topic_modelling_controller = TopicModellingController()
-        self._stopwords_controller = StopwordsController(
-            self._language_controller)
-        self._preprocessing_controller = PreprocessingController(
-            self._language_controller)
+        self._stopwords_controller = StopwordsController()
+        self._preprocessing_controller = PreprocessingController()
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
-        self._save_controller = SaveController()
-        self._config_controller = ConfigController(self._graph_controller)
+        self._saving_loading_controller = SavingLoadingController()
+        self._config_controller = ConfigController()
         self._export_controller = ExportController()
 
     def _set_controller_references(self) -> None:
@@ -116,8 +125,19 @@ class Controller:
             self._model_parameters_controller, self._corpus_controller,
             self._stopwords_controller, self._preprocessing_controller)
 
+        self._preprocessing_controller.set_controller_refs(
+            self.language_controller)
+
+        self._stopwords_controller.set_controller_refs(
+            self.language_controller)
+
+        self._config_controller.set_controller_refs(self._graph_controller)
+
+        # subscribe methods of Controller to events from sub-controllers
         self._config_controller.config_switched_event.subscribe(
-            self._update_config_model_references)
+            self._update_model_on_config_switch)
+        self._saving_loading_controller.model_changed_event.subscribe(
+            self._update_model_on_load)
 
     def _set_model_references(self) -> None:
         """
@@ -150,8 +170,10 @@ class Controller:
             self._model.project_settings_model)
 
         self._language_controller.set_model_refs(
-            self._model.language_model
-        )
+            self._model.language_model)
+
+        self._saving_loading_controller.set_model_refs(
+            self._model)
 
     def on_run_topic_modelling(self) -> None:
         """
@@ -161,25 +183,52 @@ class Controller:
         """
         self._topic_modelling_controller.train_model()
 
-    def _update_config_model_references(self, config_model: ConfigModel):
-        """When the user switches configuration, this event handler makes
+    def _update_model_on_config_switch(
+            self, data: ConfigModel) -> None:
+        """
+        When the user switches configuration, this event handler makes sure
+        that every controller gets a reference to the models of the currently
+        selected config. It then asks the controllers to notify the frontend
+        components of the new model.
+        :param data: unused parameter, since the selected config
+        model can be accessed using the model
+        :return: None
+        """
+        self._set_model_references()
+        self._notify_model_swapped()
+
+    def _update_model_on_load(self, model: Model) -> None:
+        """
+        Update the model of the controller, update the references for the
+        other controllers and notify the frontend components of the new model
+        :param model: The new model
+        :return: None
+        """
+        self._model = model
+        self._set_model_references()
+
+        # load default stopwords for the new language
+        new_language = model.language_model.selected_language
+        self._language_controller.set_language(new_language)
+
+        # load new input folder path
+        new_input_folder_path = model.project_settings_model.input_folder_path
+        self._project_settings_controller.set_input_folder_path(
+            new_input_folder_path)
+
+        self._notify_model_swapped()
+
+    def _notify_model_swapped(self) -> None:
+        """
+        When the user switches configuration, this event handler makes
         sure that every controller gets a reference to the models of the
-        currently selected config"""
-        self._model_parameters_controller.change_config_model_refs(
-            config_model.model_parameters_model)
-
-        self._topic_modelling_controller.change_config_model_refs(
-            config_model.topic_model,
-            self._model.config_model)
-
-        self._stopwords_controller.change_config_model_refs(
-            config_model.stopwords_model)
-
-        self._preprocessing_controller.change_config_model_refs(
-            config_model.stopwords_model)
-
-        self._corpus_controller.change_config_model_refs(
-            config_model.corpus_model)
+        currently selected config
+        :return: None
+        """
+        self._model_parameters_controller.on_model_swap()
+        self._topic_modelling_controller.on_model_swap()
+        self._stopwords_controller.on_model_swap()
+        self._language_controller.on_model_swap()
 
 
 """

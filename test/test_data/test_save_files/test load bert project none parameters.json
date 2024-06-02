@@ -1,0 +1,22 @@
+{
+    "input_folder_path": "data/csv_files",
+    "language": "Nederlands",
+    "configs": {
+        "Config 1": {
+            "stopwords": {
+                "extra_stopwords": []
+            },
+            "model_parameters": {
+                "n_topics": 3,
+                "model_type": "BERTopic",
+                "word_amount": 10,
+                "alpha": 1.0,
+                "beta": 0.01,
+                "alpha_beta_custom_enabled": false,
+                "bert_min_df": "None",
+                "bert_max_features": "None"
+            }
+        }
+    },
+    "selected_config": "Config 1"
+}

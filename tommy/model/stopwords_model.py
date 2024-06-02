@@ -115,6 +115,37 @@ class StopwordsModel:
         self._extra_words = word_set
         self._extra_words_in_order = words_in_order
 
+    def to_dict(self) -> dict:
+        """
+        Convert the stopwords object to a dictionary.
+
+        :return: Dictionary representation of the stopwords
+        """
+        return {
+            "extra_stopwords": self._extra_words_in_order
+        }
+
+    @classmethod
+    def from_dict(cls, stopwords_dict: dict) -> StopwordsModel:
+        """
+        Create a StopwordsModel instance from a dictionary representation.
+
+        :param stopwords_dict: Dictionary representation of the stopwords
+        :return: StopwordsModel instance
+        """
+        stopwords_model = cls()
+        stopwords_model._extra_words_in_order = list(stopwords_dict[
+                                                         "extra_stopwords"])
+
+        for word in stopwords_model._extra_words_in_order:
+            if not isinstance(word, str):
+                raise ValueError(
+                    "Extra stopwords should be strings, but are not")
+
+        stopwords_model._extra_words = set(
+            stopwords_model.extra_words_in_order)
+        return stopwords_model
+
 
 """
 This program has been developed by students from the bachelor Computer Science

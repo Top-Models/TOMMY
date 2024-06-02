@@ -12,10 +12,7 @@ def dutch_stopwords():
     """
     Fixture to create a StopWords object with predefined Dutch stop words.
     """
-
-    language_controller = LanguageController()
-    language_controller.set_model_refs(LanguageModel())
-    stopwords_controller = StopwordsController(language_controller)
+    stopwords_controller = StopwordsController()
     stopwords_controller.set_model_refs(StopwordsModel())
     stopwords_controller.load_default_stopwords(SupportedLanguage.Dutch)
     return stopwords_controller.stopwords_model
@@ -26,10 +23,7 @@ def english_stopwords():
     """
     Fixture to create a StopWords object with predefined English stop words.
     """
-
-    language_controller = LanguageController()
-    language_controller.set_model_refs(LanguageModel())
-    stopwords_controller = StopwordsController(language_controller)
+    stopwords_controller = StopwordsController()
     stopwords_controller.set_model_refs(StopwordsModel())
     stopwords_controller.load_default_stopwords(SupportedLanguage.English)
     return stopwords_controller.stopwords_model
@@ -168,7 +162,6 @@ def test_stopwords_remove_list(stopwords, request):
     Test removing a list of words from stop words.
     """
     stopword_list = request.getfixturevalue(stopwords)
-    print(type(stopword_list))
     n = len(stopword_list)
     stopword_list.add(["hoimam", "hoipap", "hoibroer"])
     assert "hoimam" in stopword_list

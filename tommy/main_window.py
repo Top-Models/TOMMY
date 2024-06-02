@@ -68,6 +68,7 @@ class MainWindow(QMainWindow):
         # Initialize the menu bar
         self.setMenuBar(MenuBar(self,
                                 self._controller.project_settings_controller,
+                                self._controller.saving_loading_controller,
                                 self._controller.export_controller))
 
         # Create widgets
@@ -80,7 +81,8 @@ class MainWindow(QMainWindow):
             self.graph_view
         )
         self.imported_files_view = ImportedFilesView(
-            self._controller.corpus_controller)
+            self._controller.corpus_controller,
+            self._controller.topic_modelling_controller)
         self.model_params_view = ModelParamsView(
             self._controller.model_parameters_controller,
             self._controller.language_controller,
@@ -175,9 +177,11 @@ class MainWindow(QMainWindow):
         # TODO: Hardcoded save name
         # Show info about run if no topic is selected
         if not topic_entity.selected:
+            self.imported_files_view.display_files()
             self.selected_information_view.display_run_info("lda_model")
             return
 
+        self.imported_files_view.on_topic_selected(topic_entity)
         self.selected_information_view.display_topic_info(topic_entity)
 
     def display_correct_initial_files(self) -> None:
