@@ -132,7 +132,7 @@ class TopicModellingController:
         then runs the LDA model on the corpus and saves the topic runner.
         :return: None
         """
-        corpus = self._corpus_controller.get_processed_corpus()
+        corpus = self._corpus_controller.preprocess_corpus()
         num_topics = self._model_parameters_controller.get_model_n_topics()
         alpha_value = self._model_parameters_controller.get_model_alpha()
         beta_value = self._model_parameters_controller.get_model_beta()
@@ -164,7 +164,7 @@ class TopicModellingController:
         then runs the NMF model on the corpus and saves the topic runner.
         :return: None
         """
-        corpus = self._corpus_controller.get_processed_corpus()
+        corpus = self._corpus_controller.preprocess_corpus()
         num_topics = self._model_parameters_controller.get_model_n_topics()
 
         self._config_model.topic_runner = NmfRunner(
