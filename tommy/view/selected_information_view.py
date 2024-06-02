@@ -7,7 +7,7 @@ from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 from tommy.support.constant_variables import (
     heading_font,
-    prim_col_red, hover_prim_col_red)
+    prim_col_red, hover_prim_col_red, scrollbar_style)
 from tommy.view.imported_files_view.file_label import FileLabel
 
 
@@ -50,6 +50,7 @@ class SelectedInformationView(QScrollArea):
         self.scroll_area.setHorizontalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidget(self.scroll_widget)
+        self.scroll_area.setStyleSheet(scrollbar_style)
         self.layout.addWidget(self.scroll_area)
 
         # Initialize controllers

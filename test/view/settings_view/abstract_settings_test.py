@@ -11,7 +11,9 @@ from tommy.view.settings_view.abstract_settings.abstract_settings import \
 def abstract_settings() -> AbstractSettings:
     controller = Controller()
     abstract_settings = AbstractSettings(
-        controller.model_parameters_controller, controller.language_controller)
+        controller.model_parameters_controller,
+        controller.config_controller,
+        controller.language_controller)
     return abstract_settings
 
 
@@ -207,7 +209,7 @@ def test_language_field_changed_event(abstract_settings: AbstractSettings,
     abstract_settings._language_controller = (
         language_controller)
 
-    # Mock the selction field
+    # Mock the selection field
     language_field = mocker.MagicMock()
     abstract_settings._language_field = language_field
 

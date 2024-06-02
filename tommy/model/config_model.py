@@ -21,15 +21,35 @@ class ConfigModel:
             self.stopwords_model = StopwordsModel()
             self.synonyms_model = SynonymsModel()
             self.model_parameters_model = ModelParametersModel()
-            self.corpus_model = CorpusModel()
         else:
             self.stopwords_model = StopwordsModel(derive_from.stopwords_model)
             self.synonyms_model = SynonymsModel(derive_from.synonyms_model)
             self.model_parameters_model = ModelParametersModel(
                 derive_from.model_parameters_model)
-            self.corpus_model = CorpusModel(
-                derive_from.corpus_model
-            )
+
+    def to_dict(self):
+        """
+        Convert the configuration object to a dictionary.
+        :return: Dictionary representation of the configuration
+        """
+        return {
+            "stopwords": self.stopwords_model.to_dict(),
+            "model_parameters": self.model_parameters_model.to_dict()
+        }
+
+    @classmethod
+    def from_dict(cls, config_dict) -> ConfigModel:
+        """
+        Create a ConfigModel instance from a dictionary representation.
+        :param config_dict: Dictionary representation of the configuration
+        :return: ConfigModel instance
+        """
+        config = cls()
+        config.stopwords_model = StopwordsModel.from_dict(
+            config_dict["stopwords"])
+        config.model_parameters_model = ModelParametersModel.from_dict(
+            config_dict["model_parameters"])
+        return config
 
 
 """

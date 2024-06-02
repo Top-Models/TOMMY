@@ -26,10 +26,10 @@ def test_display_plot_layout_cleared_correctly(graph_view: GraphView):
     canvas2.add_subplot(222)
 
     # Display plot 1
-    graph_view.display_plot(canvas)
+    graph_view.display_plot(canvas, "Woordaantal")
 
     # Display plot 2
-    graph_view.display_plot(canvas2)
+    graph_view.display_plot(canvas2, "Woordaantal")
 
     # Check if the layout was cleared before displaying the second plot
     assert graph_view.layout.count() == 1
@@ -45,7 +45,7 @@ def test_display_plot_dpi_set_correctly(graph_view: GraphView):
     canvas.add_subplot(111)
 
     # Display the plot
-    graph_view.display_plot(canvas)
+    graph_view.display_plot(canvas, "Woordaantal")
 
     # Check if the DPI was set correctly
     assert canvas.figure.dpi == 100
@@ -60,7 +60,7 @@ def test_display_plot_weight(graph_view: GraphView):
     canvas.add_subplot(111, title="gewicht")
 
     # Display the plot
-    graph_view.display_plot(canvas)
+    graph_view.display_plot(canvas, "Woordaantal")
 
     # Check if the canvas was displayed
     assert graph_view.layout.count() == 1
@@ -75,7 +75,7 @@ def test_display_plot_correlation_matrix(graph_view: GraphView):
     canvas.add_subplot(111, title="correlatiematrix")
 
     # Display the plot
-    graph_view.display_plot(canvas)
+    graph_view.display_plot(canvas, "Woordaantal")
 
     # Check if the canvas was displayed
     assert graph_view.layout.count() == 1
@@ -90,10 +90,29 @@ def test_display_plot_default(graph_view: GraphView):
     canvas.add_subplot(111)
 
     # Display the plot
-    graph_view.display_plot(canvas)
+    graph_view.display_plot(canvas, "Woordaantal")
 
     # Check if the canvas was displayed
     assert graph_view.layout.count() == 1
+
+
+def test_clear_plot(graph_view: GraphView):
+    """
+    Test if the plot is cleared correctly.
+    """
+    # Create a canvas
+    canvas = Figure()
+    canvas.add_subplot(111)
+
+    # Display the plot
+    graph_view.display_plot(canvas, "Woordaantal")
+
+    # Clear the plot
+    graph_view.clear_plot()
+
+    # Check if the plot was cleared
+    assert graph_view.layout.count() == 1
+    assert isinstance(graph_view.layout.itemAt(0).widget(), FigureCanvasQTAgg)
 
 
 """

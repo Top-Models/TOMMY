@@ -1,73 +1,152 @@
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QPushButton, QInputDialog, QListWidget,
-    QMessageBox, QListWidgetItem
+    QMessageBox, QListWidgetItem, QLabel, QHBoxLayout, QWidget
 )
-from PySide6.QtGui import QIcon, QColor, QBrush
+
 from tommy.controller.config_controller import ConfigController
-from tommy.model.config_model import ConfigModel
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
-from tommy.support.constant_variables import text_font
+from tommy.support.constant_variables import (heading_font, prim_col_red,
+                                              hover_prim_col_red, text_font,
+                                              medium_light_gray,
+                                              hover_medium_light_gray,
+                                              pressed_medium_light_gray,
+                                              selected_medium_light_gray,
+                                              seco_col_blue,
+                                              hover_seco_col_blue,
+                                              pressed_seco_col_blue)
 
 
 class ConfigView(QDialog):
     """Widget for managing configurations"""
 
     def __init__(self, config_controller: ConfigController,
-                 model_parameters_controller: ModelParametersController):
+                 model_parameters_controller: ModelParametersController) \
+            -> None:
         super().__init__()
         self.config_controller = config_controller
         self.model_parameters_controller = model_parameters_controller
         self.setWindowTitle("Configuraties Beheer")
+        self.setMaximumHeight(600)
+        self.setMinimumHeight(200)
+        self.setMinimumWidth(300)
+        self.setMaximumWidth(400)
 
-        layout = QVBoxLayout()
+        self.layout = QVBoxLayout()
+        self.layout.setSpacing(0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+
+        # Initialize title label
+        self.title_label = None
+        self.initialize_title_label()
 
         # List widget to display configurations
         self.config_list_widget = QListWidget()
+        self.config_list_widget.setObjectName("list_widget")
         self.update_config_list()
-        layout.addWidget(self.config_list_widget)
+        self.layout.addWidget(self.config_list_widget)
 
         # Buttons for configuration management
-        add_button = QPushButton("Configuratie Toevoegen")
+        self.buttons_container = QWidget()
+        self.buttons_layout = QHBoxLayout()
+        self.buttons_layout.setContentsMargins(0, 0, 0, 0)
+        self.buttons_layout.setSpacing(0)
+        self.buttons_container.setLayout(self.buttons_layout)
+        self.layout.addWidget(self.buttons_container)
+
+        button_stylesheet = f"""
+                        QPushButton {{
+                            background-color: {seco_col_blue};
+                            color: white;
+                            padding: 5px;
+                            margin: 5px;
+                        }}
+
+                        QPushButton:hover {{
+                            background-color: {hover_seco_col_blue};
+                        }}
+
+                        QPushButton:pressed {{
+                            background-color: {pressed_seco_col_blue};
+                        }}
+                    """
+
+        add_button = QPushButton("Toevoegen")
         add_button.clicked.connect(self.add_configuration)
-        layout.addWidget(add_button)
+        add_button.setStyleSheet(button_stylesheet)
+        self.buttons_layout.addWidget(add_button)
 
-        delete_button = QPushButton("Configuratie Verwijderen")
+        delete_button = QPushButton("Verwijderen")
         delete_button.clicked.connect(self.delete_configuration)
-        layout.addWidget(delete_button)
+        delete_button.setStyleSheet(button_stylesheet)
+        self.buttons_layout.addWidget(delete_button)
 
-        load_button = QPushButton("Configuratie Laden")
+        load_button = QPushButton("Laden")
         load_button.clicked.connect(self.load_configuration)
-        layout.addWidget(load_button)
+        load_button.setStyleSheet(button_stylesheet)
+        self.buttons_layout.addWidget(load_button)
 
-        self.setLayout(layout)
+        self.setLayout(self.layout)
 
         # Apply the stylesheet
-        self.setStyleSheet("""
+        self.setStyleSheet(f"""
             background-color: white;
             font-size: 15px;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: '{text_font}', sans-serif;
             border: none;
         """)
 
         # Apply styling to the list widget
-        self.config_list_widget.setStyleSheet("""
-            QListWidget {
+        self.config_list_widget.setStyleSheet(f"""
+            QListWidget {{
                 background-color: #f2f2f2;
                 border: 1px solid #d9d9d9;
-            }
+            }}
 
-            QListWidget::item {
-                background-color: #ffffff;
-                padding: 5px;
-                border-bottom: 1px solid #d9d9d9;
-            }
+            QListWidget::item {{
+                font-family: {text_font};
+                font-size: 12px;
+                background-color: {medium_light_gray};
+                color: black;
+                margin: 5px;
+                padding: 3px;
+            }}
+            
+            QListWidget::item:hover {{
+                background-color: {hover_medium_light_gray};
+            }}
+            
+            QListWidget::item:hover {{
+                background-color: {pressed_medium_light_gray};
+            }}
 
-            QListWidget::item:selected {
-                background-color: #c1e2ff;
+            QListWidget::item:selected {{
+                background-color: {selected_medium_light_gray};
                 color: #333333;
-            }
+            }}
         """)
+
+    def initialize_title_label(self) -> None:
+        """
+        Initialize the title label.
+
+        :return: None
+        """
+        self.title_label = QLabel("Configuraties")
+        self.title_label.setStyleSheet(f"font-size: 13px;"
+                                       f"font-family: {heading_font};"
+                                       f"font-weight: bold;"
+                                       f"text-transform: uppercase;"
+                                       f"background-color: {prim_col_red};"
+                                       f"color: white;"
+                                       f"border-bottom: "
+                                       f"3px solid {hover_prim_col_red};")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
+                                      Qt.AlignmentFlag.AlignTop)
+        self.title_label.setContentsMargins(0, 0, 0, 0)
+        self.title_label.setFixedHeight(50)
+        self.layout.addWidget(self.title_label)
 
     def update_config_list(self):
         """Update the list of configurations"""
@@ -80,13 +159,10 @@ class ConfigView(QDialog):
                 #  user that this is the selected config
                 item = QListWidgetItem(name)
                 self.config_list_widget.addItem(item)
-                # TODO: When the UI can display the currently selected
-                #  config, remove this print statement
-                print(f"The currently selected config is {name}")
             else:
                 self.config_list_widget.addItem(name)
 
-    def add_configuration(self):
+    def add_configuration(self) -> None:
         """Method to add a new configuration"""
         name, ok = QInputDialog.getText(self, "Voer Configuratie Naam In",
                                         "Naam:")
@@ -101,7 +177,7 @@ class ConfigView(QDialog):
                                     "De configuratie kon niet worden "
                                     "toegevoegd")
 
-    def delete_configuration(self):
+    def delete_configuration(self) -> None:
         """Method to delete a configuration"""
         selected_items = self.config_list_widget.selectedItems()
         if selected_items:
@@ -118,7 +194,7 @@ class ConfigView(QDialog):
                 if success:
                     self.update_config_list()
 
-    def load_configuration(self):
+    def load_configuration(self) -> None:
         """Method to load a configuration"""
         selected_items = self.config_list_widget.selectedItems()
         if selected_items:

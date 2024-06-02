@@ -1,15 +1,26 @@
 import csv
 import os
 import networkx as nx
-from matplotlib import pyplot as plt
 from pathlib import Path
 from tommy.controller.graph_controller import GraphController
+
+
+def hex_to_rgb(hex_color: str) -> tuple:
+    """
+    Convert hex color string to RGB tuple
+    :param hex_color: Hex color string (e.g., "#RRGGBB")
+    :return: RGB tuple (e.g., (R, G, B))
+    """
+    hex_color = hex_color.lstrip('#')
+    return tuple(int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
+
 
 class ExportController:
     """Class for exporting graphs and networks to file"""
     _graph_controller: GraphController = None
+
     def export_networks(self, path: str) -> None:
-        """"
+        """
         Exports networks to gexf file for all available nx exports
         :param path: path to the folder where to save the gexf files
         :return: None
@@ -17,9 +28,35 @@ class ExportController:
 
         nx_exports = self._graph_controller.get_all_nx_exports()
 
-        for i in range(len(nx_exports)):
+        for i, graph in enumerate(nx_exports):
             new_path = os.path.join(path, f"{i}.gexf")
-            nx.write_gexf(nx_exports[i], new_path)
+
+            # Create a new graph with the same nodes and edges to store colors
+            graph_with_colors = nx.Graph(graph)
+
+            # Store node and edge colors in the new graph
+            for node, data in graph_with_colors.nodes(data=True):
+                if 'color' in data:
+                    color = data['color']
+                    if isinstance(color, str):
+                        color = hex_to_rgb(color)
+                    graph_with_colors.nodes[node]['viz'] = \
+                        {'color': {'r': color[0],
+                                   'g': color[1],
+                                   'b': color[2]}}
+
+            for u, v, data in graph_with_colors.edges(data=True):
+                if 'color' in data:
+                    color = data['color']
+                    if isinstance(color, str):
+                        color = hex_to_rgb(color)
+                    graph_with_colors[u][v]['viz'] = \
+                        {'color': {
+                            'r': color[0],
+                            'g': color[1],
+                            'b': color[2]}}
+
+            nx.write_gexf(graph_with_colors, new_path)
 
     def export_graphs(self, path: str) -> None:
         """"
@@ -31,7 +68,8 @@ class ExportController:
 
         for i in range(len(graph_exports)):
             new_path = os.path.join(path, f"{i}.png")
-            graph_exports[i].savefig(new_path)
+            figure, _ = graph_exports[i]
+            figure.savefig(new_path)
 
     def export_topic_words_csv(self, path: str) -> None:
         """
@@ -52,6 +90,7 @@ class ExportController:
 
     def set_controller_refs(self, graph_controller: GraphController) -> None:
         self._graph_controller = graph_controller
+
 
 """
 This program has been developed by students from the bachelor Computer Science

@@ -1,6 +1,7 @@
 import matplotlib.figure
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
+from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 import numpy as np
 
 from tommy.controller.result_interfaces.correlation_matrix_interface import (
@@ -21,7 +22,7 @@ class CorrelationMatrixCreator(AbstractVisualization):
     correlation matrix plot for topics in the given topic runner and returning
     it as a matplotlib figure.
     """
-    _required_interfaces = [CorrelationMatrixInterface]
+    _required_interfaces = [CorrelationMatrixInterface, TopicRunner]
     name = 'Correlatiematrix topics'
     short_tab_name = 'Correlatie'
     vis_group = VisGroup.MODEL
@@ -46,19 +47,25 @@ class CorrelationMatrixCreator(AbstractVisualization):
         correlation_matrix = topic_runner.get_correlation_matrix(
             n_words_to_process=30)
 
+        # Normalize the correlation matrix to have values between 0 and 1
+        correlation_matrix = (correlation_matrix - np.min(
+            correlation_matrix)) / (np.max(correlation_matrix) - np.min(
+            correlation_matrix))
+
         # Construct a plot and axes
         fig, ax = plt.subplots()
 
         # Construct the correlations matrix adding colors
-        data = ax.imshow(correlation_matrix, cmap='RdBu_r', origin='lower')
+        data = ax.imshow(correlation_matrix, cmap='RdBu_r',
+                         origin='lower')
 
         # Add a color bar to the plot
         plt.colorbar(data)
 
         # Add a title and correct integer ticks on both axes
         plt.title(self.name)
-        fig.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
-        fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
         # Adjust the plot ticks so that they start from 1 instead of 0
         num_topics = topic_runner.get_n_topics()
@@ -66,8 +73,6 @@ class CorrelationMatrixCreator(AbstractVisualization):
                    np.arange(1, num_topics + 1))
         plt.yticks(np.arange(num_topics),
                    np.arange(1, num_topics + 1))
-
-        fig.figure.subplots_adjust(0.3, 0.2, 0.7, 0.8)
 
         plt.close()
         return fig

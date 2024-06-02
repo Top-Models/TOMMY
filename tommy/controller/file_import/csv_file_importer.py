@@ -1,7 +1,7 @@
 import csv
 import os.path
 from os import stat
-from typing import List, Generator
+from typing import Generator
 from datetime import date
 
 from tommy.controller.file_import import file_importer_base
@@ -14,7 +14,7 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
     """
     Handles importing of csv files
     """
-    mandatory_fields: List[str] = ['body']
+    mandatory_fields: list[str] = ['body']
 
     def __init__(self) -> None:
         """
@@ -31,32 +31,26 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                      compatibility.
         :return: bool: True if the file is compatible, False otherwise.
         """
-        try:
-            with open(path, 'r', newline="", encoding='utf-8') as csvfile:
-                csv_reader = csv.DictReader(csvfile, delimiter=',')
-
-                # To check whether each mandatory header exists and is unique,
-                # we keep an array of occurrences of all mandatory headers
-                mandatory_fields_counts = [0] * len(self.mandatory_fields)
-
-                for header in csv_reader.fieldnames:
-                    if header.lower() in self.mandatory_fields:
-                        mandatory_fields_counts[self.mandatory_fields.index(
-                            header.lower())] += 1
-
-                if mandatory_fields_counts == [1] * len(self.mandatory_fields):
-                    return True
-
-            print("Incorrect number of headers", mandatory_fields_counts)
+        if not path.endswith('.csv'):
             return False
 
-        except UnicodeDecodeError as e:
-            print(f"Error decoding file '{path}': {e}")
-            return False
+        headers = []
+        with open(path, 'r', newline="", encoding='utf-8-sig') as csvfile:
+            csv_reader = csv.DictReader(csvfile, delimiter=',')
+            headers = csv_reader.fieldnames
+            # To check whether each mandatory header exists and is unique,
+            # we keep an array of occurrences of all mandatory headers
+            mandatory_fields_counts = [0] * len(self.mandatory_fields)
+            for header in csv_reader.fieldnames:
+                if header.lower() in self.mandatory_fields:
+                    mandatory_fields_counts[self.mandatory_fields.index(
+                        header.lower())] += 1
 
-        except Exception as e:
-            print(f"Error reading file '{path}': {e}")
-            return False
+            if mandatory_fields_counts == [1] * len(self.mandatory_fields):
+                return True
+
+        raise ValueError("CSV bestand heeft niet alle verplichte headers, "
+                         f"of te veel headers. Headers: {headers}")
 
     def load_file(self, path: str) -> Generator[RawFile, None, None]:
         """
@@ -65,7 +59,7 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
         :param path: The string path to the CSV file.
         :return: File: A File object generated from each row of the CSV.
         """
-        with open(path, 'r', newline="", encoding='utf-8') as csvfile:
+        with open(path, 'r', newline="", encoding='utf-8-sig') as csvfile:
             reader = csv.DictReader(csvfile)
             reader.fieldnames = [str(header).lower() for header in
                                  reader.fieldnames]
@@ -73,29 +67,29 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
 
             row_index = 1  # Only used for debugging
             for row in reader:
+                # Remove empty fields
                 for key, value in row.items():
                     if value == "" or value.isspace():
                         del row[key]
 
-                try:
-                    yield self.generate_file(row, path)
-                except KeyError as e:
-                    print("Failed to load row {} in file {},"
-                          " reason: {}".format(row_index, path, e))
+                yield self.generate_file(row, path, row_index)
                 row_index += 1
 
-    def generate_file(self, file: dict, path) -> RawFile:
+    def generate_file(self, file: dict, path: str, row_index: int) -> RawFile:
         """
         Generates a File object from a CSV row.
 
         :param file: A dictionary representing a row of CSV data.
         :param path: The string path to the CSV file.
+        :param row_index: The index of the row in the csv file. Used for
+        debugging and error presentation to the user.
         :return: A RawFile object generated from the CSV row
         containing metadata and the raw text of the file.
         """
         for key in self.mandatory_fields:
             if key not in file or file[key] is None:
-                raise KeyError(key)
+                raise KeyError(f"er is een probleem opgetreden op rij "
+                               f"{row_index}", key)
 
         file_date: str = file.get("date")
         if file_date is not None and not file_date.isspace():
@@ -108,7 +102,7 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                               length=len(file.get("body").split(" ")),
                               name=os.path.relpath(path).split(".")[0],
                               size=stat(path).st_size),
-            body=RawBody(body=file.get("body")))
+            body=RawBody(body=file.get("body").strip()))
 
 
 """

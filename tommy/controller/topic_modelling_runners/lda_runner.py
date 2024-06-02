@@ -1,10 +1,12 @@
 from collections.abc import Iterable
 
+import numpy as np
 from gensim.corpora.dictionary import Dictionary
 from gensim.models.ldamodel import LdaModel
 from gensim.models.coherencemodel import CoherenceModel
 from numpy import ndarray
 
+from tommy.controller.file_import.processed_corpus import ProcessedCorpus
 from tommy.controller.result_interfaces.correlation_matrix_interface import (
     CorrelationMatrixInterface)
 from tommy.controller.result_interfaces.document_topics_interface import (
@@ -61,7 +63,8 @@ class LdaRunner(TopicRunner,
 
     def __init__(self,
                  topic_model: TopicModel,
-                 docs: Iterable[list[str]],
+                 processed_corpus: ProcessedCorpus,
+                 current_corpus_version_id: int,
                  num_topics: int,
                  alpha: float = None,
                  beta: float = None,
@@ -70,35 +73,35 @@ class LdaRunner(TopicRunner,
         Initialize the GensimLdaModel.
         :param topic_model: Reference to the topic model where the algorithm
             and data should be saved.
-        :param docs: Generator returning the preprocessed lists of words as
-            training input
+        :param processed_corpus: The processed corpus
+        :param current_corpus_version_id: The version identifier of the corpus
+            that is used in training
         :param num_topics: Number of topics to the model.
         :param random_seed: Seed for reproducibility, defaults to 42.
         :return: None
         """
-        super().__init__(topic_model=topic_model)
-
-        # clear location where model and dictionary will be stored
-        self.docs = docs
+        super().__init__(topic_model, current_corpus_version_id)
 
         self._num_topics = num_topics
         self._alpha = alpha
         self._beta = beta
         self._random_seed = random_seed
-        self.train_model(docs)
+        self.train_model(processed_corpus)
+        self.calculate_document_topics(processed_corpus, topic_model)
 
-    def train_model(self, docs: Iterable[list[str]]) -> None:
+    def train_model(self, processed_corpus: ProcessedCorpus) -> None:
         """
         Train the LDA model on the given documents and save the resulting model
         and dictionary in the topic model ready to return results.
-        :param docs: Generator returning the preprocessed lists of words as
-            training input
+        :param processed_corpus: The processed corpus
         :return: None
         """
 
-        self._dictionary = Dictionary(docs)
+        processed_bodies = [document.body.body for document in processed_corpus]
+
+        self._dictionary = Dictionary(processed_bodies)
         bags_of_words = [self._dictionary.doc2bow(tokens)
-                         for tokens in docs]
+                         for tokens in processed_bodies]
         self._bags_of_words = bags_of_words
 
         # Run optimized LDA if alpha and beta are None
@@ -117,6 +120,31 @@ class LdaRunner(TopicRunner,
                                alpha=self._alpha,
                                eta=self._beta)
 
+    def calculate_document_topics(self,
+                                  processed_corpus: ProcessedCorpus,
+                                  topic_model: TopicModel) -> None:
+        """
+        Calculate the topic probabilities for each document in the corpus.
+        :param processed_corpus: The processed corpus
+        :param topic_model: The topic model to save the results in
+        :return:
+        """
+        topic_model.document_topics = []
+        n_topics = self.get_n_topics()
+
+        for document in processed_corpus:
+            topic_correspondence = (
+                self.get_document_topics(document.body.body, 0.0))
+
+            probabilities = [0.0] * n_topics
+
+            # Create list of topic probabilities for each document
+            for (topic_id, topic_probability) in topic_correspondence:
+                probabilities[topic_id] = topic_probability
+
+            topic_model.document_topics.append(
+                (document.metadata, probabilities))
+
     def get_n_topics(self) -> int:
         return self._num_topics
 
@@ -131,20 +159,42 @@ class LdaRunner(TopicRunner,
                 for (topic_id, words_with_scores)
                 in self._model.show_topics(formatted=False, num_words=n_words)]
 
-    def get_correlation_matrix(self, n_words_to_process: int) -> ndarray:
+    def get_correlation_matrix(self, **kwargs) -> ndarray:
         """
-        Get the array of distances (in the sense of similarity) between
-        different topics in the model.
-        :param n_words_to_process: The number of to take into account when
-            calculating the distance between topics.
-        :return: n_topic x n_topics matrix of floats between 0 and 1 where
-            entry i,j is the distance between topic i and topic j. Entry i,j is
-            close to 0 when topic i and topic j are similar and close to 1 when
-            topic i and topic j are very different
+        Calculate the topic correlation matrix.
+
+        :return: ndarray representing the correlation matrix of topics.
         """
-        return self._model.diff(self._model,
-                                distance='jaccard',
-                                num_words=n_words_to_process)[0]
+        topic_word_distribution = self._model.get_topics()
+
+        # Binarize the topic-word distribution based on a set threshold 0.01
+        # i.e. see if a word is related enough to a topic
+        binary_topic_distribution = (topic_word_distribution >
+                                     0.005).astype(int)
+
+        num_topics = binary_topic_distribution.shape[0]
+        dice_matrix = np.zeros((num_topics, num_topics))
+
+        # Compute the Dice-Sørensen coefficient for each pair of topics
+        for i in range(num_topics):
+            for j in range(num_topics):
+                # Check if intersection is 1 or 0
+                intersection = np.sum(
+                    binary_topic_distribution[i] *
+                    binary_topic_distribution[j])
+
+                sum_i = np.sum(binary_topic_distribution[i])
+                sum_j = np.sum(binary_topic_distribution[j])
+
+                # Fill in the formula
+                if sum_i + sum_j > 0:
+                    dice_matrix[i, j] = 2 * intersection / (
+                            sum_i + sum_j)
+                # Dividing by zero is impossible, so make it 0
+                else:
+                    dice_matrix[i, j] = 0.0
+
+        return dice_matrix
 
     def get_document_topics(self, doc, minimum_probability):
         bag_of_words = self._dictionary.doc2bow(doc)

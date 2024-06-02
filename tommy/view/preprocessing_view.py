@@ -28,6 +28,8 @@ class PreprocessingView(QScrollArea):
 
         # Initialize widget properties
         self.setFixedWidth(250)
+        self.setMinimumHeight(200)
+        self.setMaximumHeight(300)
         self.setContentsMargins(0, 0, 0, 0)
         self.setStyleSheet(f"""        
                 QTabWidget {{
@@ -61,20 +63,21 @@ class PreprocessingView(QScrollArea):
                 }}
 
                 QScrollArea {{
-                    border: 0px solid #00968F;
                     border-radius: 10px;
                 }}
+                
                 QScrollBar:vertical {{
                     border: none;
+                    width: 10px;
                     background: #F0F0F0;
-                    width: 30px;
                     margin: 0px;
                 }}
+                
                 QScrollBar::handle:vertical {{
                     background: #CCCCCC;
                     min-height: 20px;
-                    border-radius: 10px;
                 }}
+                
                 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
                     height: 0px; 
                 }}
@@ -97,25 +100,21 @@ class PreprocessingView(QScrollArea):
         self.container = QTabWidget()
 
         # Initialize tabs
-        tab_style = (f"border-radius: 5px;"
-                     f"font-size: 14px;"
-                     f"font-family: {text_font};"
-                     f"color: black;"
-                     f"border: 2px solid #00968F;"
-                     f"padding: 5px;"
-                     f"background-color: white;"
-                     f"margin: 5px;")
+        tab_style = (f"""
+            QTextEdit {{
+                border-radius: 5px;
+                font-size: 14px;
+                font-family: {text_font};
+                color: black;
+                border: 2px solid #00968F;
+                padding: 5px;
+                background-color: white;
+                margin: 5px;
+            }}            
+        """)
 
         self.blacklist_tab = QTextEdit()
         self.blacklist_tab.setStyleSheet(tab_style)
-        self.blacklist_tab.setLineWrapMode(QTextEdit.NoWrap)
-        self.blacklist_tab.setPlaceholderText(
-            "woord\nwoord\netc...")
-
-        self.ngrams_tab = QTextEdit()
-        self.ngrams_tab.setStyleSheet(tab_style)
-        self.ngrams_tab.setLineWrapMode(QTextEdit.NoWrap)
-
         self.synonym_tab = QTextEdit()
         self.synonym_tab.setStyleSheet(tab_style)
         self.synonym_tab.setLineWrapMode(QTextEdit.NoWrap)
@@ -133,17 +132,14 @@ class PreprocessingView(QScrollArea):
         # Set layouts for tabs
         self.container.addTab(self.blacklist_tab, "Blacklist")
         self.container.addTab(self.synonym_tab, "Synoniemen")
-        self.container.addTab(self.ngrams_tab, "N-grams")
 
         # Connect text changed event to update methods
         self.blacklist_tab.textChanged.connect(self.update_blacklist)
         self.synonym_tab.textChanged.connect(self.update_synonyms)
-        self.ngrams_tab.textChanged.connect(self.update_ngrams)
 
         # Disable rich text
         self.blacklist_tab.setAcceptRichText(False)
         self.synonym_tab.setAcceptRichText(False)
-        self.ngrams_tab.setAcceptRichText(False)
 
     def update_blacklist(self) -> None:
         """
@@ -167,15 +163,6 @@ class PreprocessingView(QScrollArea):
         synonyms = {words[0]: words[1] for words
                     in map(str.split, lines) if len(words) == 2}
         self._synonyms_controller.update_synonyms(synonyms)
-
-    def update_ngrams(self) -> None:
-        """
-        Update ngrams set with the text from the ngrams tab.
-        should be updated to handle the right parsing.
-        :return: None
-        """
-        input_text = self.ngrams_tab.toPlainText()
-        # TODO: implement at a later point
 
     def _update_blacklist_textbox(self, words: list[str]):
         text = "\n".join(words)

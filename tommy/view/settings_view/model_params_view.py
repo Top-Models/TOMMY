@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QWidget,
-                               QPushButton)
+                               QPushButton, QApplication, QHBoxLayout)
 
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
@@ -10,14 +10,14 @@ from tommy.controller.model_parameters_controller import (
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
-    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray)
+    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray,
+    extra_light_gray, scrollbar_style)
 from tommy.support.model_type import ModelType
-from tommy.view.config_view import ConfigView
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
-from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.abstract_settings.bert_settings import (
     BertSettings)
+from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 
 
@@ -28,7 +28,7 @@ class ModelParamsView(QScrollArea):
                  language_controller: LanguageController,
                  config_controller: ConfigController,
                  controller: Controller) -> None:
-        """The initialization ot the ModelParamDisplay."""
+        """The initialization of the ModelParamDisplay."""
         super().__init__()
         self.setObjectName("model_params_display")
         self.setContentsMargins(0, 0, 0, 0)
@@ -42,47 +42,46 @@ class ModelParamsView(QScrollArea):
 
         # Subscribe to the event when the config changes
         self._model_parameters_controller.params_model_changed_event.subscribe(
-            self._update_model_params)
+            self._update_ui_on_model_params_switch)
+        language_controller.language_model_changed_event.subscribe(
+            self._update_ui_on_language_model_switch)
 
         # Initialize model settings
         self.algorithm_specific_settings_views: dict[
             ModelType, AbstractSettings] = {
-            ModelType.LDA: LdaSettings(
-                self._model_parameters_controller,
-                language_controller),
-            ModelType.BERTopic: BertSettings(
-                self._model_parameters_controller,
-                language_controller),
-            ModelType.NMF: NmfSettings(
-                self._model_parameters_controller,
-                language_controller)
+            ModelType.LDA: LdaSettings(self._model_parameters_controller,
+                                       self._config_controller,
+                                       language_controller),
+            ModelType.BERTopic: BertSettings(self._model_parameters_controller,
+                                             self._config_controller,
+                                             language_controller),
+            ModelType.NMF: NmfSettings(self._model_parameters_controller,
+                                       self._config_controller,
+                                       language_controller)
         }
 
         # Initialize widget properties
         self.setFixedWidth(250)
+        self.setMinimumHeight(350)
 
         # Apply stylesheet to model_params_display object
-        self.setStyleSheet(
-            """
-            QWidget#model_params_display {
-                border-bottom: 3px solid lightgrey;
-            }
-            
-            QWidget#model_params_display QWidget {
+        self.setStyleSheet(f"""
+            QWidget#model_params_display {{
+                border-bottom: 3px solid lightgray;
+            }}
+
+            QWidget#model_params_display QWidget {{
                 background-color: rgba(230, 230, 230, 230);
-            }
-            """
-        )
+            }}
+            """)
 
         self.enabled_input_stylesheet = (f"background-color: white;"
-                                         f"border-radius: 5px;"
                                          f"font-size: 14px;"
                                          f"font-family: {text_font};"
                                          f"color: black;"
                                          f"border: 2px solid {seco_col_blue};"
                                          f"padding: 5px;")
         self.disabled_input_stylesheet = (f"background-color: {disabled_gray};"
-                                          f"border-radius: 5px;"
                                           f"font-size: 14px;"
                                           f"font-family: {text_font};"
                                           f"color: black;"
@@ -111,15 +110,23 @@ class ModelParamsView(QScrollArea):
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_area.setWidget(self.scroll_widget)
 
+        # Style the scroll area
+        self.scroll_area.setStyleSheet(f"""
+            QScrollArea {{
+                border: 0px;
+                border-bottom: 3px solid lightgray;
+            }}
+            """ + scrollbar_style)
+
         # Initialize button widgets
         self.apply_button = None
 
-        # TODO: Frontend people make this pretty
-        self.config_management_button = None
-
         # Initialize button layout
-        self.button_layout = QVBoxLayout()
+        self.button_layout = QHBoxLayout()
         self.button_layout.setAlignment(Qt.AlignRight)
+        self.button_layout.setSpacing(10)
+
+        # Add widgets to the layout
         self.layout.addWidget(self.scroll_area)
 
         # Initialize parameter widgets
@@ -150,7 +157,6 @@ class ModelParamsView(QScrollArea):
         """
         Initialize the parameter widgets.
         """
-        self.initialize_config_button()
         current_view = self.get_current_settings_view()
         current_view.initialize_parameter_widgets(self.scroll_layout)
         current_view.set_field_values_from_backend()
@@ -181,43 +187,30 @@ class ModelParamsView(QScrollArea):
                     if sub_child.widget() is not None:
                         sub_child.widget().deleteLater()
 
-    def open_config_management_widget(self):
-        """Method to open the configuration management widget"""
-        config_management_widget = ConfigView(
-            self._config_controller, self._model_parameters_controller)
-        config_management_widget.exec()
-
-    def initialize_config_button(self) -> None:
+    def clear_layouts_from_button_layout(self) -> None:
         """
-        Initialize the button that opens the config view
-        TODO: Frontend people make this pretty
-        :return:
+        Clear the layouts from the button layout.
+
+        :return: None
         """
-        self.config_management_button = QPushButton("Beheer Configuraties")
-        self.config_management_button.setStyleSheet(
-            f"""
-                            QPushButton {{
-                                background-color: {seco_col_blue};
-                                color: white;
-                                border-radius: 5px;
-                                padding: 10px 20px;
-                                font-size: 14px;
-                                font-family: {text_font};
-                            }}
+        layout = self.button_layout
 
-                            QPushButton:hover {{
-                                background-color: {hover_seco_col_blue};
-                            }}
+        # While layout is not empty
+        while layout.count():
+            child = layout.takeAt(0)
 
-                            QPushButton:pressed {{
-                                background-color: {pressed_seco_col_blue};
-                            }}
-                            """
-        )
-        self.config_management_button.clicked.connect(
-            self.open_config_management_widget)
-        self.button_layout.addWidget(self.config_management_button,
-                                     alignment=Qt.AlignTop)
+            # If there is a widget
+            if child.widget() is not None:
+                # Delete the widget
+                child.widget().deleteLater()
+
+            # If there is a layout
+            elif child.layout() is not None:
+                # Delete all widgets in the layout
+                while child.layout().count():
+                    sub_child = child.layout().takeAt(0)
+                    if sub_child.widget() is not None:
+                        sub_child.widget().deleteLater()
 
     def initialize_apply_button(self) -> None:
         """
@@ -225,8 +218,8 @@ class ModelParamsView(QScrollArea):
 
         :return: None
         """
+        self.clear_layouts_from_button_layout()
         self.apply_button = QPushButton("Toepassen")
-        self.apply_button.setFixedWidth(100)
         self.apply_button.setFixedHeight(40)
         self.apply_button.setStyleSheet(
             f"""
@@ -244,13 +237,8 @@ class ModelParamsView(QScrollArea):
                 }}
             """)
         self.apply_button.clicked.connect(self.apply_button_clicked_event)
-
-        if self.apply_button not in self.button_layout.children():
-            self.button_layout.addWidget(self.apply_button,
-                                         alignment=Qt.AlignBottom)
-
-        if self.button_layout not in self.scroll_layout.children():
-            self.scroll_layout.addLayout(self.button_layout, stretch=1)
+        self.button_layout.addWidget(self.apply_button, stretch=1)
+        self.layout.addLayout(self.button_layout)
 
     def get_current_settings_view(self) -> AbstractSettings:
         """
@@ -270,8 +258,50 @@ class ModelParamsView(QScrollArea):
         current_model_type = self._model_parameters_controller.get_model_type()
         current_view = self.algorithm_specific_settings_views[
             current_model_type]
+        # Disable the apply button and change its text to "Laden..."
+        self.apply_button.setEnabled(False)
+        self.apply_button.setText("Laden...")
+        self.apply_button.setStyleSheet(
+            f"""
+                        QPushButton {{
+                            background-color: #808080;
+                            color: white;
+                            margin-left: 5px;
+                        }}
+
+                QPushButton:hover {{
+                    background-color: {hover_seco_col_blue};
+                }}
+
+                QPushButton:pressed {{
+                    background-color: {pressed_seco_col_blue};
+                }}
+            """)
+
+        QApplication.processEvents()
+
         if current_view.all_fields_valid():
             self._controller.on_run_topic_modelling()
+
+        # Re-enable the apply button and restore its text
+        # when processing is complete
+        self.apply_button.setEnabled(True)
+        self.apply_button.setText("Toepassen")
+        self.apply_button.setStyleSheet(
+            f"""
+                QPushButton {{
+                    background-color: {seco_col_blue};
+                    color: white;
+                }}
+
+                QPushButton:hover {{
+                    background-color: {hover_seco_col_blue};
+                }}
+
+                QPushButton:pressed {{
+                    background-color: {pressed_seco_col_blue};
+                }}
+            """)
 
     def model_type_changed_event(self) -> None:
         """
@@ -282,10 +312,12 @@ class ModelParamsView(QScrollArea):
         self.clear_layouts_from_scroll_layout()
         self.initialize_parameter_widgets()
 
-    def _update_model_params(self, data: ModelParametersModel):
+    def _update_ui_on_model_params_switch(self, data: None) -> None:
         self.model_type_changed_event()
-        settings_view = self.algorithm_specific_settings_views[data.model_type]
-        settings_view.set_text_on_config_change()
+
+    def _update_ui_on_language_model_switch(self, data: None) -> None:
+        settings_view = self.get_current_settings_view()
+        settings_view.set_field_values_from_backend()
 
 
 """

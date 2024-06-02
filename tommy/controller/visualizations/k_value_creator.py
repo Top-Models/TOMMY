@@ -11,13 +11,14 @@ from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
 from tommy.controller.visualizations.possible_visualization import VisGroup
 from tommy.controller.visualizations.visualization_input_datatypes import (
     VisInputData, TopicID, MetadataCorpus, ProcessedCorpus)
+from tommy.support.constant_variables import prim_col_red
 
 
 class KValueCreator(AbstractVisualization):
     """
 
     """
-    _required_interfaces = [TopicCoherenceInterface]
+    _required_interfaces = [TopicCoherenceInterface, TopicRunner]
     name = 'K-waarde'
     short_tab_name = 'K-waarde'
     vis_group = VisGroup.MODEL
@@ -45,11 +46,10 @@ class KValueCreator(AbstractVisualization):
         # Set the axis and plot figure
         axis.set_xlabel('Aantal topics')
         axis.set_ylabel('$u_{mass}$')
-        axis.plot(topic_range, u_mass, color='darkblue')
+        axis.plot(topic_range, u_mass, color=f'{prim_col_red}')
 
         fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
         fig.tight_layout()
 
         plt.close()
         return fig
-

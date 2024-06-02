@@ -1,3 +1,4 @@
+from tommy.controller.graph_controller import GraphController
 from tommy.model.config_model import ConfigModel
 from tommy.model.model import Model
 from tommy.support.event_handler import EventHandler
@@ -16,6 +17,7 @@ class ConfigController:
 
     def __init__(self):
         self._config_switched_event: EventHandler[ConfigModel] = EventHandler()
+        self._graph_controller = None
 
     def set_model_refs(self, model: Model) -> None:
         """
@@ -25,6 +27,14 @@ class ConfigController:
         :return: None
         """
         self._model = model
+
+    def set_controller_refs(self, graph_controller: GraphController) -> None:
+        """
+        Set a reference to the graph controller
+        :param graph_controller: The graph controller
+        :return: None
+        """
+        self._graph_controller = graph_controller
 
     def switch_configuration(self, name: str) -> bool:
         """
@@ -37,6 +47,7 @@ class ConfigController:
         if config_exists:
             self._model.selected_config_name = name
             self._config_switched_event.publish(self._model.config_model)
+            self._graph_controller.reset_graph_view_state()
         return config_exists
 
     def get_configuration_names(self) -> list[str]:

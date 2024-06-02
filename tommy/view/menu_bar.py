@@ -1,13 +1,15 @@
 import os
 
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QMenuBar, QMenu, QWidget, QFileDialog
+from PySide6.QtWidgets import QMenuBar, QWidget, QFileDialog, QMessageBox
 
 from tommy.controller.export_controller import ExportController
-from tommy.controller.project_settings_controller import (
-    ProjectSettingsController)
+from tommy.controller.project_settings_controller import \
+    ProjectSettingsController
+from tommy.controller.saving_loading_controller import SavingLoadingController
 from tommy.support.constant_variables import (
     prim_col_red, dark_prim_col_red, extra_light_gray, text_font)
+from tommy.view.error_view import ErrorView
 
 
 class MenuBar(QMenuBar):
@@ -16,6 +18,7 @@ class MenuBar(QMenuBar):
     def __init__(self,
                  parent: QWidget,
                  project_settings_controller: ProjectSettingsController,
+                 saving_loading_controller: SavingLoadingController,
                  export_controller: ExportController
                  ) -> None:
         """Initialize the menu bar."""
@@ -23,24 +26,36 @@ class MenuBar(QMenuBar):
 
         # Set reference to project settings controller for input folder button
         self._project_settings_controller = project_settings_controller
+        self._saving_loading_controller = saving_loading_controller
 
         self._export_controller = export_controller
 
         # Create actions
         import_input_folder_action = QAction("Selecteer input folder", self)
-        export_to_gexf_action = QAction("Exporteer naar Graph Exchange XML Format (.gexf)", self)
+        export_to_gexf_action = QAction(
+            "Exporteer naar Graph Exchange XML Format (.gexf)", self)
         export_to_png_action = QAction("Exporteer grafieken (.png)", self)
         export_topic_words_action = QAction("Exporteer Topicdata (.csv)", self)
+        save_settings_action = QAction("Instellingen opslaan", self)
+        save_settings_as_action = QAction("Instellingen opslaan als", self)
+        load_settings_action = QAction("Instellingen laden", self)
 
         # Connect actions to event handlers
         import_input_folder_action.triggered.connect(self.import_input_folder)
         export_to_gexf_action.triggered.connect(self.export_to_gexf)
         export_to_png_action.triggered.connect(self.export_to_png)
         export_topic_words_action.triggered.connect(self.export_topic_words)
+        save_settings_action.triggered.connect(self.save_settings_to_file)
+        save_settings_as_action.triggered.connect(self.save_settings_as)
+        load_settings_action.triggered.connect(
+            self._load_settings_from_file)  # Connect to new method
 
         # Create menu bar
         file_menu = self.addMenu("Bestand")
         file_menu.addAction(import_input_folder_action)
+        file_menu.addAction(save_settings_action)
+        file_menu.addAction(save_settings_as_action)
+        file_menu.addAction(load_settings_action)
 
         # Add sub menu export_menu to menu bar
         export_menu = file_menu.addMenu("Exporteren")
@@ -123,6 +138,61 @@ class MenuBar(QMenuBar):
         if dialog[0]:
             export_path = dialog[0]
             self._export_controller.export_topic_words_csv(export_path)
+
+    def save_settings_to_file(self) -> None:
+        """
+        Save project settings to a file. If the file path is not already
+        known, the user is asked by calling save_settings_as instead.
+        :return: None
+        """
+        if self._saving_loading_controller.filepath:
+            self._save_settings_and_show_dialog(
+                self._saving_loading_controller.filepath)
+        else:
+            self.save_settings_as()
+
+    def save_settings_as(self) -> None:
+        """
+        Ask the user where to save the project settings and save them.
+        :return: None
+        """
+        dialog = QFileDialog.getSaveFileName(self, "Selecteer opslaglocatie",
+                                             filter="JSON files (*.json)")
+        if dialog[0]:
+            self._save_settings_and_show_dialog(dialog[0])
+
+    def _save_settings_and_show_dialog(self, filepath) -> None:
+        """
+        Save the project settings to a file and show a dialog to show the
+        user whether file saving succeeded or not.
+        :param filepath: The filepath where the settings should be saved
+        :return: None
+        """
+        errors = self._saving_loading_controller.save_settings_to_file(
+            filepath)
+        if not errors:
+            QMessageBox.information(self, "Project opgeslagen",
+                                    "Het project is succesvol opgeslagen.")
+        else:
+            ErrorView("Er is een fout opgetreden bij het opslaan van het "
+                      "project.", errors)
+
+    def _load_settings_from_file(self) -> None:
+        """
+        Load project settings from a file selected by the user.
+        :return: None
+        """
+        dialog = QFileDialog.getOpenFileName(self, "Selecteer bestand",
+                                             filter="JSON files (*.json)")
+        if dialog[0]:
+            errors = self._saving_loading_controller.load_settings_from_file(
+                dialog[0])
+            if not errors:
+                QMessageBox.information(self, "Project geladen",
+                                        "Het project is succesvol geladen.")
+            else:
+                ErrorView("Er is een fout opgetreden bij het laden van het "
+                          "project.", errors)
 
 
 """

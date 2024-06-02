@@ -1,8 +1,14 @@
 import pytest
+from gensim.models import LdaModel
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from pytest_mock import mocker, MockerFixture
 
+from tommy.controller.file_import.processed_body import ProcessedBody
+from tommy.controller.file_import.processed_corpus import ProcessedCorpus
+from tommy.controller.file_import.processed_file import ProcessedFile
+from tommy.controller.project_settings_controller import (
+    ProjectSettingsController)
 from tommy.controller.topic_modelling_controller import (
     TopicModellingController)
 from tommy.controller.corpus_controller import (
@@ -12,6 +18,10 @@ from tommy.controller.graph_controller import (GraphController,
                                                TopicWithScores,
                                                VisInputData,
                                                AbstractVisualization)
+from tommy.controller.topic_modelling_runners.abstract_topic_runner import \
+    TopicRunner
+from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
+from tommy.model.topic_model import TopicModel
 
 
 @pytest.fixture(scope='function')
@@ -28,8 +38,10 @@ def graph_controller() -> GraphController:
 
     topic_modelling_controller = TopicModellingController()
     corpus_controller = CorpusController()
+    project_settings_controller = ProjectSettingsController()
     graph_controller.set_controller_refs(topic_modelling_controller,
-                                         corpus_controller)
+                                         corpus_controller,
+                                         project_settings_controller)
 
     return graph_controller
 
@@ -180,6 +192,35 @@ def test_delete_all_cached_plots(graph_controller: GraphController,
     # Assert
     for spy in method_spies:
         spy.assert_called_once()
+
+
+def test_reset_graph_view_state(graph_controller: GraphController,
+                                mocker: MockerFixture):
+    # Arrange
+    mocker.patch.object(graph_controller, "_delete_all_cached_plots")
+    mocker.patch.object(graph_controller, "_current_topic_selected_id", 5)
+
+    # Act
+    graph_controller.reset_graph_view_state()
+
+    # Assert
+    assert graph_controller._current_topic_selected_id is None
+
+
+def test_visualizations_available(graph_controller: GraphController):
+    graph_controller._current_topic_runner = None
+    assert not graph_controller.visualizations_available()
+
+    topic_model = TopicModel()
+
+    processed_corpus = ProcessedCorpus()
+    processed_corpus.documents = [
+        ProcessedFile(None, ProcessedBody([f"doc{i}"])) for i in range(10)]
+
+    graph_controller._current_topic_runner = LdaRunner(topic_model,
+                                                       processed_corpus, 0, 5)
+
+    assert graph_controller.visualizations_available()
 
 
 """

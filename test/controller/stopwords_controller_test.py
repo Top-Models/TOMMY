@@ -5,6 +5,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 from PySide6.QtTest import QTest
 
+from tommy.controller.controller import Controller
 from tommy.controller.language_controller import LanguageController
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.model.language_model import LanguageModel
@@ -23,17 +24,9 @@ def app(qtbot):
 
 
 @pytest.fixture
-def language_controller():
-    """Fixture for creating a LanguageController."""
-    language_controller = LanguageController()
-    language_controller.set_model_refs(LanguageModel())
-    return language_controller
-
-
-@pytest.fixture
-def stopwords_controller(language_controller):
+def stopwords_controller():
     """Fixture for creating a StopwordsController."""
-    return StopwordsController(language_controller)
+    return StopwordsController()
 
 
 @pytest.fixture
@@ -66,7 +59,7 @@ def test_stopwords_view_model_linkage(stopwords_controller, stopwords_view,
     assert test_stopword in stopwords_model.extra_words
 
 
-def test_stopwords_path(stopwords_controller, language_controller):
+def test_stopwords_path(stopwords_controller):
     """Test whether the path to the stopwords path is correct depending on
     the language"""
     assert (stopwords_controller.get_stopwords_path(SupportedLanguage.Dutch) ==
@@ -76,6 +69,22 @@ def test_stopwords_path(stopwords_controller, language_controller):
         SupportedLanguage.English) ==
             os.path.join(application_settings.preprocessing_data_folder,
                          "stopwords", "English.txt"))
+
+
+def test_stopwords_loaded_on_start():
+    controller = Controller()
+    loaded_stopwords = (controller.stopwords_controller.stopwords_model
+                        .default_words.copy())
+
+    assert len(loaded_stopwords) > 0
+
+    controller.stopwords_controller.load_default_stopwords(
+        controller.language_controller.get_language())
+
+    newly_loaded_stopwords = (controller.stopwords_controller.stopwords_model
+                              .default_words.copy())
+
+    assert loaded_stopwords == newly_loaded_stopwords
 
 
 """
