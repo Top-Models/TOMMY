@@ -1,7 +1,8 @@
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QGuiApplication
 from PySide6.QtWidgets import (
     QMainWindow,
-    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy
+    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy, QSplitter
 )
 
 from tommy.controller.controller import Controller
@@ -46,19 +47,39 @@ class MainWindow(QMainWindow):
 
         # Create the main layout
         self.layout = QHBoxLayout()
-        self.left_container = QVBoxLayout()
-        self.center_container = QVBoxLayout()
-        self.right_container = QVBoxLayout()
-        self.layout.addLayout(self.left_container)
-        self.layout.addLayout(self.center_container)
-        self.layout.addLayout(self.right_container)
-
-        # Set spacing of the layout
-        self.layout.setSpacing(0)
-        self.left_container.setSpacing(0)
-        self.center_container.setSpacing(0)
-        self.right_container.setSpacing(0)
         self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
+
+        # Create the splitter to handle resizing
+        self.splitter = QSplitter(Qt.Horizontal)
+        self.splitter.setStyleSheet("border: none;")
+        self.splitter.setContentsMargins(0, 0, 0, 0)
+
+        self.left_container = QWidget()
+        self.left_layout = QVBoxLayout(self.left_container)
+        self.left_layout.setContentsMargins(0, 0, 0, 0)
+        self.left_layout.setSpacing(0)
+
+        self.center_container = QWidget()
+        self.center_layout = QVBoxLayout(self.center_container)
+        self.center_layout.setContentsMargins(0, 0, 0, 0)
+        self.center_layout.setSpacing(0)
+
+        self.right_container = QWidget()
+        self.right_layout = QVBoxLayout(self.right_container)
+        self.right_layout.setContentsMargins(0, 0, 0, 0)
+        self.right_layout.setSpacing(0)
+
+        self.splitter.addWidget(self.left_container)
+        self.splitter.addWidget(self.center_container)
+        self.splitter.addWidget(self.right_container)
+
+        # Adjust size policies and minimum widths
+        self.left_container.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+        self.right_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.center_container.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        self.layout.addWidget(self.splitter)
 
         # Set the central widget
         central_widget = QWidget()
@@ -96,18 +117,18 @@ class MainWindow(QMainWindow):
             self._controller.model_parameters_controller)
 
         # Initialize widgets
-        self.left_container.addWidget(self.model_params_view)
-        self.left_container.addWidget(self.stopwords_view)
-        self.center_container.addWidget(self.plot_selection_view)
-        self.center_container.addWidget(self.graph_view)
-        self.center_container.addWidget(self.imported_files_view)
-        self.right_container.addWidget(self.fetched_topics_view)
-        self.right_container.addWidget(
-            self.selected_information_view)
+        self.left_layout.addWidget(self.model_params_view)
+        self.left_layout.addWidget(self.stopwords_view)
+        self.center_layout.addWidget(self.plot_selection_view)
+        self.center_layout.addWidget(self.graph_view)
+        self.center_layout.addWidget(self.imported_files_view)
+        self.right_layout.addWidget(self.fetched_topics_view)
+        self.right_layout.addWidget(self.selected_information_view)
 
-        # Make graph view resize with screen
-        self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Expanding,
-                                       QSizePolicy.Policy.Expanding))
+        # Adjust the splitter stretch factors
+        self.splitter.setStretchFactor(0, 0)  # Left container: fixed
+        self.splitter.setStretchFactor(1, 1)  # Center container: expand
+        self.splitter.setStretchFactor(2, 0)  # Right container: minimum size
 
         self.display_correct_initial_files()
 

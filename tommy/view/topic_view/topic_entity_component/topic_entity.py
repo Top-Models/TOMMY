@@ -41,7 +41,7 @@ class TopicEntity(QFrame):
 
         # Initialize widget properties
         self.setStyleSheet(f"background-color: {sec_col_purple};")
-        self.setFixedWidth(200)
+        self.setFixedWidth(150)
 
         # Initialize radio button layout
         radio_layout = QHBoxLayout()
