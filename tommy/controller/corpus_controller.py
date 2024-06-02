@@ -193,8 +193,7 @@ class CorpusController:
 
         :return: The pre-processed files and a reference to their metadata
         """
-        if self._corpus_model.processed_corpus.documents is None:
-            self.preprocess_corpus()
+        self.preprocess_corpus()
 
         return self._corpus_model.processed_corpus
 
