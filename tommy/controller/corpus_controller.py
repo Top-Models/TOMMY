@@ -193,18 +193,22 @@ class CorpusController:
 
         :return: The pre-processed files and a reference to their metadata
         """
-        self.preprocess_corpus()
+        if not self._corpus_model.processed_corpus:
+            return self.preprocess_corpus()
 
         return self._corpus_model.processed_corpus
 
-    def preprocess_corpus(self) -> None:
+    def preprocess_corpus(self) -> ProcessedCorpus:
         """Preprocessed the corpus and save it in the corpus model"""
         processed_files = [ProcessedFile(doc.metadata, ProcessedBody(
             self._preprocessing_controller.process_text(doc.body.body)))
                            for
                            doc in self.get_raw_files()]
 
-        self._corpus_model.processed_corpus.documents = processed_files
+        processed_corpus = ProcessedCorpus(processed_files)
+
+        self._corpus_model.processed_corpus = processed_corpus
+        return processed_corpus
 
     def get_dictionary(self) -> Dictionary:
         """
