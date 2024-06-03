@@ -21,3 +21,4 @@ class TopicNameModel:
         """Function to remove a configuration from the model."""
         if config_name in self.topic_names:
             del self.topic_names[config_name]
+        print(self.topic_names)

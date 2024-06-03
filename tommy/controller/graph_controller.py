@@ -79,6 +79,7 @@ class GraphController:
     _possible_plots_changed_event: EventHandler[list[PossibleVisualization]]
     _topics_changed_event: EventHandler[None]
     _refresh_plots_event: EventHandler[None]
+    _refresh_name_event: EventHandler[None]
 
     # Exporters
     NX_EXPORTS: list[NxExporterOnData | NxExporter] = [
@@ -105,6 +106,11 @@ class GraphController:
         return self._refresh_plots_event
 
     @property
+    def refresh_name_event(self) -> EventHandler[None]:
+        """Get the event that triggers when the config name changes."""
+        return self._refresh_name_event
+
+    @property
     def has_topic_runner(self) -> bool:
         return self._current_topic_runner is not None
 
@@ -117,6 +123,7 @@ class GraphController:
             list[PossibleVisualization]]()
         self._topics_changed_event = EventHandler[None]()
         self._refresh_plots_event = EventHandler[None]()
+        self._refresh_name_event = EventHandler[None]()
 
     def set_controller_refs(
             self,
@@ -146,8 +153,6 @@ class GraphController:
         :return: None
         """
         self._current_topic_selected_id = topic_index
-
-        # trigger event to notify that plots may have changed
         self._refresh_plots_event.publish(None)
 
     def set_current_config(self, config_name: str) -> None:
@@ -157,6 +162,7 @@ class GraphController:
         :return: None
         """
         self._current_config = config_name
+        self._refresh_name_event.publish(None)
 
     def get_topic_name(self, topic_index: int) -> str:
         """

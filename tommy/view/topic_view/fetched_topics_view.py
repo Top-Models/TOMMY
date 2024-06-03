@@ -63,6 +63,8 @@ class FetchedTopicsView(QScrollArea):
         self._graph_controller = graph_controller
         self._graph_controller.topics_changed_event.subscribe(
             self._refresh_topics)
+        self._graph_controller.refresh_name_event.subscribe(
+                self._refresh_topics)
 
         # Set reference to the model parameters controller
         self._model_parameters_controller = model_parameters_controller

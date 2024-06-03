@@ -97,6 +97,7 @@ class ConfigController:
             self.switch_configuration(configs[new_index])
 
         self._model.configs.pop(name)
+        self._graph_controller.remove_config(name)
         return True
 
     def get_selected_configuration(self) -> str:
