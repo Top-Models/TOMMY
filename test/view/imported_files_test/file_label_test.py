@@ -38,7 +38,7 @@ def test_enter_event_selected(file_label: FileLabel):
             f"background-color: {medium_light_gray};"
             f"color: black;"
             f"margin: 0px;"
-            f"padding: 3px;")
+            f"padding: 2px 3px 4px 3px;")
 
 
 def test_enter_event_not_selected(file_label: FileLabel):
@@ -54,7 +54,7 @@ def test_enter_event_not_selected(file_label: FileLabel):
             f"{hover_medium_light_gray};"
             f"color: black;"
             f"margin: 0px;"
-            f"padding: 3px;")
+            f"padding: 2px 3px 4px 3px;")
 
 
 def test_leave_event_selected(file_label: FileLabel):
@@ -65,11 +65,11 @@ def test_leave_event_selected(file_label: FileLabel):
     file_label.leaveEvent(None)
     assert (file_label.styleSheet() ==
             f"font-family: {text_font};"
-            "font-size: 12px;"
+            f"font-size: 12px;"
             f"background-color: {medium_light_gray};"
-            "color: black;"
-            "margin: 0px;"
-            "padding: 3px;")
+            f"color: black;"
+            f"margin: 0px;"
+            f"padding: 2px 3px 4px 3px;")
 
 
 def test_leave_event_not_selected(file_label: FileLabel):
@@ -84,7 +84,7 @@ def test_leave_event_not_selected(file_label: FileLabel):
             f"background-color: {medium_light_gray};"
             f"color: black;"
             f"margin: 0px;"
-            f"padding: 3px;")
+            f"padding: 2px 3px 4px 3px;")
 
 
 def test_mouse_press_event_selected(file_label: FileLabel, qtbot: QtBot):
@@ -95,11 +95,11 @@ def test_mouse_press_event_selected(file_label: FileLabel, qtbot: QtBot):
     qtbot.mousePress(file_label, Qt.LeftButton)
     assert (file_label.styleSheet() ==
             f"font-family: {text_font};"
-            "font-size: 12px;"
+            f"font-size: 12px;"
             f"background-color: {medium_light_gray};"
-            "color: black;"
-            "margin: 0px;"
-            "padding: 3px;")
+            f"color: black;"
+            f"margin: 0px;"
+            f"padding: 2px 3px 4px 3px;")
 
     assert file_label.selected is False
 
@@ -117,7 +117,7 @@ def test_mouse_press_event_not_selected(file_label: FileLabel, qtbot: QtBot):
             f"{pressed_medium_light_gray};"
             f"color: black;"
             f"margin: 0px;"
-            f"padding: 3px;")
+            f"padding: 2px 3px 4px 3px;")
 
 
 def test_deselect(file_label: FileLabel):
@@ -132,7 +132,7 @@ def test_deselect(file_label: FileLabel):
             f"background-color: {medium_light_gray};"
             f"color: black;"
             f"margin: 0px;"
-            f"padding: 3px;")
+            f"padding: 2px 3px 4px 3px;")
 
 
 def test_select(file_label: FileLabel):
@@ -148,7 +148,7 @@ def test_select(file_label: FileLabel):
             f"{pressed_medium_light_gray};"
             f"color: black;"
             f"margin: 0px;"
-            f"padding: 3px;")
+            f"padding: 2px 3px 4px 3px;")
 
 
 def test_mouse_release_event_selected(file_label: FileLabel, qtbot: QtBot):
@@ -159,12 +159,11 @@ def test_mouse_release_event_selected(file_label: FileLabel, qtbot: QtBot):
     qtbot.mouseRelease(file_label, Qt.LeftButton)
     assert (file_label.styleSheet() ==
             f"font-family: {text_font};"
-            "font-size: 12px;"
+            f"font-size: 12px;"
             f"background-color: {medium_light_gray};"
-            "color: black;"
-            "margin: 0px;"
-            "padding: 3px;"
-            )
+            f"color: black;"
+            f"margin: 0px;"
+            f"padding: 2px 3px 4px 3px;")
 
     assert file_label.selected is True
 
@@ -181,7 +180,7 @@ def test_mouse_release_event_not_selected(file_label: FileLabel, qtbot: QtBot):
             f"background-color: {hover_medium_light_gray};"
             f"color: black;"
             f"margin: 0px;"
-            f"padding: 3px;")
+            f"padding: 2px 3px 4px 3px;")
 
     assert file_label.selected is False
 

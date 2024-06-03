@@ -7,6 +7,7 @@ from gensim.corpora.dictionary import Dictionary
 from gensim.models.nmf import Nmf
 from gensim.models.coherencemodel import CoherenceModel
 
+from tommy.controller.file_import.processed_corpus import ProcessedCorpus
 from tommy.model.topic_model import TopicModel
 from tommy.datatypes.topics import TopicWithScores
 from tommy.controller.result_interfaces.correlation_matrix_interface import (
@@ -60,45 +61,72 @@ class NmfRunner(TopicRunner,
         self._topic_model.corpus = bag
 
     def __init__(self, topic_model: TopicModel,
-                 docs: Iterable[list[str]],
+                 processed_corpus: ProcessedCorpus,
+                 current_corpus_version_id: int,
                  num_topics: int,
                  random_seed=STANDARD_RANDOM_SEED) -> None:
         """
         Initialize the GensimNmfModel.
         :param topic_model: Reference to the topic model where the algorithm
             and data should be saved.
-        :param docs: Generator returning the preprocessed lists of words as
-            training input
+        :param processed_corpus: The processed corpus
+        :param current_corpus_version_id: The version identifier of the corpus
+            that is used in training
         :param num_topics: Number of topics to the model.
         :param random_seed: Seed for reproducibility, defaults to 42.
         :return: None
         """
-        super().__init__(topic_model=topic_model)
-
-        # clear location where model and dictionary will be stored
-        self.docs = docs
+        super().__init__(topic_model, current_corpus_version_id)
 
         self._num_topics = num_topics
         self._random_seed = random_seed
-        self.train_model(docs)
+        self.train_model(processed_corpus)
+        self.calculate_document_topics(processed_corpus, topic_model)
 
-    def train_model(self, docs: Iterable[list[str]]) -> None:
+    def train_model(self, processed_corpus: ProcessedCorpus) -> None:
         """
         Train the NMF model on the given documents and save the resulting model
         and dictionary in the topic model ready to return results.
-        :param docs: Generator returning the preprocessed lists of words as
-            training input
+        :param processed_corpus: The processed corpus
         :return: None
         """
-        self._dictionary = Dictionary(docs)
+
+        processed_bodies = [document.body.body for document in processed_corpus]
+
+        self._dictionary = Dictionary(processed_bodies)
         bags_of_words = [self._dictionary.doc2bow(tokens)
-                         for tokens in docs]
+                         for tokens in processed_bodies]
         self._bags_of_words = bags_of_words
 
         self._model = Nmf(corpus=bags_of_words,
                           id2word=self._dictionary,
                           num_topics=self._num_topics,
                           random_state=self._random_seed)
+
+    def calculate_document_topics(self,
+                                  processed_corpus: ProcessedCorpus,
+                                  topic_model: TopicModel) -> None:
+        """
+        Calculate the topic probabilities for each document in the corpus.
+        :param processed_corpus: The processed corpus
+        :param topic_model: The topic model to save the results in
+        :return:
+        """
+        topic_model.document_topics = []
+        n_topics = self.get_n_topics()
+
+        for document in processed_corpus:
+            topic_correspondence = (
+                self.get_document_topics(document.body.body, 0.0))
+
+            probabilities = [0.0] * n_topics
+
+            # Create list of topic probabilities for each document
+            for (topic_id, topic_probability) in topic_correspondence:
+                probabilities[topic_id] = topic_probability
+
+            topic_model.document_topics.append(
+                (document.metadata, probabilities))
 
     def get_n_topics(self) -> int:
         return self._num_topics

@@ -1,6 +1,9 @@
 import pytest
+from pytest_mock import mocker, MockerFixture
+
 import spacy.tokens
 
+from tommy.controller.controller import Controller
 from tommy.controller.language_controller import LanguageController
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.model.language_model import LanguageModel
@@ -10,31 +13,38 @@ from tommy.support.supported_languages import SupportedLanguage
 
 
 @pytest.fixture
-def language_controller():
+def language_controller_dutch(mocker: MockerFixture):
     language_controller = LanguageController()
-    language_controller.set_model_refs(LanguageModel())
+    mocker.patch.object(language_controller, "get_language",
+                        return_value=SupportedLanguage.Dutch)
     return language_controller
 
 
 @pytest.fixture
-def preprocessing_controller_dutch(language_controller):
-    controller = PreprocessingController(language_controller)
-    controller.load_pipeline(SupportedLanguage.Dutch)
+def language_controller_english(mocker: MockerFixture):
+    language_controller = LanguageController()
+    mocker.patch.object(language_controller, "get_language",
+                        return_value=SupportedLanguage.English)
+    return language_controller
+
+
+@pytest.fixture
+def preprocessing_controller_dutch(language_controller_dutch):
+    controller = PreprocessingController()
+    controller.set_controller_refs(language_controller_dutch)
     return controller
 
 
 @pytest.fixture
-def preprocessing_controller_english(language_controller):
-    controller = PreprocessingController(language_controller)
-    controller.load_pipeline(SupportedLanguage.English)
+def preprocessing_controller_english(language_controller_english):
+    controller = PreprocessingController()
+    controller.set_controller_refs(language_controller_english)
     return controller
 
 
 @pytest.fixture
 def stopwords_model_dutch():
-    language_controller = LanguageController()
-    language_controller.set_model_refs(LanguageModel())
-    stopwords_controller = StopwordsController(language_controller)
+    stopwords_controller = StopwordsController()
     stopwords_controller.set_model_refs(StopwordsModel())
     stopwords_controller.load_default_stopwords(SupportedLanguage.Dutch)
     return stopwords_controller.stopwords_model
@@ -42,9 +52,7 @@ def stopwords_model_dutch():
 
 @pytest.fixture
 def stopwords_model_english():
-    language_controller = LanguageController()
-    language_controller.set_model_refs(LanguageModel())
-    stopwords_controller = StopwordsController(language_controller)
+    stopwords_controller = StopwordsController()
     stopwords_controller.set_model_refs(StopwordsModel())
     stopwords_controller.load_default_stopwords(SupportedLanguage.English)
     return stopwords_controller.stopwords_model
@@ -82,7 +90,6 @@ def test_process_text_english(preprocessing_controller_english,
     text = "This is a test sentence token2."
     tokens = preprocessing_controller_english.process_text(text)
     assert isinstance(tokens, list)
-    print(tokens)
     # Check the expected number of tokens
     assert len(tokens) == 3
 
@@ -115,6 +122,41 @@ def test_process_tokens(preprocessing_controller_dutch, stopwords_model_dutch):
 
     # Check if specific tokens are present
     assert "test" in tokens
+
+
+@pytest.mark.parametrize("input_text, sentences", [
+    ("This is a sentence is a test. Testing is so much fun.",
+     ["This is a sentence is a test.", "Testing is so much fun."]),
+    ("It becomes more difficult when you add abbreviations, e.g., "
+     "things like that. I.E., I don't have much faith, but it might work.",
+     ["It becomes more difficult when you add abbreviations, e.g., "
+      "things like that.",
+      "I.E., I don't have much faith, but it might work."])
+])
+def test_split_into_sentences_english(preprocessing_controller_english,
+                                      input_text, sentences):
+    """Test the split_into_sentenced method of PreprocessingController."""
+    result_sentences = preprocessing_controller_english.split_into_sentences(
+        input_text)
+
+    assert result_sentences == sentences
+
+
+@pytest.mark.parametrize("input_text, sentences", [
+    ("Dit is een test zin. De vorige zin was een zin of zoiets.",
+     ["Dit is een test zin.", "De vorige zin was een zin of zoiets."]),
+    ("Deze zin is tricky, want er zit b.v. een afkorting in. "
+     "Hopelijk is een getal zoals 9.2 niet te ingewikkeld",
+     ["Deze zin is tricky, want er zit b.v. een afkorting in.",
+      "Hopelijk is een getal zoals 9.2 niet te ingewikkeld"])
+])
+def test_split_into_sentences_dutch(preprocessing_controller_dutch,
+                                    input_text, sentences):
+    """Test the split_into_sentenced method of PreprocessingController."""
+    result_sentences = preprocessing_controller_dutch.split_into_sentences(
+        input_text)
+
+    assert result_sentences == sentences
 
 
 def test_filter_stopwords(preprocessing_controller_dutch,
@@ -155,6 +197,11 @@ def test_n_gram_merging(preprocessing_controller_dutch,
     # Check if specific n_grams are present
     assert "Hello Kitty" in [token.text for token in n_grams]
     assert "Ben Ten" in [token.text for token in n_grams]
+
+
+def test_preprocessing_pipeline_loaded_on_start():
+    controller = Controller()
+    assert controller._preprocessing_controller._nlp is not None
 
 
 """

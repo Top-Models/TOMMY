@@ -1,4 +1,6 @@
 import os
+
+import pypdf
 import pytest
 from tommy.controller.file_import.pdf_file_importer import PdfFileImporter
 
@@ -33,7 +35,8 @@ def test_corrupted_file(pdf_file_importer):
     corrupted_path = os.path.join(TEST_DATA_DIR,
                             'corrupt_files',
                             'hondenverhaaltje 5.pdf')
-    assert not pdf_file_importer.compatible_file(corrupted_path)
+    with pytest.raises(pypdf.errors.PdfStreamError) as exception_info:
+        pdf_file_importer.compatible_file(corrupted_path)
 
 
 def test_load_file(pdf_file_importer):

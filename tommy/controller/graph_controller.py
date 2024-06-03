@@ -236,7 +236,7 @@ class GraphController:
 
     def get_visualization(self, vis_index: int,
                           override_topic: int | None = None
-                          ) -> matplotlib.figure.Figure:
+                          ) -> (matplotlib.figure.Figure, str):
         """
         Returns the visualization corresponding to the given index in the list
         of all visualizations.
@@ -244,6 +244,7 @@ class GraphController:
         :param override_topic: A topic index used to override the selected
             topic, default to None, which doesn't override the selected topic
         :return: matplotlib figure of visualization corresponding to the index
+        and the type of the visualization
         :raises IndexError: if the index is negative or bigger than the number
             of visualizations or if the visualization corresponding to that
             index is not possible in the current topic model.
@@ -254,8 +255,10 @@ class GraphController:
                              f'{vis_index} available')
 
         vis_creator = self.VISUALIZATIONS[vis_index]
-        return self._run_visualization_creator(vis_creator,
-                                               override_topic=override_topic)
+
+        return (self._run_visualization_creator(vis_creator,
+                                                override_topic=override_topic),
+                vis_creator.short_tab_name)
 
     def _run_visualization_creator(self, vis_creator: AbstractVisualization,
                                    override_topic: int | None = None
@@ -393,7 +396,8 @@ class GraphController:
         self._possible_plots_changed_event.publish(
             self._possible_visualizations)
 
-    def _on_config_switch(self, topic_runner: TopicRunner):
+    def _on_config_switch(self, topic_runner: TopicRunner | None):
+        """Save and publish new topic runner on config switch"""
         self.on_topic_runner_complete(topic_runner)
 
     def reset_graph_view_state(self) -> None:

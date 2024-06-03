@@ -34,13 +34,9 @@ class DocxFileImporter(file_importer_base.FileImporterBase):
         if not path.endswith('.docx'):
             return False
 
-        try:
-            with open(path, "rb") as docx_file:
-                mammoth.extract_raw_text(docx_file)
-            return True
-        except Exception as e:
-            print(f"Error reading file '{path}': {e}")
-            return False
+        with open(path, "rb") as docx_file:
+            mammoth.extract_raw_text(docx_file)
+        return True
 
     def load_file(self, path: str) -> Generator[RawFile, None, None]:
         """
@@ -71,10 +67,8 @@ class DocxFileImporter(file_importer_base.FileImporterBase):
             mod_time = os.path.getmtime(path)
             file_date = datetime.fromtimestamp(mod_time)
         except Exception:
-            # If unable to get the modification time, use None
+            # If unable to get the modification time, don't set a date
             file_date = None
-
-        print(file_date)
 
         return RawFile(
             metadata=Metadata(author=None,

@@ -2,12 +2,15 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QDoubleValidator
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QCheckBox, \
     QVBoxLayout
+from PySide6.QtCore import QRegularExpression as QRegExp
+from PySide6.QtGui import QRegularExpressionValidator as QRegExpValidator
 
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.controller.language_controller import LanguageController
 from tommy.support.constant_variables import text_font, seco_col_blue
+from tommy.support.parameter_limits import alpha_min_value, beta_min_value
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
 
@@ -16,6 +19,8 @@ class LdaSettings(AbstractSettings):
     """
     Class for LDA settings
     """
+
+    allowed_expressions = QRegExp(r"^[0-9]+(\.[0-9]+)?$")
 
     def __init__(self,
                  model_parameters_controller,
@@ -77,7 +82,8 @@ class LdaSettings(AbstractSettings):
 
         # Add alpha input field
         self._alpha_value_input = QLineEdit()
-        self._alpha_value_input.setValidator(QDoubleValidator())
+        self._alpha_value_input.setValidator(
+            QRegExpValidator(self.allowed_expressions))
         self._alpha_value_input.setReadOnly(True)
         self._alpha_value_input.setFixedWidth(100)
         self._alpha_value_input.setPlaceholderText("Voer alpha in")
@@ -97,8 +103,8 @@ class LdaSettings(AbstractSettings):
 
         :return: None
         """
-        self._model_parameters_controller.set_model_alpha(
-            float(self._alpha_value_input.text()))
+        alpha = self._alpha_value_input.text()
+        self._model_parameters_controller.set_model_alpha(float(alpha))
 
     def validate_alpha_field(self) -> bool:
         """
@@ -117,7 +123,7 @@ class LdaSettings(AbstractSettings):
         # Check if alpha is a valid float
         try:
             alpha = float(self._alpha_value_input.text())
-            if alpha <= 0:
+            if alpha <= alpha_min_value:
                 is_valid = False
         except ValueError:
             is_valid = False
@@ -125,6 +131,9 @@ class LdaSettings(AbstractSettings):
         if not is_valid:
             self._alpha_value_input.setStyleSheet(
                 self.topic_input_layout_invalid)
+            self._alpha_value_input.setText("")
+            self._alpha_value_input.setPlaceholderText(
+                f"Alpha > {alpha_min_value}")
             return False
 
         self._alpha_value_input.setStyleSheet(self.enabled_input_stylesheet)
@@ -149,7 +158,8 @@ class LdaSettings(AbstractSettings):
 
         # Add beta input field
         self._beta_value_input = QLineEdit()
-        self._beta_value_input.setValidator(QDoubleValidator())
+        self._beta_value_input.setValidator(
+            QRegExpValidator(self.allowed_expressions))
         self._beta_value_input.setReadOnly(True)
         self._beta_value_input.setFixedWidth(100)
         self._beta_value_input.setPlaceholderText("Voer beta in")
@@ -189,7 +199,7 @@ class LdaSettings(AbstractSettings):
         # Check if beta is a valid float
         try:
             beta = float(self._beta_value_input.text())
-            if beta <= 0:
+            if beta <= beta_min_value:
                 is_valid = False
         except ValueError:
             is_valid = False
@@ -197,6 +207,9 @@ class LdaSettings(AbstractSettings):
         if not is_valid:
             self._beta_value_input.setStyleSheet(
                 self.topic_input_layout_invalid)
+            self._beta_value_input.setText("")
+            self._beta_value_input.setPlaceholderText(
+                f"Beta > {beta_min_value}")
             return False
 
         self._beta_value_input.setStyleSheet(self.enabled_input_stylesheet)

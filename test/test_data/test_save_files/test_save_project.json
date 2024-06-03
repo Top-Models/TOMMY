@@ -1,0 +1,44 @@
+{
+    "input_folder_path": "data/csv_files",
+    "language": "Nederlands",
+    "configs": {
+        "Config 1": {
+            "stopwords": {
+                "extra_stopwords": [
+                    "hallootjes",
+                    "goeiedagdag"
+                ]
+            },
+            "model_parameters": {
+                "n_topics": 5,
+                "model_type": "LDA",
+                "word_amount": 6,
+                "alpha": 2.0,
+                "beta": 0.2,
+                "alpha_beta_custom_enabled": true,
+                "bert_min_df": 0.1,
+                "bert_max_features": 100
+            }
+        },
+        "Andere config": {
+            "stopwords": {
+                "extra_stopwords": [
+                    "kan",
+                    "niet",
+                    "meer"
+                ]
+            },
+            "model_parameters": {
+                "n_topics": 3,
+                "model_type": "NMF",
+                "word_amount": 4,
+                "alpha": 1.0,
+                "beta": 0.01,
+                "alpha_beta_custom_enabled": false,
+                "bert_min_df": "None",
+                "bert_max_features": "None"
+            }
+        }
+    },
+    "selected_config": "Andere config"
+}

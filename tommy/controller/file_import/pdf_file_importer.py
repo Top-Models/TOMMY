@@ -1,4 +1,4 @@
-from pypdf import PdfReader
+from pypdf import PdfReader, DocumentInformation
 import os.path
 from os import stat
 from typing import Generator
@@ -35,15 +35,8 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         if not path.endswith('.pdf'):
             return False
 
-        try:
-            with open(path, 'rb') as file:
-                PdfReader(file)
-        except Exception as e:
-            print(
-                f"Failed to check compatibility of file {path} due "
-                f"to error: {e}")
-            return False
-
+        with open(path, 'rb') as file:
+            PdfReader(file)
         return True
 
     def load_file(self, path: str) -> Generator[RawFile, None, None]:
@@ -63,12 +56,13 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
                 for page in pdf.pages:
                     text += page.extract_text()
         except Exception as e:
-            print(f"Failed to load file {path} due to error: {e}")
-            return
+            raise Exception(f"kon niet correct gelezen worden: {e}")
 
         yield self.generate_file(text, path, metadata)
 
-    def generate_file(self, file: str, path, metadata) -> RawFile:
+    @staticmethod
+    def generate_file(file: str, path: str, metadata: DocumentInformation) -> (
+            RawFile):
         """
         Generates a File object from a PDF page.
 
@@ -84,6 +78,7 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         try:
             date = metadata.creation_date
         except Exception:
+            # If unable to get the modification time, don't set a date
             date = None
 
         return RawFile(
