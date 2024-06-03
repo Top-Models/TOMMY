@@ -226,7 +226,8 @@ class GraphController:
         raise IndexError(f'No exports with index {vis_index} available')
 
     def get_visualization(self, vis_index: int,
-                          override_topic: int | None = None
+                          override_topic: int | None = None,
+                          ignore_cache: bool = False
                           ) -> (matplotlib.figure.Figure, str):
         """
         Returns the visualization corresponding to the given index in the list
@@ -234,6 +235,8 @@ class GraphController:
         :param vis_index: Index of the visualization to be requested
         :param override_topic: A topic index used to override the selected
             topic, default to None, which doesn't override the selected topic
+        :param ignore_cache: Whether to ignore the cache and always create a
+            new figure, defaults to False
         :return: matplotlib figure of visualization corresponding to the index
         and the type of the visualization
         :raises IndexError: if the index is negative or bigger than the number
@@ -248,11 +251,13 @@ class GraphController:
         vis_creator = self.VISUALIZATIONS[vis_index]
 
         return (self._run_visualization_creator(vis_creator,
-                                                override_topic=override_topic),
+                                                override_topic=override_topic,
+                                                ignore_cache=ignore_cache),
                 vis_creator.short_tab_name)
 
     def _run_visualization_creator(self, vis_creator: AbstractVisualization,
-                                   override_topic: int | None = None
+                                   override_topic: int | None = None,
+                                   ignore_cache: bool = False
                                    ) -> matplotlib.figure.Figure:
         """
         Returns the given global visualization on the current topic runner and
@@ -260,6 +265,8 @@ class GraphController:
         :param vis_creator: The visualization creator be run
         :param override_topic: A topic index used to override the selected
             topic, default to None, which doesn't override the selected topic
+        :param ignore_cache: Whether to ignore the cache and always create a
+            new figure, defaults to False
         :return: matplotlib figure of visualization
         """
         keyword_args = {}
@@ -285,6 +292,7 @@ class GraphController:
                                               f"{vis_creator.name}.")
 
         return vis_creator.get_figure(self._current_topic_runner,
+                                      ignore_cache=ignore_cache,
                                       **keyword_args)
 
     @staticmethod
@@ -329,16 +337,20 @@ class GraphController:
         """
         return nx_exporter.get_nx_graph(self._current_topic_runner)
 
-    def get_all_visualizations(self) -> list[matplotlib.figure.Figure]:
+    def get_all_visualizations(self, ignore_cache: bool = False) -> (
+            list)[tuple[matplotlib.figure.Figure, str]]:
         """
         Get all the possible visualization for the current run
+        :param ignore_cache: Whether to ignore the cache and always create a
+            new figure, defaults to False
         :return: A list of  matplotlib Figures of all possible visualizations
         """
         if self._current_topic_runner is None:
             raise RuntimeError("Plots cannot be requested when topic model "
                                "has not been run.")
 
-        vis_without_topic = [self.get_visualization(possible_vis.index)
+        vis_without_topic = [self.get_visualization(possible_vis.index,
+                                                    ignore_cache=ignore_cache)
                              for possible_vis
                              in self._possible_visualizations
                              if not possible_vis.needs_topic]
@@ -346,7 +358,8 @@ class GraphController:
         # loop over all topic and all visualization that need topics to
         #   run all combinations
         vis_with_topic = [self.get_visualization(possible_vis.index,
-                                                 override_topic=topic_id)
+                                                 override_topic=topic_id,
+                                                 ignore_cache=ignore_cache)
                           for (possible_vis, topic_id)
                           in product(self._possible_visualizations,
                                      range(self.get_number_of_topics()))
