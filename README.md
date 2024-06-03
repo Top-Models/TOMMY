@@ -32,8 +32,7 @@ data.
 The executables can be downloaded off of [tommy.fyor.nl](tommy.fyor.nl).
 Instructions for the installation process can be found in the
 [installation guide](https://tommy.fyor.nl/wiki-user/Installation-guide.html#).
-Note that this website is written in Dutch. If you have any questions, feel free
-to reach out to us at the email address provided on the website.
+Note that this website is written in Dutch.
 
 # Usage
 
@@ -52,8 +51,7 @@ separated by an enter.
 # Support
 
 If you have any questions or issues, feel free to make a post on this
-repository. We will try to respond as soon as possible. If this doesn't work,
-you can reach out to us at the email address provided on the website.
+repository. We will try to respond as soon as possible.
 
 # Contributing
 
@@ -72,15 +70,15 @@ company EMMA.
 
 The students who have contributed to this project are:
 
-- [Erben Klaver](https://www.linkedin.com/in/erben-klaver-6b39a31a9/)
-- [Fyor Lambermont](https://linkedin.com/in/fyor-lambermont)
 - [Jasper Hofman]()
 - [Nick Jordan](https://www.linkedin.com/in/nick-jordan-11247bba/)
+- [Erben Klaver](https://www.linkedin.com/in/erben-klaver-6b39a31a9/)
+- [Fyor Lambermont](https://linkedin.com/in/fyor-lambermont)
 - [Thomas Loef]()
 - [Mees Notermans](https://www.linkedin.com/in/mees-notermans/)
-- [Isabelle de Wolf](https://www.linkedin.com/in/isabelle-de-wolf-5a2561254/)
-- [Rens Versnel](https://linkedin.com/in/rens-versnel)
 - [Wessel van der Ven](https://linkedin.com/in/wesselvanderven)
+- [Rens Versnel](https://linkedin.com/in/rens-versnel)
+- [Isabelle de Wolf](https://www.linkedin.com/in/isabelle-de-wolf-5a2561254/)
 
 Our supervisors are:
 
