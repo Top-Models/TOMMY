@@ -10,11 +10,16 @@ from tommy.support.model_type import ModelType
 from tommy.view.settings_view.model_params_view import ModelParamsView
 from pytest_mock import mocker
 from tommy.controller.controller import Controller
+from test.helper_fixtures import controller_no_pipeline
+
+
+@pytest.fixture
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture(scope='function')
-def model_params_view(qtbot: QtBot) -> ModelParamsView:
-    controller = Controller()
+def model_params_view(qtbot: QtBot, controller) -> ModelParamsView:
     model_params_view = ModelParamsView(
         controller.model_parameters_controller,
         controller.language_controller,
@@ -69,8 +74,10 @@ def test_apply_button_clicked_calls_on_run_topic_modelling(
     # Assert
     assert mock_on_run_topic_modelling.call_count == 1
 
+
 def test_apply_button_disabled_while_processing(
-        model_params_view: ModelParamsView, qtbot: QtBot, mocker: MockerFixture):
+        model_params_view: ModelParamsView, qtbot: QtBot,
+        mocker: MockerFixture):
     # Arrange
     mock_all_fields_valid = mocker.patch.object(
         model_params_view.get_current_settings_view(), "all_fields_valid")
