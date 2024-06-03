@@ -112,8 +112,7 @@ class DocumentsOverTimeCreator(AbstractVisualization):
             new_df = df.groupby([pd.Grouper(key='date', freq=offset)],
                                 as_index=False)["probability"].sum()
             if new_df.shape[0] >= 12:
-                print(new_df)
                 return new_df
 
-        return df.groupby([pd.Grouper(key='date', freq="s")],
+        return df.groupby([pd.Grouper(key='date', freq="ME")],
                           as_index=False)["probability"].sum()
