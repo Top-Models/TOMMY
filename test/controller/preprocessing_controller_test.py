@@ -1,48 +1,50 @@
+from unittest.mock import patch
+
 import pytest
-from pytest_mock import mocker, MockerFixture
 
 import spacy.tokens
 
 from tommy.controller.controller import Controller
 from tommy.controller.language_controller import LanguageController
 from tommy.controller.stopwords_controller import StopwordsController
-from tommy.model.language_model import LanguageModel
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.controller.preprocessing_controller import PreprocessingController
 from tommy.support.supported_languages import SupportedLanguage
 
 
-@pytest.fixture
-def language_controller_dutch(mocker: MockerFixture):
+@pytest.fixture(scope="module")
+def language_controller_dutch():
     language_controller = LanguageController()
-    mocker.patch.object(language_controller, "get_language",
-                        return_value=SupportedLanguage.Dutch)
+    patcher = patch.object(language_controller, "get_language",
+                           return_value=SupportedLanguage.Dutch)
+    patcher.start()
     return language_controller
 
 
-@pytest.fixture
-def language_controller_english(mocker: MockerFixture):
+@pytest.fixture(scope="module")
+def language_controller_english():
     language_controller = LanguageController()
-    mocker.patch.object(language_controller, "get_language",
-                        return_value=SupportedLanguage.English)
+    patcher = patch.object(language_controller, "get_language",
+                           return_value=SupportedLanguage.English)
+    patcher.start()
     return language_controller
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def preprocessing_controller_dutch(language_controller_dutch):
     controller = PreprocessingController()
     controller.set_controller_refs(language_controller_dutch)
     return controller
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def preprocessing_controller_english(language_controller_english):
     controller = PreprocessingController()
     controller.set_controller_refs(language_controller_english)
     return controller
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def stopwords_model_dutch():
     stopwords_controller = StopwordsController()
     stopwords_controller.set_model_refs(StopwordsModel())
@@ -50,7 +52,7 @@ def stopwords_model_dutch():
     return stopwords_controller.stopwords_model
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def stopwords_model_english():
     stopwords_controller = StopwordsController()
     stopwords_controller.set_model_refs(StopwordsModel())
@@ -84,8 +86,6 @@ def test_process_text_english(preprocessing_controller_english,
     """
     Test the process_text method of PreprocessingController.
     """
-    preprocessing_controller_english.load_pipeline(
-        SupportedLanguage.English)
     preprocessing_controller_english.set_model_refs(stopwords_model_english)
     text = "This is a test sentence token2."
     tokens = preprocessing_controller_english.process_text(text)
