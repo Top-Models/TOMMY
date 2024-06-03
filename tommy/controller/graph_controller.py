@@ -46,6 +46,7 @@ from tommy.controller.visualizations.visualization_input_datatypes import (
 from tommy.datatypes.topics import TopicWithScores
 from tommy.model.topic_model import TopicModel
 from tommy.support.event_handler import EventHandler
+from tommy.model.custom_name_model import TopicNameModel
 
 
 class GraphController:
@@ -110,11 +111,12 @@ class GraphController:
     def __init__(self) -> None:
         """Initialize the graph-controller and its two publishers"""
         super().__init__()
+        self._current_config = "Config 1"
+        self._topic_name_model = TopicNameModel(self._current_config)
         self._possible_plots_changed_event = EventHandler[
             list[PossibleVisualization]]()
         self._topics_changed_event = EventHandler[None]()
         self._refresh_plots_event = EventHandler[None]()
-        self._topic_names = {}
 
     def set_controller_refs(
             self,
@@ -148,6 +150,41 @@ class GraphController:
         # trigger event to notify that plots may have changed
         self._refresh_plots_event.publish(None)
 
+    def set_current_config(self, config_name: str) -> None:
+        """
+        Set the current configuration name
+        :param config_name: The name of the current configuration
+        :return: None
+        """
+        self._current_config = config_name
+
+    def get_topic_name(self, topic_index: int) -> str:
+        """
+        Get the name of the topic with the given index
+        :param topic_index: The index of the topic
+        :return: The name of the topic
+        """
+        return self._topic_name_model.get_topic_name(self._current_config,
+                                                     topic_index)
+
+    def set_topic_name(self, topic_index: int, name: str) -> None:
+        """
+        Set the name of the topic with the given index
+        :param topic_index: The index of the topic
+        :param name: The new name of the topic
+        :return: None
+        """
+        self._topic_name_model.set_topic_name(self._current_config,
+                                              topic_index, name)
+
+    def remove_config(self, config_name: str) -> None:
+        """
+        Remove the configuration with the given name
+        :param config_name: The name of the configuration to remove
+        :return: None
+        """
+        self._topic_name_model.remove_config(config_name)
+
     def clear_graphs(self, _):
         """Clear all graphs when the input folder path changes"""
         self._delete_all_cached_plots()
@@ -156,15 +193,6 @@ class GraphController:
         self._topics_changed_event.publish(None)
         self._possible_plots_changed_event.publish(
             self._possible_visualizations)
-
-    def set_topic_name(self, topic_id: int, name: str) -> None:
-        """Set the name of a topic identified by topic_id."""
-        self._topic_names[topic_id] = name
-        print(self._topic_names)
-
-    def get_topic_name(self, topic_id: int) -> str:
-        """Get the name of a topic identified by topic_id."""
-        return self._topic_names.get(topic_id, f"Topic {topic_id + 1}")
 
     def get_number_of_topics(self) -> int:
         """

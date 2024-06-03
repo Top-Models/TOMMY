@@ -99,12 +99,9 @@ class FetchedTopicsView(QScrollArea):
         :param new_name: The new name of the topic
         :return: None
         """
-        # You can handle the name change here
         if self._graph_controller.has_topic_runner:
-            # Determine the index of the topic based on the sender
-            topic_entity = self.sender()
-            if isinstance(topic_entity, TopicEntity):
-                self._graph_controller.set_topic_name(index, new_name)
+            self._graph_controller.set_topic_name(index, new_name)
+        self._refresh_topics(None)
 
     def _display_topics(self, tab_name: str) -> None:
         """
