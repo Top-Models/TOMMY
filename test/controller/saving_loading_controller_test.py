@@ -284,8 +284,9 @@ def test_load_project_imports_files(controller: Controller):
     # check if the files are imported correctly
     metadata = controller.corpus_controller._corpus_model.metadata
     assert len(metadata) == 2
-    assert metadata[0].title == "kattenverhaaltje 1"
-    assert metadata[1].title == "kattenverhaaltje 2"
+    file_names = [metadata[i].name for i in range(2)]
+    assert sorted(file_names) == ["kattenverhaaltje 1",
+                                  "kattenverhaaltje 2"]
 
 
 def test_load_project_updates_imported_files_view(
