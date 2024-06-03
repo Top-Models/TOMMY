@@ -10,8 +10,7 @@ class ModelParametersController:
     """
     _parameters_model: ModelParametersModel = None
     # TODO: Not all parameters emit this event when changed
-    _params_model_changed_event: EventHandler[
-        ModelParametersModel] = EventHandler()
+    _params_model_changed_event: EventHandler[None] = EventHandler()
     _algorithm_changed_event: EventHandler[None]
 
     @property
@@ -29,18 +28,19 @@ class ModelParametersController:
         """Set the reference to the model-parameters-model"""
         self._parameters_model = parameters_model
 
-    def change_config_model_refs(self,
-                                 parameters_model: ModelParametersModel
-                                 ) -> None:
+    def on_model_swap(self) -> None:
         """
-        Set the reference to the model-parameters-model and
-        update the frontend
+        Notify the frontend that the model parameters model has changed
+        :return: None
         """
-        self._parameters_model = parameters_model
-        self._params_model_changed_event.publish(parameters_model)
+        self._params_model_changed_event.publish(None)
 
     def set_model_word_amount(self, word_amount: int) -> None:
-        """Set the amount of words to be displayed per topic"""
+        """
+        Set the amount of words to be displayed per topic
+        :param word_amount: the amount of words to be displayed per topic
+        :return: None
+        """
         self._parameters_model.word_amount = word_amount
 
     def get_model_word_amount(self) -> int:
@@ -100,8 +100,37 @@ class ModelParametersController:
         """Return the type of topic modelling algorithm to be run"""
         return self._parameters_model.model_type
 
+    def set_bert_min_df(self, min_df: float | None) -> None:
+        """
+        Set the value of the minimum frequency of a term in the BERTopic
+        algorithm
+        :param min_df: new value of min_df
+        """
+        self._parameters_model.bert_min_df = min_df
+
+    def get_bert_min_df(self) -> float | None:
+        """Return the minimum frequency of a term in BERTopic"""
+        return self._parameters_model.bert_min_df
+
+    def set_bert_max_features(self, max_features: int | None) -> None:
+        """
+        Set the value of the minimum frequency of a term in the BERTopic
+        algorithm
+        :param max_features: new value of min_df
+        """
+        self._parameters_model.bert_max_features = max_features
+
+    def get_bert_max_features(self) -> int | None:
+        """Return the maximum number of terms in the BERTopic matrix"""
+        return self._parameters_model.bert_max_features
+
     @property
-    def params_model_changed_event(self):
+    def params_model_changed_event(self) -> EventHandler[None]:
+        """
+        This event gets triggered when the model parameters model is changed
+        for example due to changing configs
+        :return: The event
+        """
         return self._params_model_changed_event
 
 

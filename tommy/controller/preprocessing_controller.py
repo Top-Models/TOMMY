@@ -2,6 +2,8 @@ import os
 
 import spacy
 from spacy.tokens import Doc
+import nltk
+import nltk.data
 
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.support.application_settings import application_settings
@@ -14,12 +16,32 @@ class PreprocessingController:
     _stopwords_model: StopwordsModel = None
     _enable_pos: bool
 
-    def __init__(self, language_controller: LanguageController) -> None:
+    def __init__(self) -> None:
         self._nlp = None
         self._enable_pos: bool
-        self.language_controller = language_controller
-        self.language_controller.change_language_event.subscribe(
-            self.load_pipeline)
+        self.language_controller = None
+
+        # load punkt tokenizers for splitting sentences
+        self._dutch_sent_tokenizer = self._load_nltk_sent_tokenizer(
+            "dutch.pickle")
+        self._english_sent_tokenizer = self._load_nltk_sent_tokenizer(
+            "english.pickle")
+
+    @staticmethod
+    def _load_nltk_sent_tokenizer(*path_parts) -> nltk.PunktSentenceTokenizer:
+        """
+        Load a sentence tokenizer from nltk from the preprocessing data folder
+        :param path_parts: Components of the path to the desired tokenizer,
+            e.g., "dutch.pickle"
+        """
+        fpath = f"file:///{os.path.join(
+                           application_settings.preprocessing_data_folder,
+                           "nltk_downloads", "tokenizers_punkt", *path_parts)}"
+        try:
+            tokenizer = nltk.data.load(fpath)
+        except LookupError:
+            raise LookupError(f"Could not load nltk tokenizer at path {fpath}")
+        return tokenizer
 
     def load_pipeline(self, language: SupportedLanguage) -> None:
         nlp: spacy.Language
@@ -53,16 +75,30 @@ class PreprocessingController:
         """Set the reference to the stopwords model"""
         self._stopwords_model = stopwords_model
 
-    def change_config_model_refs(self, stopwords_model: StopwordsModel):
-        """Change the reference to the stopwords model when the user
-        switches config"""
-        self._stopwords_model = stopwords_model
+    def set_controller_refs(self, language_controller: LanguageController):
+        """Set the reference to the language controller"""
+        self.language_controller = language_controller
+        self.language_controller.change_language_event.subscribe(
+            self.load_pipeline)
+        self.load_pipeline(self.language_controller.get_language())
 
     def process_text(self, text: str) -> list[str]:
         """Preprocesses the given text to a list of tokens."""
         tokens = self._nlp(text)
         tokens = self.process_tokens(tokens)
         return tokens
+
+    def split_into_sentences(self, text: str) -> list[str]:
+        """Split the given text to a list of sentences."""
+        match self.language_controller.get_language():
+            case SupportedLanguage.Dutch:
+                tokenizer = self._dutch_sent_tokenizer
+            case SupportedLanguage.English:
+                tokenizer = self._english_sent_tokenizer
+            case _:
+                raise ValueError("Current language is not supported by NLTK"
+                                 " sentence splitter.")
+        return tokenizer.tokenize(text)
 
     def process_tokens(self, doc: Doc) -> list[str]:
         """

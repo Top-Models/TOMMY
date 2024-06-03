@@ -12,28 +12,57 @@ class LanguageController:
     modelling, and loading the settings from the associated file.
     """
     _language_model: LanguageModel = None
-    _model_change_language: EventHandler[SupportedLanguage] = None
+    _change_language_event: EventHandler[SupportedLanguage] = None
+    _language_model_changed_event: EventHandler[None] = EventHandler()
+
+    @property
+    def language_model_changed_event(self) -> EventHandler[None]:
+        """
+        The event that is triggered when the language model is changed
+        for example due to changing configs
+        :return: The event
+        """
+        return self._language_model_changed_event
 
     @property
     def change_language_event(self) -> EventHandler[SupportedLanguage]:
-        return self._model_change_language
+        """
+        The event that is triggered when the language is changed
+        :return: The event
+        """
+        return self._change_language_event
 
     def __init__(self) -> None:
-        self._model_change_language = EventHandler[SupportedLanguage]()
+        self._change_language_event = EventHandler[SupportedLanguage]()
 
     def set_model_refs(self, language_model: LanguageModel) -> None:
-        """Set the reference to the language-model"""
+        """
+        Set the reference to the language-model
+        :param language_model: The language model
+        :return: None
+        """
         self._language_model = language_model
-        self._model_change_language.publish(language_model.selectedLanguage)
+
+    def on_model_swap(self) -> None:
+        """
+        Notify the frontend that the language model has changed
+        :return: None
+        """
+        self._language_model_changed_event.publish(None)
 
     def set_language(self, language: SupportedLanguage) -> None:
-        """Set the language for the topic modelling"""
-        self._language_model.selectedLanguage = language
-        self._model_change_language.publish(language)
+        """
+        Set the language of the corpus and notify the preprocessing pipeline
+        and stopwords that the language has changed
+        :param language: The new language
+        :return: None
+        """
+        self._language_model.selected_language = language
+        self._change_language_event.publish(language)
 
     def get_language(self) -> SupportedLanguage:
         """Return the language for the topic modelling"""
-        return self._language_model.selectedLanguage
+        return self._language_model.selected_language
 
 
 """

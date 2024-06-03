@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
-from tommy.support.constant_variables import sec_col_orange
+from tommy.support.constant_variables import sec_col_orange, scrollbar_style
 from tommy.datatypes.topics import TopicWithScores
 
 from tommy.view.topic_view.topic_entity_component.topic_entity import (
@@ -34,6 +34,7 @@ class FetchedTopicsView(QScrollArea):
                 border-bottom: 3px solid lightgrey;
             }
             """
+            + scrollbar_style
         )
 
         # { tab_name, [(topic_name, [words])] }

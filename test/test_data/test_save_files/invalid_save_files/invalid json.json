@@ -1,0 +1,42 @@
+{
+  "input_folder_path": "../test/test_data/test_pdf_files/correct_files",
+  "language": "Engels",
+  "configs": {
+    "Config 1": {
+      "stopwords": {
+        "extra_stopwords": [
+          "ja",
+          "tommy"
+        ]
+      },
+      "model_parameters": {
+        "n_topics": 6,
+        "model_type": "LDA",
+        "word_amount": 99,
+        "alpha": 13.0,
+        "beta": 0.02,
+        "alpha_beta_custom_enabled": true,
+        "bert_min_df": "None",
+        "bert_max_features": "None"
+      }
+    },
+    "Config 2": {
+      "stopwords": {
+        "extra_stopwords": [
+          "misschien"
+
+      },
+      "model_parameters": {
+        "n_topics": 4,
+        "model_type": "NMF",
+        "word_amount": 8,
+        "alpha": 1.0,
+        "beta": 0.01,
+        "alpha_beta_custom_enabled": false,
+        "bert_min_df": 0.1,
+        "bert_max_features": 100
+      }
+    }
+  },
+  "selected_config": "Config 2"
+}

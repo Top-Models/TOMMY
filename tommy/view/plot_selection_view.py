@@ -88,9 +88,10 @@ class PlotSelectionView(QTabWidget):
 
         selected_tab_index = self.currentIndex()
         new_possible_vis = self._tabs_plots[selected_tab_index]
-        new_plot = self._graph_controller.get_visualization(
+        new_plot, plot_type = self._graph_controller.get_visualization(
             new_possible_vis.index)
-        self._graph_view.display_plot(new_plot)
+
+        self._graph_view.display_plot(new_plot, plot_type)
 
     def _tab_clicked_event(self) -> None:
         """Update the currently selected tab in the graph-view"""
@@ -106,9 +107,10 @@ class PlotSelectionView(QTabWidget):
             return
 
         new_possible_vis = self._tabs_plots[selected_tab_index]
-        new_plot = self._graph_controller.get_visualization(
+        new_plot, plot_type = self._graph_controller.get_visualization(
             new_possible_vis.index)
-        self._graph_view.display_plot(new_plot)
+
+        self._graph_view.display_plot(new_plot, plot_type)
 
     def _create_tabs(self, possible_vis_list: list[PossibleVisualization]
                      ) -> None:

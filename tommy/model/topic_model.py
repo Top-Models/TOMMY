@@ -1,17 +1,21 @@
 from dataclasses import dataclass
 
+from bertopic import BERTopic
 from gensim.corpora import Dictionary
 from gensim.models import LdaModel
 from gensim.models.nmf import Nmf
+
+from tommy.support.types import Document_topics
 
 
 @dataclass
 class TopicModel:
     """dataclass that holds the data and objects necessary to run a topic
     modelling algorithm"""
-    model: LdaModel | Nmf = None
+    model: LdaModel | Nmf | BERTopic = None
     dictionary: Dictionary = None
     corpus: list[list[tuple[int, int]]] = None
+    document_topics: Document_topics = None
     used_corpus_version_id: int = None
 
 

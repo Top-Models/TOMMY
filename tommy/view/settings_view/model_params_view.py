@@ -10,7 +10,8 @@ from tommy.controller.model_parameters_controller import (
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
-    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray)
+    pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray,
+    extra_light_gray, scrollbar_style)
 from tommy.support.model_type import ModelType
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
@@ -41,7 +42,9 @@ class ModelParamsView(QScrollArea):
 
         # Subscribe to the event when the config changes
         self._model_parameters_controller.params_model_changed_event.subscribe(
-            self._update_model_params)
+            self._update_ui_on_model_params_switch)
+        language_controller.language_model_changed_event.subscribe(
+            self._update_ui_on_language_model_switch)
 
         # Initialize model settings
         self.algorithm_specific_settings_views: dict[
@@ -73,14 +76,12 @@ class ModelParamsView(QScrollArea):
             """)
 
         self.enabled_input_stylesheet = (f"background-color: white;"
-                                         f"border-radius: 5px;"
                                          f"font-size: 14px;"
                                          f"font-family: {text_font};"
                                          f"color: black;"
                                          f"border: 2px solid {seco_col_blue};"
                                          f"padding: 5px;")
         self.disabled_input_stylesheet = (f"background-color: {disabled_gray};"
-                                          f"border-radius: 5px;"
                                           f"font-size: 14px;"
                                           f"font-family: {text_font};"
                                           f"color: black;"
@@ -115,7 +116,7 @@ class ModelParamsView(QScrollArea):
                 border: 0px;
                 border-bottom: 3px solid lightgray;
             }}
-            """)
+            """ + scrollbar_style)
 
         # Initialize button widgets
         self.apply_button = None
@@ -262,11 +263,11 @@ class ModelParamsView(QScrollArea):
         self.apply_button.setText("Laden...")
         self.apply_button.setStyleSheet(
             f"""
-                QPushButton {{
-                    background-color: #808080;
-                    color: white;
-                    margin-left: 5px;
-                }}
+                        QPushButton {{
+                            background-color: #808080;
+                            color: white;
+                            margin-left: 5px;
+                        }}
 
                 QPushButton:hover {{
                     background-color: {hover_seco_col_blue};
@@ -311,10 +312,12 @@ class ModelParamsView(QScrollArea):
         self.clear_layouts_from_scroll_layout()
         self.initialize_parameter_widgets()
 
-    def _update_model_params(self, data: ModelParametersModel):
+    def _update_ui_on_model_params_switch(self, data: None) -> None:
         self.model_type_changed_event()
-        settings_view = self.algorithm_specific_settings_views[data.model_type]
-        settings_view.set_text_on_config_change()
+
+    def _update_ui_on_language_model_switch(self, data: None) -> None:
+        settings_view = self.get_current_settings_view()
+        settings_view.set_field_values_from_backend()
 
 
 """

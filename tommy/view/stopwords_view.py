@@ -56,20 +56,21 @@ class StopwordsView(QScrollArea):
                 }}
                 
                 QScrollArea {{
-                    border: 0px solid #00968F;
                     border-radius: 10px;
                 }}
+                
                 QScrollBar:vertical {{
                     border: none;
+                    width: 10px;
                     background: #F0F0F0;
-                    width: 30px;
                     margin: 0px;
                 }}
+                
                 QScrollBar::handle:vertical {{
                     background: #CCCCCC;
                     min-height: 20px;
-                    border-radius: 10px;
                 }}
+                
                 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
                     height: 0px; 
                 }}
@@ -78,14 +79,18 @@ class StopwordsView(QScrollArea):
         self.container = QTabWidget()
 
         # Initialize tabs
-        tab_style = (f"border-radius: 5px;"
-                     f"font-size: 14px;"
-                     f"font-family: {text_font};"
-                     f"color: black;"
-                     f"border: 2px solid #00968F;"
-                     f"padding: 5px;"
-                     f"background-color: white;"
-                     f"margin: 5px;")
+        tab_style = (f"""
+            QTextEdit {{
+                border-radius: 5px;
+                font-size: 14px;
+                font-family: {text_font};
+                color: black;
+                border: 2px solid #00968F;
+                padding: 5px;
+                background-color: white;
+                margin: 5px;
+            }}            
+        """)
 
         # self.stopwords_tab = QWidget()
         # self.stopwords_tab.setStyleSheet(tab_style)

@@ -1,5 +1,5 @@
 import os
-from typing import List, Generator
+from typing import Generator
 
 from tommy.controller.file_import import file_importer_base
 from tommy.controller.file_import import csv_file_importer
@@ -19,7 +19,7 @@ class GenericFileImporter:
         Initialization of a new GenericFileImporter object.
         """
         self.importers: (
-            List)[file_importer_base.FileImporterBase] = [
+            list)[file_importer_base.FileImporterBase] = [
             docx_file_importer.DocxFileImporter(),
             pdf_file_importer.PdfFileImporter(),
             csv_file_importer.CsvFileImporter()
