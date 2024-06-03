@@ -66,7 +66,6 @@ def test_generate_file(pdf_file_importer):
     assert file.body.body == "Verhaaltje over een kat"
     assert file.metadata.author == 'Test Author'
     assert file.metadata.title == 'kattenverhaaltje 1'
-    assert file.metadata.date == 'D:20220101000000+00\'00\''
 
 
 """

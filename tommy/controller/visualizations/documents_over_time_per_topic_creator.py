@@ -40,6 +40,7 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
         # Construct a plot and axes
         fig, ax = plt.subplots()
 
+        # Select all available dates with its corresponding probability
         dates = {"date": [],
                  "probability": []}
         for document in processed_corpus:
@@ -57,18 +58,22 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
                 dates["date"].append(current_date)
                 dates["probability"].append(current_probability)
 
+        # If no dates available, show it on screen
         if all([dates[i] == [] for i in dates]):
             return self._get_no_dates_available_screen()
 
+        # Sort and group all dates
         df = pd.DataFrame(dates)
         df = df.groupby("date", as_index=False).sum()
         df = df.sort_values(by="date", ascending=True)
         grouped_df = self._group_df(df)
 
+        # Plot graph
         ax.plot(grouped_df["date"],
                 grouped_df["probability"],
                 color=plot_colors[topic_id % len(plot_colors)])
 
+        # Add labels and title to plot
         plt.title("Documenten over tijd topic {}".format(topic_id + 1))
         plt.xlabel("Datum")
         plt.ylabel("Som gewichten")
@@ -78,7 +83,7 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
 
     @staticmethod
     def _get_no_dates_available_screen() -> matplotlib.figure.Figure:
-        """Returns a figure showing a text that a topic needs to be selected"""
+        """Returns a figure showing a text that there are no dates available."""
         fig = plt.figure()
         plt.figtext(0.5,
                     0.5,
@@ -92,11 +97,13 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
 
     @staticmethod
     def _get_valid_offsets() -> list[str]:
+        """Returns the possible groupings for grouping dates"""
         return ["YE", "6ME", "2ME", "ME", "2W", "W", "D", "6h", "h", "min",
                 "s"]
 
     @staticmethod
     def _group_df(df: pd.DataFrame) -> pd.DataFrame:
+        """Returns a grouped dataframe for the plot over time"""
         offsets = DocumentsOverTimePerTopicCreator._get_valid_offsets()
 
         for offset in offsets:

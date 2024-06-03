@@ -80,12 +80,16 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         """
 
         alt_title = os.path.basename(path).replace('.pdf', '')
-        print(metadata.creation_date)
+
+        try:
+            date = metadata.creation_date
+        except Exception:
+            date = None
 
         return RawFile(
                 metadata=Metadata(author=metadata.get('/Author', None),
                                   title=metadata.get('/Title', alt_title),
-                                  date=metadata.creation_date,
+                                  date=date,
                                   path=os.path.relpath(path),
                                   format="pdf",
                                   length=len(file.split(" ")),

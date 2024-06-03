@@ -74,6 +74,8 @@ class DocxFileImporter(file_importer_base.FileImporterBase):
             # If unable to get the modification time, use None
             file_date = None
 
+        print(file_date)
+
         return RawFile(
             metadata=Metadata(author=None,
                               title=alt_title,
