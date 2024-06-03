@@ -155,7 +155,7 @@ class FetchedTopicsView(QScrollArea):
             return
 
         for i in range(self._graph_controller.get_number_of_topics()):
-            topic_name = f"Topic {i + 1}"
+            topic_name = self._graph_controller.get_topic_name(i)
             topic = self._graph_controller.get_topic_with_scores(
                 i, self._model_parameters_controller.get_model_word_amount())
             topic_words = topic.top_words

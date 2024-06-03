@@ -164,7 +164,7 @@ class GraphController:
 
     def get_topic_name(self, topic_id: int) -> str:
         """Get the name of a topic identified by topic_id."""
-        return self._topic_names.get(topic_id, f"Topic {topic_id}")
+        return self._topic_names.get(topic_id, f"Topic {topic_id + 1}")
 
     def get_number_of_topics(self) -> int:
         """
