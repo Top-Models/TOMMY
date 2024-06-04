@@ -115,7 +115,9 @@ class Controller:
         self._corpus_controller.set_controller_refs(
             self._project_settings_controller,
             self._preprocessing_controller)
-        self._export_controller.set_controller_refs(self._graph_controller)
+        self._export_controller.set_controller_refs(
+            self._graph_controller,
+            self._topic_modelling_controller)
 
         self._graph_controller.set_controller_refs(
             self._topic_modelling_controller, self._corpus_controller,

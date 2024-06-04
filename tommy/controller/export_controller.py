@@ -3,6 +3,9 @@ import os
 import networkx as nx
 from pathlib import Path
 from tommy.controller.graph_controller import GraphController
+from tommy.controller.topic_modelling_controller import \
+    TopicModellingController
+from tommy.support.types import Document_topics
 
 
 def hex_to_rgb(hex_color: str) -> tuple:
@@ -18,6 +21,8 @@ def hex_to_rgb(hex_color: str) -> tuple:
 class ExportController:
     """Class for exporting graphs and networks to file"""
     _graph_controller: GraphController = None
+    _topic_modelling_controller: TopicModellingController = None
+    document_topics: Document_topics = []
 
     def export_networks(self, path: str) -> None:
         """
@@ -91,8 +96,44 @@ class ExportController:
                 for word, score in zip(topic.top_words, topic.word_scores):
                     csv_writer.writerow([topic_name, word, score])
 
-    def set_controller_refs(self, graph_controller: GraphController) -> None:
+    def on_document_topics_calculated(
+            self,
+            document_topics: Document_topics) -> None:
+        """
+        Update stored topic document correspondence reference.
+        :param document_topics: The list of documents related to topics
+        :return: None
+        """
+
+        self.document_topics = document_topics
+
+    def export_document_topics_csv(self, path: str) -> None:
+        """
+        Export documents related to topics to a CSV file.
+        :param path: Path to the CSV file
+        :return: None
+        """
+        with open(path, 'w', newline='') as csvfile:
+            csv_writer = csv.writer(csvfile)
+            # Assume that Metadata has an attribute 'id' for document identifier
+            # Write header row with topic indices
+            header = ['Filename'] + ['Length'] + ['Author'] + ['Title'] + ['Date'] + ['Path'] + [f'Topic {i + 1} Probability' for i in
+                                        range(len(self.document_topics[0][1]))]
+            csv_writer.writerow(header)
+
+            for metadata, probabilities in self.document_topics:
+                row = [metadata.name+"."+metadata.format, str(metadata.length), metadata.author,
+                       metadata.title, str(metadata.date), metadata.path] + probabilities
+                csv_writer.writerow(row)
+
+    def set_controller_refs(
+            self,
+            graph_controller: GraphController,
+            topic_modelling_controller: TopicModellingController) -> None:
         self._graph_controller = graph_controller
+        self._topic_modelling_controller = topic_modelling_controller
+        topic_modelling_controller.calculate_topic_documents_event.subscribe(
+            self.on_document_topics_calculated)
 
 
 """

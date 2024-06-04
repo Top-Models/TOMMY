@@ -38,6 +38,8 @@ class MenuBar(QMenuBar):
             "Exporteer naar Graph Exchange XML Format (.gexf)", self)
         export_to_png_action = QAction("Exporteer grafieken (.png)", self)
         export_topic_words_action = QAction("Exporteer Topicdata (.csv)", self)
+        export_document_topic_action = QAction(
+            "Exporteer Document Topics (.csv)", self)
         save_settings_action = QAction("Instellingen opslaan", self)
         save_settings_as_action = QAction("Instellingen opslaan als", self)
         load_settings_action = QAction("Instellingen laden", self)
@@ -48,6 +50,8 @@ class MenuBar(QMenuBar):
         export_to_gexf_action.triggered.connect(self.export_to_gexf)
         export_to_png_action.triggered.connect(self.export_to_png)
         export_topic_words_action.triggered.connect(self.export_topic_words)
+        export_document_topic_action.triggered.connect(
+            self.export_document_topics)
         save_settings_action.triggered.connect(self.save_settings_to_file)
         save_settings_as_action.triggered.connect(self.save_settings_as)
         load_settings_action.triggered.connect(
@@ -66,6 +70,7 @@ class MenuBar(QMenuBar):
         export_menu.addAction(export_to_gexf_action)
         export_menu.addAction(export_to_png_action)
         export_menu.addAction(export_topic_words_action)
+        export_menu.addAction(export_document_topic_action)
 
         # Create help bar
         help_menu = self.addMenu("Help")
@@ -146,6 +151,18 @@ class MenuBar(QMenuBar):
         if dialog[0]:
             export_path = dialog[0]
             self._export_controller.export_topic_words_csv(export_path)
+
+    def export_document_topics(self) -> None:
+        """
+        Export documents related to topics to a CSV file.
+        :return: None
+        """
+        dialog = QFileDialog.getSaveFileName(self, "Selecteer export locatie",
+                                             filter="CSV files (*.csv)")
+
+        if dialog[0]:
+            export_path = dialog[0]
+            self._export_controller.export_document_topics_csv(export_path)
 
     def save_settings_to_file(self) -> None:
         """
