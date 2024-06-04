@@ -23,6 +23,7 @@ from tommy.controller.topic_modelling_runners.bertopic_runner import (
     BertopicRunner)
 from tommy.support.event_handler import EventHandler
 from tommy.support.types import Document_topics, Processed_body
+from tommy.support.async_worker import Worker
 
 
 class TopicModellingController:
@@ -58,6 +59,7 @@ class TopicModellingController:
     def __init__(self) -> None:
         """Initialize the publisher of the topic-modelling-controller"""
         super().__init__()
+        self._worker = None
         self._model_trained_event = EventHandler[TopicRunner]()
         self._topic_model_switched_event = EventHandler[TopicRunner]()
         self._calculate_document_topics_event = (
@@ -103,28 +105,37 @@ class TopicModellingController:
 
     def train_model(self) -> None:
         """
-        Trains the selected model from scratch on the currently loaded data
-        and notifies the observers that a (new) topic runner is ready
+        Trains the selected model from on the currently loaded data
+        and notifies the observers that a (new) topic runner is ready when
+        async training is done
         :raises NotImplementedError: if selected model type is not supported
         :return: None
         """
+
         new_model_type = self._model_parameters_controller.get_model_type()
+
+        def model_trained_callback():
+            self._model_trained_event.publish(self._config_model.topic_runner)
+            self._calculate_document_topics_event.publish(
+                self._topic_model.document_topics)
 
         match new_model_type:
             case ModelType.LDA:
-                self._train_lda()
+                self._worker = Worker(self._train_lda)
+                self._worker.finished.connect(model_trained_callback)
+                self._worker.start()
             case ModelType.BERTopic:
-                self._train_bert()
+                self._worker = Worker(self._train_bert)
+                self._worker.finished.connect(model_trained_callback)
+                self._worker.start()
             case ModelType.NMF:
-                self._train_nmf()
+                self._worker = Worker(self._train_nmf)
+                self._worker.finished.connect(model_trained_callback)
+                self._worker.start()
             case _:
                 raise NotImplementedError(
                     f"model type {new_model_type.name} is not supported by "
                     f"topic modelling controller")
-
-        self._model_trained_event.publish(self._config_model.topic_runner)
-        self._calculate_document_topics_event.publish(
-            self._topic_model.document_topics)
 
     def _train_lda(self) -> None:
         """

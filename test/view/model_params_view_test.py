@@ -24,7 +24,7 @@ def model_params_view(qtbot: QtBot, controller) -> ModelParamsView:
         controller.model_parameters_controller,
         controller.language_controller,
         controller.config_controller,
-        controller)
+        controller.topic_modelling_controller)
     qtbot.addWidget(model_params_view)
     return model_params_view
 
@@ -64,15 +64,15 @@ def test_apply_button_clicked_calls_on_run_topic_modelling(
         qtbot: QtBot,
         mocker: MockerFixture):
     # Arrange
-    mock_on_run_topic_modelling = mocker.Mock()
-    model_params_view._controller.on_run_topic_modelling = (
-        mock_on_run_topic_modelling)
+    mock_train_model = mocker.Mock()
+    model_params_view._topic_modelling_controller.train_model = (
+        mock_train_model)
 
     # Act
     qtbot.mouseClick(model_params_view.apply_button, Qt.LeftButton)
 
     # Assert
-    assert mock_on_run_topic_modelling.call_count == 1
+    mock_train_model.assert_called_once()
 
 
 def test_apply_button_disabled_while_processing(
@@ -84,15 +84,19 @@ def test_apply_button_disabled_while_processing(
     mock_all_fields_valid.return_value = True
 
     # Mock the controller method to simulate processing
-    mock_on_run_topic_modelling = mocker.Mock()
-    model_params_view._controller.on_run_topic_modelling = (
-        mock_on_run_topic_modelling)
+    mock_train_model = mocker.Mock()
+    model_params_view._topic_modelling_controller.train_model = (
+        mock_train_model)
 
     # Act
     qtbot.mouseClick(model_params_view.apply_button, Qt.LeftButton)
 
     # Simulate processing completion
-    mock_on_run_topic_modelling.assert_called_once()
+    mock_topic_runner = mocker.Mock()
+    (model_params_view._topic_modelling_controller
+     .model_trained_event.publish(mock_topic_runner))
+
+    mock_train_model.assert_called_once()
     # Ensure that the button is re-enabled and its text is restored
     assert model_params_view.apply_button.isEnabled() == True
     assert model_params_view.apply_button.text() == "Toepassen"
