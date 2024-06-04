@@ -58,6 +58,7 @@ class WordEntity(QTextEdit):
         :param event: The mouse press event
         :return: None
         """
+        super().mousePressEvent(event)
         self.setStyleSheet(f"font-family: {text_font}; "
                            f"font-size: 12px; "
                            f"background-color: {pressed_medium_light_gray}; "
