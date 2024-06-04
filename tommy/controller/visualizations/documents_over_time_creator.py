@@ -86,7 +86,7 @@ class DocumentsOverTimeCreator(AbstractVisualization):
                     label=topic_id + 1)
 
             # Add labels and title to plot
-            plt.title("Documenten over tijd topic {}".format(topic_id + 1))
+            plt.title(self.name)
             plt.xlabel("Datum")
             plt.ylabel("Som gewichten")
             plt.xticks(rotation=30)
