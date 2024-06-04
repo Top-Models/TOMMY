@@ -119,12 +119,15 @@ class PreprocessingView(QScrollArea):
         self.blacklist_tab.setStyleSheet(tab_style)
         self.blacklist_tab.setLineWrapMode(QTextEdit.NoWrap)
         self.blacklist_tab.setPlaceholderText(
-            "woord\nwoord\netc.")
+            "Plaats op elke regel een woord dat uitgesloten moet worden:"
+            "\n\nwoord\nwoord\netc.")
         self.synonym_tab = QTextEdit()
         self.synonym_tab.setStyleSheet(tab_style)
         self.synonym_tab.setLineWrapMode(QTextEdit.NoWrap)
         self.synonym_tab.setPlaceholderText(
-            "woord synoniem\nwoord synoniem\netc.")
+            "Plaats op elke regel een synoniem gevolgd door het woord dat dit "
+            "synoniem vervangt:"
+            "\n\nsynoniem vervanging\nsynoniem vervanging\netc.")
 
         # Set container as the focal point
         self.setWidget(self.container)
