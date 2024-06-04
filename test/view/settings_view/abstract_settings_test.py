@@ -1,15 +1,22 @@
 import pytest
+from pytest_mock import MockerFixture
+from pytestqt.qtbot import QtBot
 
 from tommy.controller.controller import Controller
 from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
+from test.helper_fixtures import controller_no_pipeline
+
+
+@pytest.fixture
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture(scope='function')
-def abstract_settings() -> AbstractSettings:
-    controller = Controller()
+def abstract_settings(controller) -> AbstractSettings:
     abstract_settings = AbstractSettings(
         controller.model_parameters_controller,
         controller.config_controller,

@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytest
+from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.controller import Controller
@@ -9,11 +10,17 @@ from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.selected_information_view import SelectedInformationView
 from tommy.view.topic_view.topic_entity_component.topic_entity import \
     TopicEntity
+from test.helper_fixtures import controller_no_pipeline
+
+
+@pytest.fixture
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture(scope='function')
-def selected_information_view(qtbot: QtBot) -> SelectedInformationView:
-    controller = Controller()
+def selected_information_view(qtbot: QtBot, controller) -> (
+        SelectedInformationView):
     selected_information_view = SelectedInformationView(
         controller.graph_controller,
         controller.model_parameters_controller)

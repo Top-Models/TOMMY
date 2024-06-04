@@ -1,12 +1,18 @@
 import pytest
+from pytest_mock import MockerFixture
 
 from tommy.controller.controller import Controller
 from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
+from test.helper_fixtures import controller_no_pipeline
+
+
+@pytest.fixture
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture(scope='function')
-def nmf_settings() -> NmfSettings:
-    controller = Controller()
+def nmf_settings(controller) -> NmfSettings:
     abstract_settings = NmfSettings(
         controller.model_parameters_controller,
         controller.config_controller,

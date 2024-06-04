@@ -1,4 +1,5 @@
 import pytest
+from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.config_controller import ConfigController
@@ -11,11 +12,12 @@ from tommy.support.model_type import ModelType
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.model_params_view import ModelParamsView
 from tommy.view.stopwords_view import StopwordsView
+from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture
-def controller() -> Controller:
-    return Controller()
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture

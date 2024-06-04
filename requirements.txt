@@ -19,6 +19,7 @@ pypdf~=4.2.0
 mammoth~=1.7.1
 bertopic==0.16.1
 scikit-learn~=1.4.2
+pandas~=2.2.1
 
 #pytest
 pytest==8.0.2

@@ -126,7 +126,8 @@ def test_get_visualization(plot: Figure, graph_controller: GraphController,
         # Assert - that run_visualization is called once with correct params
         mocked_method.assert_called_once_with(
             graph_controller.VISUALIZATIONS[vis_index],
-            override_topic=override_topic)
+            override_topic=override_topic,
+            ignore_cache=False)
 
 
 @pytest.mark.parametrize("needed_input_data, override_topic",
@@ -177,7 +178,9 @@ def test_run_visualization_creator(plot: Figure,
 
     # Assert - that visualization is called with expected arguments
     mocked_method.assert_called_once_with(
-        graph_controller._current_topic_runner, **expected_args)
+        graph_controller._current_topic_runner,
+        ignore_cache=False,
+        **expected_args)
 
 
 def test_delete_all_cached_plots(graph_controller: GraphController,
