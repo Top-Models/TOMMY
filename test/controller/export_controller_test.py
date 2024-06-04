@@ -8,11 +8,22 @@ from tommy.controller.graph_controller import GraphController
 from tommy.controller.topic_modelling_controller import \
     TopicModellingController
 
+# Mock metadata
+class MockMetadata:
+    def __init__(self, name, format, length, author, title, date, path):
+        self.name = name
+        self.format = format
+        self.length = length
+        self.author = author
+        self.title = title
+        self.date = date
+        self.path = path
+
 # Mock data
 DOCUMENT_TOPICS = [
-    ('doc1', [0.1, 0.9]),
-    ('doc2', [0.3, 0.7]),
-    ('doc3', [0.4, 0.6]),
+    (MockMetadata('doc1', 'txt', 123, 'author1', 'title1', '2023-01-01', '/path1'), [0.1, 0.9]),
+    (MockMetadata('doc2', 'pdf', 456, 'author2', 'title2', '2023-01-02', '/path2'), [0.3, 0.7]),
+    (MockMetadata('doc3', 'docx', 789, 'author3', 'title3', '2023-01-03', '/path3'), [0.4, 0.6]),
 ]
 
 
@@ -68,13 +79,12 @@ def test_export_document_topics_csv(export_controller, tmp_path):
         rows = list(csv_reader)
 
     # Verify header row
-    assert rows[0] == ['Document ID', 'Topic 1 Probability',
-                       'Topic 2 Probability']
+    assert rows[0] == ['Filename', 'Length', 'Author', 'Title', 'Date', 'Path', 'Topic 1 Probability', 'Topic 2 Probability']
 
     # Verify document topic rows
-    assert rows[1] == ['doc1', '0.1', '0.9']
-    assert rows[2] == ['doc2', '0.3', '0.7']
-    assert rows[3] == ['doc3', '0.4', '0.6']
+    assert rows[1] == ['doc1.txt', '123', 'author1', 'title1', '2023-01-01', '/path1', '0.1', '0.9']
+    assert rows[2] == ['doc2.pdf', '456', 'author2', 'title2', '2023-01-02', '/path2', '0.3', '0.7']
+    assert rows[3] == ['doc3.docx', '789', 'author3', 'title3', '2023-01-03', '/path3', '0.4', '0.6']
 
     os.remove(temp_csv_path)
 
