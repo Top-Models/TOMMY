@@ -64,7 +64,10 @@ class ExportController:
         :param path: path to the folder where to save the png files
         :return: None
         """
-        graph_exports = self._graph_controller.get_all_visualizations()
+        # cache is ignored because it may give an error when trying to save
+        # a figure that has already been used by pyqt
+        graph_exports = self._graph_controller.get_all_visualizations(
+            ignore_cache=True)
 
         for i in range(len(graph_exports)):
             new_path = os.path.join(path, f"{i}.png")
