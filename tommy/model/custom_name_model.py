@@ -21,6 +21,7 @@ class TopicNameModel:
         :param config_name: The name of the configuration
         :param index: The index of the topic
         :param name: The custom name to set
+        :return: None
         """
         if config_name not in self.topic_names:
             self.topic_names[config_name] = {}
@@ -30,6 +31,7 @@ class TopicNameModel:
         """
         Function to remove a configuration from the model.
         :param config_name: The name of the configuration to remove
+        :return: None
         """
         if config_name in self.topic_names:
             del self.topic_names[config_name]

@@ -53,6 +53,7 @@ from tommy.datatypes.topics import TopicWithScores
 from tommy.model.topic_model import TopicModel
 from tommy.support.event_handler import EventHandler
 from tommy.model.custom_name_model import TopicNameModel
+from tommy.support.application_settings import application_settings
 
 
 class GraphController:
@@ -126,7 +127,7 @@ class GraphController:
     def __init__(self) -> None:
         """Initialize the graph-controller and its two publishers"""
         super().__init__()
-        self._current_config = "Config 1"
+        self._current_config = application_settings.default_config_name
         self._topic_name_model = TopicNameModel(self._current_config)
         self._possible_plots_changed_event = EventHandler[
             list[PossibleVisualization]]()
