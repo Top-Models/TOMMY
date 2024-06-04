@@ -7,6 +7,10 @@ from tommy.controller.controller import Controller
 from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
+from tommy.controller.topic_modelling_controller import \
+    TopicModellingController
+from tommy.controller.topic_modelling_runners.abstract_topic_runner import \
+    TopicRunner
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
@@ -27,7 +31,7 @@ class ModelParamsView(QScrollArea):
     def __init__(self, model_parameters_controller: ModelParametersController,
                  language_controller: LanguageController,
                  config_controller: ConfigController,
-                 controller: Controller) -> None:
+                 topic_modelling_controller: TopicModellingController) -> None:
         """The initialization of the ModelParamDisplay."""
         super().__init__()
         self.setObjectName("model_params_display")
@@ -37,7 +41,9 @@ class ModelParamsView(QScrollArea):
         self._model_parameters_controller = model_parameters_controller
         self._model_parameters_controller.algorithm_changed_event.subscribe(
             lambda _: self.model_type_changed_event())
-        self._controller = controller
+        self._topic_modelling_controller = topic_modelling_controller
+        self._topic_modelling_controller.model_trained_event.subscribe(
+            lambda _: self._reset_apply_button_on_model_trained())
         self._config_controller = config_controller
 
         # Subscribe to the event when the config changes
@@ -278,13 +284,15 @@ class ModelParamsView(QScrollArea):
                 }}
             """)
 
-        QApplication.processEvents()
-
         if current_view.all_fields_valid():
-            self._controller.on_run_topic_modelling()
+            self._topic_modelling_controller.train_model()
 
-        # Re-enable the apply button and restore its text
-        # when processing is complete
+    def _reset_apply_button_on_model_trained(self) -> None:
+        """
+        Re-enable the apply button and restore its text when training is
+        complete.
+        :return: None
+        """
         self.apply_button.setEnabled(True)
         self.apply_button.setText("Toepassen")
         self.apply_button.setStyleSheet(
