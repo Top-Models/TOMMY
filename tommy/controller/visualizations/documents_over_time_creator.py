@@ -23,8 +23,8 @@ from tommy.support.constant_variables import plot_colors
 class DocumentsOverTimeCreator(AbstractVisualization):
 
     _required_interfaces = [TopicRunner]
-    name = 'Documenten over tijd'
-    short_tab_name = 'Doc. over tijd'
+    name = "Documenten over tijd"
+    short_tab_name = "Doc. over tijd"
     vis_group = VisGroup.MODEL
     needed_input_data = [VisInputData.PROCESSED_CORPUS]
 
