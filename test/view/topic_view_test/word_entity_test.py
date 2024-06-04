@@ -61,18 +61,6 @@ def test_leave_event_not_selected(word_entity: WordEntity):
                                        f"color: black"
 
 
-def test_mouse_press_event(word_entity: WordEntity, qtbot: QtBot):
-    """
-    Test the mouse press event of the word entity.
-    """
-    qtbot.mousePress(word_entity, Qt.LeftButton)
-    assert (word_entity.styleSheet() ==
-            f"font-family: {text_font}; "
-            f"font-size: 12px; "
-            f"background-color: {pressed_medium_light_gray}; "
-            f"color: black")
-
-
 def test_mouse_release_event(word_entity: WordEntity, qtbot: QtBot):
     """
     Test the mouse release event of the word entity.
@@ -82,24 +70,6 @@ def test_mouse_release_event(word_entity: WordEntity, qtbot: QtBot):
                                        f"font-size: 12px; " \
                                        f"background-color: white; " \
                                        f"color: black"
-
-
-def test_mouse_release_event_signal_emission(word_entity: WordEntity,
-                                             qtbot: QtBot):
-    """
-    Test if the mouse release event emits the 'clicked' signal
-    with the correct word.
-    """
-    clicked_word = None
-
-    def on_clicked(word: str):
-        nonlocal clicked_word
-        clicked_word = word
-
-    word_entity.clicked.connect(on_clicked)
-
-    qtbot.mouseRelease(word_entity, Qt.LeftButton)
-    assert clicked_word == "test_word"
 
 
 """

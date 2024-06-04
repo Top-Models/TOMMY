@@ -1,5 +1,6 @@
-from PySide6.QtCore import Qt, Signal, QEvent
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
+from PySide6.QtCore import Qt, Signal, QEvent, QRect, QPoint, QSize
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy, \
+    QLayout
 
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.model_parameters_controller import \
@@ -24,8 +25,10 @@ class FetchedTopicsView(QScrollArea):
         super().__init__()
 
         # Initialize widget properties
-        self.setMinimumHeight(400)
-        self.setFixedWidth(250)
+        self.setMinimumHeight(430)
+        self.setMinimumWidth(160)
+        self.setContentsMargins(5,5,5,5)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setObjectName("fetched_topics_display")
         self.setStyleSheet(
             """
@@ -44,7 +47,9 @@ class FetchedTopicsView(QScrollArea):
         # Initialize layout for scroll area
         self.scroll_area = QWidget()
         self.scroll_area.setObjectName("scroll_area")
-        self.layout = QVBoxLayout(self.scroll_area)
+        self.scroll_area.setSizePolicy(QSizePolicy.Expanding,
+                                       QSizePolicy.Expanding)
+        self.layout = FlowLayout(self.scroll_area)
         self.layout.setAlignment(Qt.AlignCenter | Qt.AlignTop)
 
         # Set scroll area as focal point
@@ -210,6 +215,86 @@ class FetchedTopicsView(QScrollArea):
             topic_entity = self.layout.itemAt(i).widget()
             if isinstance(topic_entity, TopicEntity):
                 topic_entity.deselect()
+
+
+class FlowLayout(QLayout):
+    def __init__(self, parent=None, margin=5, spacing=5):
+        super().__init__(parent)
+
+        if parent is not None:
+            self.setContentsMargins(15, margin, margin, margin)
+
+        self.setSpacing(spacing)
+        self.itemList = []
+
+    def addItem(self, item):
+        self.itemList.append(item)
+
+    def count(self):
+        return len(self.itemList)
+
+    def itemAt(self, index):
+        if 0 <= index < len(self.itemList):
+            return self.itemList[index]
+        return None
+
+    def takeAt(self, index):
+        if 0 <= index < len(self.itemList):
+            return self.itemList.pop(index)
+        return None
+
+    def expandingDirections(self):
+        return Qt.Orientations(Qt.Orientation(0))
+
+    def hasHeightForWidth(self):
+        return True
+
+    def heightForWidth(self, width):
+        return self.doLayout(QRect(0, 0, width, 0), True)
+
+    def setGeometry(self, rect):
+        super().setGeometry(rect)
+        self.doLayout(rect, False)
+
+    def sizeHint(self):
+        return self.minimumSize()
+
+    def minimumSize(self):
+        size = QSize()
+
+        for item in self.itemList:
+            size = size.expandedTo(item.minimumSize())
+
+        margin = self.contentsMargins().left()
+        size += QSize(2 * margin, 2 * margin)
+        return size
+
+    def doLayout(self, rect, testOnly):
+        x = rect.x() + self.contentsMargins().left()
+        y = rect.y() + self.contentsMargins().top()
+        lineHeight = 0
+
+        for item in self.itemList:
+            wid = item.widget()
+            spaceX = self.spacing() + wid.style().layoutSpacing(
+                QSizePolicy.PushButton, QSizePolicy.PushButton, Qt.Horizontal)
+            spaceY = self.spacing() + wid.style().layoutSpacing(
+                QSizePolicy.PushButton, QSizePolicy.PushButton, Qt.Vertical)
+
+            nextX = x + item.sizeHint().width() + spaceX
+            if nextX - spaceX > rect.right() and lineHeight > 0:
+                x = rect.x() + self.contentsMargins().left()
+                y = y + lineHeight + spaceY
+                nextX = x + item.sizeHint().width() + spaceX
+                lineHeight = 0
+
+            if not testOnly:
+                item.setGeometry(QRect(QPoint(x, y), item.sizeHint()))
+
+            x = nextX
+            lineHeight = max(lineHeight, item.sizeHint().height())
+
+        return y + lineHeight - rect.y()
 
 
 """

@@ -39,10 +39,12 @@ class TopicEntity(QFrame):
         main_layout = QVBoxLayout(self)
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
                                  Qt.AlignmentFlag.AlignHCenter)
+        main_layout.setContentsMargins(5, 5, 5, 5)  # Adjust margins as needed
+        main_layout.setSpacing(5)  # Adjust spacing as needed
 
         # Initialize widget properties
         self.setStyleSheet(f"background-color: {sec_col_purple};")
-        self.setFixedWidth(200)
+        self.setFixedWidth(150)
 
         # Initialize radio button layout
         radio_layout = QHBoxLayout()
@@ -191,7 +193,7 @@ class TopicEntity(QFrame):
         :return: None
         """
         for word_entity in self.word_entities:
-            if word_entity.text() == word:
+            if word_entity.toPlainText() == word:
                 word_entity.selected = True
                 word_entity.setStyleSheet(
                     f"font-family: {text_font}; "

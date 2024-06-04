@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QLabel, QScrollArea, QVBoxLayout, QLayout,
-                               QWidget)
+                               QWidget, QSizePolicy)
 
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.model_parameters_controller import (
@@ -22,7 +22,6 @@ class SelectedInformationView(QScrollArea):
         super().__init__()
 
         # Initialize widget properties
-        self.setFixedWidth(250)
         self.setStyleSheet(f"background-color: white;"
                            f"color: black;")
         self.setMinimumHeight(200)
@@ -44,7 +43,8 @@ class SelectedInformationView(QScrollArea):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_widget = QWidget()
         self.scroll_layout = QVBoxLayout(self.scroll_widget)
-        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
+                                        Qt.AlignmentFlag.AlignLeft)
         self.scroll_area.setVerticalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.scroll_area.setHorizontalScrollBarPolicy(
@@ -59,6 +59,10 @@ class SelectedInformationView(QScrollArea):
 
         # Initialize widgets
         self.display_no_component_selected()
+
+        # Set size policy
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.setMinimumWidth(0)  # Allow the widget to shrink to zero width
 
     def initialize_title_widget(self) -> None:
         """
