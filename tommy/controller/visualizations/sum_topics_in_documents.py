@@ -19,7 +19,7 @@ from tommy.support.constant_variables import plot_colors
 
 class SumTopicsInDocuments(AbstractVisualization):
 
-    _required_interfaces = [TopicRunner]
+    _required_interfaces = [TopicRunner, DocumentTopicsInterface]
     name = "Topics in documenten"
     short_tab_name = "Topics in doc."
     vis_group = VisGroup.MODEL
