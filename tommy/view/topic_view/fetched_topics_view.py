@@ -25,8 +25,8 @@ class FetchedTopicsView(QScrollArea):
         super().__init__()
 
         # Initialize widget properties
-        self.setMinimumHeight(400)
-        self.setMinimumWidth(320)
+        self.setMinimumHeight(430)
+        self.setMinimumWidth(160)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setObjectName("fetched_topics_display")
         self.setStyleSheet(
@@ -203,7 +203,7 @@ class FetchedTopicsView(QScrollArea):
 
 
 class FlowLayout(QLayout):
-    def __init__(self, parent=None, margin=3, spacing=5):
+    def __init__(self, parent=None, margin=0, spacing=-1):
         super().__init__(parent)
 
         if parent is not None:

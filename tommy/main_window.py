@@ -1,8 +1,8 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon, QGuiApplication
+from PySide6.QtGui import QIcon, QGuiApplication, QPainter, QColor
 from PySide6.QtWidgets import (
     QMainWindow,
-    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy, QSplitter
+    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy, QSplitter, QSplitterHandle
 )
 
 from tommy.controller.controller import Controller
@@ -24,6 +24,39 @@ from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
 from tommy.view.topic_view.topic_entity_component.topic_entity import (
     TopicEntity)
+
+
+class CustomSplitterHandle(QSplitterHandle):
+    """Custom splitter handle to add visual indicator."""
+
+    def __init__(self, orientation, parent):
+        super().__init__(orientation, parent)
+        self.setFixedWidth(15)  # Set the width of the splitter handle
+
+
+    def paintEvent(self, event):
+        super().paintEvent(event)
+        painter = QPainter(self)
+        painter.setPen(QColor(210, 210, 210))
+        rect = self.rect()
+
+        # Draw "|||" symbol on both sides of the handle
+        painter.drawText(rect.adjusted(2, 0, -2, 0),
+                         Qt.AlignLeft | Qt.AlignVCenter, "|||")
+        painter.drawText(rect.adjusted(2, 0, -2, 0),
+                         Qt.AlignRight | Qt.AlignVCenter, "|||")
+
+        painter.end()
+
+
+class CustomSplitter(QSplitter):
+    """Custom splitter to use the custom handle."""
+
+    def __init__(self, orientation, parent=None):
+        super().__init__(orientation, parent)
+
+    def createHandle(self):
+        return CustomSplitterHandle(self.orientation(), self)
 
 
 class MainWindow(QMainWindow):
@@ -50,8 +83,8 @@ class MainWindow(QMainWindow):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
 
-        # Create the splitter to handle resizing
-        self.splitter = QSplitter(Qt.Horizontal)
+        # Create the custom splitter to handle resizing
+        self.splitter = CustomSplitter(Qt.Horizontal)
         self.splitter.setStyleSheet("border: none;")
         self.splitter.setContentsMargins(0, 0, 0, 0)
 
@@ -77,8 +110,8 @@ class MainWindow(QMainWindow):
         # Adjust size policies and minimum widths
         self.left_container.setSizePolicy(QSizePolicy.Fixed,
                                           QSizePolicy.Expanding)
-        self.right_container.setSizePolicy(QSizePolicy.Minimum,
-                                           QSizePolicy.Expanding)
+        self.right_container.setSizePolicy(QSizePolicy.Expanding,
+                                           QSizePolicy.Expanding)  # Changed to Expanding
         self.center_container.setSizePolicy(QSizePolicy.Expanding,
                                             QSizePolicy.Expanding)
 
@@ -129,9 +162,10 @@ class MainWindow(QMainWindow):
         self.right_layout.addWidget(self.selected_information_view)
 
         # Adjust the splitter stretch factors
-        self.splitter.setStretchFactor(0, 0)  # Left container: fixed
-        self.splitter.setStretchFactor(1, 1)  # Center container: expand
-        self.splitter.setStretchFactor(2, 0)  # Right container: minimum size
+        self.splitter.setStretchFactor(0, 1)  # Left container: expand slightly
+        self.splitter.setStretchFactor(1, 3)  # Center container: expand more
+        self.splitter.setStretchFactor(2,
+                                       1)  # Right container: expand slightly
 
         self.display_correct_initial_files()
 
