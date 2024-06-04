@@ -16,8 +16,12 @@ def get_standard_input_folder() -> str:
     :return: the standard location where input will be expected by the
         application
     """
+    # when run as an executable, we do not have a standard input folder
+    if hasattr(sys, '_MEIPASS'):
+        return ""
+
     base_dir = get_base_dir()
-    return os.path.join(base_dir, "data")
+    return os.path.join(base_dir, "data", "corpora")
 
 
 def get_preprocessing_data_folder() -> str:
@@ -25,13 +29,14 @@ def get_preprocessing_data_folder() -> str:
     Returns the standard location where preprocessing data is stored
     :return: the standard location where data needed for preprocessing will
         be expected by the application (such as stopwords and maybe spacy
-        pipeline downloads) Note: this is a temporary hardcoded location for
-        now.
+        pipeline downloads)
     """
-    base_dir = get_base_dir()
     if hasattr(sys, '_MEIPASS'):
-        return os.path.join(base_dir, "preprocessing_data")
-    return get_standard_input_folder()
+        base_dir = get_base_dir()
+    else:
+        base_dir = os.path.join(get_base_dir(), "data")
+
+    return os.path.join(base_dir, "preprocessing_data")
 
 
 def get_base_dir() -> str:
@@ -46,6 +51,7 @@ def get_base_dir() -> str:
 
 application_settings = ApplicationSettings(get_preprocessing_data_folder())
 
+print(application_settings.preprocessing_data_folder)
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
