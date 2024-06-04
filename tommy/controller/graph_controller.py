@@ -22,6 +22,12 @@ from tommy.controller.visualizations.document_topic_network_summary_creator \
     import DocumentTopicNetworkSummaryCreator
 from tommy.controller.visualizations.document_word_count_creator import (
     DocumentWordCountCreator)
+from tommy.controller.visualizations.documents_over_time_creator import (
+    DocumentsOverTimeCreator)
+from tommy.controller.visualizations.documents_over_time_per_topic_creator import \
+    DocumentsOverTimePerTopicCreator
+from tommy.controller.visualizations.sum_topics_in_documents import \
+    SumTopicsInDocuments
 from tommy.controller.visualizations.top_words_bar_plot_creator import (
     TopWordsBarPlotCreator)
 from tommy.controller.visualizations.word_cloud_creator import WordCloudCreator
@@ -62,11 +68,14 @@ class GraphController:
     VISUALIZATIONS: list[AbstractVisualization] = [
         DocumentWordCountCreator(),
         KValueCreator(),
+        DocumentsOverTimeCreator(),
+        SumTopicsInDocuments(),
         CorrelationMatrixCreator(),
         WordTopicNetworkCreator(),
         DocumentTopicNetworkSummaryCreator(),
         WordCloudCreator(),
-        TopWordsBarPlotCreator()
+        TopWordsBarPlotCreator(),
+        DocumentsOverTimePerTopicCreator()
     ]
     _possible_visualizations: list[PossibleVisualization] | None = None
 

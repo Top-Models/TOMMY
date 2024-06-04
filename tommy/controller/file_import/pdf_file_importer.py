@@ -76,22 +76,21 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         alt_title = os.path.basename(path).replace('.pdf', '')
 
         try:
-            mod_time = os.path.getmtime(path)
-            file_date = datetime.fromtimestamp(mod_time)
+            date = metadata.creation_date
         except Exception:
             # If unable to get the modification time, don't set a date
-            file_date = None
+            date = None
 
         return RawFile(
-            metadata=Metadata(author=metadata.get('/Author', None),
-                              title=metadata.get('/Title', alt_title),
-                              date=metadata.get('/ModDate', file_date),
-                              path=os.path.relpath(path),
-                              format="pdf",
-                              length=len(file.split(" ")),
-                              name=alt_title,
-                              size=stat(path).st_size),
-            body=RawBody(body=file))
+                metadata=Metadata(author=metadata.get('/Author', None),
+                                  title=metadata.get('/Title', alt_title),
+                                  date=date,
+                                  path=os.path.relpath(path),
+                                  format="pdf",
+                                  length=len(file.split(" ")),
+                                  name=alt_title,
+                                  size=stat(path).st_size),
+                body=RawBody(body=file))
 
 
 """
