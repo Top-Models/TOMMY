@@ -114,12 +114,13 @@ class ExportController:
             csv_writer = csv.writer(csvfile)
             # Assume that Metadata has an attribute 'id' for document identifier
             # Write header row with topic indices
-            header = ['Document ID'] + [f'Topic {i + 1} Probability' for i in
+            header = ['Filename'] + ['Length'] + ['Author'] + ['Title'] + ['Date'] + ['Path'] + [f'Topic {i + 1} Probability' for i in
                                         range(len(self.document_topics[0][1]))]
             csv_writer.writerow(header)
 
             for metadata, probabilities in self.document_topics:
-                row = [metadata] + probabilities
+                row = [metadata.name, str(metadata.length), metadata.author,
+                       metadata.title, str(metadata.date), metadata.path] + probabilities
                 csv_writer.writerow(row)
 
     def set_controller_refs(
