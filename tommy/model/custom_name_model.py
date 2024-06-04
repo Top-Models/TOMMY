@@ -15,10 +15,8 @@ class TopicNameModel:
         if config_name not in self.topic_names:
             self.topic_names[config_name] = {}
         self.topic_names[config_name][index] = name
-        print(self.topic_names)
 
     def remove_config(self, config_name: str) -> None:
         """Function to remove a configuration from the model."""
         if config_name in self.topic_names:
             del self.topic_names[config_name]
-        print(self.topic_names)
