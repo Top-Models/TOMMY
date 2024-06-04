@@ -33,6 +33,17 @@ class DocumentsOverTimeCreator(AbstractVisualization):
                        processed_corpus: ProcessedCorpus = None,
                        **kwargs
                        ) -> matplotlib.figure.Figure:
+        """
+        Construct a document over time plot for the given topic runner and
+        return it as a matplotlib figure.
+
+        :param topic_runner: The topic model to construct the plot for. This
+            should implement the DocumentTopicsInterface
+        :param processed_corpus: The preprocessed corpus containing all files
+            as bags of words after preprocessing.
+        :return: Matplotlib figure showing a topic ove time plot for all
+            topics.
+        """
 
         # Construct a plot and axes
         fig, ax = plt.subplots()
@@ -43,11 +54,12 @@ class DocumentsOverTimeCreator(AbstractVisualization):
             dates = {"date": [],
                      "probability": []}
             for document in processed_corpus:
-                if (document.metadata.date is not None):
+                if document.metadata.date is not None:
                     current_date = datetime.combine(document.metadata.date,
                                                     datetime.min.time())
-                    topics = topic_runner.get_document_topics(document.body.body,
-                                                              0.0)
+                    topics = topic_runner.get_document_topics(
+                        document.body.body,
+                        0.0)
 
                     topic = [topic for topic in topics if topic[0] == topic_id]
                     if topic:
@@ -85,7 +97,8 @@ class DocumentsOverTimeCreator(AbstractVisualization):
 
     @staticmethod
     def _get_no_dates_available_screen() -> matplotlib.figure.Figure:
-        """Returns a figure showing a text that there are no dates available."""
+        """Returns a figure showing a text that there are no dates
+        available."""
         fig = plt.figure()
         plt.figtext(0.5,
                     0.5,

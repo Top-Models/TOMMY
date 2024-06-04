@@ -30,6 +30,16 @@ class SumTopicsInDocuments(AbstractVisualization):
                        processed_corpus: ProcessedCorpus = None,
                        **kwargs
                        ) -> matplotlib.figure.Figure:
+        """
+        Construct a plot containing the sum of all probabilities for each
+        topic.
+
+        :param topic_runner: The topic model to construct the plot for. This
+            should implement the DocumentTopicsInterface.
+        :param processed_corpus: The preprocessed corpus containing all files
+            as bags of words after preprocessing.
+        :return: Matplotlib figure showing a sum topics in documents plot.
+        """
 
         # Construct a plot and axes
         fig, ax = plt.subplots()
