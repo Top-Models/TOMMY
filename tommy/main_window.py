@@ -33,19 +33,11 @@ class CustomSplitterHandle(QSplitterHandle):
         super().__init__(orientation, parent)
         self.setFixedWidth(15)  # Set the width of the splitter handle
 
-
     def paintEvent(self, event):
         super().paintEvent(event)
         painter = QPainter(self)
-        painter.setPen(QColor(210, 210, 210))
-        rect = self.rect()
-
-        # Draw "|||" symbol on both sides of the handle
-        painter.drawText(rect.adjusted(2, 0, -2, 0),
-                         Qt.AlignLeft | Qt.AlignVCenter, "|||")
-        painter.drawText(rect.adjusted(2, 0, -2, 0),
-                         Qt.AlignRight | Qt.AlignVCenter, "|||")
-
+        painter.setPen(QColor(150, 150, 150))
+        painter.drawText(self.rect(), Qt.AlignCenter, "|||")
         painter.end()
 
 

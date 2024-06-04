@@ -27,6 +27,7 @@ class FetchedTopicsView(QScrollArea):
         # Initialize widget properties
         self.setMinimumHeight(430)
         self.setMinimumWidth(160)
+        self.setContentsMargins(5,5,5,5)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setObjectName("fetched_topics_display")
         self.setStyleSheet(
@@ -203,11 +204,11 @@ class FetchedTopicsView(QScrollArea):
 
 
 class FlowLayout(QLayout):
-    def __init__(self, parent=None, margin=0, spacing=-1):
+    def __init__(self, parent=None, margin=5, spacing=5):
         super().__init__(parent)
 
         if parent is not None:
-            self.setContentsMargins(margin, margin, margin, margin)
+            self.setContentsMargins(15, margin, margin, margin)
 
         self.setSpacing(spacing)
         self.itemList = []
@@ -255,8 +256,8 @@ class FlowLayout(QLayout):
         return size
 
     def doLayout(self, rect, testOnly):
-        x = rect.x()
-        y = rect.y()
+        x = rect.x() + self.contentsMargins().left()
+        y = rect.y() + self.contentsMargins().top()
         lineHeight = 0
 
         for item in self.itemList:
@@ -268,7 +269,7 @@ class FlowLayout(QLayout):
 
             nextX = x + item.sizeHint().width() + spaceX
             if nextX - spaceX > rect.right() and lineHeight > 0:
-                x = rect.x()
+                x = rect.x() + self.contentsMargins().left()
                 y = y + lineHeight + spaceY
                 nextX = x + item.sizeHint().width() + spaceX
                 lineHeight = 0
