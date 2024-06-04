@@ -20,7 +20,8 @@ pyinstaller ^
 --name "%APP_NAME%" ^
 --icon "assets/tommy.ico" ^
 --add-data "%DATA_FOLDER_PATH%\stopwords.txt:.\preprocessing_data" ^
---add-data "%DATA_FOLDER_PATH%\pipeline_download:.\preprocessing_data/pipeline_download" ^
+--add-data "%DATA_FOLDER_PATH%\pipeline_download:.\preprocessing_data\pipeline_download" ^
+--hidden-import "pkg_resources.extern" ^
 tommy/main.py
 
 echo ^> You can find the application in the dist folder

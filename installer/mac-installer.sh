@@ -21,6 +21,7 @@ pyinstaller \
 --icon "assets/tommy.icns" \
 --add-data "${DATA_FOLDER_PATH}/stopwords.txt:./preprocessing_data" \
 --add-data "${DATA_FOLDER_PATH}/pipeline_download:./preprocessing_data/pipeline_download" \
+--hidden-import "pkg_resources.extern" \
 tommy/main.py
 
 echo "> Creating a DMG file for Tommy"
