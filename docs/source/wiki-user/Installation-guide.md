@@ -14,9 +14,9 @@ Navigeer daarom eerst in Finder naar de Apps folder. Dubbel-klik vervolgens op d
 
 *'Tommy.App' kan niet worden geopend omdat Apple het bestand niet kan controleren op kwaadaardige software.*
 
-Negeer deze waarschuwing door op `OK` te klikken. Klik vervolgens met rechtermuisknop op de TOMMY applicatie en kies voor `Open`.
+Negeer deze waarschuwing door op `OK` te klikken. Klik vervolgens in de Finder met rechtermuisknop op de TOMMY applicatie en kies voor `Open`.
 Er zal een soortgelijke waarschuwing weergegeven worden, hoewel dit keer ook op `Open` geklikt kan worden.
-Door op `Open` te klikken, zal de applicatie na enige tijd geopend worden (en is dan klaar voor gebruik). 
+Door op `Open` te klikken, zal de applicatie na enige tijd - dit kan even duren - geopend worden (en is dan klaar voor gebruik). 
 
 Dit is eenmalig; voortaan kan de applicatie direct vanuit Launchpad geopend worden.
 
