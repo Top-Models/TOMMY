@@ -180,6 +180,7 @@ class GraphController:
         :param name: The new name of the topic
         :return: None
         """
+
         self._topic_name_model.set_topic_name(self._current_config,
                                               topic_index, name)
 

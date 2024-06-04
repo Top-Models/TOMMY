@@ -20,3 +20,11 @@ class TopicNameModel:
         """Function to remove a configuration from the model."""
         if config_name in self.topic_names:
             del self.topic_names[config_name]
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""
