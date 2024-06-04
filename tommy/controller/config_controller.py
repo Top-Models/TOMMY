@@ -48,6 +48,7 @@ class ConfigController:
             self._model.selected_config_name = name
             self._config_switched_event.publish(self._model.config_model)
             self._graph_controller.reset_graph_view_state()
+            self._graph_controller.set_current_config(name)
         return config_exists
 
     def get_configuration_names(self) -> list[str]:
@@ -96,6 +97,7 @@ class ConfigController:
             self.switch_configuration(configs[new_index])
 
         self._model.configs.pop(name)
+        self._graph_controller.remove_config(name)
         return True
 
     def get_selected_configuration(self) -> str:

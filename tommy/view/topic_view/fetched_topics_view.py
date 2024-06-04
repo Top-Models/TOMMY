@@ -63,6 +63,8 @@ class FetchedTopicsView(QScrollArea):
         self._graph_controller = graph_controller
         self._graph_controller.topics_changed_event.subscribe(
             self._refresh_topics)
+        self._graph_controller.refresh_name_event.subscribe(
+                self._refresh_topics)
 
         # Set reference to the model parameters controller
         self._model_parameters_controller = model_parameters_controller
@@ -91,6 +93,17 @@ class FetchedTopicsView(QScrollArea):
         topic_entity = TopicEntity(topic_name, topic_words, index)
         topic_entity.clicked.connect(self._on_topic_clicked)
         topic_entity.wordClicked.connect(self._on_word_clicked)
+        topic_entity.nameChanged.connect(self._on_topic_name_changed)
+
+    def _on_topic_name_changed(self, index: int,  new_name: str) -> None:
+        """
+        Event handler for when a topic name is changed
+        :param new_name: The new name of the topic
+        :return: None
+        """
+        if self._graph_controller.has_topic_runner:
+            self._graph_controller.set_topic_name(index, new_name)
+        self._refresh_topics(None)
 
     def _display_topics(self, tab_name: str) -> None:
         """
@@ -113,6 +126,7 @@ class FetchedTopicsView(QScrollArea):
             topic_entity = TopicEntity(topic_name, topic_words, index)
             topic_entity.wordClicked.connect(self._on_word_clicked)
             topic_entity.clicked.connect(self._on_topic_clicked)
+            topic_entity.nameChanged.connect(self._on_topic_name_changed)
             self.layout.addWidget(topic_entity)
 
     def remove_tab_from_container(self, tab_name: str) -> None:
@@ -140,7 +154,7 @@ class FetchedTopicsView(QScrollArea):
             return
 
         for i in range(self._graph_controller.get_number_of_topics()):
-            topic_name = f"Topic {i + 1}"
+            topic_name = self._graph_controller.get_topic_name(i)
             topic = self._graph_controller.get_topic_with_scores(
                 i, self._model_parameters_controller.get_model_word_amount())
             topic_words = topic.top_words
