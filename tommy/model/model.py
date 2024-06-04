@@ -5,10 +5,11 @@ from tommy.model.corpus_model import CorpusModel
 from tommy.model.language_model import LanguageModel
 from tommy.model.project_settings_model import ProjectSettingsModel
 from tommy.support.supported_languages import SupportedLanguage
+from tommy.support.application_settings import application_settings
 
 
 class Model:
-    default_config_name = "Config 1"
+    default_config_name = application_settings.default_config_name
 
     def __init__(self):
         self.language_model: LanguageModel = LanguageModel()

@@ -52,6 +52,8 @@ from tommy.controller.visualizations.visualization_input_datatypes import (
 from tommy.datatypes.topics import TopicWithScores
 from tommy.model.topic_model import TopicModel
 from tommy.support.event_handler import EventHandler
+from tommy.model.custom_name_model import TopicNameModel
+from tommy.support.application_settings import application_settings
 
 
 class GraphController:
@@ -87,6 +89,7 @@ class GraphController:
     _possible_plots_changed_event: EventHandler[list[PossibleVisualization]]
     _topics_changed_event: EventHandler[None]
     _refresh_plots_event: EventHandler[None]
+    _refresh_name_event: EventHandler[None]
 
     # Exporters
     NX_EXPORTS: list[NxExporterOnData | NxExporter] = [
@@ -113,16 +116,24 @@ class GraphController:
         return self._refresh_plots_event
 
     @property
+    def refresh_name_event(self) -> EventHandler[None]:
+        """Get the event that triggers when the config name changes."""
+        return self._refresh_name_event
+
+    @property
     def has_topic_runner(self) -> bool:
         return self._current_topic_runner is not None
 
     def __init__(self) -> None:
         """Initialize the graph-controller and its two publishers"""
         super().__init__()
+        self._current_config = application_settings.default_config_name
+        self._topic_name_model = TopicNameModel(self._current_config)
         self._possible_plots_changed_event = EventHandler[
             list[PossibleVisualization]]()
         self._topics_changed_event = EventHandler[None]()
         self._refresh_plots_event = EventHandler[None]()
+        self._refresh_name_event = EventHandler[None]()
 
     def set_controller_refs(
             self,
@@ -152,9 +163,44 @@ class GraphController:
         :return: None
         """
         self._current_topic_selected_id = topic_index
-
-        # trigger event to notify that plots may have changed
         self._refresh_plots_event.publish(None)
+
+    def set_current_config(self, config_name: str) -> None:
+        """
+        Set the current configuration name
+        :param config_name: The name of the current configuration
+        :return: None
+        """
+        self._current_config = config_name
+        self._refresh_name_event.publish(None)
+
+    def get_topic_name(self, topic_index: int) -> str:
+        """
+        Get the name of the topic with the given index
+        :param topic_index: The index of the topic
+        :return: The name of the topic
+        """
+        return self._topic_name_model.get_topic_name(self._current_config,
+                                                     topic_index)
+
+    def set_topic_name(self, topic_index: int, name: str) -> None:
+        """
+        Set the name of the topic with the given index
+        :param topic_index: The index of the topic
+        :param name: The new name of the topic
+        :return: None
+        """
+
+        self._topic_name_model.set_topic_name(self._current_config,
+                                              topic_index, name)
+
+    def remove_config(self, config_name: str) -> None:
+        """
+        Remove the configuration with the given name
+        :param config_name: The name of the configuration to remove
+        :return: None
+        """
+        self._topic_name_model.remove_config(config_name)
 
     def clear_graphs(self, _):
         """Clear all graphs when the input folder path changes"""
