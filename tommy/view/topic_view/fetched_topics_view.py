@@ -26,7 +26,7 @@ class FetchedTopicsView(QScrollArea):
 
         # Initialize widget properties
         self.setMinimumHeight(430)
-        self.setMinimumWidth(160)
+        self.setMinimumWidth(180)
         self.setContentsMargins(5,5,5,5)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setObjectName("fetched_topics_display")
