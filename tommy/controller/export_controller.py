@@ -119,7 +119,7 @@ class ExportController:
             csv_writer.writerow(header)
 
             for metadata, probabilities in self.document_topics:
-                row = [metadata.name, str(metadata.length), metadata.author,
+                row = [metadata.name+"."+metadata.format, str(metadata.length), metadata.author,
                        metadata.title, str(metadata.date), metadata.path] + probabilities
                 csv_writer.writerow(row)
 
