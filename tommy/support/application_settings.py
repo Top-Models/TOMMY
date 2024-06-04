@@ -51,7 +51,6 @@ def get_base_dir() -> str:
 
 application_settings = ApplicationSettings(get_preprocessing_data_folder())
 
-print(application_settings.preprocessing_data_folder)
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
