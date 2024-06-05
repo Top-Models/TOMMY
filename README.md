@@ -70,11 +70,11 @@ company EMMA.
 
 The students who have contributed to this project are:
 
-- [Jasper Hofman]()
+- [Jasper Hofman](https://www.linkedin.com/in/jasper-hofman-499939311)
 - [Nick Jordan](https://www.linkedin.com/in/nick-jordan-11247bba/)
 - [Erben Klaver](https://www.linkedin.com/in/erben-klaver-6b39a31a9/)
 - [Fyor Lambermont](https://linkedin.com/in/fyor-lambermont)
-- [Thomas Loef]()
+- [Thomas Loef](https://www.linkedin.com/in/thomas-loef-05a691311/)
 - [Mees Notermans](https://www.linkedin.com/in/mees-notermans/)
 - [Wessel van der Ven](https://linkedin.com/in/wesselvanderven)
 - [Rens Versnel](https://linkedin.com/in/rens-versnel)
