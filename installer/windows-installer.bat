@@ -2,7 +2,7 @@
 
 set APP_NAME=Tommy
 set OUTPUT_FOLDER=dist
-set DATA_FOLDER_PATH=tommy\data
+set DATA_FOLDER_PATH=tommy/data/preprocessing_data
 
 echo ^> Removing the dist folder if it exists
 
@@ -19,8 +19,7 @@ pyinstaller ^
 --name "%APP_NAME%" ^
 --name "%APP_NAME%" ^
 --icon "assets/tommy.ico" ^
---add-data "%DATA_FOLDER_PATH%\stopwords.txt:.\preprocessing_data" ^
---add-data "%DATA_FOLDER_PATH%\pipeline_download:.\preprocessing_data\pipeline_download" ^
+--add-data "%DATA_FOLDER_PATH%:.\preprocessing_data" ^
 --hidden-import "pkg_resources.extern" ^
 tommy/main.py
 
