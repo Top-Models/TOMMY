@@ -272,7 +272,6 @@ class ModelParamsView(QScrollArea):
                         QPushButton {{
                             background-color: #808080;
                             color: white;
-                            margin-left: 5px;
                         }}
 
                 QPushButton:hover {{
