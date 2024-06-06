@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt, Signal, QEvent, QRect, QPoint, QSize
+from PySide6.QtCore import Qt, Signal, QEvent, QRect, QPoint, QSize, QTimer
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy, \
     QLayout, QLayoutItem, QWidgetItem
 
@@ -218,7 +218,7 @@ class FetchedTopicsView(QScrollArea):
 
 
 class FlowLayout(QLayout):
-    def __init__(self, parent=None, margin=5, spacing=5):
+    def __init__(self, parent=None, margin=5, spacing=0):
         super().__init__(parent)
 
         if parent is not None:
@@ -331,13 +331,16 @@ class FlowLayout(QLayout):
         Perform the layout
 
         :param rect: The rectangle to perform the layout in
-        :param testOnly: True if the layout should only be tested, False
+        :param testOnly: True if the layout should only be tested,
+        False otherwise
         :return: The height of the layout
         """
         x = rect.x() + self.contentsMargins().left()
         y = rect.y() + self.contentsMargins().top()
-        line_height = 0
-        space_y = self.spacing()
+        line_height = 15
+
+        # Add a constant margin of 15px to the right
+        right_margin = 15
 
         # Calculate items per line
         items_per_line = []
@@ -346,26 +349,41 @@ class FlowLayout(QLayout):
 
         for item in self.itemList:
             wid = item.widget()
-            style = wid.style()
-            space_x = self.spacing() + style.layoutSpacing(
-                QSizePolicy.PushButton, QSizePolicy.PushButton, Qt.Horizontal)
-            space_y = self.spacing() + style.layoutSpacing(
-                QSizePolicy.PushButton, QSizePolicy.PushButton, Qt.Vertical)
+            if not wid:
+                continue
 
-            next_x = x + wid.sizeHint().width() + space_x
+            style = wid.style() if hasattr(wid, 'style') else None
+            space_x = self.spacing()
+            space_y = self.spacing()
+
+            if style:
+                try:
+                    space_x += style.layoutSpacing(
+                        QSizePolicy.PushButton, QSizePolicy.PushButton,
+                        Qt.Horizontal)
+                    space_y += style.layoutSpacing(
+                        QSizePolicy.PushButton, QSizePolicy.PushButton,
+                        Qt.Vertical)
+                except AttributeError:
+                    pass
+
+            # Calculate the width including the right margin
+            item_width = wid.sizeHint().width() + right_margin
+
+            next_x = x + item_width + space_x
             if next_x - space_x > rect.right() and line_height > 0:
                 items_per_line.append((current_line, line_width))
                 current_line = []
                 x = rect.x() + self.contentsMargins().left()
-                y = y + line_height + space_y
-                next_x = x + wid.sizeHint().width() + space_x
+                y = y + line_height + 10
+                next_x = x + item_width + space_x
                 line_height = 0
                 line_width = 0
 
             current_line.append(item)
             x = next_x
             line_height = max(line_height, wid.sizeHint().height())
-            line_width += wid.sizeHint().width() + space_x
+            line_width += item_width + space_x
 
         items_per_line.append((current_line, line_width))
 
@@ -382,13 +400,23 @@ class FlowLayout(QLayout):
 
             for item in line:
                 wid = item.widget()
-                style = wid.style()
-                space_x = self.spacing() + style.layoutSpacing(
-                    QSizePolicy.PushButton, QSizePolicy.PushButton,
-                    Qt.Horizontal)
-                space_y = self.spacing() + style.layoutSpacing(
-                    QSizePolicy.PushButton, QSizePolicy.PushButton,
-                    Qt.Vertical)
+                if not wid:
+                    continue
+
+                style = wid.style() if hasattr(wid, 'style') else None
+                space_x = self.spacing()
+                space_y = 5
+
+                if style:
+                    try:
+                        space_x += style.layoutSpacing(
+                            QSizePolicy.PushButton, QSizePolicy.PushButton,
+                            Qt.Horizontal)
+                        space_y += style.layoutSpacing(
+                            QSizePolicy.PushButton, QSizePolicy.PushButton,
+                            Qt.Vertical)
+                    except AttributeError:
+                        pass
 
                 item_width = wid.sizeHint().width() + extra_space_per_item
                 if not testOnly:
@@ -400,8 +428,11 @@ class FlowLayout(QLayout):
                 line_height = max(line_height, wid.sizeHint().height())
 
             x = rect.x() + self.contentsMargins().left()
-            y += line_height + space_y
+            y += line_height + 10
             line_height = 0
+
+        # Schedule a delayed layout update
+        QTimer.singleShot(0, self.update)
 
         return y + line_height - rect.y()
 
