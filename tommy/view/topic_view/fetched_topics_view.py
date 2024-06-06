@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt, Signal, QEvent, QRect, QPoint, QSize
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy, \
-    QLayout
+    QLayout, QLayoutItem
 
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.model_parameters_controller import \
@@ -26,8 +26,8 @@ class FetchedTopicsView(QScrollArea):
 
         # Initialize widget properties
         self.setMinimumHeight(430)
-        self.setMinimumWidth(180)
-        self.setContentsMargins(5,5,5,5)
+        self.setMinimumWidth(250)
+        self.setContentsMargins(5, 5, 5, 5)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setObjectName("fetched_topics_display")
         self.setStyleSheet(
@@ -69,7 +69,7 @@ class FetchedTopicsView(QScrollArea):
         self._graph_controller.topics_changed_event.subscribe(
             self._refresh_topics)
         self._graph_controller.refresh_name_event.subscribe(
-                self._refresh_topics)
+            self._refresh_topics)
 
         # Set reference to the model parameters controller
         self._model_parameters_controller = model_parameters_controller
@@ -100,7 +100,7 @@ class FetchedTopicsView(QScrollArea):
         topic_entity.wordClicked.connect(self._on_word_clicked)
         topic_entity.nameChanged.connect(self._on_topic_name_changed)
 
-    def _on_topic_name_changed(self, index: int,  new_name: str) -> None:
+    def _on_topic_name_changed(self, index: int, new_name: str) -> None:
         """
         Event handler for when a topic name is changed
         :param new_name: The new name of the topic
@@ -227,39 +227,96 @@ class FlowLayout(QLayout):
         self.setSpacing(spacing)
         self.itemList = []
 
-    def addItem(self, item):
+    def addItem(self, item) -> None:
+        """
+        Add an item to the layout
+
+        :param item: The item to add
+        :return: None
+        """
         self.itemList.append(item)
 
-    def count(self):
+    def count(self) -> int:
+        """
+        Get the number of items in the layout
+
+        :return: The number of items in the layout
+        """
         return len(self.itemList)
 
-    def itemAt(self, index):
+    def itemAt(self, index) -> QLayoutItem:
+        """
+        Get the item at the given index
+
+        :param index: The index of the item
+        :return: The item at the given index
+        """
         if 0 <= index < len(self.itemList):
             return self.itemList[index]
+
         return None
 
-    def takeAt(self, index):
+    def takeAt(self, index) -> QLayoutItem:
+        """
+        Remove the item at the given index
+
+        :param index: The index of the item to remove
+        :return: The item that was removed
+        """
         if 0 <= index < len(self.itemList):
             return self.itemList.pop(index)
+
         return None
 
-    def expandingDirections(self):
+    def expandingDirections(self) -> Qt.Orientations:
+        """
+        Get the expanding directions of the layout
+
+        :return: The expanding directions of the layout
+        """
         return Qt.Orientations(Qt.Orientation(0))
 
-    def hasHeightForWidth(self):
+    def hasHeightForWidth(self) -> bool:
+        """
+        Check if the layout has a height for width
+
+        :return: True if the layout has a height for width, False otherwise
+        """
         return True
 
-    def heightForWidth(self, width):
-        return self.doLayout(QRect(0, 0, width, 0), True)
+    def heightForWidth(self, width) -> int:
+        """
+        Get the height for the given width
 
-    def setGeometry(self, rect):
+        :param width: The width to get the height for
+        :return: The height for the given width
+        """
+        return self.do_layout(QRect(0, 0, width, 0), True)
+
+    def setGeometry(self, rect) -> None:
+        """
+        Set the geometry of the layout
+
+        :param rect: The rectangle to set the geometry to
+        :return: None
+        """
         super().setGeometry(rect)
-        self.doLayout(rect, False)
+        self.do_layout(rect, False)
 
-    def sizeHint(self):
+    def sizeHint(self) -> QSize:
+        """
+        Get the size hint of the layout
+
+        :return: The size hint of the layout
+        """
         return self.minimumSize()
 
-    def minimumSize(self):
+    def minimumSize(self) -> QSize:
+        """
+        Get the minimum size of the layout
+
+        :return: The minimum size of the layout
+        """
         size = QSize()
 
         for item in self.itemList:
@@ -269,32 +326,82 @@ class FlowLayout(QLayout):
         size += QSize(2 * margin, 2 * margin)
         return size
 
-    def doLayout(self, rect, testOnly):
+    def do_layout(self, rect, testOnly) -> int:
+        """
+        Perform the layout
+
+        :param rect: The rectangle to perform the layout in
+        :param testOnly: True if the layout should only be tested, False
+        :return: The height of the layout
+        """
         x = rect.x() + self.contentsMargins().left()
         y = rect.y() + self.contentsMargins().top()
-        lineHeight = 0
+        line_height = 0
+        space_y = self.spacing()
+
+        # Calculate items per line
+        items_per_line = []
+        current_line = []
+        line_width = 0
 
         for item in self.itemList:
             wid = item.widget()
-            spaceX = self.spacing() + wid.style().layoutSpacing(
+            space_x = self.spacing() + wid.style().layoutSpacing(
                 QSizePolicy.PushButton, QSizePolicy.PushButton, Qt.Horizontal)
-            spaceY = self.spacing() + wid.style().layoutSpacing(
+            space_y = self.spacing() + wid.style().layoutSpacing(
                 QSizePolicy.PushButton, QSizePolicy.PushButton, Qt.Vertical)
 
-            nextX = x + item.sizeHint().width() + spaceX
-            if nextX - spaceX > rect.right() and lineHeight > 0:
+            next_x = x + wid.sizeHint().width() + space_x
+            if next_x - space_x > rect.right() and line_height > 0:
+                items_per_line.append((current_line, line_width))
+                current_line = []
                 x = rect.x() + self.contentsMargins().left()
-                y = y + lineHeight + spaceY
-                nextX = x + item.sizeHint().width() + spaceX
-                lineHeight = 0
+                y = y + line_height + space_y
+                next_x = x + wid.sizeHint().width() + space_x
+                line_height = 0
+                line_width = 0
 
-            if not testOnly:
-                item.setGeometry(QRect(QPoint(x, y), item.sizeHint()))
+            current_line.append(item)
+            x = next_x
+            line_height = max(line_height, wid.sizeHint().height())
+            line_width += wid.sizeHint().width() + space_x
 
-            x = nextX
-            lineHeight = max(lineHeight, item.sizeHint().height())
+        items_per_line.append((current_line, line_width))
 
-        return y + lineHeight - rect.y()
+        # Reset x and y for actual layout
+        x = rect.x() + self.contentsMargins().left()
+        y = rect.y() + self.contentsMargins().top()
+        line_height = 0
+
+        # Perform actual layout
+        for line, line_width in items_per_line:
+            extra_space = rect.width() - line_width + self.spacing()
+            extra_space_per_item = extra_space // len(line) if len(
+                line) > 0 else 0
+
+            for item in line:
+                wid = item.widget()
+                space_x = self.spacing() + wid.style().layoutSpacing(
+                    QSizePolicy.PushButton, QSizePolicy.PushButton,
+                    Qt.Horizontal)
+                space_y = self.spacing() + wid.style().layoutSpacing(
+                    QSizePolicy.PushButton, QSizePolicy.PushButton,
+                    Qt.Vertical)
+
+                item_width = wid.sizeHint().width() + extra_space_per_item
+                if not testOnly:
+                    item.setGeometry(QRect(QPoint(x, y),
+                                           QSize(item_width,
+                                                 wid.sizeHint().height())))
+
+                x += item_width + space_x
+                line_height = max(line_height, wid.sizeHint().height())
+
+            x = rect.x() + self.contentsMargins().left()
+            y += line_height + space_y
+            line_height = 0
+
+        return y + line_height - rect.y()
 
 
 """
