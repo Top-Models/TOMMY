@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt, Signal, QEvent, QRect, QPoint, QSize
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy, \
-    QLayout, QLayoutItem
+    QLayout, QLayoutItem, QWidgetItem
 
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.model_parameters_controller import \
@@ -244,7 +244,7 @@ class FlowLayout(QLayout):
         """
         return len(self.itemList)
 
-    def itemAt(self, index) -> QLayoutItem:
+    def itemAt(self, index) -> QWidgetItem:
         """
         Get the item at the given index
 
@@ -256,7 +256,7 @@ class FlowLayout(QLayout):
 
         return None
 
-    def takeAt(self, index) -> QLayoutItem:
+    def takeAt(self, index) -> QWidgetItem:
         """
         Remove the item at the given index
 
@@ -346,9 +346,10 @@ class FlowLayout(QLayout):
 
         for item in self.itemList:
             wid = item.widget()
-            space_x = self.spacing() + wid.style().layoutSpacing(
+            style = wid.style()
+            space_x = self.spacing() + style.layoutSpacing(
                 QSizePolicy.PushButton, QSizePolicy.PushButton, Qt.Horizontal)
-            space_y = self.spacing() + wid.style().layoutSpacing(
+            space_y = self.spacing() + style.layoutSpacing(
                 QSizePolicy.PushButton, QSizePolicy.PushButton, Qt.Vertical)
 
             next_x = x + wid.sizeHint().width() + space_x
@@ -381,10 +382,11 @@ class FlowLayout(QLayout):
 
             for item in line:
                 wid = item.widget()
-                space_x = self.spacing() + wid.style().layoutSpacing(
+                style = wid.style()
+                space_x = self.spacing() + style.layoutSpacing(
                     QSizePolicy.PushButton, QSizePolicy.PushButton,
                     Qt.Horizontal)
-                space_y = self.spacing() + wid.style().layoutSpacing(
+                space_y = self.spacing() + style.layoutSpacing(
                     QSizePolicy.PushButton, QSizePolicy.PushButton,
                     Qt.Vertical)
 
