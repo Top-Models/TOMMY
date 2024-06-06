@@ -1,13 +1,11 @@
-from PySide6.QtCore import Qt, Signal, QEvent, QRect, QPoint, QSize, QTimer
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy, \
-    QLayout, QLayoutItem, QWidgetItem
+from PySide6.QtCore import Qt, Signal, QRect, QPoint, QSize, QTimer
+from PySide6.QtWidgets import QWidget, QScrollArea, QSizePolicy, \
+    QLayout, QWidgetItem
 
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
 from tommy.support.constant_variables import sec_col_orange, scrollbar_style
-from tommy.datatypes.topics import TopicWithScores
-
 from tommy.view.topic_view.topic_entity_component.topic_entity import (
     TopicEntity)
 
@@ -280,7 +278,8 @@ class FlowLayout(QLayout):
         """
         Check if the layout has a height for width
 
-        :return: True if the layout has a height for width, False otherwise
+        :return: True if the layout has a height for width,
+        False otherwise
         """
         return True
 
@@ -326,12 +325,12 @@ class FlowLayout(QLayout):
         size += QSize(2 * margin, 2 * margin)
         return size
 
-    def do_layout(self, rect, testOnly) -> int:
+    def do_layout(self, rect, test_only) -> int:
         """
         Perform the layout
 
         :param rect: The rectangle to perform the layout in
-        :param testOnly: True if the layout should only be tested,
+        :param test_only: True if the layout should only be tested,
         False otherwise
         :return: The height of the layout
         """
@@ -398,7 +397,7 @@ class FlowLayout(QLayout):
             extra_space_per_item = extra_space // len(line) if len(
                 line) > 0 else 0
 
-            for item in line:
+            for idx, item in enumerate(line):
                 wid = item.widget()
                 if not wid:
                     continue
@@ -418,8 +417,14 @@ class FlowLayout(QLayout):
                     except AttributeError:
                         pass
 
-                item_width = wid.sizeHint().width() + extra_space_per_item
-                if not testOnly:
+                # Subtract the right margin for the last item in the line
+                if idx == len(line) - 1:
+                    item_width = wid.sizeHint().width() + extra_space_per_item
+                else:
+                    item_width = (wid.sizeHint().width() + extra_space_per_item
+                                  + right_margin)
+
+                if not test_only:
                     item.setGeometry(QRect(QPoint(x, y),
                                            QSize(item_width,
                                                  wid.sizeHint().height())))
