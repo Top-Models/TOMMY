@@ -8,6 +8,8 @@ from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
 from tommy.controller.stopwords_controller import StopwordsController
+from tommy.controller.topic_modelling_controller import \
+    TopicModellingController
 from tommy.support.model_type import ModelType
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.model_params_view import ModelParamsView
@@ -37,16 +39,22 @@ def language_controller(controller: Controller) -> LanguageController:
 
 
 @pytest.fixture
+def topic_modelling_controller(
+        controller: Controller) -> TopicModellingController:
+    return controller.topic_modelling_controller
+
+
+@pytest.fixture
 def model_params_view(controller: Controller,
                       model_parameters_controller: ModelParametersController,
                       config_controller: ConfigController,
                       language_controller: LanguageController,
+                      topic_modelling_controller: TopicModellingController,
                       qtbot: QtBot) -> ModelParamsView:
-    controller = Controller()
     model_params_view = ModelParamsView(model_parameters_controller,
                                         language_controller,
                                         config_controller,
-                                        controller)
+                                        topic_modelling_controller)
     qtbot.addWidget(model_params_view)
     return model_params_view
 
@@ -248,3 +256,11 @@ def test_config_updates_blacklist_textbox(
 
 # TODO: implement and then test the behaviour for the other tabs in the
 #  stopwords view
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

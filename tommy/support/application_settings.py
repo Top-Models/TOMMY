@@ -7,6 +7,7 @@ from dataclasses import dataclass
 class ApplicationSettings:
     """A class that holds the application-wide settings."""
     preprocessing_data_folder: str
+    default_config_name: str = "Config 1"
 
 
 def get_standard_input_folder() -> str:

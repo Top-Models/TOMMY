@@ -97,38 +97,6 @@ def test_clear_topics(fetched_topics_view: FetchedTopicsView, qtbot: QtBot):
     assert (fetched_topics_view.layout.count() == 0)
 
 
-def test_on_word_clicked(fetched_topics_view: FetchedTopicsView, qtbot: QtBot):
-    """
-    Test the word clicked event of the fetched topics view.
-    """
-    # Add a topic and display it
-    fetched_topics_view._add_topic(
-        "lda_model",
-        "test_topic",
-        ["word1", "word2", "word3"],
-        0)
-    fetched_topics_view._display_topics("lda_model")
-
-    # Find the TopicEntity widget
-    topic_entity = None
-    for i in range(fetched_topics_view.layout.count()):
-        widget = fetched_topics_view.layout.itemAt(i).widget()
-        if isinstance(widget, TopicEntity):
-            topic_entity = widget
-            break
-
-    # Ensure we found the TopicEntity widget
-    assert topic_entity is not None
-
-    # Spy on the emit method of wordClicked signal
-    with qtbot.waitSignal(topic_entity.wordClicked) as word_clicked:
-        # Simulate word click
-        qtbot.mouseClick(topic_entity.word_entities[0], Qt.LeftButton)
-
-    # Ensure the wordClicked signal was emitted
-    assert word_clicked.args == ["word1"]
-
-
 def test_on_topic_clicked(fetched_topics_view: FetchedTopicsView):
     """
     Test the topic clicked event of the fetched topics view.

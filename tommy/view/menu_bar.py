@@ -66,7 +66,7 @@ class MenuBar(QMenuBar):
         file_menu.addAction(load_settings_action)
 
         # Add sub menu export_menu to menu bar
-        export_menu = file_menu.addMenu("Exporteren")
+        export_menu = self.addMenu("Exporteren")
         export_menu.addAction(export_to_gexf_action)
         export_menu.addAction(export_to_png_action)
         export_menu.addAction(export_topic_words_action)

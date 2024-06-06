@@ -15,6 +15,7 @@ class TopicEntity(QFrame):
 
     wordClicked = Signal(str)
     clicked = Signal(object)
+    nameChanged = Signal(int, str)
 
     def __init__(self,
                  topic_name: str,
@@ -38,10 +39,12 @@ class TopicEntity(QFrame):
         main_layout = QVBoxLayout(self)
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
                                  Qt.AlignmentFlag.AlignHCenter)
+        main_layout.setContentsMargins(5, 5, 5, 5)  # Adjust margins as needed
+        main_layout.setSpacing(5)  # Adjust spacing as needed
 
         # Initialize widget properties
         self.setStyleSheet(f"background-color: {sec_col_purple};")
-        self.setFixedWidth(200)
+        self.setFixedWidth(150)
 
         # Initialize radio button layout
         radio_layout = QHBoxLayout()
@@ -87,7 +90,7 @@ class TopicEntity(QFrame):
         if horizontal_layout.count() > 0:
             self.word_layout.addLayout(horizontal_layout)
 
-        self.topic_label.textChanged.connect(self.get_topic_name)
+        self.topic_label.editingFinished.connect(self._on_name_changed)
 
     def get_topic_name(self) -> str:
         """
@@ -96,6 +99,13 @@ class TopicEntity(QFrame):
         :return: The topic name
         """
         return self.topic_label.text()
+
+    def _on_name_changed(self):
+        new_name = self.get_topic_name()
+        self.nameChanged.emit(self.index, new_name)
+
+    def set_name(self, name: str):
+        self.topic_label.setText(name)
 
     def add_words(self,
                   layout: QHBoxLayout,
@@ -183,7 +193,7 @@ class TopicEntity(QFrame):
         :return: None
         """
         for word_entity in self.word_entities:
-            if word_entity.text() == word:
+            if word_entity.toPlainText() == word:
                 word_entity.selected = True
                 word_entity.setStyleSheet(
                     f"font-family: {text_font}; "
