@@ -72,7 +72,7 @@ class ErrorView(QMessageBox):
                 error_label.setWordWrap(True)
                 error_label.setMaximumWidth(400)
                 error_label.setStyleSheet(f"""
-                    font-family: 'Corbel', sans-serif;
+                    font-family: '{text_font}', sans-serif;
                     font-size: 14px;
                     color: black;
                     margin-bottom: 5px;

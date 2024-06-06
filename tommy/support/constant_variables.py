@@ -37,8 +37,8 @@ dark_gray = "#333333"
 darker_gray = "#222222"
 
 # Font properties
-text_font = "Corbel"
-heading_font = "Century Gothic"
+text_font = "Source Sans 3"
+heading_font = "Raleway"
 
 # Label properties
 label_height = 25
