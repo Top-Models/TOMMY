@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (
 
 from tommy.controller.controller import Controller
 from tommy.support.constant_variables import (
-    text_font)
+    text_font, light_gray)
 from tommy.view.graph_view import GraphView
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.imported_files_view import (
@@ -42,10 +42,23 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("TOMMY")
         self.set_initial_window_size()
         self.setWindowIcon(QIcon("../assets/tommy.png"))
-        self.setStyleSheet("background-color: white;"
-                           "font-size: 15px;"
-                           f"font-family: {text_font};"
-                           "border: none;")
+        self.setStyleSheet(f"""
+            QMainWindow {{
+                background-color: white;
+                font-size: 15px;
+                font-family: {text_font};
+                border: none;
+            }}
+            
+            QMainWindow::children {{
+                font-family: {text_font};
+            }}
+            
+            QSplitter::handle {{
+                background-color: rgba(200, 200, 200, 200);
+                border: none;
+            }}
+        """)
 
         # Create the main layout
         self.layout = QHBoxLayout()

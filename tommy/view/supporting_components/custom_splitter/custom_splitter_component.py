@@ -9,6 +9,7 @@ class CustomSplitter(QSplitter):
 
     def __init__(self, orientation, parent=None):
         super().__init__(orientation, parent)
+        self.setHandleWidth(15)
 
     def createHandle(self):
         return CustomSplitterHandle(self.orientation(), self)
