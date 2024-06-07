@@ -103,7 +103,7 @@ class MainWindow(QMainWindow):
         self.left_container.setSizePolicy(QSizePolicy.Fixed,
                                           QSizePolicy.Expanding)
         self.right_container.setSizePolicy(QSizePolicy.Expanding,
-                                           QSizePolicy.Expanding)  # Changed to Expanding
+                                           QSizePolicy.Expanding)
         self.center_container.setSizePolicy(QSizePolicy.Expanding,
                                             QSizePolicy.Expanding)
 
@@ -154,16 +154,18 @@ class MainWindow(QMainWindow):
         self.right_layout.addWidget(self.selected_information_view)
 
         # Adjust the splitter stretch factors
-        self.splitter.setStretchFactor(0, 1)  # Left container: expand slightly
-        self.splitter.setStretchFactor(1, 3)  # Center container: expand more
+        self.splitter.setStretchFactor(0, 1)
+        self.splitter.setStretchFactor(1, 3)
         self.splitter.setStretchFactor(2,
-                                       1)  # Right container: expand slightly
+                                       1)
 
         self.display_correct_initial_files()
 
         # Initialize event handlers
         self.imported_files_view.fileClicked.connect(self.on_file_clicked)
         self.fetched_topics_view.topicClicked.connect(self.on_topic_clicked)
+        self.fetched_topics_view.topicNameChanged.connect(
+            self.on_topic_name_changed)
 
     def initialize_widget(self, widget: QWidget,
                           x: int, y: int, w: int, h: int) -> None:
@@ -233,6 +235,16 @@ class MainWindow(QMainWindow):
 
         self.imported_files_view.on_topic_selected(topic_entity)
         self.selected_information_view.display_topic_info(topic_entity)
+
+    def on_topic_name_changed(self, topic_entity: TopicEntity) -> None:
+        """
+        Event handler for when a topic name is changed.
+
+        :param topic_entity: The topic entity whose name was changed
+        :return: None
+        """
+        if topic_entity.selected:
+            self.selected_information_view.display_topic_info(topic_entity)
 
     def display_correct_initial_files(self) -> None:
         """

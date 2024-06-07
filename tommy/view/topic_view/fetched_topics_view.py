@@ -1,6 +1,8 @@
+from typing import Any
+
 from PySide6.QtCore import Qt, Signal, QRect, QPoint, QSize, QTimer
 from PySide6.QtWidgets import QWidget, QScrollArea, QSizePolicy, \
-    QLayout, QWidgetItem
+    QLayout
 
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.model_parameters_controller import \
@@ -14,6 +16,7 @@ class FetchedTopicsView(QScrollArea):
     """A widget for displaying the found topics."""
 
     topicClicked = Signal(object)
+    topicNameChanged = Signal(object)
 
     def __init__(self,
                  graph_controller: GraphController,
@@ -72,11 +75,10 @@ class FetchedTopicsView(QScrollArea):
         # Set reference to the model parameters controller
         self._model_parameters_controller = model_parameters_controller
 
-    def _add_topic(self,
-                   tab_name: str,
-                   topic_name: str,
-                   topic_words: list[str],
-                   index: int) -> None:
+    def _add_topic_to_container(self,
+                                tab_name: str,
+                                topic_name: str,
+                                topic_words: list[str]) -> None:
         """
         Add a new topic to the display
         :param tab_name: Name of the tab to add the topic to
@@ -92,23 +94,50 @@ class FetchedTopicsView(QScrollArea):
         # Add topic to tab
         self.topic_container[tab_name].append((topic_name, topic_words))
 
-        # Add topic to display
-        topic_entity = TopicEntity(topic_name, topic_words, index)
-        topic_entity.clicked.connect(self._on_topic_clicked)
-        topic_entity.wordClicked.connect(self._on_word_clicked)
-        topic_entity.nameChanged.connect(self._on_topic_name_changed)
-
     def _on_topic_name_changed(self, index: int, new_name: str) -> None:
         """
         Event handler for when a topic name is changed
         :param new_name: The new name of the topic
         :return: None
         """
+        selected_topic_index = None
+
+        # Update the topic name in the graph controller
         if self._graph_controller.has_topic_runner:
             self._graph_controller.set_topic_name(index, new_name)
-        self._refresh_topics(None)
 
-    def _display_topics(self, tab_name: str) -> None:
+        # Get current topic at index
+        current_topic_at_index = self.get_topic_entity_by_index(index)
+
+        # Determine if the topic was selected
+        if current_topic_at_index.selected:
+            selected_topic_index = index
+
+        self._refresh_topics(None, selected_topic_index)
+
+        # Fetch topic and update information view
+        words = current_topic_at_index.topic_words
+        topic_entity = self.create_topic_entity(new_name, words, index)
+        if self.selected_topic is not None:
+            topic_entity.select()
+
+        self.topicNameChanged.emit(topic_entity)
+
+    def get_topic_entity_by_index(self, index: int) -> TopicEntity:
+        """
+        Get the topic entity with the given index
+
+        :param index: The index of the topic entity
+        :return: The topic entity with the given index
+        """
+        for i in range(self.layout.count()):
+            topic_entity = self.layout.itemAt(i).widget()
+            if (isinstance(topic_entity, TopicEntity) and
+                    topic_entity.index == index):
+                return topic_entity
+
+    def _display_topics(self, tab_name: str, selected_topic_index=None) \
+            -> None:
         """
         Display topics in the given tab
         :param tab_name: Name of the tab to display
@@ -126,10 +155,18 @@ class FetchedTopicsView(QScrollArea):
         # Add topics to view
         for index, (topic_name, topic_words) in (
                 enumerate(self.topic_container[tab_name])):
-            topic_entity = TopicEntity(topic_name, topic_words, index)
-            topic_entity.wordClicked.connect(self._on_word_clicked)
-            topic_entity.clicked.connect(self._on_topic_clicked)
-            topic_entity.nameChanged.connect(self._on_topic_name_changed)
+
+            # Make topic entity
+            topic_entity = self.create_topic_entity(topic_name, topic_words,
+                                                    index)
+
+            # Make topic selected if it was selected before
+            if (selected_topic_index is not None and
+                    index == selected_topic_index):
+                self.selected_topic = topic_entity
+                topic_entity.select()
+
+            # Add topic to layout
             self.layout.addWidget(topic_entity)
 
     def remove_tab_from_container(self, tab_name: str) -> None:
@@ -149,7 +186,7 @@ class FetchedTopicsView(QScrollArea):
             self.layout.itemAt(i).widget().deleteLater()
         self.topic_container = {}
 
-    def _refresh_topics(self, data: None) -> None:
+    def _refresh_topics(self, data: None, selected_topic_index=None) -> None:
         """Retrieve the topics from the GraphController and update the view"""
         self._clear_topics()
 
@@ -161,9 +198,26 @@ class FetchedTopicsView(QScrollArea):
             topic = self._graph_controller.get_topic_with_scores(
                 i, self._model_parameters_controller.get_model_word_amount())
             topic_words = topic.top_words
-            self._add_topic(self._current_tab_name, topic_name, topic_words, i)
+            self._add_topic_to_container(self._current_tab_name, topic_name,
+                                         topic_words)
 
-        self._display_topics(self._current_tab_name)
+        self._display_topics(self._current_tab_name, selected_topic_index)
+
+    def create_topic_entity(self, topic_name: str, topic_words: list[str],
+                            index: int) -> TopicEntity:
+        """
+        Create a topic entity
+
+        :param topic_name: The name of the topic
+        :param topic_words: The words of the topic
+        :param index: The index of the topic
+        :return: The created topic entity
+        """
+        topic_entity = TopicEntity(topic_name, topic_words, index)
+        topic_entity.wordClicked.connect(self._on_word_clicked)
+        topic_entity.clicked.connect(self._on_topic_clicked)
+        topic_entity.nameChanged.connect(self._on_topic_name_changed)
+        return topic_entity
 
     def _on_word_clicked(self, word: str):
         """
@@ -242,7 +296,7 @@ class FlowLayout(QLayout):
         """
         return len(self.itemList)
 
-    def itemAt(self, index) -> QWidgetItem:
+    def itemAt(self, index) -> Any | None:
         """
         Get the item at the given index
 
@@ -254,7 +308,7 @@ class FlowLayout(QLayout):
 
         return None
 
-    def takeAt(self, index) -> QWidgetItem:
+    def takeAt(self, index) -> Any | None:
         """
         Remove the item at the given index
 
