@@ -98,8 +98,8 @@ def test_apply_button_disabled_while_processing(
 
     mock_train_model.assert_called_once()
     # Ensure that the button is re-enabled and its text is restored
-    assert model_params_view.apply_button.isEnabled() == True
-    assert model_params_view.apply_button.text() == "Toepassen"
+    assert model_params_view.apply_button.isEnabled() is True
+    assert model_params_view.apply_button.text() == "TOEPASSEN"
 
 
 """
