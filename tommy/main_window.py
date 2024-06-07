@@ -20,35 +20,12 @@ from tommy.view.plot_selection_view import (
 from tommy.view.selected_information_view import SelectedInformationView
 from tommy.view.stopwords_view import (
     StopwordsView)
+from tommy.view.supporting_components.custom_splitter.custom_splitter_component import \
+    CustomSplitter
 from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
 from tommy.view.topic_view.topic_entity_component.topic_entity import (
     TopicEntity)
-
-
-class CustomSplitterHandle(QSplitterHandle):
-    """Custom splitter handle to add visual indicator."""
-
-    def __init__(self, orientation, parent):
-        super().__init__(orientation, parent)
-        self.setFixedWidth(15)  # Set the width of the splitter handle
-
-    def paintEvent(self, event):
-        super().paintEvent(event)
-        painter = QPainter(self)
-        painter.setPen(QColor(150, 150, 150))
-        painter.drawText(self.rect(), Qt.AlignCenter, "|||")
-        painter.end()
-
-
-class CustomSplitter(QSplitter):
-    """Custom splitter to use the custom handle."""
-
-    def __init__(self, orientation, parent=None):
-        super().__init__(orientation, parent)
-
-    def createHandle(self):
-        return CustomSplitterHandle(self.orientation(), self)
 
 
 class MainWindow(QMainWindow):

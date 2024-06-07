@@ -39,8 +39,8 @@ class TopicEntity(QFrame):
         main_layout = QVBoxLayout(self)
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
                                  Qt.AlignmentFlag.AlignHCenter)
-        main_layout.setContentsMargins(5, 5, 5, 5)  # Adjust margins as needed
-        main_layout.setSpacing(5)  # Adjust spacing as needed
+        main_layout.setContentsMargins(5, 5, 5, 5)
+        main_layout.setSpacing(5)
 
         # Initialize widget properties
         self.setStyleSheet(f"background-color: {sec_col_purple};")
