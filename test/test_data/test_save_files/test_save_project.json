@@ -9,6 +9,10 @@
                     "goeiedagdag"
                 ]
             },
+            "synonyms": {
+                "hello": "hi",
+                "goodbye": "bye"
+            },
             "model_parameters": {
                 "n_topics": 5,
                 "model_type": "LDA",
@@ -27,6 +31,10 @@
                     "niet",
                     "meer"
                 ]
+            },
+            "synonyms": {
+                "yeah": "yes",
+                "nay": "no"
             },
             "model_parameters": {
                 "n_topics": 3,
