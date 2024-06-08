@@ -16,6 +16,7 @@ class SynonymsController:
         """
         return self._synonyms_model_changed_event
 
+    # TODO: should this be called synonyms_model?
     @property
     def stopwords_model(self) -> SynonymsModel:
         return self._synonyms_model

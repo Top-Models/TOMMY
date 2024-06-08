@@ -34,6 +34,7 @@ class ConfigModel:
         """
         return {
             "stopwords": self.stopwords_model.to_dict(),
+            "synonyms": self.synonyms_model.to_dict(),
             "model_parameters": self.model_parameters_model.to_dict()
         }
 
@@ -47,6 +48,8 @@ class ConfigModel:
         config = cls()
         config.stopwords_model = StopwordsModel.from_dict(
             config_dict["stopwords"])
+        config.synonyms_model = SynonymsModel.from_dict(
+            config_dict["synonyms"])
         config.model_parameters_model = ModelParametersModel.from_dict(
             config_dict["model_parameters"])
         return config

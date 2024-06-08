@@ -59,6 +59,33 @@ class SynonymsModel:
         """
         self._synonyms = synonyms
 
+    def to_dict(self) -> dict[str, str]:
+        """
+        Convert the synonyms model to a dictionary.
+
+        :return: Dictionary representation of the synonyms model
+        """
+        return self._synonyms
+
+    @classmethod
+    def from_dict(cls, synonyms_dict: dict[str, str]) -> SynonymsModel:
+        """
+        Create a SynonymsModel instance from a dictionary representation.
+
+        :param synonyms_dict: Dictionary representation of the synonyms model
+        :return: SynonymsModel instance
+        """
+        synonyms = cls()
+        synonyms.replace(synonyms_dict)
+
+        # check that every value is of type string
+        for key, value in synonyms_dict.items():
+            if not isinstance(value, str):
+                raise TypeError(f"Synonyms should be strings, but they are "
+                                f"not. The value for key {key} is {value}.")
+
+        return synonyms
+
 
 """
 This program has been developed by students from the bachelor Computer Science
