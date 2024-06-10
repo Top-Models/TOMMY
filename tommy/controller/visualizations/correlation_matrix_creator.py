@@ -63,7 +63,7 @@ class CorrelationMatrixCreator(AbstractVisualization):
         plt.colorbar(data)
 
         # Add a title and correct integer ticks on both axes
-        plt.title(self.name)
+        plt.title(self.name, pad=25)
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
