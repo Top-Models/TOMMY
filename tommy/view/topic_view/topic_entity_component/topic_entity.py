@@ -58,14 +58,18 @@ class TopicEntity(QFrame):
         self.radio_button.clicked.connect(
             lambda checked: self.clicked.emit(self))
 
-        # Initialize title widget
+        # Initialize top layout
+        self.top_layout = QHBoxLayout()
+        main_layout.addLayout(self.top_layout)
+
+        # Initialize topic labels
         self.topic_label = QLineEdit(topic_name, self)
         self.topic_label.setStyleSheet(f"font-family: {heading_font}; "
                                        f"color: white;"
                                        f"font-size: 15px; "
                                        f"font-weight: bold; "
                                        f"background-color: "
-                                       f"{pressed_seco_col_purple};"
+                                       f"{sec_col_purple};"
                                        f"padding: 5px 5px;"
                                        f"border-radius: 2px;"
                                        f"border:"
@@ -73,7 +77,27 @@ class TopicEntity(QFrame):
                                        )
         self.topic_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.topic_label.setPlaceholderText(topic_name)
-        main_layout.addWidget(self.topic_label)
+
+        # Initialize topic number
+        self.topic_number = QLineEdit(str(index + 1), self)
+        self.topic_number.setStyleSheet(f"""
+            font-family: {heading_font};
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            background-color: {pressed_seco_col_purple};
+            padding: 5px 5px;
+            border-radius: 2px;
+            border: 2px solid {seco_purple_border_color};
+        """)
+        self.topic_number.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.topic_number.setPlaceholderText(str(index + 1))
+        self.topic_number.setFixedWidth(40)
+        self.topic_number.setReadOnly(True)
+
+        # Add widgets to top layout
+        self.top_layout.addWidget(self.topic_number)
+        self.top_layout.addWidget(self.topic_label)
 
         # Initialize word widgets
         self.word_layout = QVBoxLayout()
