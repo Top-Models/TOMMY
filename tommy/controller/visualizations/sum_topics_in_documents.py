@@ -61,6 +61,9 @@ class SumTopicsInDocuments(AbstractVisualization):
         plt.xlabel("Topic")
         plt.ylabel("Som kansen")
 
+        fig.figure.subplots_adjust(
+            left=0.15, right=0.85, top=0.85, bottom=0.15)
+
         fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
 
         return fig

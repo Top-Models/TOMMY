@@ -74,6 +74,9 @@ class CorrelationMatrixCreator(AbstractVisualization):
         plt.yticks(np.arange(num_topics),
                    np.arange(1, num_topics + 1))
 
+        fig.figure.subplots_adjust(
+            left=0.15, right=0.85, top=0.85, bottom=0.15)
+
         plt.close()
         return fig
 

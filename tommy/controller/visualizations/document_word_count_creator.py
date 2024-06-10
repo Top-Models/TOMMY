@@ -63,7 +63,8 @@ class DocumentWordCountCreator(AbstractVisualization):
         # Rotate tick labels to prevent overlapping
         plt.xticks(rotation=30)
 
-        fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+        fig.figure.subplots_adjust(
+            left=0.15, right=0.85, top=0.85, bottom=0.15)
 
         plt.close()
         return fig

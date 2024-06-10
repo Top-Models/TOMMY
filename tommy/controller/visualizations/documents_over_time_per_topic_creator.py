@@ -90,6 +90,8 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
         plt.ylabel("Som gewichten")
         plt.xticks(rotation=30)
 
+        fig.figure.subplots_adjust(0.2, 0.2, 0.8, 0.8)
+
         return fig
 
     @staticmethod
@@ -103,7 +105,8 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
                     horizontalalignment='center',
                     verticalalignment='center')
 
-        fig.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+        fig.figure.subplots_adjust(
+            left=0.15, right=0.85, top=0.85, bottom=0.15)
         plt.close()
         return fig
 
