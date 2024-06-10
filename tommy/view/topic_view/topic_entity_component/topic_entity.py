@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QFrame,
-                               QLineEdit, QRadioButton)
+                               QLineEdit, QRadioButton, QLabel)
 
 from tommy.support.constant_variables import (
     heading_font, text_font, sec_col_purple, pressed_seco_col_purple,
@@ -60,7 +60,7 @@ class TopicEntity(QFrame):
 
         # Initialize top layout
         self.bottom_layout = QHBoxLayout()
-        self.bottom_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.bottom_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # Initialize topic labels
         self.topic_label = QLineEdit(topic_name, self)
@@ -80,21 +80,16 @@ class TopicEntity(QFrame):
         main_layout.addWidget(self.topic_label)
 
         # Initialize topic number
-        self.topic_number = QLineEdit(str(index + 1), self)
+        self.topic_number = QLabel(str(index + 1), self)
         self.topic_number.setStyleSheet(f"""
             font-family: {heading_font};
             color: white;
             font-size: 12px;
             font-weight: bold;
-            background-color: {sec_col_purple};
             padding: 5px 5px;
-            border-radius: 2px;
-            border: 2px solid {seco_purple_border_color};
         """)
         self.topic_number.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.topic_number.setPlaceholderText(str(index + 1))
         self.topic_number.setFixedWidth(40)
-        self.topic_number.setReadOnly(True)
         self.bottom_layout.addWidget(self.topic_number)
 
         # Initialize word widgets
