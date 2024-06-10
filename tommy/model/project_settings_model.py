@@ -1,7 +1,4 @@
-import os
-
-from tommy.model.config_model import ConfigModel
-from tommy.model.model_parameters_model import ModelParametersModel
+from tommy.support.application_settings import get_standard_input_folder
 
 
 class ProjectSettingsModel:
@@ -9,7 +6,7 @@ class ProjectSettingsModel:
 
     def __init__(self) -> None:
         # Set input_folder_path to "data" by default
-        self.input_folder_path: str = os.path.join("data", "csv_files")
+        self.input_folder_path: str = get_standard_input_folder()
 
 
 """

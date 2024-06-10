@@ -5,7 +5,7 @@ VOLUME_NAME="${APP_NAME} Installer"
 OUTPUT_FOLDER="dist"
 DMG_FOLDER_PATH="${OUTPUT_FOLDER}/${APP_NAME}-Installer.dmg"
 SOURCE_FOLDER_PATH="${OUTPUT_FOLDER}/${APP_NAME}.app"
-DATA_FOLDER_PATH="tommy/data"
+DATA_FOLDER_PATH="tommy/data/preprocessing_data"
 
 echo "> Removing the dist folder if it exists"
 
@@ -19,8 +19,8 @@ pyinstaller \
 --onedir \
 --name "${APP_NAME}" \
 --icon "assets/tommy.icns" \
---add-data "${DATA_FOLDER_PATH}/stopwords.txt:./preprocessing_data" \
---add-data "${DATA_FOLDER_PATH}/pipeline_download:./preprocessing_data/pipeline_download" \
+--add-data "${DATA_FOLDER_PATH}:./preprocessing_data" \
+--hidden-import "pkg_resources.extern" \
 tommy/main.py
 
 echo "> Creating a DMG file for Tommy"
