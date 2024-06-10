@@ -60,7 +60,7 @@ class WordCloudCreator(AbstractVisualization):
 
         # Construct a word cloud
         fig = plt.figure()
-        plt.title("Woordenwolk topic {}".format(topic_id + 1))
+        plt.title("Woordenwolk topic {}".format(topic_id + 1), pad=25)
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis('off')
 

@@ -85,7 +85,7 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
                 color=plot_colors[topic_id % len(plot_colors)])
 
         # Add labels and title to plot
-        plt.title("Documenten over tijd topic {}".format(topic_id + 1))
+        plt.title("Documenten over tijd topic {}".format(topic_id + 1), pad=25)
         plt.xlabel("Datum")
         plt.ylabel("Som gewichten")
         plt.xticks(rotation=30)
