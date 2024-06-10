@@ -155,8 +155,6 @@ class ConfigView(QDialog):
         selected_config = self.config_controller.get_selected_configuration()
         for name in configurations:
             if name == selected_config:
-                # TODO: change the style of this item to communicate to the
-                #  user that this is the selected config
                 item = QListWidgetItem(name)
                 self.config_list_widget.addItem(item)
             else:
@@ -164,8 +162,13 @@ class ConfigView(QDialog):
 
     def add_configuration(self) -> None:
         """Method to add a new configuration"""
-        name, ok = QInputDialog.getText(self, "Voer Configuratie Naam In",
-                                        "Naam:")
+        dialog = QInputDialog(self)
+        dialog.setStyleSheet("color: black;")
+        dialog.setWindowTitle("Voer Configuratie Naam In")
+        dialog.setLabelText("Naam:")
+        ok = dialog.exec_()
+        name = dialog.textValue()
+
         if ok:
             success = self.config_controller.add_configuration(name)
             if success:
