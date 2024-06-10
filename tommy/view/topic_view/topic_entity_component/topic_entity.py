@@ -83,7 +83,7 @@ class TopicEntity(QFrame):
         self.topic_number = QLabel(str(index + 1), self)
         self.topic_number.setStyleSheet(f"""
             font-family: {heading_font};
-            color: white;
+            color: #d8bfd8;
             font-size: 12px;
             font-weight: bold;
             padding: 5px 5px;
