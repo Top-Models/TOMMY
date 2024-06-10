@@ -195,9 +195,6 @@ class MainWindow(QMainWindow):
         :param file: The file that was clicked
         :return: None
         """
-        self.fetched_topics_view.deselect_all_topics()
-        self.fetched_topics_view.selected_topic = None
-
         # TODO: Hardcoded save name
         # Show info about run if no file is selected
         if not file.selected:
