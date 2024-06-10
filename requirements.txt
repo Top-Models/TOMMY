@@ -9,7 +9,7 @@ spacy==3.7.4
 gensim==4.3.2
 scipy==1.12.0 # 1.13 does not work due to scipy.linalg.triu
 wordcloud==1.9.3
-pyinstaller==6.4.0
+pyinstaller==6.7.0
 matplotlib==3.8.3
 nltk==3.8.1
 numpy==1.26.4
@@ -17,6 +17,13 @@ networkx==3.2.1
 striprtf==0.0.26 # rtf_files to csv file
 pypdf~=4.2.0
 mammoth~=1.7.1
+
+# hdbscan is required by bertopic and sklearn, two developers unfortunately need a different forced version
+# Pycharm "install requirements" does NOT work like pip evaluation of requirements.txt
+# To install the system dependent version, run 'pip install -r requirements.txt' in the terminal in your venv
+hdbscan==0.8.33; sys_platform == 'darwin' # Specifically needed for 1 out of 2 Mac users
+hdbscan==0.8.32; sys_platform == 'linux' # Specifically needed for the Arch user, but not for the Ubuntu pipeline
+
 bertopic==0.16.1
 scikit-learn~=1.4.2
 pandas~=2.2.1
