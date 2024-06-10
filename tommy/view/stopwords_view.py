@@ -34,6 +34,7 @@ class StopwordsView(QScrollArea):
                     color: rgba(120, 120, 120, 1);
                     background-color: rgba(210, 210, 210, 1);
                     font-size: 15px;
+                    font-family: {text_font};
                     padding-left: 5px;
                     padding-right: 5px;
                     padding-top: 10px;
