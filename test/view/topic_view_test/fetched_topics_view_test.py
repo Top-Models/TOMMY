@@ -29,11 +29,10 @@ def test_add_topic(fetched_topics_view: FetchedTopicsView):
     Test adding a topic to the fetched topics view.
     """
     # Act
-    fetched_topics_view._add_topic(
+    fetched_topics_view._add_topic_to_container(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"],
-        0)
+        ["word1", "word2", "word3"])
 
     # Assert
     assert (fetched_topics_view.topic_container ==
@@ -45,11 +44,10 @@ def test_display_topics(fetched_topics_view: FetchedTopicsView):
     Test displaying topics in the fetched topics view.
     """
     # Arrange
-    fetched_topics_view._add_topic(
+    fetched_topics_view._add_topic_to_container(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"],
-        0)
+        ["word1", "word2", "word3"])
 
     # Act
     fetched_topics_view._display_topics("lda_model")
@@ -63,11 +61,10 @@ def test_remove_tab_from_container(fetched_topics_view: FetchedTopicsView):
     Test removing a tab from the topic container.
     """
     # Arrange
-    fetched_topics_view._add_topic(
+    fetched_topics_view._add_topic_to_container(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"],
-        0)
+        ["word1", "word2", "word3"])
 
     # Act
     fetched_topics_view.remove_tab_from_container("lda_model")
@@ -81,11 +78,10 @@ def test_clear_topics(fetched_topics_view: FetchedTopicsView, qtbot: QtBot):
     Test clearing the topics from the fetched topics view.
     """
     # Arrange
-    fetched_topics_view._add_topic(
+    fetched_topics_view._add_topic_to_container(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"],
-        0)
+        ["word1", "word2", "word3"])
 
     # Act
     fetched_topics_view._display_topics("lda_model")
@@ -102,11 +98,10 @@ def test_on_topic_clicked(fetched_topics_view: FetchedTopicsView):
     Test the topic clicked event of the fetched topics view.
     """
     # Add a topic and display it
-    fetched_topics_view._add_topic(
+    fetched_topics_view._add_topic_to_container(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"],
-        0)
+        ["word1", "word2", "word3"])
     fetched_topics_view._display_topics("lda_model")
 
     # Find the TopicEntity widget
@@ -138,11 +133,10 @@ def test_deselect_all_topics(fetched_topics_view: FetchedTopicsView):
     Test deselecting all topics in the fetched topics view.
     """
     # Add a topic and display it
-    fetched_topics_view._add_topic(
+    fetched_topics_view._add_topic_to_container(
         "lda_model",
         "test_topic",
-        ["word1", "word2", "word3"],
-        0)
+        ["word1", "word2", "word3"])
     fetched_topics_view._display_topics("lda_model")
 
     # Find the TopicEntity widget

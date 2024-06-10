@@ -7,7 +7,7 @@ from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 from tommy.support.constant_variables import (
     heading_font,
-    prim_col_red, hover_prim_col_red, scrollbar_style)
+    prim_col_red, hover_prim_col_red, scrollbar_style, text_font)
 from tommy.view.imported_files_view.file_label import FileLabel
 
 
@@ -23,7 +23,8 @@ class SelectedInformationView(QScrollArea):
 
         # Initialize widget properties
         self.setStyleSheet(f"background-color: white;"
-                           f"color: black;")
+                           f"color: black;"
+                           f"font-family: {text_font};")
         self.setMinimumHeight(200)
         self.setMaximumHeight(300)
 
@@ -99,7 +100,8 @@ class SelectedInformationView(QScrollArea):
 
         # Add label
         no_file_selected_label = QLabel("Geen component\ngeselecteerd")
-        no_file_selected_label.setStyleSheet("font-size: 20px;")
+        no_file_selected_label.setStyleSheet("font-size: 20px;"
+                                             f"font-family: {text_font};")
         no_file_selected_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.scroll_layout.addWidget(no_file_selected_label)
 
