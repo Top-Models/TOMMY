@@ -1,9 +1,5 @@
-import logging
-
 from PySide6.QtCore import Qt, QRect, QSize, QPoint
 from PySide6.QtWidgets import QLayout, QLayoutItem
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 class FlowLayout(QLayout):
@@ -118,9 +114,6 @@ class FlowLayout(QLayout):
                 item_height = wid.sizeHint().height()
 
                 if not test_only:
-                    logging.debug(
-                        f"Setting geometry for item: x={x}, y={y}, "
-                        f"width={item_width}, height={item_height}")
                     item.setGeometry(
                         QRect(QPoint(x, y), QSize(item_width, item_height)))
 
