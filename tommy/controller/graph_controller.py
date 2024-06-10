@@ -194,6 +194,13 @@ class GraphController:
         self._topic_name_model.set_topic_name(self._current_config,
                                               topic_index, name)
 
+    def clear_topic_names(self) -> None:
+        """
+        Clear all custom topic names
+        :return: None
+        """
+        self._topic_name_model.clear_topic_names()
+
     def remove_config(self, config_name: str) -> None:
         """
         Remove the configuration with the given name
