@@ -59,8 +59,8 @@ class TopicEntity(QFrame):
             lambda checked: self.clicked.emit(self))
 
         # Initialize top layout
-        self.top_layout = QHBoxLayout()
-        main_layout.addLayout(self.top_layout)
+        self.bottom_layout = QHBoxLayout()
+        self.bottom_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         # Initialize topic labels
         self.topic_label = QLineEdit(topic_name, self)
@@ -77,15 +77,16 @@ class TopicEntity(QFrame):
                                        )
         self.topic_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.topic_label.setPlaceholderText(topic_name)
+        main_layout.addWidget(self.topic_label)
 
         # Initialize topic number
         self.topic_number = QLineEdit(str(index + 1), self)
         self.topic_number.setStyleSheet(f"""
             font-family: {heading_font};
             color: white;
-            font-size: 15px;
+            font-size: 12px;
             font-weight: bold;
-            background-color: {pressed_seco_col_purple};
+            background-color: {sec_col_purple};
             padding: 5px 5px;
             border-radius: 2px;
             border: 2px solid {seco_purple_border_color};
@@ -94,14 +95,12 @@ class TopicEntity(QFrame):
         self.topic_number.setPlaceholderText(str(index + 1))
         self.topic_number.setFixedWidth(40)
         self.topic_number.setReadOnly(True)
-
-        # Add widgets to top layout
-        self.top_layout.addWidget(self.topic_number)
-        self.top_layout.addWidget(self.topic_label)
+        self.bottom_layout.addWidget(self.topic_number)
 
         # Initialize word widgets
         self.word_layout = QVBoxLayout()
         main_layout.addLayout(self.word_layout)
+        main_layout.addLayout(self.bottom_layout)
 
         # List to store word labels
         self.word_labels = []
