@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QFrame,
-                               QLineEdit, QRadioButton)
+                               QLineEdit, QRadioButton, QLabel)
 
 from tommy.support.constant_variables import (
     heading_font, text_font, sec_col_purple, pressed_seco_col_purple,
@@ -58,14 +58,18 @@ class TopicEntity(QFrame):
         self.radio_button.clicked.connect(
             lambda checked: self.clicked.emit(self))
 
-        # Initialize title widget
+        # Initialize top layout
+        self.bottom_layout = QHBoxLayout()
+        self.bottom_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Initialize topic labels
         self.topic_label = QLineEdit(topic_name, self)
         self.topic_label.setStyleSheet(f"font-family: {heading_font}; "
                                        f"color: white;"
                                        f"font-size: 15px; "
                                        f"font-weight: bold; "
                                        f"background-color: "
-                                       f"{pressed_seco_col_purple};"
+                                       f"{sec_col_purple};"
                                        f"padding: 5px 5px;"
                                        f"border-radius: 2px;"
                                        f"border:"
@@ -75,9 +79,23 @@ class TopicEntity(QFrame):
         self.topic_label.setPlaceholderText(topic_name)
         main_layout.addWidget(self.topic_label)
 
+        # Initialize topic number
+        self.topic_number = QLabel(str(index + 1), self)
+        self.topic_number.setStyleSheet(f"""
+            font-family: {heading_font};
+            color: #d8bfd8;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 5px 5px;
+        """)
+        self.topic_number.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.topic_number.setFixedWidth(40)
+        self.bottom_layout.addWidget(self.topic_number)
+
         # Initialize word widgets
         self.word_layout = QVBoxLayout()
         main_layout.addLayout(self.word_layout)
+        main_layout.addLayout(self.bottom_layout)
 
         # List to store word labels
         self.word_labels = []
