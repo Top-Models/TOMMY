@@ -45,10 +45,10 @@ class ConfigController:
         """
         config_exists = name in self.get_configuration_names()
         if config_exists:
+            self._graph_controller.set_current_config(name)
             self._model.selected_config_name = name
             self._config_switched_event.publish(self._model.config_model)
             self._graph_controller.reset_graph_view_state()
-            self._graph_controller.set_current_config(name)
         return config_exists
 
     def get_configuration_names(self) -> list[str]:

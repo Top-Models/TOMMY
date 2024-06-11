@@ -194,12 +194,12 @@ class GraphController:
         self._topic_name_model.set_topic_name(self._current_config,
                                               topic_index, name)
 
-    def clear_topic_names(self) -> None:
+    def _clear_topic_names(self) -> None:
         """
         Clear all custom topic names
         :return: None
         """
-        self._topic_name_model.clear_topic_names()
+        self._topic_name_model.clear_topic_names(self._current_config)
 
     def remove_config(self, config_name: str) -> None:
         """
@@ -461,6 +461,7 @@ class GraphController:
         self._topics_changed_event.publish(None)
         self._possible_plots_changed_event.publish(
             self._possible_visualizations)
+        self._clear_topic_names()
 
     def _on_config_switch(self, topic_runner: TopicRunner | None):
         """Save and publish new topic runner on config switch"""
