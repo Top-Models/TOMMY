@@ -1,3 +1,4 @@
+import string
 from itertools import product
 
 import networkx as nx
@@ -229,6 +230,17 @@ class GraphController:
             raise RuntimeError("Amount of topics requested before topic "
                                "runner has finished running")
         return self._current_topic_runner.get_n_topics()
+
+    def get_model_type(self) -> string:
+        """
+        Get the model type in the topic modelling results
+        :return: the model type in the topic modelling results
+        :raises RuntimeError: if the topic runner has not finished running yet.
+        """
+        if not self.has_topic_runner:
+            raise RuntimeError("Amount of topics requested before topic "
+                               "runner has finished running")
+        return self._current_topic_runner.get_model()
 
     def get_topic_with_scores(self, topic_id, n_words) -> TopicWithScores:
         """

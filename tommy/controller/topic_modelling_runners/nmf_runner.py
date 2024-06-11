@@ -1,3 +1,5 @@
+import string
+
 import numpy as np
 
 from collections.abc import Iterable
@@ -130,6 +132,9 @@ class NmfRunner(TopicRunner,
 
     def get_n_topics(self) -> int:
         return self._num_topics
+
+    def get_model(self) -> string:
+        return "NMF"
 
     def get_topic_with_scores(self, topic_id,
                               n_words) -> TopicWithScores:
