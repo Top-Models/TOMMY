@@ -185,13 +185,17 @@ class ConfigView(QDialog):
         selected_items = self.config_list_widget.selectedItems()
         if selected_items:
             selected_item = selected_items[0]
-            confirmation = QMessageBox.question(
-                self, "Verwijder Configuratie",
+            confirmation = QMessageBox(self)
+            confirmation.setWindowTitle("Verwijder Configuratie")
+            confirmation.setText(
                 f"Weet u zeker dat u de configuratie "
-                f"'{selected_item.text()}' wilt verwijderen?",
-                QMessageBox.Yes | QMessageBox.No
-            )
-            if confirmation == QMessageBox.Yes:
+                f"'{selected_item.text()}' wilt verwijderen?")
+            confirmation.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            confirmation.setStyleSheet(
+                "QLabel{color: black;} QPushButton{color: black;}")
+            user_choice = confirmation.exec_()
+
+            if user_choice == QMessageBox.Yes:
                 success = self.config_controller.delete_configuration(
                     selected_item.text())
                 if success:
