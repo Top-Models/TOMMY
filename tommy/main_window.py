@@ -121,7 +121,9 @@ class MainWindow(QMainWindow):
         )
         self.imported_files_view = ImportedFilesView(
             self._controller.corpus_controller,
-            self._controller.topic_modelling_controller)
+            self._controller.topic_modelling_controller,
+            self._controller.config_controller
+        )
         self.model_params_view = ModelParamsView(
             self._controller.model_parameters_controller,
             self._controller.language_controller,
