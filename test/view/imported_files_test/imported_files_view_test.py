@@ -4,6 +4,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 from pytestqt.qtbot import QtBot
 
+from tommy.controller.config_controller import ConfigController
 from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.file_import.metadata import Metadata
 from tommy.controller.topic_modelling_controller import TopicModellingController
@@ -17,7 +18,8 @@ from tommy.view.topic_view.topic_entity_component.topic_entity import \
 def imported_files_view(qtbot):
     imported_files_view = ImportedFilesView(
         CorpusController(),
-        TopicModellingController())
+        TopicModellingController(),
+        ConfigController())
     qtbot.addWidget(imported_files_view)
     return imported_files_view
 

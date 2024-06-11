@@ -53,7 +53,8 @@ def imported_files_view(controller: Controller,
                         qtbot: QtBot) -> ImportedFilesView:
     imported_files_view = (
         ImportedFilesView(controller.corpus_controller,
-                          controller.topic_modelling_controller))
+                          controller.topic_modelling_controller,
+                          controller.config_controller))
     qtbot.addWidget(imported_files_view)
     return imported_files_view
 
