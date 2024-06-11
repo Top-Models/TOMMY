@@ -2,6 +2,13 @@
 This file contains all constant variable, such as colour codes and fonts.
 """
 
+import os
+
+from PySide6.QtGui import QFontDatabase
+
+from tommy.support.application_settings import application_settings
+
+
 # Primary colour properties
 prim_col_red = "#E40046"
 dark_prim_col_red = "#B3003C"
@@ -37,8 +44,20 @@ dark_gray = "#333333"
 darker_gray = "#222222"
 
 # Font properties
-text_font = "Corbel, 'Source Sans 3'"
-heading_font = "Century Gothic, Raleway"
+source_sans_3_id = QFontDatabase.addApplicationFont(os.path.join(
+    application_settings.fonts_data_folder,
+    "Source_Sans_3",
+    "static",
+    "SourceSans3-Regular.ttf"))
+raleway_id = QFontDatabase.addApplicationFont(os.path.join(
+    application_settings.fonts_data_folder,
+    "Raleway",
+    "static",
+    "Raleway-Regular.ttf"))
+source_sans_3 = QFontDatabase.applicationFontFamilies(source_sans_3_id)[0]
+raleway = QFontDatabase.applicationFontFamilies(raleway_id)[0]
+text_font = f"'{source_sans_3}', Corbel"
+heading_font = f"{raleway}, 'Century Gothic'"
 
 # Label properties
 label_height = 25

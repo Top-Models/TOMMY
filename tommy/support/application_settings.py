@@ -7,6 +7,7 @@ from dataclasses import dataclass
 class ApplicationSettings:
     """A class that holds the application-wide settings."""
     preprocessing_data_folder: str
+    fonts_data_folder: str
     default_config_name: str = "Config 1"
 
 
@@ -40,6 +41,20 @@ def get_preprocessing_data_folder() -> str:
     return os.path.join(base_dir, "preprocessing_data")
 
 
+def get_fonts_data_folder() -> str:
+    """
+    Returs the standard location where fonts are stored
+    :return: the standard location where fonts will be expected by the
+        application
+    """
+    if hasattr(sys, '_MEIPASS'):
+        base_dir = get_base_dir()
+    else:
+        base_dir = os.path.join(get_base_dir(), "data")
+
+    return os.path.join(base_dir, "fonts")
+
+
 def get_base_dir() -> str:
     """
     Returns the current working directory
@@ -50,7 +65,7 @@ def get_base_dir() -> str:
     return os.path.abspath(getattr(sys, '_MEIPASS', os.getcwd()))
 
 
-application_settings = ApplicationSettings(get_preprocessing_data_folder())
+application_settings = ApplicationSettings(get_preprocessing_data_folder(), get_fonts_data_folder())
 
 """
 This program has been developed by students from the bachelor Computer Science
