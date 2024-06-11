@@ -61,7 +61,8 @@ class WordTopicNetworkCreator(AbstractVisualization):
                              node_color=node_colors,
                              font_size=8)
 
-        fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+        fig.figure.subplots_adjust(
+            left=0.15, right=0.85, top=0.85, bottom=0.15)
 
         plt.close()
         return fig

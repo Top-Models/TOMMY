@@ -50,7 +50,7 @@ class DocumentWordCountCreator(AbstractVisualization):
         plt.margins(x=0.02)
         plt.xlabel("Aantal woorden per document")
         plt.ylabel("Aantal documenten")
-        plt.title("Distributie aantal woorden per document")
+        plt.title("Distributie aantal woorden per document", pad=25)
 
         # Use MaxNLocator to ensure the number of ticks is manageable
         ax.xaxis.set_major_locator(MaxNLocator(integer=True, nbins=10))
@@ -63,7 +63,8 @@ class DocumentWordCountCreator(AbstractVisualization):
         # Rotate tick labels to prevent overlapping
         plt.xticks(rotation=30)
 
-        fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+        fig.figure.subplots_adjust(
+            left=0.15, right=0.85, top=0.85, bottom=0.15)
 
         plt.close()
         return fig

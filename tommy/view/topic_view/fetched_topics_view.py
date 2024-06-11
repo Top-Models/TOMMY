@@ -1,8 +1,5 @@
-from typing import Any
-
-from PySide6.QtCore import Qt, Signal, QRect, QPoint, QSize, QTimer
-from PySide6.QtWidgets import QWidget, QScrollArea, QSizePolicy, \
-    QLayout
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtWidgets import QWidget, QScrollArea, QSizePolicy
 
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.model_parameters_controller import \
