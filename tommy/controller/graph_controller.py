@@ -148,7 +148,7 @@ class GraphController:
         self._topic_modelling_controller = topic_modelling_controller
 
         topic_modelling_controller.model_trained_event.subscribe(
-            self.on_topic_runner_complete)
+            self.on_new_topic_runner)
         topic_modelling_controller.topic_model_switched_event.subscribe(
             self._on_config_switch)
         project_settings_controller.input_folder_path_changed_event.subscribe(
@@ -200,6 +200,7 @@ class GraphController:
         :return: None
         """
         self._topic_name_model.clear_topic_names(self._current_config)
+        self.topics_changed_event.publish(None)
 
     def remove_config(self, config_name: str) -> None:
         """
@@ -447,7 +448,7 @@ class GraphController:
         for vis_creator in self.VISUALIZATIONS:
             vis_creator.delete_cache()
 
-    def on_topic_runner_complete(self, topic_runner: TopicRunner) -> None:
+    def on_new_topic_runner(self, topic_runner: TopicRunner) -> None:
         """
         Signal the graph-controller that a topic runner has finished training
         and is ready to provide results. Notify the subscribes of the plots
@@ -463,9 +464,22 @@ class GraphController:
             self._possible_visualizations)
         self._clear_topic_names()
 
+    def on_topic_runner_switched(self, topic_runner: TopicRunner) -> None:
+        """
+        Signal the graph-controller that a topic runner has been switched
+        :param topic_runner: The newly trained topic runner object
+        :return: None
+        """
+        self._delete_all_cached_plots()
+        self._current_topic_runner = topic_runner
+        self._calculate_possible_visualizations()
+        self._topics_changed_event.publish(None)
+        self._possible_plots_changed_event.publish(
+                self._possible_visualizations)
+
     def _on_config_switch(self, topic_runner: TopicRunner | None):
         """Save and publish new topic runner on config switch"""
-        self.on_topic_runner_complete(topic_runner)
+        self.on_topic_runner_switched(topic_runner)
 
     def reset_graph_view_state(self) -> None:
         """Reset the state of the graph view"""

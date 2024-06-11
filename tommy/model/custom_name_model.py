@@ -26,6 +26,7 @@ class TopicNameModel:
         if config_name not in self.topic_names:
             self.topic_names[config_name] = {}
         self.topic_names[config_name][index] = name
+        print(self.topic_names)
 
     def clear_topic_names(self, config: str) -> None:
         """
@@ -35,6 +36,7 @@ class TopicNameModel:
         """
         if config in self.topic_names:
             self.topic_names[config] = {}
+        print(self.topic_names)
 
     def remove_config(self, config_name: str) -> None:
         """
