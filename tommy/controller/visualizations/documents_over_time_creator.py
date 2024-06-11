@@ -86,12 +86,14 @@ class DocumentsOverTimeCreator(AbstractVisualization):
                     label=topic_id + 1)
 
             # Add labels and title to plot
-            plt.title(self.name)
+            plt.title(self.name, pad=25)
             plt.xlabel("Datum")
             plt.ylabel("Som gewichten")
             plt.xticks(rotation=30)
 
             ax.legend()
+
+        fig.figure.subplots_adjust(0.2, 0.2, 0.8, 0.8)
 
         return fig
 
@@ -106,7 +108,8 @@ class DocumentsOverTimeCreator(AbstractVisualization):
                     horizontalalignment='center',
                     verticalalignment='center')
 
-        fig.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+        fig.figure.subplots_adjust(
+            left=0.15, right=0.85, top=0.85, bottom=0.15)
         plt.close()
         return fig
 

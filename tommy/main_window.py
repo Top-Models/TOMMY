@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (
 
 from tommy.controller.controller import Controller
 from tommy.support.constant_variables import (
-    text_font)
+    text_font, light_gray)
 from tommy.view.graph_view import GraphView
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.imported_files_view import (
@@ -20,35 +20,12 @@ from tommy.view.plot_selection_view import (
 from tommy.view.selected_information_view import SelectedInformationView
 from tommy.view.stopwords_view import (
     StopwordsView)
+from tommy.view.supporting_components.custom_splitter.custom_splitter_component import \
+    CustomSplitter
 from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
 from tommy.view.topic_view.topic_entity_component.topic_entity import (
     TopicEntity)
-
-
-class CustomSplitterHandle(QSplitterHandle):
-    """Custom splitter handle to add visual indicator."""
-
-    def __init__(self, orientation, parent):
-        super().__init__(orientation, parent)
-        self.setFixedWidth(15)  # Set the width of the splitter handle
-
-    def paintEvent(self, event):
-        super().paintEvent(event)
-        painter = QPainter(self)
-        painter.setPen(QColor(150, 150, 150))
-        painter.drawText(self.rect(), Qt.AlignCenter, "|||")
-        painter.end()
-
-
-class CustomSplitter(QSplitter):
-    """Custom splitter to use the custom handle."""
-
-    def __init__(self, orientation, parent=None):
-        super().__init__(orientation, parent)
-
-    def createHandle(self):
-        return CustomSplitterHandle(self.orientation(), self)
 
 
 class MainWindow(QMainWindow):
@@ -65,10 +42,23 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("TOMMY")
         self.set_initial_window_size()
         self.setWindowIcon(QIcon("../assets/tommy.png"))
-        self.setStyleSheet("background-color: white;"
-                           "font-size: 15px;"
-                           f"font-family: {text_font};"
-                           "border: none;")
+        self.setStyleSheet(f"""
+            QMainWindow {{
+                background-color: white;
+                font-size: 15px;
+                font-family: {text_font};
+                border: none;
+            }}
+            
+            QMainWindow::children {{
+                font-family: {text_font};
+            }}
+            
+            QSplitter::handle {{
+                background-color: rgba(200, 200, 200, 200);
+                border: none;
+            }}
+        """)
 
         # Create the main layout
         self.layout = QHBoxLayout()
@@ -103,7 +93,7 @@ class MainWindow(QMainWindow):
         self.left_container.setSizePolicy(QSizePolicy.Fixed,
                                           QSizePolicy.Expanding)
         self.right_container.setSizePolicy(QSizePolicy.Expanding,
-                                           QSizePolicy.Expanding)  # Changed to Expanding
+                                           QSizePolicy.Expanding)
         self.center_container.setSizePolicy(QSizePolicy.Expanding,
                                             QSizePolicy.Expanding)
 
@@ -131,7 +121,9 @@ class MainWindow(QMainWindow):
         )
         self.imported_files_view = ImportedFilesView(
             self._controller.corpus_controller,
-            self._controller.topic_modelling_controller)
+            self._controller.topic_modelling_controller,
+            self._controller.config_controller
+        )
         self.model_params_view = ModelParamsView(
             self._controller.model_parameters_controller,
             self._controller.language_controller,
@@ -154,16 +146,18 @@ class MainWindow(QMainWindow):
         self.right_layout.addWidget(self.selected_information_view)
 
         # Adjust the splitter stretch factors
-        self.splitter.setStretchFactor(0, 1)  # Left container: expand slightly
-        self.splitter.setStretchFactor(1, 3)  # Center container: expand more
+        self.splitter.setStretchFactor(0, 1)
+        self.splitter.setStretchFactor(1, 3)
         self.splitter.setStretchFactor(2,
-                                       1)  # Right container: expand slightly
+                                       1)
 
         self.display_correct_initial_files()
 
         # Initialize event handlers
         self.imported_files_view.fileClicked.connect(self.on_file_clicked)
         self.fetched_topics_view.topicClicked.connect(self.on_topic_clicked)
+        self.fetched_topics_view.topicNameChanged.connect(
+            self.on_topic_name_changed)
 
     def initialize_widget(self, widget: QWidget,
                           x: int, y: int, w: int, h: int) -> None:
@@ -203,9 +197,6 @@ class MainWindow(QMainWindow):
         :param file: The file that was clicked
         :return: None
         """
-        self.fetched_topics_view.deselect_all_topics()
-        self.fetched_topics_view.selected_topic = None
-
         # TODO: Hardcoded save name
         # Show info about run if no file is selected
         if not file.selected:
@@ -233,6 +224,16 @@ class MainWindow(QMainWindow):
 
         self.imported_files_view.on_topic_selected(topic_entity)
         self.selected_information_view.display_topic_info(topic_entity)
+
+    def on_topic_name_changed(self, topic_entity: TopicEntity) -> None:
+        """
+        Event handler for when a topic name is changed.
+
+        :param topic_entity: The topic entity whose name was changed
+        :return: None
+        """
+        if topic_entity.selected:
+            self.selected_information_view.display_topic_info(topic_entity)
 
     def display_correct_initial_files(self) -> None:
         """

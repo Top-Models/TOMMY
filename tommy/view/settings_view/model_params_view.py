@@ -225,13 +225,16 @@ class ModelParamsView(QScrollArea):
         :return: None
         """
         self.clear_layouts_from_button_layout()
-        self.apply_button = QPushButton("Toepassen")
+        self.apply_button = QPushButton("TOEPASSEN")
         self.apply_button.setFixedHeight(40)
         self.apply_button.setStyleSheet(
             f"""
                 QPushButton {{
                     background-color: {seco_col_blue};
                     color: white;
+                    font-family: {heading_font};
+                    font-size: 12px;
+                    font-weight: bold;
                 }}
 
                 QPushButton:hover {{
@@ -266,13 +269,17 @@ class ModelParamsView(QScrollArea):
             current_model_type]
         # Disable the apply button and change its text to "Laden..."
         self.apply_button.setEnabled(False)
-        self.apply_button.setText("Laden...")
+        self.apply_button.setText("LADEN...")
         self.apply_button.setStyleSheet(
             f"""
-                        QPushButton {{
-                            background-color: #808080;
-                            color: white;
-                        }}
+                QPushButton {{
+                    background-color: #808080;
+                    color: white;
+                    margin-left: 5px;
+                    font-family: {heading_font};
+                    font-size: 12px;
+                    font-weight: bold;
+                }}
 
                 QPushButton:hover {{
                     background-color: {hover_seco_col_blue};
@@ -293,12 +300,15 @@ class ModelParamsView(QScrollArea):
         :return: None
         """
         self.apply_button.setEnabled(True)
-        self.apply_button.setText("Toepassen")
+        self.apply_button.setText("TOEPASSEN")
         self.apply_button.setStyleSheet(
             f"""
                 QPushButton {{
                     background-color: {seco_col_blue};
                     color: white;
+                    font-family: {heading_font};
+                    font-size: 12px;
+                    font-weight: bold;
                 }}
 
                 QPushButton:hover {{

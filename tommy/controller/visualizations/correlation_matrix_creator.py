@@ -63,7 +63,7 @@ class CorrelationMatrixCreator(AbstractVisualization):
         plt.colorbar(data)
 
         # Add a title and correct integer ticks on both axes
-        plt.title(self.name)
+        plt.title(self.name, pad=25)
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
@@ -73,6 +73,9 @@ class CorrelationMatrixCreator(AbstractVisualization):
                    np.arange(1, num_topics + 1))
         plt.yticks(np.arange(num_topics),
                    np.arange(1, num_topics + 1))
+
+        fig.figure.subplots_adjust(
+            left=0.15, right=0.85, top=0.85, bottom=0.15)
 
         plt.close()
         return fig

@@ -85,10 +85,12 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
                 color=plot_colors[topic_id % len(plot_colors)])
 
         # Add labels and title to plot
-        plt.title("Documenten over tijd topic {}".format(topic_id + 1))
+        plt.title("Documenten over tijd topic {}".format(topic_id + 1), pad=25)
         plt.xlabel("Datum")
         plt.ylabel("Som gewichten")
         plt.xticks(rotation=30)
+
+        fig.figure.subplots_adjust(0.2, 0.2, 0.8, 0.8)
 
         return fig
 
@@ -103,7 +105,8 @@ class DocumentsOverTimePerTopicCreator(AbstractVisualization):
                     horizontalalignment='center',
                     verticalalignment='center')
 
-        fig.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+        fig.figure.subplots_adjust(
+            left=0.15, right=0.85, top=0.85, bottom=0.15)
         plt.close()
         return fig
 

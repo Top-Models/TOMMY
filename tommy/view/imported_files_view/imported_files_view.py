@@ -3,6 +3,7 @@ from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (QLabel, QVBoxLayout, QScrollArea, QWidget,
                                QSizePolicy, QPushButton, QGridLayout)
 
+from tommy.controller.config_controller import ConfigController
 from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.file_import.metadata import Metadata
 from tommy.controller.file_import.processed_corpus import ProcessedCorpus
@@ -24,12 +25,14 @@ class ImportedFilesView(QWidget):
     fileClicked = Signal(object)
 
     def __init__(self, corpus_controller: CorpusController,
-                 topic_modelling_controller: TopicModellingController) -> None:
+                 topic_modelling_controller: TopicModellingController,
+                 config_controller: ConfigController) -> None:
         """Initialize the ImportedFileDisplay"""
         super().__init__()
 
         # Set reference to the corpus controller and subscribe to the metadata
         self._corpus_controller = corpus_controller
+        self.config_controller = config_controller
         corpus_controller.metadata_changed_event.subscribe(
             self.on_metadata_changed)
 
@@ -38,6 +41,9 @@ class ImportedFilesView(QWidget):
 
         topic_modelling_controller.calculate_topic_documents_event.subscribe(
             self.on_document_topics_calculated)
+
+        config_controller.config_switched_event.subscribe(
+            lambda _: self.display_files())
 
         # Initialize widget properties
         self.setMinimumHeight(200)

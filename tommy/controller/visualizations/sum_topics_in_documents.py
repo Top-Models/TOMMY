@@ -57,9 +57,12 @@ class SumTopicsInDocuments(AbstractVisualization):
         df = df.groupby(by="topic_id", as_index=False).sum()
 
         plt.bar(df["topic_id"] + 1, df["probability"], color=plot_colors)
-        plt.title("Verdeling topics over documenten")
+        plt.title("Verdeling topics over documenten", pad=25)
         plt.xlabel("Topic")
         plt.ylabel("Som kansen")
+
+        fig.figure.subplots_adjust(
+            left=0.15, right=0.85, top=0.85, bottom=0.15)
 
         fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
 
