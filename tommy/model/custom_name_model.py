@@ -27,6 +27,15 @@ class TopicNameModel:
             self.topic_names[config_name] = {}
         self.topic_names[config_name][index] = name
 
+    def clear_topic_names(self, config: str) -> None:
+        """
+        Function to clear all custom topic names in a config when rerunning
+        topic modelling.
+        :return: None
+        """
+        if config in self.topic_names:
+            self.topic_names[config] = {}
+
     def remove_config(self, config_name: str) -> None:
         """
         Function to remove a configuration from the model.
