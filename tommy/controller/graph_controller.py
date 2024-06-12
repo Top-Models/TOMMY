@@ -230,6 +230,17 @@ class GraphController:
                                "runner has finished running")
         return self._current_topic_runner.get_n_topics()
 
+    def get_model_type(self) -> str:
+        """
+        Get the model type in the topic modelling results
+        :return: the model type in the topic modelling results
+        :raises RuntimeError: if the topic runner has not finished running yet.
+        """
+        if not self.has_topic_runner:
+            raise RuntimeError("Model type requested before topic "
+                               "runner has finished running")
+        return self._current_topic_runner.get_model()
+
     def get_topic_with_scores(self, topic_id, n_words) -> TopicWithScores:
         """
         Return a topic object containing top n terms and their corresponding

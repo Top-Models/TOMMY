@@ -1,3 +1,4 @@
+import string
 from abc import ABC, abstractmethod
 
 from tommy.model.topic_model import TopicModel
@@ -38,6 +39,10 @@ class TopicRunner(ABC):
     @abstractmethod
     def get_n_topics(self) -> int:
         """Returns the number of topics in the model"""
+
+    @abstractmethod
+    def get_model(self) -> string:
+        """Returns model of the runner"""
 
     @abstractmethod
     def get_topic_with_scores(self, topic_id,
