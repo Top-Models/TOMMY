@@ -157,3 +157,6 @@ cython_debug/
 
 # MacOs specific file
 **/.DS_Store
+
+# unnecessary files
+tommy/data/corpora
