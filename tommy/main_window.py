@@ -200,7 +200,7 @@ class MainWindow(QMainWindow):
         # TODO: Hardcoded save name
         # Show info about run if no file is selected
         if not file.selected:
-            self.selected_information_view.display_run_info("lda_model")
+            self.selected_information_view.display_run_info("Run Info")
             return
 
         self.selected_information_view.display_file_info(file)
@@ -219,7 +219,7 @@ class MainWindow(QMainWindow):
         # Show info about run if no topic is selected
         if not topic_entity.selected:
             self.imported_files_view.display_files()
-            self.selected_information_view.display_run_info("lda_model")
+            self.selected_information_view.display_run_info("Run Info")
             return
 
         self.imported_files_view.on_topic_selected(topic_entity)

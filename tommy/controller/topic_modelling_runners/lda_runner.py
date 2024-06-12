@@ -1,3 +1,4 @@
+import string
 from collections.abc import Iterable
 
 import numpy as np
@@ -147,6 +148,9 @@ class LdaRunner(TopicRunner,
 
     def get_n_topics(self) -> int:
         return self._num_topics
+
+    def get_model(self) -> string:
+        return "LDA"
 
     def get_topic_with_scores(self, topic_id,
                               n_words) -> TopicWithScores:
