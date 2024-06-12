@@ -11,7 +11,7 @@ from tommy.controller.topic_modelling_controller import \
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
     pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray,
-    scrollbar_style, title_label_font)
+    scrollbar_style, title_label_font, apply_button_font)
 from tommy.support.model_type import ModelType
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
@@ -221,6 +221,7 @@ class ModelParamsView(QScrollArea):
         """
         self.clear_layouts_from_button_layout()
         self.apply_button = QPushButton("TOEPASSEN")
+        self.apply_button.setFont(apply_button_font)
         self.apply_button.setFixedHeight(40)
         self.apply_button.setStyleSheet(
             f"""

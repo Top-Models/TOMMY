@@ -8,7 +8,6 @@ from tommy.support.application_settings import application_settings
 This file contains all constant variable, such as colour codes and fonts.
 """
 
-
 # Primary color properties
 prim_col_red = "#E40046"
 dark_prim_col_red = "#B3003C"
@@ -50,8 +49,12 @@ gwendolyn = ""
 text_font = ""
 heading_font = ""
 
-# TODO: Check which fonts to actually use
-title_label_font = QFont(f"Raleway", 13)  # Done
+# Define fonts
+title_label_font = QFont(f"Century Gothic, Raleway", 13)
+apply_button_font = QFont(f"Century Gothic, Raleway", 12)
+collapse_button_font = QFont(f"Raleway", 12)
+config_button_font = QFont(f"Raleway", 12)
+file_label_font = QFont(f"Source Sans 3", 12)
 
 
 def initialize_fonts() -> None:  # TODO: remove Gwendolyn & print statements
@@ -134,8 +137,6 @@ def initialize_fonts() -> None:  # TODO: remove Gwendolyn & print statements
 
     text_font = source_sans_3  # Alternative for Corbel
     heading_font = raleway  # Alternative for Century Gothic
-
-    print(f"Loaded fonts: {source_sans_3}, {raleway}, {gwendolyn}")
 
 
 # Label properties

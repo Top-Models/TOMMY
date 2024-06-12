@@ -7,7 +7,8 @@ from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 from tommy.support.constant_variables import (
     heading_font,
-    prim_col_red, hover_prim_col_red, scrollbar_style, text_font)
+    prim_col_red, hover_prim_col_red, scrollbar_style, text_font,
+    title_label_font)
 from tommy.view.imported_files_view.file_label import FileLabel
 
 
@@ -82,6 +83,7 @@ class SelectedInformationView(QScrollArea):
                                   f"{hover_prim_col_red};")
         title_label.setContentsMargins(0, 0, 0, 0)
         title_label.setFixedHeight(50)
+        title_label.setFont(title_label_font)
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
                                  Qt.AlignmentFlag.AlignTop)
         self.layout.addWidget(title_label)

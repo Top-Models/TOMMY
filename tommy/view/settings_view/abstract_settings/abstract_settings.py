@@ -8,7 +8,7 @@ from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 from tommy.support.constant_variables import (
     text_font, seco_col_blue, disabled_gray, heading_font, hover_seco_col_blue,
-    pressed_seco_col_blue)
+    pressed_seco_col_blue, config_button_font)
 from tommy.support.model_type import ModelType
 from tommy.support.parameter_limits import num_topics_min_value, \
     num_topics_max_value, amount_of_words_min_value, amount_of_words_max_value
@@ -179,6 +179,7 @@ class AbstractSettings:
 
         # Add button to container
         self._config_management_button = QPushButton("⛭")
+        self._config_management_button.setFont(config_button_font)
         self._config_management_button.setStyleSheet(f"""
             QPushButton {{
                 font-size: 20px;
