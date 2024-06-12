@@ -444,8 +444,8 @@ class GraphController:
         :return: A list of nx.graph objects of all possible visualizations
         """
         if self._current_topic_runner is None:
-            raise RuntimeError("Exports cannot be requested when topic model "
-                               "has not been run.")
+            raise RuntimeWarning("Exports cannot be requested when topic model"
+                                 " has not been run.")
 
         return [NxExport(self.NX_EXPORTS[vis].name, self._get_nx_export(vis))
                 for vis
