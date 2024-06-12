@@ -237,7 +237,7 @@ class GraphController:
         :raises RuntimeError: if the topic runner has not finished running yet.
         """
         if not self.has_topic_runner:
-            raise RuntimeError("Amount of topics requested before topic "
+            raise RuntimeError("Model type requested before topic "
                                "runner has finished running")
         return self._current_topic_runner.get_model()
 
