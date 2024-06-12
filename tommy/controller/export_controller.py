@@ -1,11 +1,13 @@
 import csv
 import os
-import networkx as nx
 from pathlib import Path
+
+import networkx as nx
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.topic_modelling_controller import \
     TopicModellingController
 from tommy.support.types import Document_topics
+from tommy.datatypes.exports import NxExport, MatplotLibExport
 
 
 def hex_to_rgb(hex_color: str) -> tuple:
@@ -33,11 +35,11 @@ class ExportController:
 
         nx_exports = self._graph_controller.get_all_nx_exports()
 
-        for i, graph in enumerate(nx_exports):
-            new_path = os.path.join(path, f"{i}.gexf")
+        for nx_export in nx_exports:
+            new_path = os.path.join(path, f"{nx_export.vis_name}.gexf")
 
             # Create a new graph with the same nodes and edges to store colors
-            graph_with_colors = nx.Graph(graph)
+            graph_with_colors = nx.Graph(nx_export.graph)
 
             # Store node and edge colors in the new graph
             for node, data in graph_with_colors.nodes(data=True):
@@ -74,9 +76,12 @@ class ExportController:
         graph_exports = self._graph_controller.get_all_visualizations(
             ignore_cache=True)
 
-        for i in range(len(graph_exports)):
-            new_path = os.path.join(path, f"{i}.png")
-            figure, _ = graph_exports[i]
+        for graph_export in graph_exports:
+            topic_string = ("" if graph_export.topic_num is None
+                            else f" - Topic {graph_export.topic_num + 1}")
+            new_path = os.path.join(path, f"{graph_export.vis_name}"
+                                          f"{topic_string}.png")
+            figure = graph_export.figure
             figure.savefig(new_path)
 
     def export_topic_words_csv(self, path: str) -> None:
