@@ -43,7 +43,7 @@ class MenuBar(QMenuBar):
         save_settings_action = QAction("Instellingen opslaan", self)
         save_settings_as_action = QAction("Instellingen opslaan als", self)
         load_settings_action = QAction("Instellingen laden", self)
-        info_action = QAction("Over Tommy", self)
+        info_action = QAction("Over TOMMY", self)
 
         # Connect actions to event handlers
         import_input_folder_action.triggered.connect(self.import_input_folder)
