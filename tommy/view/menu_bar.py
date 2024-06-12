@@ -118,11 +118,28 @@ class MenuBar(QMenuBar):
             self._project_settings_controller.set_input_folder_path(
                     os.path.relpath(dialog))
 
+    def export_before_running(self) -> bool:
+        """
+        Raise an error if topic modelling is not yet performed and signal
+        the method to stop
+        :return: a boolean value whether the topic modelling is NOT
+        yet perfomed
+        """
+        if not self._export_controller.is_topic_modelling_done():
+            ErrorView("Topic modelling is nog niet uitgevoerd. "
+                      "Klik op de knop 'toepassen' om het "
+                      "programma uit te voeren.", [])
+            return True
+        return False
+
     def export_to_gexf(self) -> None:
         """
         Export the networks to GEXF files.
         :return: None
         """
+        if self.export_before_running():
+            return
+
         dialog = QFileDialog.getExistingDirectory(self,
                                                   "Selecteer export folder")
 
@@ -151,21 +168,6 @@ class MenuBar(QMenuBar):
         if dialog[0]:
             export_path = dialog[0]
             self._export_controller.export_topic_words_csv(export_path)
-
-    def export_before_running(self) -> bool:
-        """
-        Raise an error if topic modelling is not yet performed and signal
-        the method to stop
-        :return: a boolean value whether the topic modelling is not
-        yet perfomed
-        """
-        if not self._export_controller.is_topic_modelling_done():
-            ErrorView("Topic modelling is nog niet uitgevoerd. "
-                      "Klik op de knop 'toepassen' om het "
-                      "programma uit te voeren.", [])
-            return True
-        else:
-            return False
 
     def export_document_topics(self) -> None:
         """
