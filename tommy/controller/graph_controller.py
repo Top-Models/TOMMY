@@ -48,6 +48,7 @@ from tommy.controller.visualizations.possible_visualization import (
     PossibleVisualization)
 from tommy.controller.visualizations.visualization_input_datatypes import (
     VisInputData, ProcessedCorpus, MetadataCorpus)
+from tommy.datatypes.exports import NxExport, MatplotLibExport
 
 from tommy.datatypes.topics import TopicWithScores
 from tommy.model.topic_model import TopicModel
@@ -267,7 +268,7 @@ class GraphController:
             if exporter.is_possible(self._current_topic_runner)
         ]
 
-    def _get_nx_export(self, vis_index: int) -> nx.graph:
+    def _get_nx_export(self, vis_index: int) -> nx.Graph:
         """
         Returns the networkx graph corresponding showing the network
         corresponding to the given index in the list of all exports.
@@ -291,7 +292,7 @@ class GraphController:
     def get_visualization(self, vis_index: int,
                           override_topic: int | None = None,
                           ignore_cache: bool = False
-                          ) -> (matplotlib.figure.Figure, str):
+                          ) -> tuple[matplotlib.figure.Figure, str]:
         """
         Returns the visualization corresponding to the given index in the list
         of all visualizations.
@@ -400,29 +401,35 @@ class GraphController:
         """
         return nx_exporter.get_nx_graph(self._current_topic_runner)
 
-    def get_all_visualizations(self, ignore_cache: bool = False) -> (
-            list)[tuple[matplotlib.figure.Figure, str]]:
+    def get_all_visualizations(self, ignore_cache: bool = False
+                               ) -> list[MatplotLibExport]:
         """
         Get all the possible visualization for the current run
         :param ignore_cache: Whether to ignore the cache and always create a
             new figure, defaults to False
         :return: A list of  matplotlib Figures of all possible visualizations
         """
-        if self._current_topic_runner is None:
-            raise RuntimeError("Plots cannot be requested when topic model "
-                               "has not been run.")
-
-        vis_without_topic = [self.get_visualization(possible_vis.index,
-                                                    ignore_cache=ignore_cache)
+        vis_without_topic = [MatplotLibExport(possible_vis.name, None,
+                                              self.get_visualization(
+                                                   possible_vis.index,
+                                                   ignore_cache=ignore_cache
+                                                   )[0]
+                                              )
                              for possible_vis
                              in self._possible_visualizations
                              if not possible_vis.needs_topic]
 
+        if self._current_topic_runner is None:
+            return vis_without_topic
+
         # loop over all topic and all visualization that need topics to
         #   run all combinations
-        vis_with_topic = [self.get_visualization(possible_vis.index,
-                                                 override_topic=topic_id,
-                                                 ignore_cache=ignore_cache)
+        vis_with_topic = [MatplotLibExport(possible_vis.name, topic_id,
+                                           self.get_visualization(
+                                                possible_vis.index,
+                                                override_topic=topic_id,
+                                                ignore_cache=ignore_cache)[0]
+                                           )
                           for (possible_vis, topic_id)
                           in product(self._possible_visualizations,
                                      range(self.get_number_of_topics()))
@@ -430,7 +437,7 @@ class GraphController:
 
         return vis_without_topic + vis_with_topic
 
-    def get_all_nx_exports(self) -> list[nx.graph]:
+    def get_all_nx_exports(self) -> list[NxExport]:
         """
         Get all the networkx graphs for the possible visualization for the
         current run
@@ -440,7 +447,8 @@ class GraphController:
             raise RuntimeError("Exports cannot be requested when topic model "
                                "has not been run.")
 
-        return [self._get_nx_export(vis) for vis
+        return [NxExport(self.NX_EXPORTS[vis].name, self._get_nx_export(vis))
+                for vis
                 in range(len(self._possible_nx_exports))]
 
     def _delete_all_cached_plots(self):
