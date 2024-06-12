@@ -72,7 +72,7 @@ class ExportController:
         # cache is ignored because it may give an error when trying to save
         # a figure that has already been used by pyqt
         graph_exports = self._graph_controller.get_all_visualizations(
-            ignore_cache=True)
+                ignore_cache=True)
 
         for i in range(len(graph_exports)):
             new_path = os.path.join(path, f"{i}.png")
@@ -115,15 +115,21 @@ class ExportController:
         """
         with open(path, 'w', newline='') as csvfile:
             csv_writer = csv.writer(csvfile)
-            # Assume that Metadata has an attribute 'id' for document identifier
+            # Assume that Metadata has an attribute 'id' for document
+            # identifier
+
             # Write header row with topic indices
-            header = ['Filename'] + ['Length'] + ['Author'] + ['Title'] + ['Date'] + ['Path'] + [f'Topic {i + 1} Probability' for i in
-                                        range(len(self.document_topics[0][1]))]
+            header = ['Filename'] + ['Length'] + ['Author'] + ['Title'] + [
+                'Date'] + ['Path'] + [f'Topic {i + 1} Probability'
+                                      for i in range(
+                        len(self.document_topics[0][1]))]
             csv_writer.writerow(header)
 
             for metadata, probabilities in self.document_topics:
-                row = [metadata.name+"."+metadata.format, str(metadata.length), metadata.author,
-                       metadata.title, str(metadata.date), metadata.path] + probabilities
+                row = [metadata.name + "." + metadata.format,
+                       str(metadata.length), metadata.author,
+                       metadata.title, str(metadata.date),
+                       metadata.path] + probabilities
                 csv_writer.writerow(row)
 
     def set_controller_refs(
@@ -133,7 +139,7 @@ class ExportController:
         self._graph_controller = graph_controller
         self._topic_modelling_controller = topic_modelling_controller
         topic_modelling_controller.calculate_topic_documents_event.subscribe(
-            self.on_document_topics_calculated)
+                self.on_document_topics_calculated)
 
 
 """
