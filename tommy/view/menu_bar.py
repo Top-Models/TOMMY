@@ -144,30 +144,49 @@ class MenuBar(QMenuBar):
                                                   "Selecteer export folder")
 
         if dialog:
-            self._export_controller.export_networks(dialog)
+            errors = self._export_controller.export_networks(dialog)
+            if errors:
+                ErrorView("Er is een fout opgetreden "
+                          "bij het exporteren van de "
+                          "netwerken.", errors)
 
     def export_to_png(self) -> None:
         """
         Export the plots to PNG files.
         :return: None
         """
+        if self.export_before_running():
+            return
+
         dialog = QFileDialog.getExistingDirectory(self,
                                                   "Selecteer export folder")
 
         if dialog:
-            self._export_controller.export_graphs(dialog)
+            errors = self._export_controller.export_graphs(dialog)
+            if errors:
+                ErrorView("Er is een fout opgetreden "
+                          "bij het exporteren van de "
+                          "grafieken.", errors)
 
     def export_topic_words(self) -> None:
         """
         Export words related to topics to a CSV file.
         :return: None
         """
+        if self.export_before_running():
+            return
+
         dialog = QFileDialog.getSaveFileName(self, "Selecteer export locatie",
                                              filter="CSV files (*.csv)")
 
         if dialog[0]:
             export_path = dialog[0]
-            self._export_controller.export_topic_words_csv(export_path)
+            errors = self._export_controller.export_topic_words_csv(
+                    export_path)
+            if errors:
+                ErrorView("Er is een fout opgetreden bij "
+                          "het exporteren van de "
+                          "topics.", errors)
 
     def export_document_topics(self) -> None:
         """
