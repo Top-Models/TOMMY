@@ -39,7 +39,7 @@ if __name__ == "__main__":
     # Set application name
     app.setApplicationDisplayName("TOMMY")
 
-    # Initialize application fonts
+    # Initialize & load application fonts
     initialize_fonts()
 
     # Create and show main window
