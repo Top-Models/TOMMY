@@ -1,6 +1,6 @@
 import os
 import pytest
-from datetime import date
+from datetime import datetime
 from tommy.controller.file_import.csv_file_importer import CsvFileImporter
 
 # Test data directory
@@ -51,7 +51,7 @@ def test_generate_file(csv_file_importer):
     raw_file = csv_file_importer.generate_file(file_data, csv_path, 1)
 
     assert raw_file.metadata.title == "Bedreiging Complotdenker door Spanje uitgezet naar NL"
-    assert raw_file.metadata.date == date(2021, 8, 24)
+    assert raw_file.metadata.date == datetime(2021, 8, 24)
     assert raw_file.metadata.format == "csv"
     assert raw_file.metadata.length == 267  # Number of words in body
     assert raw_file.metadata.size > 0

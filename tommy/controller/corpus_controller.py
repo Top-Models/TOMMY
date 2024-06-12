@@ -1,6 +1,5 @@
 import os
-import traceback
-from collections.abc import Generator, Iterable
+from collections.abc import Generator
 
 from gensim.corpora import Dictionary
 
@@ -119,8 +118,7 @@ class CorpusController:
                 except Exception as e:
                     errors.append(f"Er is een probleem opgetreden bij het "
                                   f"laden van dit bestand: "
-                                  f" {file}. Probleem: "
-                                  f"{traceback.format_exception(e)}")
+                                  f" {file}. Probleem: {e}")
 
         if show_error and errors:
             ErrorView("Er is een probleem opgetreden bij het "
