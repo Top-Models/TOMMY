@@ -35,11 +35,11 @@ class MenuBar(QMenuBar):
         # Create actions
         import_input_folder_action = QAction("Selecteer input folder", self)
         export_to_gexf_action = QAction(
-            "Exporteer naar Graph Exchange XML Format (.gexf)", self)
+                "Exporteer naar Graph Exchange XML Format (.gexf)", self)
         export_to_png_action = QAction("Exporteer grafieken (.png)", self)
         export_topic_words_action = QAction("Exporteer Topicdata (.csv)", self)
         export_document_topic_action = QAction(
-            "Exporteer Document Topics (.csv)", self)
+                "Exporteer Document Topics (.csv)", self)
         save_settings_action = QAction("Instellingen opslaan", self)
         save_settings_as_action = QAction("Instellingen opslaan als", self)
         load_settings_action = QAction("Instellingen laden", self)
@@ -51,11 +51,11 @@ class MenuBar(QMenuBar):
         export_to_png_action.triggered.connect(self.export_to_png)
         export_topic_words_action.triggered.connect(self.export_topic_words)
         export_document_topic_action.triggered.connect(
-            self.export_document_topics)
+                self.export_document_topics)
         save_settings_action.triggered.connect(self.save_settings_to_file)
         save_settings_as_action.triggered.connect(self.save_settings_as)
         load_settings_action.triggered.connect(
-            self._load_settings_from_file)  # Connect to new method
+                self._load_settings_from_file)  # Connect to new method
         info_action.triggered.connect(self.show_about_dialog)
 
         # Create menu bar
@@ -116,7 +116,7 @@ class MenuBar(QMenuBar):
             # Publishing duties to inform people this has changed are done by
             # the controller
             self._project_settings_controller.set_input_folder_path(
-                os.path.relpath(dialog))
+                    os.path.relpath(dialog))
 
     def export_to_gexf(self) -> None:
         """
@@ -152,17 +152,38 @@ class MenuBar(QMenuBar):
             export_path = dialog[0]
             self._export_controller.export_topic_words_csv(export_path)
 
+    def export_before_running(self) -> bool:
+        """
+        Raise an error if topic modelling is not yet performed and signal
+        the method to stop
+        :return: a boolean value whether the topic modelling is not
+        yet perfomed
+        """
+        if not self._export_controller.is_topic_modelling_done():
+            ErrorView("Topic modelling is nog niet uitgevoerd. "
+                      "Klik op de knop 'toepassen' om het "
+                      "programma uit te voeren.", [])
+            return True
+        else:
+            return False
+
     def export_document_topics(self) -> None:
         """
         Export documents related to topics to a CSV file.
         :return: None
         """
+        if self.export_before_running():
+            return
+
         dialog = QFileDialog.getSaveFileName(self, "Selecteer export locatie",
                                              filter="CSV files (*.csv)")
 
         if dialog[0]:
-            export_path = dialog[0]
-            self._export_controller.export_document_topics_csv(export_path)
+            errors = self._export_controller.export_document_topics_csv(
+                    dialog[0])
+            if errors:
+                ErrorView("Er is een fout opgetreden "
+                          "bij het exporteren van het document.", errors)
 
     def save_settings_to_file(self) -> None:
         """
@@ -172,7 +193,7 @@ class MenuBar(QMenuBar):
         """
         if self._saving_loading_controller.filepath:
             self._save_settings_and_show_dialog(
-                self._saving_loading_controller.filepath)
+                    self._saving_loading_controller.filepath)
         else:
             self.save_settings_as()
 
@@ -202,7 +223,7 @@ class MenuBar(QMenuBar):
         :return: None
         """
         errors = self._saving_loading_controller.save_settings_to_file(
-            filepath)
+                filepath)
         if not errors:
             QMessageBox.information(self, "Project opgeslagen",
                                     "Het project is succesvol opgeslagen.")
@@ -219,7 +240,7 @@ class MenuBar(QMenuBar):
                                              filter="JSON files (*.json)")
         if dialog[0]:
             errors = self._saving_loading_controller.load_settings_from_file(
-                dialog[0])
+                    dialog[0])
             if not errors:
                 QMessageBox.information(self, "Project geladen",
                                         "Het project is succesvol geladen.")

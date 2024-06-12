@@ -24,6 +24,13 @@ class ExportController:
     _topic_modelling_controller: TopicModellingController = None
     document_topics: Document_topics = []
 
+    def is_topic_modelling_done(self) -> bool:
+        """Check if topic modeling has been run"""
+        try:
+            return self._graph_controller.get_number_of_topics() > 0
+        except RuntimeError:
+            return False
+
     def export_networks(self, path: str) -> None:
         """
         Exports networks to gexf file for all available nx exports
@@ -107,30 +114,34 @@ class ExportController:
 
         self.document_topics = document_topics
 
-    def export_document_topics_csv(self, path: str) -> None:
+    def export_document_topics_csv(self, path: str) -> list[str]:
         """
         Export documents related to topics to a CSV file.
         :param path: Path to the CSV file
-        :return: None
+        :return: List of error messages
         """
-        with open(path, 'w', newline='') as csvfile:
-            csv_writer = csv.writer(csvfile)
-            # Assume that Metadata has an attribute 'id' for document
-            # identifier
 
-            # Write header row with topic indices
-            header = ['Filename'] + ['Length'] + ['Author'] + ['Title'] + [
-                'Date'] + ['Path'] + [f'Topic {i + 1} Probability'
-                                      for i in range(
-                        len(self.document_topics[0][1]))]
-            csv_writer.writerow(header)
 
-            for metadata, probabilities in self.document_topics:
-                row = [metadata.name + "." + metadata.format,
-                       str(metadata.length), metadata.author,
-                       metadata.title, str(metadata.date),
-                       metadata.path] + probabilities
-                csv_writer.writerow(row)
+
+        errors = []
+        try:
+            with open(path, 'w', newline='') as csvfile:
+                csv_writer = csv.writer(csvfile)
+                header = ['Filename'] + ['Length'] + ['Author'] + ['Title'] + [
+                    'Date'] + ['Path'] + [f'Topic {i + 1} Probability'
+                                          for i in range(
+                            len(self.document_topics[0][1]))]
+                csv_writer.writerow(header)
+
+                for metadata, probabilities in self.document_topics:
+                    row = [metadata.name + "." + metadata.format,
+                           str(metadata.length), metadata.author,
+                           metadata.title, str(metadata.date),
+                           metadata.path] + probabilities
+                    csv_writer.writerow(row)
+        except Exception as e:
+            errors.append(f"Error exporting document topics to CSV: {repr(e)}")
+        return errors
 
     def set_controller_refs(
             self,
