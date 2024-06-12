@@ -2,7 +2,7 @@ import csv
 import os.path
 from os import stat
 from typing import Generator
-from datetime import date
+from datetime import datetime
 
 from tommy.controller.file_import import file_importer_base
 from tommy.controller.file_import.metadata import Metadata
@@ -66,14 +66,25 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
             row: dict
 
             row_index = 1  # Only used for debugging
+            errors = []
             for row in reader:
                 # Remove empty fields
                 for key, value in row.items():
-                    if value == "" or value.isspace():
-                        del row[key]
-
-                yield self.generate_file(row, path, row_index)
+                    if (not isinstance(value, str) or value == "" or
+                            value.isspace()):
+                        row[key] = None
+                try:
+                    yield self.generate_file(row, path, row_index)
+                except Exception as e:
+                    errors.append(e)
                 row_index += 1
+
+        if errors:
+            if len(errors) == 1:
+                raise errors[0]
+            else:
+                raise ExceptionGroup("Er zijn meerdere fouten opgetreden "
+                                     "bij het laden van het bestand: ", errors)
 
     def generate_file(self, file: dict, path: str, row_index: int) -> RawFile:
         """
@@ -87,16 +98,19 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
         containing metadata and the raw text of the file.
         """
         for key in self.mandatory_fields:
-            if key not in file or file[key] is None:
-                raise KeyError(f"er is een probleem opgetreden op rij "
-                               f"{row_index}", key)
+            if file.get(key) is None:
+                raise KeyError(f"De kolom '{key}' is verplicht, maar is niet "
+                               f"gevonden op rij {row_index}")
 
-        file_date: str = file.get("date")
-        if file_date is not None and not file_date.isspace():
-            file_date: date = self.parse_date(file_date)
+        file_date_str: str = file.get("date")
+        file_date: datetime = None if file_date_str is None else (
+            self.parse_date(file_date_str))
+        dict_title = file.get("title")
+        alt_title = os.path.basename(path).replace('.csv', '')
+        file_title = alt_title if dict_title is None else dict_title
         return RawFile(
             metadata=Metadata(author=file.get("author"),
-                              title=file.get("title"), date=file_date,
+                              title=file_title, date=file_date,
                               url=file.get("url"), path=os.path.relpath(path),
                               format="csv",
                               length=len(file.get("body").split(" ")),

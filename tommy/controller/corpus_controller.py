@@ -1,4 +1,5 @@
 import os
+import traceback
 from collections.abc import Generator, Iterable
 
 from gensim.corpora import Dictionary
@@ -109,15 +110,21 @@ class CorpusController:
                 except UnicodeDecodeError as e:
                     errors.append(f"Dit bestand kon niet worden gedecodeerd: "
                                   f"{file}. Probleem: {e}")
-
+                except ExceptionGroup as e:
+                    error_lines = "\n".join(str(error) for error in
+                                            e.exceptions)
+                    errors.append(f"Er zijn meerdere fouten opgetreden bij "
+                                  f"het laden van dit bestand: {file}. "
+                                  f"Problemen:\n{error_lines}")
                 except Exception as e:
-                    errors.append(f"er is een probleem opgetreden bij het "
+                    errors.append(f"Er is een probleem opgetreden bij het "
                                   f"laden van dit bestand: "
-                                  f" {file}. Probleem: {e}")
+                                  f" {file}. Probleem: "
+                                  f"{traceback.format_exception(e)}")
 
         if show_error and errors:
-            ErrorView("Er is een probleem opgetreden bij het importeren "
-                      "van de volgende bestanden:", errors)
+            ErrorView("Er is een probleem opgetreden bij het "
+                      "importeren van de volgende bestanden:", errors)
 
     def _read_files_from_input_folder(self) -> Generator[RawFile, None, None]:
         """
