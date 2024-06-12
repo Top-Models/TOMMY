@@ -1,12 +1,12 @@
-"""
-This file contains all constant variable, such as colour codes and fonts.
-"""
-
 import os
 
 from PySide6.QtGui import QFontDatabase
 
 from tommy.support.application_settings import application_settings
+
+"""
+This file contains all constant variable, such as colour codes and fonts.
+"""
 
 
 # Primary colour properties
@@ -43,21 +43,36 @@ medium_gray = "#666666"
 dark_gray = "#333333"
 darker_gray = "#222222"
 
+
 # Font properties
-source_sans_3_id = QFontDatabase.addApplicationFont(os.path.join(
-    application_settings.fonts_data_folder,
-    "Source_Sans_3",
-    "static",
-    "SourceSans3-Regular.ttf"))
-raleway_id = QFontDatabase.addApplicationFont(os.path.join(
-    application_settings.fonts_data_folder,
-    "Raleway",
-    "static",
-    "Raleway-Regular.ttf"))
-source_sans_3 = QFontDatabase.applicationFontFamilies(source_sans_3_id)[0]
-raleway = QFontDatabase.applicationFontFamilies(raleway_id)[0]
-text_font = f"'{source_sans_3}', Corbel"
-heading_font = f"{raleway}, 'Century Gothic'"
+source_sans_3 = ""
+raleway = ""
+#text_font = f"'{source_sans_3}', Corbel"
+#heading_font = f"{raleway}, 'Century Gothic'"
+#text_font = "Skia"
+#heading_font = "Skia"
+text_font = f"{source_sans_3}"
+heading_font = f"{raleway}"
+
+
+def initialize_fonts() -> None:
+    global source_sans_3, raleway
+
+    source_sans_3_id = QFontDatabase.addApplicationFont(os.path.join(
+        application_settings.fonts_data_folder,
+        "Source_Sans_3",
+        "static",
+        "SourceSans3-Regular.ttf"))
+    raleway_id = QFontDatabase.addApplicationFont(os.path.join(
+        application_settings.fonts_data_folder,
+        "Raleway",
+        "static",
+        "Raleway-Regular.ttf"))
+    source_sans_3 = QFontDatabase.applicationFontFamilies(source_sans_3_id)[0]
+    raleway = QFontDatabase.applicationFontFamilies(raleway_id)[0]
+    print(source_sans_3)
+    print(raleway)
+
 
 # Label properties
 label_height = 25

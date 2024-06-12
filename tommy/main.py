@@ -7,6 +7,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
 from tommy.main_window import MainWindow
+from tommy.support.constant_variables import initialize_fonts
 
 """This file is the program entry point."""
 
@@ -37,6 +38,9 @@ if __name__ == "__main__":
 
     # Set application name
     app.setApplicationDisplayName("TOMMY")
+
+    # Initialize application fonts
+    initialize_fonts()
 
     # Create and show main window
     window = MainWindow()
