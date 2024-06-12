@@ -1,4 +1,3 @@
-import string
 from itertools import product
 
 import networkx as nx
@@ -231,7 +230,7 @@ class GraphController:
                                "runner has finished running")
         return self._current_topic_runner.get_n_topics()
 
-    def get_model_type(self) -> string:
+    def get_model_type(self) -> str:
         """
         Get the model type in the topic modelling results
         :return: the model type in the topic modelling results
