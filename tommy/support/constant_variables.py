@@ -8,6 +8,7 @@ from tommy.support.application_settings import application_settings
 This file contains all constant variable, such as colour codes and fonts.
 """
 
+
 # Primary color properties
 prim_col_red = "#E40046"
 dark_prim_col_red = "#B3003C"
@@ -49,18 +50,18 @@ gwendolyn = ""
 text_font = ""
 heading_font = ""
 
-_font_db = QFontDatabase()
-
 # TODO: Check which fonts to actually use
-title_label_font = QFont("Source Sans 3", 14)
+title_label_font = QFont(f"Raleway", 13)  # Done
 
 
-def initialize_fonts() -> None:
+def initialize_fonts() -> None:  # TODO: remove Gwendolyn & print statements
     """
     Function to initialize the fonts.
     :return: None
     """
     global source_sans_3, raleway, text_font, heading_font, gwendolyn
+
+    _font_db = QFontDatabase()
 
     # Print path of the font files
     source_sans_path = os.path.join(
@@ -69,22 +70,19 @@ def initialize_fonts() -> None:
         "static",
         "SourceSans3-Regular.ttf"
     )
-    print(f"Source Sans 3 font path: {source_sans_path}")
 
     raleway_path = os.path.join(
         application_settings.fonts_data_folder,
         "Raleway",
         "static",
-        "Raleway-Regular.ttf"
+        "Raleway-Bold.ttf"
     )
-    print(f"Raleway font path: {raleway_path}")
 
     gwendolyn_path = os.path.join(
         application_settings.fonts_data_folder,
         "Gwendolyn",
         "Gwendolyn-Regular.ttf"
     )
-    print(f"Gwendolyn font path: {gwendolyn_path}")
 
     # Check if the font files exist
     if not os.path.isfile(source_sans_path):
@@ -134,8 +132,8 @@ def initialize_fonts() -> None:
         else:
             gwendolyn = gwendolyn_families[0]
 
-    text_font = source_sans_3
-    heading_font = raleway
+    text_font = source_sans_3  # Alternative for Corbel
+    heading_font = raleway  # Alternative for Century Gothic
 
     print(f"Loaded fonts: {source_sans_3}, {raleway}, {gwendolyn}")
 
