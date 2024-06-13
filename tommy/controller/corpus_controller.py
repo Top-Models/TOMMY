@@ -91,6 +91,8 @@ class CorpusController:
         :return: A generator yielding File
         objects
         """
+        if path == "":
+            return None
         errors = []
 
         for root, dirs, files in os.walk(path):
@@ -230,6 +232,16 @@ class CorpusController:
         :return: None
         """
         self._corpus_model.dictionary = dictionary
+
+    def metadata_exists(self) -> bool:
+        """
+        Check if the corpus exists
+
+        :return: True if the corpus exists, False otherwise
+        """
+        return self._corpus_model.metadata is not None and (
+                self._corpus_model.metadata != []
+        )
 
 
 """

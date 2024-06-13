@@ -11,21 +11,6 @@ class ApplicationSettings:
     default_config_name: str = "Config 1"
 
 
-def get_standard_input_folder() -> str:
-    """
-    Returns the standard location where input files will be expected
-    Note: this is a temporary hardcoded location for now.
-    :return: the standard location where input will be expected by the
-        application
-    """
-    # when run as an executable, we do not have a standard input folder
-    if hasattr(sys, '_MEIPASS'):
-        return ""
-
-    base_dir = get_base_dir()
-    return os.path.join(base_dir, "data", "corpora")
-
-
 def get_preprocessing_data_folder() -> str:
     """
     Returns the standard location where preprocessing data is stored
