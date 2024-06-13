@@ -1,12 +1,10 @@
-from tommy.support.application_settings import get_standard_input_folder
-
-
 class ProjectSettingsModel:
     """A class representing project settings."""
 
     def __init__(self) -> None:
-        # Set input_folder_path to "data" by default
-        self.input_folder_path: str = get_standard_input_folder()
+        # Don't load anything on startup, make the user select a folder
+        # themselves.
+        self.input_folder_path: str = ""
 
 
 """

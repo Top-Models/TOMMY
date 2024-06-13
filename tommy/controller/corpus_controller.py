@@ -91,6 +91,8 @@ class CorpusController:
         :return: A generator yielding File
         objects
         """
+        if path == "":
+            return None
         errors = []
 
         for root, dirs, files in os.walk(path):
