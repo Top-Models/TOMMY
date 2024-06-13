@@ -209,7 +209,7 @@ class TopicEntity(QFrame):
         :return: None
         """
         for word_entity in self.word_entities:
-            if word_entity.toPlainText() == word:
+            if word_entity.text() == word:
                 word_entity.selected = True
                 word_entity.setStyleSheet(
                     f"background-color: {background_color}; "
