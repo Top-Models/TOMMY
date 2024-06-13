@@ -169,14 +169,16 @@ class PreprocessingView(QScrollArea):
         input_text = self.synonym_tab.toPlainText()
         lines = input_text.lower().split('\n')
         synonyms = {words[0]: words[1] for words
-                    in map(str.split, lines) if len(words) == 2}
+                    in map(str.split, lines) if len(words) == 2}  # Change in map
         self._synonyms_controller.update_synonyms(synonyms)
 
-    def _update_blacklist_textbox(self, words: list[str]):
+    def _update_blacklist_textbox(self, words: list[str]) -> None:
+        """Update the blacklist textbox with the given words."""
         text = "\n".join(words)
         self.blacklist_tab.setText(text)
 
-    def _update_synonym_textbox(self, synonyms: dict[str, str]):
+    def _update_synonym_textbox(self, synonyms: dict[str, str]) -> None:
+        """Update the synonym textbox with the given synonyms."""
         text = "\n".join([f"{key} {value}" for key, value in synonyms.items()])
         self.synonym_tab.setText(text)
 
