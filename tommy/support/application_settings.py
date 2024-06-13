@@ -19,7 +19,7 @@ def get_preprocessing_data_folder() -> str:
         pipeline downloads)
     """
     if hasattr(sys, '_MEIPASS'):
-        base_dir = get_base_dir()
+        base_dir = os.path.join(get_base_dir(), "data")
     else:
         base_dir = os.path.join(get_base_dir(), "data")
 
@@ -33,7 +33,7 @@ def get_fonts_data_folder() -> str:
         application
     """
     if hasattr(sys, '_MEIPASS'):
-        base_dir = get_base_dir()
+        base_dir = os.path.join(get_base_dir(), "data")
     else:
         base_dir = os.path.join(get_base_dir(), "data")
 
