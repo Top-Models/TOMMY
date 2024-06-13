@@ -16,7 +16,7 @@ class WordTopicNxExporter(NxExporter):
     Note: this visualization is only to be used for exporting purposes
     """
     _required_interfaces = [TopicRunner]
-    name = 'Topics en woorden die daarbij horen'
+    name = 'Topics en woorden netwerk'
 
     def get_nx_graph(self,
                      topic_runner: TopicRunner | DocumentTopicsInterface

@@ -23,7 +23,7 @@ class DocumentTopicNxExporter(NxExporterOnData[ProcessedCorpus]):
     Note: this visualization is only to be used for exporting purposes
     """
     _required_interfaces = [DocumentTopicsInterface, TopicRunner]
-    name = 'Topics en documenten die daar ten minste 5% bij horen'
+    name = 'Topics en documenten netwerk'
 
     @property
     def input_data_type(self) -> TypeAliasType:
