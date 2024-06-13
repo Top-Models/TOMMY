@@ -19,6 +19,8 @@ class PreprocessingController:
     _synonyms_model: SynonymsModel = None
 
     def __init__(self) -> None:
+        self._pos_categories = None
+        self._entity_categories = None
         self._nlp = None
         self._enable_pos: bool
         self.language_controller = None
@@ -73,7 +75,8 @@ class PreprocessingController:
                                    "MONEY", "QUANTITY", "ORDINAL", "CARDINAL"}
         self._pos_categories = {"NOUN", "PROPN", "ADJ", "ADV", "VERB"}
 
-    def set_model_refs(self, stopwords_model: StopwordsModel, synonyms_model: SynonymsModel) -> None:
+    def set_model_refs(self, stopwords_model: StopwordsModel,
+                       synonyms_model: SynonymsModel) -> None:
         self._stopwords_model = stopwords_model
         self._synonyms_model = synonyms_model
 
@@ -120,9 +123,6 @@ class PreprocessingController:
         lemmas = [lemma.lower() for lemma in lemmas if len(lemma) > 3]
         # TODO: fine-grain abbreviation filtering (i.e. don't exclude every
         #  token under 4 characters)
-
-        # TODO: fix "-" and "'" words and remove diacritical marks
-        #  (i.e. character 'normalization')
 
         lemmas = self.apply_synonyms(lemmas)
         lemmas = self.filter_stopwords(lemmas)
