@@ -231,6 +231,14 @@ class CorpusController:
         """
         self._corpus_model.dictionary = dictionary
 
+    def metadata_available(self) -> bool:
+        """
+        Check if the metadata is available in the corpus model
+
+        :return: True if metadata is available, False otherwise
+        """
+        return bool(self._corpus_model.metadata)
+
 
 """
 This program has been developed by students from the bachelor Computer Science
