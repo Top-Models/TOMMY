@@ -15,7 +15,11 @@ from tommy.support.constant_variables import (heading_font, prim_col_red,
                                               selected_medium_light_gray,
                                               seco_col_blue,
                                               hover_seco_col_blue,
-                                              pressed_seco_col_blue)
+                                              pressed_seco_col_blue,
+                                              title_label_font,
+                                              config_button_font,
+                                              config_view_button,
+                                              config_view_label_font)
 
 
 class ConfigView(QDialog):
@@ -75,14 +79,17 @@ class ConfigView(QDialog):
         add_button = QPushButton("Toevoegen")
         add_button.clicked.connect(self.add_configuration)
         add_button.setStyleSheet(button_stylesheet)
+        add_button.setFont(config_view_button)
         self.buttons_layout.addWidget(add_button)
 
         delete_button = QPushButton("Verwijderen")
+        delete_button.setFont(config_view_button)
         delete_button.clicked.connect(self.delete_configuration)
         delete_button.setStyleSheet(button_stylesheet)
         self.buttons_layout.addWidget(delete_button)
 
         load_button = QPushButton("Laden")
+        load_button.setFont(config_view_button)
         load_button.clicked.connect(self.load_configuration)
         load_button.setStyleSheet(button_stylesheet)
         self.buttons_layout.addWidget(load_button)
@@ -134,6 +141,7 @@ class ConfigView(QDialog):
         :return: None
         """
         self.title_label = QLabel("Configuraties")
+        self.title_label.setFont(title_label_font)
         self.title_label.setStyleSheet(f"font-size: 13px;"
                                        f"font-family: {heading_font};"
                                        f"font-weight: bold;"
@@ -158,6 +166,7 @@ class ConfigView(QDialog):
                 # TODO: change the style of this item to communicate to the
                 #  user that this is the selected config
                 item = QListWidgetItem(name)
+                item.setFont(config_view_label_font)
                 self.config_list_widget.addItem(item)
             else:
                 self.config_list_widget.addItem(name)

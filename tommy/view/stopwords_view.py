@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (QScrollArea, QTabWidget,
 
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.support.constant_variables import (
-    text_font)
+    text_font, stopwords_tab_font, stopwords_text_edit_font)
 
 
 class StopwordsView(QScrollArea):
@@ -76,8 +76,10 @@ class StopwordsView(QScrollArea):
                     height: 0px; 
                 }}
                    """)
+
         # Initialize container for all elements
         self.container = QTabWidget()
+        self.container.tabBar().setFont(stopwords_tab_font)
 
         # Initialize tabs
         tab_style = (f"""
@@ -96,8 +98,10 @@ class StopwordsView(QScrollArea):
         # self.stopwords_tab = QWidget()
         # self.stopwords_tab.setStyleSheet(tab_style)
         self.blacklist_tab = QTextEdit()
+        self.blacklist_tab.setFont(stopwords_text_edit_font)
         self.blacklist_tab.setStyleSheet(tab_style)
         self.synonym_tab = QTextEdit()
+        self.synonym_tab.setFont(stopwords_text_edit_font)
         self.synonym_tab.setStyleSheet(tab_style)
 
         # Set container as the focal point

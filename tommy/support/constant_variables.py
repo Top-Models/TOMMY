@@ -45,7 +45,6 @@ darker_gray = "#222222"
 # Font properties
 source_sans_3 = ""
 raleway = ""
-gwendolyn = ""
 text_font = ""
 heading_font = ""
 
@@ -54,15 +53,33 @@ title_label_font = QFont(f"Century Gothic, Raleway", 13)
 apply_button_font = QFont(f"Century Gothic, Raleway", 12)
 collapse_button_font = QFont(f"Raleway", 12)
 config_button_font = QFont(f"Raleway", 12)
-file_label_font = QFont(f"Source Sans 3", 12)
+file_label_font = QFont(f"Corbel, Source Sans 3", 12)
+plot_tab_font = QFont(f"Corbel, Source Sans 3", 15)
+stopwords_tab_font = QFont(f"Corbel, Source Sans 3", 15)
+stopwords_text_edit_font = QFont(f"Corbel, Source Sans 3", 12)
+settings_header_font = QFont(f"Corbel, Source Sans 3", 15)
+settings_label_font = QFont(f"Corbel, Source Sans 3", 12)
+file_name_label_font = QFont(f"Century Gothic, Source Sans 3", 15)
+file_property_font = QFont(f"Corbel, Source Sans 3", 12)
+no_component_selected_font = QFont(f"Corbel, Source Sans 3", 15)
+topic_title_font = QFont(f"Century Gothic, Raleway", 15)
+topic_word_font = QFont(f"Corbel, Source Sans 3", 12)
+topic_entity_label_font = QFont(f"Century Gothic, Raleway", 15)
+topic_entity_word_font = QFont(f"Corbel, Source Sans 3", 12)
+topic_number_font = QFont(f"Century Gothic, Raleway", 12)
+config_view_button = QFont(f"Corbel, Source Sans 3", 15)
+config_view_label_font = QFont(f"Corbel, Source Sans 3", 15)
+error_description_label_font = QFont(f"Corbel, Source Sans 3", 16)
+error_label_font = QFont(f"Corbel, Source Sans 3", 14)
+error_heading_font = QFont(f"Century Gothic, Raleway", 20)
 
 
-def initialize_fonts() -> None:  # TODO: remove Gwendolyn & print statements
+def initialize_fonts() -> None:
     """
     Function to initialize the fonts.
     :return: None
     """
-    global source_sans_3, raleway, text_font, heading_font, gwendolyn
+    global source_sans_3, raleway, text_font, heading_font
 
     _font_db = QFontDatabase()
 
@@ -78,13 +95,7 @@ def initialize_fonts() -> None:  # TODO: remove Gwendolyn & print statements
         application_settings.fonts_data_folder,
         "Raleway",
         "static",
-        "Raleway-Bold.ttf"
-    )
-
-    gwendolyn_path = os.path.join(
-        application_settings.fonts_data_folder,
-        "Gwendolyn",
-        "Gwendolyn-Regular.ttf"
+        "Raleway-ExtraBold.ttf"
     )
 
     # Check if the font files exist
@@ -94,10 +105,6 @@ def initialize_fonts() -> None:  # TODO: remove Gwendolyn & print statements
 
     if not os.path.isfile(raleway_path):
         print(f"Raleway font file not found at {raleway_path}")
-        return
-
-    if not os.path.isfile(gwendolyn_path):
-        print(f"Gwendolyn font file not found at {gwendolyn_path}")
         return
 
     # Load Source Sans 3
@@ -122,18 +129,6 @@ def initialize_fonts() -> None:  # TODO: remove Gwendolyn & print statements
             print("No font families found for Raleway.")
         else:
             raleway = raleway_families[0]
-
-    # Load Gwendolyn
-    gwendolyn_id = _font_db.addApplicationFont(gwendolyn_path)
-    if gwendolyn_id == -1:
-        print("Failed to load Gwendolyn font.")
-    else:
-        gwendolyn_families = _font_db.applicationFontFamilies(
-            gwendolyn_id)
-        if not gwendolyn_families:
-            print("No font families found for Gwendolyn.")
-        else:
-            gwendolyn = gwendolyn_families[0]
 
     text_font = source_sans_3  # Alternative for Corbel
     heading_font = raleway  # Alternative for Century Gothic

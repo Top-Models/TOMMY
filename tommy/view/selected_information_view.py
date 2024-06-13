@@ -8,7 +8,9 @@ from tommy.controller.model_parameters_controller import (
 from tommy.support.constant_variables import (
     heading_font,
     prim_col_red, hover_prim_col_red, scrollbar_style, text_font,
-    title_label_font)
+    title_label_font, settings_label_font, file_name_label_font,
+    file_property_font, no_component_selected_font, topic_title_font,
+    topic_word_font)
 from tommy.view.imported_files_view.file_label import FileLabel
 
 
@@ -102,6 +104,7 @@ class SelectedInformationView(QScrollArea):
 
         # Add label
         no_file_selected_label = QLabel("Geen component\ngeselecteerd")
+        no_file_selected_label.setFont(no_component_selected_font)
         no_file_selected_label.setStyleSheet("font-size: 20px;"
                                              f"font-family: {text_font};")
         no_file_selected_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -163,10 +166,9 @@ class SelectedInformationView(QScrollArea):
         # Add file name
         file_name = file_metadata.name.split("/")[-1]
         file_name_label = QLabel(f"{file_name}")
-        file_name_label.setStyleSheet(f"font-size: 18px;"
-                                      f"font-family: {heading_font};"
-                                      f"font-weight: bold;"
+        file_name_label.setStyleSheet(f"font-weight: bold;"
                                       f"text-transform: uppercase;")
+        file_name_label.setFont(file_name_label_font)
         file_name_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignTop)
         file_name_label.setMinimumHeight(30)
@@ -174,6 +176,7 @@ class SelectedInformationView(QScrollArea):
 
         # Add file path
         file_path_label = QLabel(f"Pad: {file_metadata.path}")
+        file_path_label.setFont(file_property_font)
         file_path_label.setStyleSheet("font-size: 16px;")
         file_path_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignTop)
@@ -182,6 +185,7 @@ class SelectedInformationView(QScrollArea):
 
         # Add file format
         file_format_label = QLabel(f"Formaat: {file_metadata.format}")
+        file_format_label.setFont(file_property_font)
         file_format_label.setStyleSheet("font-size: 16px;")
         file_format_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                        Qt.AlignmentFlag.AlignTop)
@@ -190,6 +194,7 @@ class SelectedInformationView(QScrollArea):
 
         # Add word amount
         word_amount_label = QLabel(f"Aantal woorden: {file_metadata.length}")
+        word_amount_label.setFont(file_property_font)
         word_amount_label.setStyleSheet("font-size: 16px;")
         word_amount_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                        Qt.AlignmentFlag.AlignTop)
@@ -198,6 +203,7 @@ class SelectedInformationView(QScrollArea):
 
         # Add file size
         file_size_label = QLabel(f"Grootte: {file_metadata.size}B")
+        file_size_label.setFont(file_property_font)
         file_size_label.setStyleSheet("font-size: 16px;")
         file_size_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignTop)
@@ -237,6 +243,7 @@ class SelectedInformationView(QScrollArea):
         # Add topic name
         topic_name = topic_entity.topic_name
         topic_name_label = QLabel(f"{topic_name}")
+        topic_name_label.setFont(topic_title_font)
         topic_name_label.setStyleSheet(f"font-size: 18px;"
                                        f"font-family: {heading_font};"
                                        f"font-weight: bold;"
@@ -250,6 +257,7 @@ class SelectedInformationView(QScrollArea):
         for word_entity in topic_entity.word_entities:
             word_label = QLabel(f"{word_entity.word}")
             word_label.setStyleSheet(f"font-size: 16px;")
+            word_label.setFont(topic_word_font)
             word_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                     Qt.AlignmentFlag.AlignTop)
             # Make sure word_label is always big enough
@@ -297,6 +305,7 @@ class SelectedInformationView(QScrollArea):
                                      f"font-family: {heading_font};"
                                      f"font-weight: bold;"
                                      f"text-transform: uppercase;")
+        run_name_label.setFont(settings_label_font)
         run_name_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                     Qt.AlignmentFlag.AlignTop)
         run_name_label.setMinimumHeight(20)
@@ -305,6 +314,7 @@ class SelectedInformationView(QScrollArea):
         # Display model type
         model_type_label = QLabel(f"Model type: {model_type}")
         model_type_label.setStyleSheet("font-size: 16px;")
+        model_type_label.setFont(settings_label_font)
         model_type_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                       Qt.AlignmentFlag.AlignTop)
         model_type_label.setMinimumHeight(20)
@@ -312,6 +322,7 @@ class SelectedInformationView(QScrollArea):
 
         # Display topic amount
         topic_amount_label = QLabel(f"Aantal topics: {topic_amount}")
+        topic_amount_label.setFont(settings_label_font)
         topic_amount_label.setStyleSheet("font-size: 16px;")
         topic_amount_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                         Qt.AlignmentFlag.AlignTop)

@@ -8,7 +8,8 @@ from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 from tommy.support.constant_variables import (
     text_font, seco_col_blue, disabled_gray, heading_font, hover_seco_col_blue,
-    pressed_seco_col_blue, config_button_font)
+    pressed_seco_col_blue, config_button_font, settings_header_font,
+    settings_label_font)
 from tommy.support.model_type import ModelType
 from tommy.support.parameter_limits import num_topics_min_value, \
     num_topics_max_value, amount_of_words_min_value, amount_of_words_max_value
@@ -115,6 +116,7 @@ class AbstractSettings:
                                    f"font-family: {heading_font};"
                                    f"color: black;"
                                    f"font-family: {text_font};")
+        header_label.setFont(settings_header_font)
         self._scroll_layout.addWidget(header_label)
 
     def add_margin(self, height: int) -> None:
@@ -167,6 +169,7 @@ class AbstractSettings:
         self.config_management_label.setAlignment(
             Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
         )
+        self.config_management_label.setFont(settings_label_font)
         container_layout.addWidget(self.config_management_label)
 
         # Add a horizontal spacer to push the button to the right
@@ -224,6 +227,7 @@ class AbstractSettings:
 
         # Add label
         topic_label = QLabel("Aantal topics:")
+        topic_label.setFont(settings_label_font)
         topic_label.setStyleSheet(f"font-size: 16px;"
                                   f"color: black;"
                                   f"font-family: {text_font};")
@@ -249,6 +253,7 @@ class AbstractSettings:
 
         # Add input field
         self._topic_amount_field = QLineEdit()
+        self._topic_amount_field.setFont(settings_label_font)
         self._topic_amount_field.setFixedWidth(100)
         self._topic_amount_field.setStyleSheet(self.topic_input_layout_valid)
         # QIntValidator prevents user from typing
@@ -256,6 +261,7 @@ class AbstractSettings:
         self._topic_amount_field.setValidator(QIntValidator(
             num_topics_min_value, num_topics_max_value))
         self._topic_amount_field.setPlaceholderText("Voer aantal topics in")
+        self._topic_amount_field.setFont(settings_label_font)
         self._topic_amount_field.setStyleSheet(self.topic_input_layout_valid)
         self._topic_amount_field.setAlignment(Qt.AlignmentFlag.AlignLeft)
         topic_amount_layout.addWidget(self._topic_amount_field)
@@ -327,6 +333,7 @@ class AbstractSettings:
         topic_words_label.setStyleSheet(f"font-size: 16px;"
                                         f"color: black;"
                                         f"font-family: {text_font};")
+        topic_words_label.setFont(settings_label_font)
         topic_words_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                        Qt.AlignmentFlag.AlignVCenter)
         topic_words_layout.addWidget(topic_words_label)
@@ -336,6 +343,7 @@ class AbstractSettings:
         self._amount_of_words_field.setFixedWidth(100)
         self._amount_of_words_field.setPlaceholderText("Voer aantal "
                                                        "woorden in")
+        self._amount_of_words_field.setFont(settings_label_font)
         self._amount_of_words_field.setStyleSheet(
             self.enabled_input_stylesheet)
         self._amount_of_words_field.setAlignment(Qt.AlignmentFlag.AlignLeft)
@@ -413,6 +421,7 @@ class AbstractSettings:
         algorithm_label.setStyleSheet(f"font-size: 16px;"
                                       f"color: black;"
                                       f"font-family: {text_font};")
+        algorithm_label.setFont(settings_label_font)
         algorithm_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignVCenter)
         algorithm_layout.addWidget(algorithm_label)
@@ -423,6 +432,7 @@ class AbstractSettings:
         self._algorithm_field.addItem("LDA")
         self._algorithm_field.addItem("NMF")
         self._algorithm_field.addItem("BERTopic")
+        self._algorithm_field.setFont(settings_label_font)
 
         # Try to disconnect the algorithm_field_changed_event method, otherwise
         # endless recursion
@@ -473,12 +483,14 @@ class AbstractSettings:
                                      f"font-family: {text_font};")
         language_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                     Qt.AlignmentFlag.AlignVCenter)
+        language_label.setFont(settings_label_font)
         language_layout.addWidget(language_label)
 
         # Add input field
         self._language_field.setFixedWidth(100)
         self._language_field.addItem("Nederlands")
         self._language_field.addItem("Engels")
+        self._language_field.setFont(settings_label_font)
 
         # Try to disconnect the algorithm_field_changed_event method, otherwise
         # endless recursion
