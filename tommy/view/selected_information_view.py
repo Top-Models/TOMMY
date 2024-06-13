@@ -277,7 +277,7 @@ class SelectedInformationView(QScrollArea):
             topic_amount: int = (
                 self._graph_controller.get_number_of_topics())
             model_type: str = (
-                self._model_parameters_controller.get_model_type().name)
+                self._graph_controller.get_model_type())
         except RuntimeError:
             self.display_no_component_selected()
             return

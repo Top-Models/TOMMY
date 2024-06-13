@@ -163,8 +163,6 @@ class ConfigView(QDialog):
         selected_config = self.config_controller.get_selected_configuration()
         for name in configurations:
             if name == selected_config:
-                # TODO: change the style of this item to communicate to the
-                #  user that this is the selected config
                 item = QListWidgetItem(name)
                 item.setFont(config_view_label_font)
                 self.config_list_widget.addItem(item)
@@ -173,8 +171,13 @@ class ConfigView(QDialog):
 
     def add_configuration(self) -> None:
         """Method to add a new configuration"""
-        name, ok = QInputDialog.getText(self, "Voer Configuratie Naam In",
-                                        "Naam:")
+        dialog = QInputDialog(self)
+        dialog.setStyleSheet("color: black;")
+        dialog.setWindowTitle("Voer Configuratie Naam In")
+        dialog.setLabelText("Naam:")
+        ok = dialog.exec_()
+        name = dialog.textValue()
+
         if ok:
             success = self.config_controller.add_configuration(name)
             if success:
@@ -191,13 +194,17 @@ class ConfigView(QDialog):
         selected_items = self.config_list_widget.selectedItems()
         if selected_items:
             selected_item = selected_items[0]
-            confirmation = QMessageBox.question(
-                self, "Verwijder Configuratie",
+            confirmation = QMessageBox(self)
+            confirmation.setWindowTitle("Verwijder Configuratie")
+            confirmation.setText(
                 f"Weet u zeker dat u de configuratie "
-                f"'{selected_item.text()}' wilt verwijderen?",
-                QMessageBox.Yes | QMessageBox.No
-            )
-            if confirmation == QMessageBox.Yes:
+                f"'{selected_item.text()}' wilt verwijderen?")
+            confirmation.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            confirmation.setStyleSheet(
+                "QLabel{color: black;} QPushButton{color: black;}")
+            user_choice = confirmation.exec_()
+
+            if user_choice == QMessageBox.Yes:
                 success = self.config_controller.delete_configuration(
                     selected_item.text())
                 if success:

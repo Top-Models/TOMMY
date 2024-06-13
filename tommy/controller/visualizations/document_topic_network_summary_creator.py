@@ -27,7 +27,7 @@ class DocumentTopicNetworkSummaryCreator(AbstractVisualization):
     matplotlib figure.
     """
     _required_interfaces = [DocumentTopicsInterface, TopicRunner]
-    name = 'Topics en documenten die daar ten minste 5% bij horen'
+    name = 'Topics en documenten die daar 5+% bij horen'
     short_tab_name = 'Doc. Netwerk'
     vis_group = VisGroup.MODEL
     needed_input_data = [VisInputData.PROCESSED_CORPUS]
