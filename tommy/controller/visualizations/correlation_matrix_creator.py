@@ -57,6 +57,7 @@ class CorrelationMatrixCreator(AbstractVisualization):
 
         # Construct the correlations matrix adding colors
         data = ax.imshow(correlation_matrix, cmap='RdBu_r',
+                         vmin=0, vmax=1,
                          origin='lower')
 
         # Add a color bar to the plot
