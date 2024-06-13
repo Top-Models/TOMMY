@@ -56,19 +56,18 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                              in zip(mandatory_fields_counts,
                                     self.mandatory_fields)
                              if count > 1]
-        errors = []
-        if missing_headers:
-            errors.append(ValueError(f"CSV bestand mist de volgende verplichte"
-                                     f" headers: {missing_headers}"))
-        if duplicate_headers:
-            errors.append(ValueError(f"CSV bestand heeft de volgende duplicate"
-                                     f" headers: {duplicate_headers}"))
 
-        if len(errors) > 1:
-            raise ExceptionGroup("Er zijn problemen met de headers in "
-                                 "het CSV bestand: ", errors)
-        if len(errors) == 1:
-            raise errors[0]
+        if missing_headers and duplicate_headers:
+            raise ValueError(f"CSV bestand mist de volgende verplichte"
+                             f" headers: {missing_headers}\n"
+                             f"En heeft de volgende duplicate headers: "
+                             f"{duplicate_headers}")
+        if missing_headers:
+            raise ValueError(f"CSV bestand mist de volgende verplichte"
+                             f" headers: {missing_headers}")
+        if duplicate_headers:
+            raise ValueError(f"CSV bestand heeft de volgende duplicate"
+                             f" headers: {duplicate_headers}")
 
     def load_file(self, path: str) -> Generator[RawFile, None, None]:
         """
