@@ -34,10 +34,9 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
         if not path.endswith('.csv'):
             return False
 
-        headers = []
         with open(path, 'r', newline="", encoding='utf-8-sig') as csvfile:
             csv_reader = csv.DictReader(csvfile, delimiter=',')
-            headers = csv_reader.fieldnames
+
             # To check whether each mandatory header exists and is unique,
             # we keep an array of occurrences of all mandatory headers
             mandatory_fields_counts = [0] * len(self.mandatory_fields)
@@ -49,8 +48,27 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
             if mandatory_fields_counts == [1] * len(self.mandatory_fields):
                 return True
 
-        raise ValueError("CSV bestand heeft niet alle verplichte headers, "
-                         f"of te veel headers. Headers: {headers}")
+        missing_headers = [header for count, header
+                           in zip(mandatory_fields_counts,
+                                  self.mandatory_fields)
+                           if count == 0]
+        duplicate_headers = [header for count, header
+                             in zip(mandatory_fields_counts,
+                                    self.mandatory_fields)
+                             if count > 1]
+        errors = []
+        if missing_headers:
+            errors.append(ValueError(f"CSV bestand mist de volgende verplichte"
+                                     f" headers: {missing_headers}"))
+        if duplicate_headers:
+            errors.append(ValueError(f"CSV bestand heeft de volgende duplicate"
+                                     f" headers: {duplicate_headers}"))
+
+        if len(errors) > 1:
+            raise ExceptionGroup("Er zijn problemen met de headers in "
+                                 "het CSV bestand: ", errors)
+        if len(errors) == 1:
+            raise errors[0]
 
     def load_file(self, path: str) -> Generator[RawFile, None, None]:
         """
