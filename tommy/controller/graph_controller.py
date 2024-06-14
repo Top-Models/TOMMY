@@ -150,7 +150,6 @@ class GraphController:
         """
         self._corpus_controller = corpus_controller
         self._topic_modelling_controller = topic_modelling_controller
-        self._project_settings_controller = project_settings_controller
 
         topic_modelling_controller.model_trained_event.subscribe(
             self.on_new_topic_runner)
