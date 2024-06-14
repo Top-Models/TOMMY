@@ -36,7 +36,6 @@ class WelcomeScreen(AbstractVisualization):
 
         # Import the image
         image_path = os.path.abspath('../assets/tommy_welcome_screen.png')
-        print(image_path)
         image = plt.imread(image_path)
 
         # Create the figure

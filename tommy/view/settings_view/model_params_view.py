@@ -290,8 +290,19 @@ class ModelParamsView(QScrollArea):
                 }}
             """)
 
+        # Apply the settings
         if current_view.all_fields_valid():
+            self.disable_input_fields_on_model_training()
             self._topic_modelling_controller.train_model()
+
+    def disable_input_fields_on_model_training(self) -> None:
+        """
+        Disable the input fields when the model is training.
+
+        :return: None
+        """
+        current_view = self.get_current_settings_view()
+        current_view.disable_input_fields_on_model_training()
 
     def _reset_apply_button_on_model_trained(self) -> None:
         """
@@ -299,6 +310,10 @@ class ModelParamsView(QScrollArea):
         complete.
         :return: None
         """
+        current_view = self.get_current_settings_view()
+        current_view.enable_input_fields_on_model_trained()
+
+        # Change the apply button back to its original state
         self.apply_button.setEnabled(True)
         self.apply_button.setText("TOEPASSEN")
         self.apply_button.setStyleSheet(
