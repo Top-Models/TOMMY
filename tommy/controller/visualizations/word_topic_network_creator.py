@@ -34,6 +34,7 @@ class WordTopicNetworkCreator(AbstractVisualization):
         """
         # Construct a plot and graph
         fig = plt.figure()
+        plt.title(self.name, pad=25)
         graph = self.construct_word_topic_network(topic_runner, 15)
 
         # Get the scale factor used for the displayed edge weight (width)
