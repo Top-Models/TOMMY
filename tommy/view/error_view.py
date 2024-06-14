@@ -4,7 +4,8 @@ from PySide6.QtWidgets import QMessageBox, QScrollArea, QWidget, QVBoxLayout, \
     QLabel
 
 from tommy.support.constant_variables import heading_font, text_font, \
-    prim_col_red, seco_col_blue, hover_seco_col_blue, pressed_seco_col_blue
+    prim_col_red, seco_col_blue, hover_seco_col_blue, pressed_seco_col_blue, \
+    scrollbar_style
 
 
 class ErrorView(QMessageBox):
@@ -41,7 +42,7 @@ class ErrorView(QMessageBox):
             QPushButton:pressed {{
                 background-color: {pressed_seco_col_blue};
             }}
-        """)
+        """ + scrollbar_style)
 
         # Create a QWidget to hold the custom layout
         custom_widget = QWidget()
