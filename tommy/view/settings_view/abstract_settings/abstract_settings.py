@@ -1,3 +1,5 @@
+import sys
+
 from PySide6.QtGui import QIntValidator, Qt
 from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, QVBoxLayout, \
     QWidget, QSizePolicy, QPushButton
@@ -425,7 +427,12 @@ class AbstractSettings:
         self._algorithm_field.setFixedWidth(100)
         self._algorithm_field.addItem("LDA")
         self._algorithm_field.addItem("NMF")
-        self._algorithm_field.addItem("BERTopic")
+
+        # BERTopic has issues with PyInstaller
+        # For this reason, BERTopic is only available when running via Python
+        # Like this, the field becomes unavailable when running via PyInstaller
+        if not getattr(sys, 'frozen', False):
+            self._algorithm_field.addItem("BERTopic")
 
         # Try to disconnect the algorithm_field_changed_event method, otherwise
         # endless recursion
