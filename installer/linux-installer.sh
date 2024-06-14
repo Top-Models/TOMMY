@@ -18,6 +18,8 @@ pyinstaller \
 --icon "assets/tommy.svg" \
 --add-data "${DATA_FOLDER_PATH}/:./data" \
 --hidden-import "pkg_resources.extern" \
+--exclude tkinter --exclude _tkinter \
+--exclude-module torch \
 tommy/main.py
 
 echo "> You can find the application in the dist folder"
