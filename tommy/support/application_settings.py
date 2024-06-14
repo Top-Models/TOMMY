@@ -25,6 +25,18 @@ def get_preprocessing_data_folder() -> str:
     return os.path.join(base_dir, "preprocessing_data")
 
 
+def get_assets_folder() -> str:
+    """
+    Returns the standard location where assets are stored
+    :return: the standard location where assets are stored
+    """
+    if hasattr(sys, '_MEIPASS'):
+        base_dir = get_base_dir()
+    else:
+        base_dir = os.path.dirname(get_base_dir())
+    return os.path.join(base_dir, "assets")
+
+
 def get_base_dir() -> str:
     """
     Returns the current working directory
