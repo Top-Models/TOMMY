@@ -47,16 +47,11 @@ class CorrelationMatrixCreator(AbstractVisualization):
         correlation_matrix = topic_runner.get_correlation_matrix(
             n_words_to_process=30)
 
-        # Normalize the correlation matrix to have values between 0 and 1
-        correlation_matrix = (correlation_matrix - np.min(
-            correlation_matrix)) / (np.max(correlation_matrix) - np.min(
-            correlation_matrix))
-
         # Construct a plot and axes
         fig, ax = plt.subplots()
 
         # Construct the correlations matrix adding colors
-        data = ax.imshow(correlation_matrix, cmap='RdBu_r',
+        data = ax.imshow(correlation_matrix, cmap='Blues',
                          vmin=0, vmax=1,
                          origin='lower')
 
