@@ -30,6 +30,7 @@ from tommy.controller.visualizations.sum_topics_in_documents import \
     SumTopicsInDocuments
 from tommy.controller.visualizations.top_words_bar_plot_creator import (
     TopWordsBarPlotCreator)
+from tommy.controller.visualizations.welcome_screen import WelcomeScreen
 from tommy.controller.visualizations.word_cloud_creator import WordCloudCreator
 from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
@@ -79,7 +80,8 @@ class GraphController:
         DocumentTopicNetworkSummaryCreator(),
         WordCloudCreator(),
         TopWordsBarPlotCreator(),
-        DocumentsOverTimePerTopicCreator()
+        DocumentsOverTimePerTopicCreator(),
+        WelcomeScreen()
     ]
     _possible_visualizations: list[PossibleVisualization] | None = None
 
@@ -282,9 +284,6 @@ class GraphController:
             in enumerate(self.NX_EXPORTS)
             if exporter.is_possible(self._current_topic_runner)
         ]
-
-        if not bool(self._possible_visualizations):
-            self._show_welcome_screen()
 
     def _get_nx_export(self, vis_index: int) -> nx.Graph:
         """
@@ -518,11 +517,6 @@ class GraphController:
         :return: True if there are visualizations available, False otherwise
         """
         return self._current_topic_runner is not None
-
-    def _show_welcome_screen(self) -> None:
-        """Show a welcome screen with a button to select an input folder if no
-        visualizations are available"""
-        pass
 
 
 """
