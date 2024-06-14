@@ -81,15 +81,20 @@ class AbstractVisualization(ABC):
         :return: The matplotlib figure showing the requested visualization
         """
 
-    def is_possible(self, topic_runner: TopicRunner) -> bool:
+    def is_possible(self, metadata_available: bool,
+                    topic_runner: TopicRunner) -> bool:
         """
         Test whether the topic runner implements the necessary interfaces
         for this visualization type
+        :param metadata_available: whether metadata is available
         :param topic_runner: the topic runner to check interfaces from
         :return: True iff the visualization is possible on given topic runner
         """
-        return all(isinstance(topic_runner, requirement)
-                   for requirement in self._required_interfaces)
+        return (all(isinstance(topic_runner, requirement)
+                    for requirement in self._required_interfaces)
+                and (VisInputData.METADATA_CORPUS not in self.needed_input_data
+                     or metadata_available
+                     ))
 
     def delete_cache(self):
         """Delete all cached figures"""

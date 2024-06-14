@@ -24,6 +24,7 @@ from tommy.controller.topic_modelling_runners.bertopic_runner import (
 from tommy.support.event_handler import EventHandler
 from tommy.support.types import Document_topics, Processed_body
 from tommy.support.async_worker import Worker
+from tommy.view.error_view import ErrorView
 
 
 class TopicModellingController:
@@ -119,6 +120,19 @@ class TopicModellingController:
             self._calculate_document_topics_event.publish(
                 self._topic_model.document_topics)
 
+        if self._corpus_controller.metadata_available() is False:
+            ErrorView("Er is geen data beschikbaar om een model op te "
+                      "trainen. Zorg ervoor dat er een map met ondersteunde "
+                      "bestanden is ingeladen. De ondersteunde bestandstypen "
+                      "zijn:", ["pdf", "docx",
+                                "csv, zorg ervoor dat de tekst die je wilt "
+                                "analyseren in een kolom staat die als header "
+                                "'body' heeft. Voor meer informatie zie de "
+                                "website <a href='tommy.fyor.nl'>"
+                                "tommy.fyor.nl</a>"])
+            model_trained_callback()
+            return
+
         match new_model_type:
             case ModelType.LDA:
                 self._worker = Worker(self._train_lda)
@@ -179,11 +193,11 @@ class TopicModellingController:
         num_topics = self._model_parameters_controller.get_model_n_topics()
 
         self._config_model.topic_runner = NmfRunner(
-                topic_model=self._topic_model,
-                processed_corpus=corpus,
-                current_corpus_version_id=
-                self._corpus_controller.corpus_version_id,
-                num_topics=num_topics)
+            topic_model=self._topic_model,
+            processed_corpus=corpus,
+            current_corpus_version_id=
+            self._corpus_controller.corpus_version_id,
+            num_topics=num_topics)
 
     def _train_bert(self) -> None:
         """
