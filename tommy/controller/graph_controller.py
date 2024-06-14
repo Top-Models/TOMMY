@@ -66,6 +66,7 @@ class GraphController:
     """
     _topic_modelling_controller: TopicModellingController = None
     _corpus_controller: CorpusController = None
+    _project_settings_controller: ProjectSettingsController = None
 
     # Visualization Creators
     VISUALIZATIONS: list[AbstractVisualization] = [
@@ -147,6 +148,7 @@ class GraphController:
         """
         self._corpus_controller = corpus_controller
         self._topic_modelling_controller = topic_modelling_controller
+        self._project_settings_controller = project_settings_controller
 
         topic_modelling_controller.model_trained_event.subscribe(
             self.on_new_topic_runner)
@@ -280,6 +282,9 @@ class GraphController:
             in enumerate(self.NX_EXPORTS)
             if exporter.is_possible(self._current_topic_runner)
         ]
+
+        if not bool(self._possible_visualizations):
+            self._show_welcome_screen()
 
     def _get_nx_export(self, vis_index: int) -> nx.Graph:
         """
@@ -513,6 +518,11 @@ class GraphController:
         :return: True if there are visualizations available, False otherwise
         """
         return self._current_topic_runner is not None
+
+    def _show_welcome_screen(self) -> None:
+        """Show a welcome screen with a button to select an input folder if no
+        visualizations are available"""
+        pass
 
 
 """
