@@ -1,3 +1,5 @@
+import sys
+
 from PySide6.QtGui import QIntValidator, Qt
 from PySide6.QtWidgets import QLineEdit, QLabel, QHBoxLayout, QVBoxLayout, \
     QWidget, QSizePolicy, QPushButton
@@ -84,11 +86,15 @@ class AbstractSettings:
         self.initialize_config_management()
         self.add_margin(10)
 
+        # Visualizations
+        self.add_header_label("Visualisatie", 17)
+        self.initialize_amount_of_words_field()
+        self.add_margin(10)
+
         # General
         self.add_header_label("Algemeen", 17)
         self.initialize_algorithm_field()
         self.initialize_topic_amount_field()
-        self.initialize_amount_of_words_field()
         self.initialize_language_field()
         self.add_margin(10)
 
@@ -222,7 +228,7 @@ class AbstractSettings:
         topic_amount_layout = QHBoxLayout()
 
         # Add label
-        topic_label = QLabel("Aantal topics:")
+        topic_label = QLabel("#Topics:")
         topic_label.setStyleSheet(f"font-size: 16px;"
                                   f"color: black;"
                                   f"font-family: {text_font};")
@@ -322,7 +328,7 @@ class AbstractSettings:
         topic_words_layout = QHBoxLayout()
 
         # Add label
-        topic_words_label = QLabel("Aantal woorden:")
+        topic_words_label = QLabel("#Topicwoorden:")
         topic_words_label.setStyleSheet(f"font-size: 16px;"
                                         f"color: black;"
                                         f"font-family: {text_font};")
@@ -421,7 +427,12 @@ class AbstractSettings:
         self._algorithm_field.setFixedWidth(100)
         self._algorithm_field.addItem("LDA")
         self._algorithm_field.addItem("NMF")
-        self._algorithm_field.addItem("BERTopic")
+
+        # BERTopic has issues with PyInstaller
+        # For this reason, BERTopic is only available when running via Python
+        # Like this, the field becomes unavailable when running via PyInstaller
+        if not getattr(sys, 'frozen', False):
+            self._algorithm_field.addItem("BERTopic")
 
         # Try to disconnect the algorithm_field_changed_event method, otherwise
         # endless recursion
