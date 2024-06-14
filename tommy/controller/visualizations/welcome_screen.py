@@ -1,3 +1,5 @@
+import os.path
+
 import matplotlib.figure
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
@@ -32,14 +34,16 @@ class WelcomeScreen(AbstractVisualization):
         Constructs a welcome screen for the user.
         """
 
+        # Import the image
+        image_path = os.path.abspath('../assets/tommy_welcome_screen.png')
+        print(image_path)
+        image = plt.imread(image_path)
+
+        # Create the figure
         fig, ax = plt.subplots()
-        ax.text(0.5, 0.5, "Welkom bij TOMMY! Selecteer je folder met "
-                          "documenten door in de menubalk op bestand -> "
-                          "selecteer input folder te klikken.",
-                fontsize=20,
-                horizontalalignment='center', verticalalignment='center',
-                wrap=True, color='black')
+        ax.imshow(image)
         ax.axis('off')
+        fig.tight_layout()
         return fig
 
     def is_possible(self, metadata_available: bool,
