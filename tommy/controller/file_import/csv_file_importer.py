@@ -91,7 +91,15 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                             value.isspace()):
                         row[key] = None
                 try:
-                    yield self.generate_file(row, path, row_index)
+                    correct_date_format, file = self.generate_file(row, path,
+                                                                   row_index)
+                    yield file
+                    if not correct_date_format:
+                        errors.append(
+                            SyntaxWarning(
+                                f"De datum van document {row_index} kon niet "
+                                f"worden geïnterpreteerd: '{row.get('date')}'."
+                                f" Dit bestand is zonder datum ingeladen."))
                 except Exception as e:
                     errors.append(e)
                 row_index += 1
@@ -103,7 +111,8 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
                 raise ExceptionGroup("Er zijn meerdere fouten opgetreden "
                                      "bij het laden van het bestand: ", errors)
 
-    def generate_file(self, file: dict, path: str, row_index: int) -> RawFile:
+    def generate_file(self, file: dict, path: str, row_index: int) -> (
+            tuple[bool, RawFile]):
         """
         Generates a File object from a CSV row.
 
@@ -111,21 +120,30 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
         :param path: The string path to the CSV file.
         :param row_index: The index of the row in the csv file. Used for
         debugging and error presentation to the user.
-        :return: A RawFile object generated from the CSV row
-        containing metadata and the raw text of the file.
+        :return: A tuple of a boolean and a RawFile object. The boolean is
+        False if the datetime could not be parsed, and True if the datetime
+        was successfully parsed or if the datetime does not exist for that
+        document. A RawFile object generated from the CSV row containing
+        metadata and the raw text of the file.
         """
         for key in self.mandatory_fields:
             if file.get(key) is None:
                 raise KeyError(f"De kolom '{key}' is verplicht, maar is niet "
-                               f"gevonden op rij {row_index}")
+                               f"gevonden voor document {row_index}")
 
         file_date_str: str = file.get("date")
-        file_date: datetime = None if file_date_str is None else (
-            self.parse_date(file_date_str))
+        file_date: datetime
+        correct_date_format: bool
+        if file_date_str is None:
+            file_date = None
+            correct_date_format = True
+        else:
+            file_date = self.parse_date(file_date_str)
+            correct_date_format = file_date is not None
         dict_title = file.get("title")
         alt_title = os.path.basename(path).replace('.csv', '')
         file_title = alt_title if dict_title is None else dict_title
-        return RawFile(
+        return correct_date_format, RawFile(
             metadata=Metadata(author=file.get("author"),
                               title=file_title, date=file_date,
                               url=file.get("url"), path=os.path.relpath(path),

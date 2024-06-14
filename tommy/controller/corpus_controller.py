@@ -109,6 +109,8 @@ class CorpusController:
                 except UnicodeDecodeError as e:
                     errors.append(f"Dit bestand kon niet worden gedecodeerd: "
                                   f"{file}. Probleem: {e}")
+                except Warning as e:
+                    errors.append(f"Waarschuwing bij bestand '{file}': {e}")
                 except ExceptionGroup as e:
                     error_lines = "\n".join(str(error) for error in
                                             e.exceptions)
