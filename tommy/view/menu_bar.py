@@ -9,6 +9,8 @@ from tommy.controller.export_controller import ExportController
 from tommy.controller.project_settings_controller import \
     ProjectSettingsController
 from tommy.controller.saving_loading_controller import SavingLoadingController
+from tommy.controller.topic_modelling_controller import \
+    TopicModellingController
 from tommy.support.constant_variables import (
     prim_col_red, dark_prim_col_red, extra_light_gray, text_font)
 from tommy.view.error_view import ErrorView
@@ -21,7 +23,8 @@ class MenuBar(QMenuBar):
                  parent: QWidget,
                  project_settings_controller: ProjectSettingsController,
                  saving_loading_controller: SavingLoadingController,
-                 export_controller: ExportController
+                 export_controller: ExportController,
+                 topic_modelling_controller: TopicModellingController
                  ) -> None:
         """Initialize the menu bar."""
         super().__init__(parent)
@@ -29,52 +32,63 @@ class MenuBar(QMenuBar):
         # Set reference to project settings controller for input folder button
         self._project_settings_controller = project_settings_controller
         self._saving_loading_controller = saving_loading_controller
-
         self._export_controller = export_controller
+        self._topic_modelling_controller = topic_modelling_controller
+
+        # Subscribe to topic modelling controller
+        self._topic_modelling_controller.start_training_model_event.subscribe(
+                lambda _: self.disable_menu_on_start_topic_modelling())
+        self._topic_modelling_controller.model_trained_event.subscribe(
+                lambda _: self.enable_menu_on_finish_topic_modelling())
 
         # Create actions
-        import_input_folder_action = QAction("Selecteer input folder", self)
-        export_to_gexf_action = QAction(
+        self.import_input_folder_action = (
+            QAction("Selecteer input folder", self))
+        self.export_to_gexf_action = QAction(
                 "Exporteer naar Graph Exchange XML Format (.gexf)", self)
-        export_to_png_action = QAction("Exporteer grafieken (.png)", self)
-        export_topic_words_action = QAction("Exporteer Topicdata (.csv)", self)
-        export_document_topic_action = QAction(
+        self.export_to_png_action = QAction("Exporteer grafieken (.png)", self)
+        self.export_topic_words_action = QAction("Exporteer Topicdata (.csv)",
+                                                 self)
+        self.export_document_topic_action = QAction(
                 "Exporteer Document Topics (.csv)", self)
-        save_settings_action = QAction("Instellingen opslaan", self)
-        save_settings_as_action = QAction("Instellingen opslaan als", self)
-        load_settings_action = QAction("Instellingen laden", self)
-        info_action = QAction("Over TOMMY", self)
+        self.save_settings_action = QAction("Instellingen opslaan", self)
+        self.save_settings_as_action = QAction("Instellingen opslaan als",
+                                               self)
+        self.load_settings_action = QAction("Instellingen laden", self)
+        self.info_action = QAction("Over TOMMY", self)
 
         # Connect actions to event handlers
-        import_input_folder_action.triggered.connect(self.import_input_folder)
-        export_to_gexf_action.triggered.connect(self.export_to_gexf)
-        export_to_png_action.triggered.connect(self.export_to_png)
-        export_topic_words_action.triggered.connect(self.export_topic_words)
-        export_document_topic_action.triggered.connect(
+        self.import_input_folder_action.triggered.connect(
+            self.import_input_folder)
+        self.export_to_gexf_action.triggered.connect(self.export_to_gexf)
+        self.export_to_png_action.triggered.connect(self.export_to_png)
+        self.export_topic_words_action.triggered.connect(
+            self.export_topic_words)
+        self.export_document_topic_action.triggered.connect(
                 self.export_document_topics)
-        save_settings_action.triggered.connect(self.save_settings_to_file)
-        save_settings_as_action.triggered.connect(self.save_settings_as)
-        load_settings_action.triggered.connect(
+        self.save_settings_action.triggered.connect(self.save_settings_to_file)
+        self.save_settings_as_action.triggered.connect(self.save_settings_as)
+        self.load_settings_action.triggered.connect(
                 self._load_settings_from_file)  # Connect to new method
-        info_action.triggered.connect(self.show_about_dialog)
+        self.info_action.triggered.connect(self.show_about_dialog)
 
         # Create menu bar
         file_menu = self.addMenu("Bestand")
-        file_menu.addAction(import_input_folder_action)
-        file_menu.addAction(save_settings_action)
-        file_menu.addAction(save_settings_as_action)
-        file_menu.addAction(load_settings_action)
+        file_menu.addAction(self.import_input_folder_action)
+        file_menu.addAction(self.save_settings_action)
+        file_menu.addAction(self.save_settings_as_action)
+        file_menu.addAction(self.load_settings_action)
 
         # Add sub menu export_menu to menu bar
         export_menu = self.addMenu("Exporteren")
-        export_menu.addAction(export_to_gexf_action)
-        export_menu.addAction(export_to_png_action)
-        export_menu.addAction(export_topic_words_action)
-        export_menu.addAction(export_document_topic_action)
+        export_menu.addAction(self.export_to_gexf_action)
+        export_menu.addAction(self.export_to_png_action)
+        export_menu.addAction(self.export_topic_words_action)
+        export_menu.addAction(self.export_document_topic_action)
 
         # Create help bar
         help_menu = self.addMenu("Help")
-        help_menu.addAction(info_action)
+        help_menu.addAction(self.info_action)
 
         # Set style
         self.setStyleSheet(f"""
@@ -167,6 +181,20 @@ class MenuBar(QMenuBar):
                 ErrorView("Er is een fout opgetreden "
                           "bij het exporteren van de "
                           "grafieken.", errors)
+
+    def disable_menu_on_start_topic_modelling(self) -> None:
+        """
+        Disable the export menu when the topic modelling is started.
+        :return: None
+        """
+        self.import_input_folder_action.setEnabled(False)
+
+    def enable_menu_on_finish_topic_modelling(self) -> None:
+        """
+        Enable the export menu when the topic modelling is finished.
+        :return: None
+        """
+        self.import_input_folder_action.setEnabled(True)
 
     def export_topic_words(self) -> None:
         """
