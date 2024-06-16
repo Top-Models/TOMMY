@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP_NAME="Tommy"
+APP_NAME="TOMMY"
 VOLUME_NAME="${APP_NAME} Installer"
 OUTPUT_FOLDER="dist"
 DMG_FOLDER_PATH="${OUTPUT_FOLDER}/${APP_NAME}-Installer.dmg"
@@ -19,7 +19,7 @@ pyinstaller \
 --windowed \
 --onedir \
 --name "${APP_NAME}" \
---icon "assets/tommy.icns" \
+--icon "assets/tommy_icon_macos.ico" \
 --add-data "${DATA_FOLDER_PATH}:./preprocessing_data" \
 --add-data "${ASSETS_FOLDER_PATH}:./assets" \
 --hidden-import "pkg_resources.extern" \

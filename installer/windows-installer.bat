@@ -5,7 +5,7 @@
 :: but only using this command directly in a terminal:
 :: pyinstaller --noconfirm --windowed --onedir --name "Tommy" --icon "assets/tommy.ico" --hidden-import "pkg_resources.extern" --add-data "tommy/data/preprocessing_data/:./preprocessing_data/" tommy/main.py
 
-set APP_NAME=Tommy
+set APP_NAME=TOMMY
 set OUTPUT_FOLDER=dist
 set DATA_FOLDER_PATH=tommy/data/preprocessing_data
 set ASSETS_FOLDER_PATH=assets

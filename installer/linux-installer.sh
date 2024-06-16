@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP_NAME="Tommy"
+APP_NAME="TOMMY"
 OUTPUT_FOLDER="dist"
 DATA_FOLDER_PATH="tommy/data/preprocessing_data"
 ASSETS_FOLDER_PATH="assets"
