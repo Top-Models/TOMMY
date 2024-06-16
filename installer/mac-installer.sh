@@ -21,7 +21,7 @@ pyinstaller \
 --name "${APP_NAME}" \
 --icon "assets/tommy.icns" \
 --add-data "${DATA_FOLDER_PATH}:./preprocessing_data" \
---add-data "${DATA_FOLDER_PATH}:./assets}"
+--add-data "${ASSETS_FOLDER_PATH}:./assets" \
 --hidden-import "pkg_resources.extern" \
 --exclude-module torch \
 tommy/main.py
