@@ -2,7 +2,7 @@
 
 APP_NAME="Tommy"
 OUTPUT_FOLDER="dist"
-DATA_FOLDER_PATH="tommy/data/preprocessing_data"
+DATA_FOLDER_PATH="tommy/data"
 
 echo "> Removing the dist folder if it exists"
 
@@ -16,7 +16,7 @@ pyinstaller \
 --onedir \
 --name "${APP_NAME}" \
 --icon "assets/tommy.svg" \
---add-data "${DATA_FOLDER_PATH}/:./preprocessing_data" \
+--add-data "${DATA_FOLDER_PATH}/:./data" \
 --hidden-import "pkg_resources.extern" \
 --exclude tkinter --exclude _tkinter \
 --exclude-module torch \

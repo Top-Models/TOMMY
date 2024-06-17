@@ -9,8 +9,9 @@ from tommy.controller.model_parameters_controller import \
     ModelParametersController
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.controller.language_controller import LanguageController
-from tommy.support.constant_variables import text_font, seco_col_blue, \
-    disabled_gray
+from tommy.support.constant_variables import (text_font, seco_col_blue,
+                                              disabled_gray,
+                                              settings_label_font)
 from tommy.support.parameter_limits import alpha_min_value, beta_min_value
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
@@ -124,6 +125,7 @@ class LdaSettings(AbstractSettings):
 
         # Add alpha label
         alpha_label = QLabel("Alpha:")
+        alpha_label.setFont(settings_label_font)
         alpha_label.setStyleSheet(f"font-size: 16px;"
                                   f"color: black;"
                                   f"font-family: {text_font};")
@@ -133,6 +135,7 @@ class LdaSettings(AbstractSettings):
 
         # Add alpha input field
         self._alpha_value_input = QLineEdit()
+        self._alpha_value_input.setFont(settings_label_font)
         self._alpha_value_input.setValidator(
             QRegExpValidator(self.allowed_expressions))
         self._alpha_value_input.setReadOnly(True)
@@ -200,6 +203,7 @@ class LdaSettings(AbstractSettings):
 
         # Add beta label
         beta_label = QLabel("Beta:")
+        beta_label.setFont(settings_label_font)
         beta_label.setStyleSheet(f"font-size: 16px;"
                                  f"color: black;"
                                  f"font-family: {text_font};")
@@ -211,6 +215,7 @@ class LdaSettings(AbstractSettings):
         self._beta_value_input = QLineEdit()
         self._beta_value_input.setValidator(
             QRegExpValidator(self.allowed_expressions))
+        self._beta_value_input.setFont(settings_label_font)
         self._beta_value_input.setReadOnly(True)
         self._beta_value_input.setFixedWidth(100)
         self._beta_value_input.setPlaceholderText("Voer beta in")
@@ -277,6 +282,7 @@ class LdaSettings(AbstractSettings):
 
         # Add auto calculate label
         auto_calculate_label = QLabel("Automatisch (aanbevolen):")
+        auto_calculate_label.setFont(settings_label_font)
         auto_calculate_label.setStyleSheet(f"font-size: 16px;"
                                            f"color: black;"
                                            f"font-family: {text_font};")
@@ -286,6 +292,7 @@ class LdaSettings(AbstractSettings):
 
         # Add auto calculate checkbox
         self._auto_calc_alpha_beta_checkbox = QCheckBox()
+        self._auto_calc_alpha_beta_checkbox.setFont(settings_label_font)
         self._auto_calc_alpha_beta_checkbox.setFixedWidth(20)
         self._auto_calc_alpha_beta_checkbox.setFixedHeight(20)
         self._auto_calc_alpha_beta_checkbox.setStyleSheet(

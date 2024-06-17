@@ -11,7 +11,8 @@ from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.topic_modelling_controller import TopicModellingController
 from tommy.support.constant_variables import (
     heading_font, prim_col_red,
-    hover_prim_col_red, scrollbar_style)
+    hover_prim_col_red, scrollbar_style, title_label_font,
+    collapse_button_font)
 from tommy.support.types import Document_topics
 
 from tommy.view.imported_files_view.file_label import FileLabel
@@ -105,9 +106,7 @@ class ImportedFilesView(QWidget):
         # Create the title label
         self.title_widget.title_label = QLabel("Geïmporteerde bestanden")
         (self.title_widget.title_label.
-         setStyleSheet(f"font-size: 13px;"
-                       f"font-family: {heading_font};"
-                       f"font-weight: bold;"
+         setStyleSheet(f"font-weight: bold;"
                        f"text-transform: uppercase;"
                        f"background-color: {prim_col_red};"
                        f"color: white;"
@@ -118,6 +117,7 @@ class ImportedFilesView(QWidget):
         self.title_widget.title_label.setAlignment(
             Qt.AlignmentFlag.AlignCenter)
         self.title_widget.title_label.setContentsMargins(50, 0, 0, 0)
+        self.title_widget.title_label.setFont(title_label_font)
 
         # Create the title button
         self.title_widget.title_button = QPushButton("▽")
@@ -139,6 +139,9 @@ class ImportedFilesView(QWidget):
         title_layout.addWidget(self.title_widget.title_label, 0, 1)
         title_layout.addWidget(self.title_widget.title_button, 0, 2)
         self.layout.addWidget(self.title_widget)
+
+        # Change style of collapse sign
+        self.title_widget.title_button.setFont(collapse_button_font)
 
         # Connect label click event to toggle_collapse method
         self.title_widget.title_button.mousePressEvent = self.toggle_collapse

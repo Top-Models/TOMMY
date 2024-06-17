@@ -57,8 +57,9 @@ class StopwordsController:
     @staticmethod
     def get_stopwords_path(language: SupportedLanguage) -> str:
         """Return the path to the stopwords file for the selected language"""
-        return os.path.join(application_settings.preprocessing_data_folder,
-                            "stopwords", f"{language.name}.txt")
+        return os.path.join(application_settings.data_folder,
+                            "preprocessing_data", "stopwords",
+                            f"{language.name}.txt")
 
     def update_stopwords(self, words: list[str]) -> None:
         """

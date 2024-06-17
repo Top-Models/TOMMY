@@ -2,10 +2,10 @@ from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QLabel, QTextEdit
 
 from tommy.support.constant_variables import text_font, \
-    pressed_medium_light_gray, label_height
+    pressed_medium_light_gray, label_height, topic_entity_word_font
 
 
-class WordEntity(QTextEdit):
+class WordEntity(QLabel):
     """
     A class representing a word within a topic.
     """
@@ -15,15 +15,12 @@ class WordEntity(QTextEdit):
     def __init__(self, word: str):
         super().__init__(word)
         self.word = word
-        self.setStyleSheet(f"font-family: {text_font}; "
-                           f"font-size: 12px; "
-                           f"background-color: white; "
+        self.setStyleSheet(f"background-color: white; "
                            f"color: black")
         self.setContentsMargins(10, 0, 10, 0)
         self.setFixedHeight(label_height)
         self.selected = False
-        self.setReadOnly(True)  # Make the QTextEdit read-only
-        self.setLineWrapMode(QTextEdit.WidgetWidth)  # Enable word wrapping
+        self.setFont(topic_entity_word_font)
 
     def enterEvent(self, event) -> None:
         """
@@ -33,9 +30,7 @@ class WordEntity(QTextEdit):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"font-family: {text_font}; "
-                               f"font-size: 12px; "
-                               f"background-color: lightgray; "
+            self.setStyleSheet(f"background-color: lightgray; "
                                f"color: black")
 
     def leaveEvent(self, event) -> None:
@@ -46,9 +41,7 @@ class WordEntity(QTextEdit):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"font-family: {text_font}; "
-                               f"font-size: 12px; "
-                               f"background-color: white; "
+            self.setStyleSheet(f"background-color: white; "
                                f"color: black")
 
     def mousePressEvent(self, event) -> None:
@@ -56,19 +49,6 @@ class WordEntity(QTextEdit):
         Emit signal when word is clicked
 
         :param event: The mouse press event
-        :return: None
-        """
-        super().mousePressEvent(event)
-        self.setStyleSheet(f"font-family: {text_font}; "
-                           f"font-size: 12px; "
-                           f"background-color: {pressed_medium_light_gray}; "
-                           f"color: black")
-
-    def mouseReleaseEvent(self, event) -> None:
-        """
-        Emit signal when word is released
-
-        :param event: The mouse release event
         :return: None
         """
         self.clicked.emit(self.word)

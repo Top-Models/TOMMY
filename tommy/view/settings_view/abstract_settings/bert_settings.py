@@ -5,7 +5,8 @@ from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (QHBoxLayout, QLabel, QLineEdit, QVBoxLayout)
 
 from tommy.controller.language_controller import LanguageController
-from tommy.support.constant_variables import text_font, seco_col_blue
+from tommy.support.constant_variables import text_font, seco_col_blue, \
+    settings_label_font
 from tommy.support.parameter_limits import min_df_min_value, min_df_max_value, \
     max_features_min_value, max_features_max_value
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
@@ -86,6 +87,7 @@ class BertSettings(AbstractSettings):
 
         # Add label
         min_df = QLabel("Min. term freq.:")
+        min_df.setFont(settings_label_font)
         min_df.setStyleSheet(f"font-size: 16px;"
                              f"color: black;"
                              f"font-family: {text_font};")
@@ -95,6 +97,7 @@ class BertSettings(AbstractSettings):
 
         # Add input field
         self._min_df_input = QLineEdit()
+        self._min_df_input.setFont(settings_label_font)
         self._min_df_input.setFixedWidth(100)
         self._min_df_input.setStyleSheet(self.layout_valid)
         self._min_df_input.setValidator(QRegExpValidator(self.float_regex))
@@ -147,6 +150,7 @@ class BertSettings(AbstractSettings):
 
         # Add label
         max_features = QLabel("Max. #termen:")
+        max_features.setFont(settings_label_font)
         max_features.setStyleSheet(f"font-size: 16px;"
                                    f"color: black;"
                                    f"font-family: {text_font};")
@@ -156,6 +160,7 @@ class BertSettings(AbstractSettings):
 
         # Add input field
         self._max_features_input = QLineEdit()
+        self._max_features_input.setFont(settings_label_font)
         self._max_features_input.setFixedWidth(100)
         self._max_features_input.setStyleSheet(self.layout_valid)
         # QIntValidator prevents user from typing

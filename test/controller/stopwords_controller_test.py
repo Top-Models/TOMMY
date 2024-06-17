@@ -69,12 +69,12 @@ def test_stopwords_path(stopwords_controller):
     """Test whether the path to the stopwords path is correct depending on
     the language"""
     assert (stopwords_controller.get_stopwords_path(SupportedLanguage.Dutch) ==
-            os.path.join(application_settings.preprocessing_data_folder,
-                         "stopwords", "Dutch.txt"))
+            os.path.join(application_settings.data_folder,
+                         "preprocessing_data", "stopwords", "Dutch.txt"))
     assert (stopwords_controller.get_stopwords_path(
         SupportedLanguage.English) ==
-            os.path.join(application_settings.preprocessing_data_folder,
-                         "stopwords", "English.txt"))
+            os.path.join(application_settings.data_folder,
+                         "preprocessing_data", "stopwords", "English.txt"))
 
 
 def test_stopwords_loaded_on_start():

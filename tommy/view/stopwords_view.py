@@ -6,7 +6,7 @@ from tommy.controller.stopwords_controller import StopwordsController
 from tommy.controller.topic_modelling_controller import \
     TopicModellingController
 from tommy.support.constant_variables import (
-    text_font, disabled_gray)
+    text_font, stopwords_tab_font, stopwords_text_edit_font, disabled_gray)
 
 
 class StopwordsView(QScrollArea):
@@ -87,8 +87,10 @@ class StopwordsView(QScrollArea):
                     height: 0px; 
                 }}
                    """)
+
         # Initialize container for all elements
         self.container = QTabWidget()
+        self.container.tabBar().setFont(stopwords_tab_font)
 
         # Initialize tabs
         self.tab_style_enabled = (f"""
@@ -117,8 +119,10 @@ class StopwordsView(QScrollArea):
         """)
 
         self.blacklist_tab = QTextEdit()
+        self.blacklist_tab.setFont(stopwords_text_edit_font)
         self.blacklist_tab.setStyleSheet(self.tab_style_enabled)
         self.synonym_tab = QTextEdit()
+        self.synonym_tab.setFont(stopwords_text_edit_font)
         self.synonym_tab.setStyleSheet(self.tab_style_enabled)
 
         # Set container as the focal point
