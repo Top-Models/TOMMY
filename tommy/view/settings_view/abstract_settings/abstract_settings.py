@@ -58,6 +58,44 @@ class AbstractSettings:
                                           f"color: black;"
                                           f"border: 2px solid {seco_col_blue};"
                                           f"padding: 5px;")
+        self.button_enabled_stylesheet = (f"""
+            QPushButton {{
+                font-size: 20px;
+                font-family: {text_font};
+                border-radius: 5px;
+                color: white;
+                border: 2px solid {seco_col_blue};
+                padding: 5px 10px 5px 10px;
+                background-color: {seco_col_blue};
+            }}
+            
+            QPushButton:hover {{
+                background-color: {hover_seco_col_blue};
+            }}
+            
+            QPushButton:pressed {{
+                background-color: {pressed_seco_col_blue};
+            }}
+        """)
+        self.button_disabled_stylesheet = (f"""
+            QPushButton {{
+                font-size: 20px;
+                font-family: {text_font};
+                border-radius: 5px;
+                color: white;
+                border: 2px solid {seco_col_blue};
+                padding: 5px 10px 5px 10px;
+                background-color: {disabled_gray};
+            }}
+            
+            QPushButton:hover {{
+                background-color: {disabled_gray};
+            }}
+            
+            QPushButton:pressed {{
+                background-color: {disabled_gray};
+            }}
+        """)
 
         # Initialize buttons
         self.config_management_label = None
@@ -549,6 +587,90 @@ class AbstractSettings:
         current_language = self._language_controller.get_language()
         self._language_field.set_current_text_without_signal(
             SupportedLanguage.to_string(current_language))
+
+    def disable_input_field(self, field: QLineEdit) -> None:
+        """
+        Disable an input field
+
+        :param field: QTextField
+        :return: None
+        """
+        field.setDisabled(True)
+        field.setStyleSheet(self.disabled_input_stylesheet)
+
+    def enable_input_field(self, field: QLineEdit) -> None:
+        """
+        Enable an input field
+
+        :param field: QLineEdit
+        :return: None
+        """
+        field.setDisabled(False)
+        field.setStyleSheet(self.enabled_input_stylesheet)
+
+    def disable_combobox(self, combobox: BetterComboBox) -> None:
+        """
+        Disable a combobox
+
+        :param combobox: BetterComboBox
+        :return: None
+        """
+        combobox.setDisabled(True)
+        combobox.setStyleSheet(self.disabled_input_stylesheet)
+
+    def enable_combobox(self, combobox: BetterComboBox) -> None:
+        """
+        Enable a combobox
+
+        :param combobox: BetterComboBox
+        :return: None
+        """
+        combobox.setDisabled(False)
+        combobox.setStyleSheet(self.enabled_input_stylesheet)
+
+    def disable_button(self, button: QPushButton) -> None:
+        """
+        Disable a button
+
+        :param button: QPushButton
+        :return: None
+        """
+        button.setDisabled(True)
+        button.setStyleSheet(self.button_disabled_stylesheet)
+
+    def enable_button(self, button: QPushButton) -> None:
+        """
+        Enable a button
+
+        :param button: QPushButton
+        :return: None
+        """
+        button.setDisabled(False)
+        button.setStyleSheet(self.button_enabled_stylesheet)
+
+    def disable_input_fields_on_model_training(self) -> None:
+        """
+        Disable the input fields when the model is training
+
+        :return: None
+        """
+        self.disable_input_field(self._topic_amount_field)
+        self.disable_input_field(self._amount_of_words_field)
+        self.disable_combobox(self._algorithm_field)
+        self.disable_combobox(self._language_field)
+        self.disable_button(self._config_management_button)
+
+    def enable_input_fields_on_model_trained(self) -> None:
+        """
+        Enable the input fields when the model is done training
+
+        :return: None
+        """
+        self.enable_input_field(self._topic_amount_field)
+        self.enable_input_field(self._amount_of_words_field)
+        self.enable_combobox(self._algorithm_field)
+        self.enable_combobox(self._language_field)
+        self.enable_button(self._config_management_button)
 
 
 """

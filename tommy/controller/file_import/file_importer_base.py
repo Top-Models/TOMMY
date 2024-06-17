@@ -1,47 +1,11 @@
 from abc import ABC, abstractmethod
-from datetime import date
+from datetime import datetime
+from dateutil.parser import ParserError
+
 from dateutil import parser
-from typing import Generator
+from typing import Generator, Optional
 
 from tommy.controller.file_import.raw_file import RawFile
-
-
-class FileImporterBase(ABC):
-    """
-    Abstract base class for file importers.
-    """
-
-    @abstractmethod
-    def load_file(self, path: str) -> Generator[RawFile, None, None]:
-        """
-        Abstract method to load a file.
-
-        :param path: The string path of the file.
-        :return: Generator[File, None, None]: A generator yielding File
-        objects.
-        """
-        pass
-
-    @abstractmethod
-    def compatible_file(self, path: str) -> bool:
-        """
-        Abstract method to check if a file is compatible.
-
-        :param path: The path to the file.
-        :return: bool: True is compatible, False otherwise.
-        """
-        pass
-
-    def parse_date(self, file_date: str) -> date:
-        """
-        Parse the Dutch date string into a date object.
-
-        :param file_date: The date string to parse.
-        :return: date: The date object .
-        """
-        parse_info = DutchParseInfo()
-        return parser.parse(file_date, parserinfo=parse_info, fuzzy=True,
-                            dayfirst=True).date()
 
 
 class DutchParseInfo(parser.parserinfo):
@@ -79,6 +43,48 @@ class DutchParseInfo(parser.parserinfo):
                          ('Sun', 'Sunday', 'Zondag', 'Zo', 'Zo.')]
 
         super().__init__(dayfirst=True)
+
+
+class FileImporterBase(ABC):
+    """
+    Abstract base class for file importers.
+    """
+
+    dutch_parse_info = DutchParseInfo()
+
+    @abstractmethod
+    def load_file(self, path: str) -> Generator[RawFile, None, None]:
+        """
+        Abstract method to load a file.
+
+        :param path: The string path of the file.
+        :return: Generator[File, None, None]: A generator yielding File
+        objects.
+        """
+        pass
+
+    @abstractmethod
+    def compatible_file(self, path: str) -> bool:
+        """
+        Abstract method to check if a file is compatible.
+
+        :param path: The path to the file.
+        :return: bool: True is compatible, False otherwise.
+        """
+        pass
+
+    def parse_date(self, file_date: str) -> Optional[datetime]:
+        """
+        Parse the Dutch date string into a date object.
+
+        :param file_date: The date string to parse.
+        :return: date: The date object .
+        """
+        try:
+            return parser.parse(file_date, parserinfo=self.dutch_parse_info,
+                                fuzzy=True)
+        except ParserError:
+            return None
 
 
 """

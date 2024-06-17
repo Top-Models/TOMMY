@@ -10,6 +10,8 @@ from tommy.controller.model_parameters_controller import \
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.controller.language_controller import LanguageController
 from tommy.support.constant_variables import text_font, seco_col_blue, \
+    disabled_gray
+from tommy.support.constant_variables import text_font, seco_col_blue, \
     settings_label_font
 from tommy.support.parameter_limits import alpha_min_value, beta_min_value
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
@@ -39,6 +41,56 @@ class LdaSettings(AbstractSettings):
         self._alpha_value_input = QLineEdit()
         self._beta_value_input = QLineEdit()
         self._auto_calc_alpha_beta_checkbox = QCheckBox()
+        self._enabled_checkbox_stylesheet = f"""
+                            QCheckBox {{
+                                font-family: {text_font};
+                                color: black;
+                                border: 2px solid {seco_col_blue};
+                                padding: 5px;
+                                background-color: white;
+                                border-radius: 5px;
+                                position: relative; 
+                            }}
+
+                            QCheckBox::indicator {{
+                                /* Hide checkbox */
+                                text-align: left;
+                                width: 20;
+                                height: 20;
+                                border: none;
+                                position: absolute;
+                                left: -5px;
+                            }}
+
+                            QCheckBox::checked {{
+                                background-color: {seco_col_blue};
+                            }}
+                        """
+        self._disabled_checkbox_stylesheet = f"""
+                            QCheckBox {{
+                                font-family: {text_font};
+                                color: black;
+                                border: 2px solid {seco_col_blue};
+                                padding: 5px;
+                                background-color: {disabled_gray};
+                                border-radius: 5px;
+                                position: relative; 
+                            }}
+
+                            QCheckBox::indicator {{
+                                /* Hide checkbox */
+                                text-align: left;
+                                width: 20;
+                                height: 20;
+                                border: none;
+                                position: absolute;
+                                left: -5px;
+                            }}
+
+                            QCheckBox::checked {{
+                                background-color: {disabled_gray};
+                            }}
+                        """
 
     def initialize_parameter_widgets(self,
                                      scroll_layout: QVBoxLayout) -> None:
@@ -244,31 +296,8 @@ class LdaSettings(AbstractSettings):
         self._auto_calc_alpha_beta_checkbox.setFont(settings_label_font)
         self._auto_calc_alpha_beta_checkbox.setFixedWidth(20)
         self._auto_calc_alpha_beta_checkbox.setFixedHeight(20)
-        self._auto_calc_alpha_beta_checkbox.setStyleSheet(f"""
-                            QCheckBox {{
-                                font-family: {text_font};
-                                color: black;
-                                border: 2px solid {seco_col_blue};
-                                padding: 5px;
-                                background-color: white;
-                                border-radius: 5px;
-                                position: relative; 
-                            }}
-
-                            QCheckBox::indicator {{
-                                /* Hide checkbox */
-                                text-align: left;
-                                width: 20;
-                                height: 20;
-                                border: none;
-                                position: absolute;
-                                left: -5px;
-                            }}
-
-                            QCheckBox::checked {{
-                                background-color: {seco_col_blue};
-                            }}
-                        """)
+        self._auto_calc_alpha_beta_checkbox.setStyleSheet(
+            self._enabled_checkbox_stylesheet)
         self._auto_calc_alpha_beta_checkbox.setChecked(True)
         self._auto_calc_alpha_beta_checkbox.stateChanged.connect(
             self.toggle_auto_calculate_alpha_beta
@@ -345,6 +374,49 @@ class LdaSettings(AbstractSettings):
             self._model_parameters_controller.get_model_beta(),
             auto_calculate)
         self._auto_calc_alpha_beta_checkbox.setChecked(auto_calculate)
+
+    def disable_checkbox(self, checkbox: QCheckBox) -> None:
+        """
+        Disable the checkbox
+
+        :param checkbox: QCheckBox
+        :return: None
+        """
+        checkbox.setEnabled(False)
+        checkbox.setStyleSheet(self._disabled_checkbox_stylesheet)
+
+    def enable_checkbox(self, checkbox: QCheckBox) -> None:
+        """
+        Enable the auto checkbox
+
+        :param checkbox: QCheckBox
+        :return: None
+        """
+        checkbox.setEnabled(True)
+        checkbox.setStyleSheet(self._enabled_checkbox_stylesheet)
+
+    def disable_input_fields_on_model_training(self) -> None:
+        """
+        Disable the input fields when the model is training
+        :return: None
+        """
+        super().disable_input_fields_on_model_training()
+        self.disable_input_field(self._alpha_value_input)
+        self.disable_input_field(self._beta_value_input)
+        self.disable_checkbox(self._auto_calc_alpha_beta_checkbox)
+
+    def enable_input_fields_on_model_trained(self) -> None:
+        """
+        Enable the input fields when the model is training
+        :return: None
+        """
+        super().enable_input_fields_on_model_trained()
+        self.enable_checkbox(self._auto_calc_alpha_beta_checkbox)
+        if self._auto_calc_alpha_beta_checkbox.isChecked():
+            return
+
+        self.enable_input_field(self._alpha_value_input)
+        self.enable_input_field(self._beta_value_input)
 
 
 """

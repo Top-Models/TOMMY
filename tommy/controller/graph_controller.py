@@ -30,6 +30,7 @@ from tommy.controller.visualizations.sum_topics_in_documents import \
     SumTopicsInDocuments
 from tommy.controller.visualizations.top_words_bar_plot_creator import (
     TopWordsBarPlotCreator)
+from tommy.controller.visualizations.welcome_screen import WelcomeScreen
 from tommy.controller.visualizations.word_cloud_creator import WordCloudCreator
 from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
@@ -66,6 +67,7 @@ class GraphController:
     """
     _topic_modelling_controller: TopicModellingController = None
     _corpus_controller: CorpusController = None
+    _project_settings_controller: ProjectSettingsController = None
 
     # Visualization Creators
     VISUALIZATIONS: list[AbstractVisualization] = [
@@ -78,7 +80,8 @@ class GraphController:
         DocumentTopicNetworkSummaryCreator(),
         WordCloudCreator(),
         TopWordsBarPlotCreator(),
-        DocumentsOverTimePerTopicCreator()
+        DocumentsOverTimePerTopicCreator(),
+        WelcomeScreen()
     ]
     _possible_visualizations: list[PossibleVisualization] | None = None
 
@@ -268,7 +271,9 @@ class GraphController:
                                    visualization.needed_input_data))
             for (vis_index, visualization)
             in enumerate(self.VISUALIZATIONS)
-            if visualization.is_possible(self._current_topic_runner)
+            if visualization.is_possible(
+                self._corpus_controller.metadata_available(),
+                self._current_topic_runner)
         ]
 
         # check for each export if it is possible
@@ -422,9 +427,9 @@ class GraphController:
         """
         vis_without_topic = [MatplotLibExport(possible_vis.name, None,
                                               self.get_visualization(
-                                                   possible_vis.index,
-                                                   ignore_cache=ignore_cache
-                                                   )[0]
+                                                  possible_vis.index,
+                                                  ignore_cache=ignore_cache
+                                              )[0]
                                               )
                              for possible_vis
                              in self._possible_visualizations
@@ -437,9 +442,9 @@ class GraphController:
         #   run all combinations
         vis_with_topic = [MatplotLibExport(possible_vis.name, topic_id,
                                            self.get_visualization(
-                                                possible_vis.index,
-                                                override_topic=topic_id,
-                                                ignore_cache=ignore_cache)[0]
+                                               possible_vis.index,
+                                               override_topic=topic_id,
+                                               ignore_cache=ignore_cache)[0]
                                            )
                           for (possible_vis, topic_id)
                           in product(self._possible_visualizations,
@@ -494,7 +499,7 @@ class GraphController:
         self._calculate_possible_visualizations()
         self._topics_changed_event.publish(None)
         self._possible_plots_changed_event.publish(
-                self._possible_visualizations)
+            self._possible_visualizations)
 
     def _on_config_switch(self, topic_runner: TopicRunner | None):
         """Save and publish new topic runner on config switch"""

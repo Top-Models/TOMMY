@@ -20,6 +20,8 @@ from tommy.support.constant_variables import (heading_font, prim_col_red,
                                               config_button_font,
                                               config_view_button,
                                               config_view_label_font)
+                                              pressed_seco_col_blue,
+                                              scrollbar_style)
 
 
 class ConfigView(QDialog):
@@ -132,7 +134,7 @@ class ConfigView(QDialog):
                 background-color: {selected_medium_light_gray};
                 color: #333333;
             }}
-        """)
+        """ + scrollbar_style)
 
     def initialize_title_label(self) -> None:
         """
