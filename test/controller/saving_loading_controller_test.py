@@ -3,9 +3,9 @@ import os
 import pytest
 from pytestqt.qtbot import QtBot
 
+from test.helper_fixtures import controller_no_pipeline
 from tommy.controller.controller import Controller
 from tommy.controller.saving_loading_controller import SavingLoadingController
-from tommy.model.model import Model
 from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
 from tommy.view.imported_files_view.imported_files_view import \
@@ -16,7 +16,6 @@ from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 from tommy.view.settings_view.model_params_view import ModelParamsView
 from tommy.view.stopwords_view import StopwordsView
-from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture
@@ -43,7 +42,8 @@ def model_params_view(controller: Controller, qtbot: QtBot) -> ModelParamsView:
 
 @pytest.fixture
 def stopwords_view(controller: Controller, qtbot: QtBot) -> StopwordsView:
-    stopwords_view = StopwordsView(controller.stopwords_controller)
+    stopwords_view = StopwordsView(controller.stopwords_controller,
+                                   controller.topic_modelling_controller)
     qtbot.addWidget(stopwords_view)
     return stopwords_view
 

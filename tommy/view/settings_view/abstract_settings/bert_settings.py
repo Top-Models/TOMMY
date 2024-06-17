@@ -220,6 +220,26 @@ class BertSettings(AbstractSettings):
                                          if max_feat is not None
                                          else "")
 
+    def disable_input_fields_on_model_training(self) -> None:
+        """
+        Disable the input fields when starting the topic modelling
+
+        :return: None
+        """
+        super().disable_input_fields_on_model_training()
+        self.disable_input_field(self._min_df_input)
+        self.disable_input_field(self._max_features_input)
+
+    def enable_input_fields_on_model_trained(self) -> None:
+        """
+        Enable the input fields when stopping the topic modelling
+
+        :return: None
+        """
+        super().enable_input_fields_on_model_trained()
+        self.enable_input_field(self._min_df_input)
+        self.enable_input_field(self._max_features_input)
+
 
 """
 This program has been developed by students from the bachelor Computer Science

@@ -8,6 +8,8 @@ from PySide6.QtTest import QTest
 from tommy.controller.controller import Controller
 from tommy.controller.language_controller import LanguageController
 from tommy.controller.stopwords_controller import StopwordsController
+from tommy.controller.topic_modelling_controller import \
+    TopicModellingController
 from tommy.model.language_model import LanguageModel
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.support.application_settings import application_settings
@@ -28,6 +30,10 @@ def stopwords_controller():
     """Fixture for creating a StopwordsController."""
     return StopwordsController()
 
+@pytest.fixture
+def topic_modelling_controller():
+    """Fixture for creating a TopicModellingController."""
+    return TopicModellingController()
 
 @pytest.fixture
 def stopwords_model():
@@ -36,9 +42,9 @@ def stopwords_model():
 
 
 @pytest.fixture
-def stopwords_view(stopwords_controller):
+def stopwords_view(stopwords_controller, topic_modelling_controller):
     """Fixture for creating a StopwordsView."""
-    view = StopwordsView(stopwords_controller)
+    view = StopwordsView(stopwords_controller, topic_modelling_controller)
     return view
 
 
