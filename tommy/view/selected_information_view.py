@@ -73,11 +73,11 @@ class SelectedInformationView(QScrollArea):
         Add the title label widget
         """
         title_label = QLabel("Informatie")
-        title_label.setStyleSheet(f"font-size: 13px;"
-                                  f"font-family: {heading_font};"
-                                  f"font-weight: bold;"
+        title_label.setStyleSheet(f"font-weight: bold;"
                                   f"text-transform: uppercase;"
                                   f"background-color: {prim_col_red};"
+                                  f"font-family: {heading_font}; "
+                                  f"font-size: 13px; "
                                   f"color: white;"
                                   f"border-bottom: "
                                   f"3px solid {hover_prim_col_red};"

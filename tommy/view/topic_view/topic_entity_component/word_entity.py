@@ -15,8 +15,13 @@ class WordEntity(QLabel):
     def __init__(self, word: str):
         super().__init__(word)
         self.word = word
-        self.setStyleSheet(f"background-color: white; "
-                           f"color: black")
+        self.setStyleSheet(
+            f"font-family: {text_font}; "
+        )
+        self.setStyleSheet(
+            f"background-color: white; "
+            f"color: black;"
+            f"font-size: 12px;")
         self.setContentsMargins(10, 0, 10, 0)
         self.setFixedHeight(label_height)
         self.selected = False
@@ -30,8 +35,10 @@ class WordEntity(QLabel):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"background-color: lightgray; "
-                               f"color: black")
+            self.setStyleSheet(
+                f"background-color: lightgrey; "
+                f"color: black;"
+                f"font-size: 12px;")
 
     def leaveEvent(self, event) -> None:
         """
@@ -41,8 +48,10 @@ class WordEntity(QLabel):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"background-color: white; "
-                               f"color: black")
+            self.setStyleSheet(
+                f"background-color: white; "
+                f"color: black;"
+                f"font-size: 12px;")
 
     def mousePressEvent(self, event) -> None:
         """

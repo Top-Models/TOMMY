@@ -107,6 +107,8 @@ class ImportedFilesView(QWidget):
         self.title_widget.title_label = QLabel("Geïmporteerde bestanden")
         (self.title_widget.title_label.
          setStyleSheet(f"font-weight: bold;"
+                       f"font-family: {heading_font}; "
+                       f"font-size: 13px; "
                        f"text-transform: uppercase;"
                        f"background-color: {prim_col_red};"
                        f"color: white;"
