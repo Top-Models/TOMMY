@@ -92,7 +92,7 @@ class ErrorView(QMessageBox):
         scroll_area.setMinimumWidth(400)
         scroll_area.setMinimumHeight(200)
         scroll_area.setStyleSheet(f"""
-            border: none;
+            border-color: grey;
             background-color: white;
         """)
 

@@ -2,7 +2,7 @@ import csv
 import os.path
 from os import stat
 from typing import Generator
-from datetime import date
+from datetime import datetime
 
 from tommy.controller.file_import import file_importer_base
 from tommy.controller.file_import.metadata import Metadata
@@ -34,10 +34,9 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
         if not path.endswith('.csv'):
             return False
 
-        headers = []
         with open(path, 'r', newline="", encoding='utf-8-sig') as csvfile:
             csv_reader = csv.DictReader(csvfile, delimiter=',')
-            headers = csv_reader.fieldnames
+
             # To check whether each mandatory header exists and is unique,
             # we keep an array of occurrences of all mandatory headers
             mandatory_fields_counts = [0] * len(self.mandatory_fields)
@@ -49,8 +48,26 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
             if mandatory_fields_counts == [1] * len(self.mandatory_fields):
                 return True
 
-        raise ValueError("CSV bestand heeft niet alle verplichte headers, "
-                         f"of te veel headers. Headers: {headers}")
+        missing_headers = [header for count, header
+                           in zip(mandatory_fields_counts,
+                                  self.mandatory_fields)
+                           if count == 0]
+        duplicate_headers = [header for count, header
+                             in zip(mandatory_fields_counts,
+                                    self.mandatory_fields)
+                             if count > 1]
+
+        if missing_headers and duplicate_headers:
+            raise ValueError(f"CSV bestand mist de volgende verplichte"
+                             f" headers: {missing_headers}\n"
+                             f"En heeft de volgende duplicate headers: "
+                             f"{duplicate_headers}")
+        if missing_headers:
+            raise ValueError(f"CSV bestand mist de volgende verplichte"
+                             f" headers: {missing_headers}")
+        if duplicate_headers:
+            raise ValueError(f"CSV bestand heeft de volgende duplicate"
+                             f" headers: {duplicate_headers}")
 
     def load_file(self, path: str) -> Generator[RawFile, None, None]:
         """
@@ -66,16 +83,36 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
             row: dict
 
             row_index = 1  # Only used for debugging
+            errors = []
             for row in reader:
                 # Remove empty fields
                 for key, value in row.items():
-                    if value == "" or value.isspace():
-                        del row[key]
-
-                yield self.generate_file(row, path, row_index)
+                    if (not isinstance(value, str) or value == "" or
+                            value.isspace()):
+                        row[key] = None
+                try:
+                    correct_date_format, file = self.generate_file(row, path,
+                                                                   row_index)
+                    yield file
+                    if not correct_date_format:
+                        errors.append(
+                            SyntaxWarning(
+                                f"De datum van document {row_index} kon niet "
+                                f"worden geïnterpreteerd: '{row.get('date')}'."
+                                f" Dit bestand is zonder datum ingeladen."))
+                except Exception as e:
+                    errors.append(e)
                 row_index += 1
 
-    def generate_file(self, file: dict, path: str, row_index: int) -> RawFile:
+        if errors:
+            if len(errors) == 1:
+                raise errors[0]
+            else:
+                raise ExceptionGroup("Er zijn meerdere fouten opgetreden "
+                                     "bij het laden van het bestand: ", errors)
+
+    def generate_file(self, file: dict, path: str, row_index: int) -> (
+            tuple[bool, RawFile]):
         """
         Generates a File object from a CSV row.
 
@@ -83,20 +120,32 @@ class CsvFileImporter(file_importer_base.FileImporterBase):
         :param path: The string path to the CSV file.
         :param row_index: The index of the row in the csv file. Used for
         debugging and error presentation to the user.
-        :return: A RawFile object generated from the CSV row
-        containing metadata and the raw text of the file.
+        :return: A tuple of a boolean and a RawFile object. The boolean is
+        False if the datetime could not be parsed, and True if the datetime
+        was successfully parsed or if the datetime does not exist for that
+        document. A RawFile object generated from the CSV row containing
+        metadata and the raw text of the file.
         """
         for key in self.mandatory_fields:
-            if key not in file or file[key] is None:
-                raise KeyError(f"er is een probleem opgetreden op rij "
-                               f"{row_index}", key)
+            if file.get(key) is None:
+                raise KeyError(f"De kolom '{key}' is verplicht, maar is niet "
+                               f"gevonden voor document {row_index}")
 
-        file_date: str = file.get("date")
-        if file_date is not None and not file_date.isspace():
-            file_date: date = self.parse_date(file_date)
-        return RawFile(
+        file_date_str: str = file.get("date")
+        file_date: datetime
+        correct_date_format: bool
+        if file_date_str is None:
+            file_date = None
+            correct_date_format = True
+        else:
+            file_date = self.parse_date(file_date_str)
+            correct_date_format = file_date is not None
+        dict_title = file.get("title")
+        alt_title = os.path.basename(path).replace('.csv', '')
+        file_title = alt_title if dict_title is None else dict_title
+        return correct_date_format, RawFile(
             metadata=Metadata(author=file.get("author"),
-                              title=file.get("title"), date=file_date,
+                              title=file_title, date=file_date,
                               url=file.get("url"), path=os.path.relpath(path),
                               format="csv",
                               length=len(file.get("body").split(" ")),
