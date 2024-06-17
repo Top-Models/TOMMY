@@ -15,7 +15,13 @@ from tommy.support.constant_variables import (heading_font, prim_col_red,
                                               selected_medium_light_gray,
                                               seco_col_blue,
                                               hover_seco_col_blue,
-                                              pressed_seco_col_blue)
+                                              pressed_seco_col_blue,
+                                              title_label_font,
+                                              config_button_font,
+                                              config_view_button,
+                                              config_view_label_font,
+                                              pressed_seco_col_blue,
+                                              scrollbar_style)
 
 
 class ConfigView(QDialog):
@@ -75,14 +81,17 @@ class ConfigView(QDialog):
         add_button = QPushButton("Toevoegen")
         add_button.clicked.connect(self.add_configuration)
         add_button.setStyleSheet(button_stylesheet)
+        add_button.setFont(config_view_button)
         self.buttons_layout.addWidget(add_button)
 
         delete_button = QPushButton("Verwijderen")
+        delete_button.setFont(config_view_button)
         delete_button.clicked.connect(self.delete_configuration)
         delete_button.setStyleSheet(button_stylesheet)
         self.buttons_layout.addWidget(delete_button)
 
         load_button = QPushButton("Laden")
+        load_button.setFont(config_view_button)
         load_button.clicked.connect(self.load_configuration)
         load_button.setStyleSheet(button_stylesheet)
         self.buttons_layout.addWidget(load_button)
@@ -125,7 +134,7 @@ class ConfigView(QDialog):
                 background-color: {selected_medium_light_gray};
                 color: #333333;
             }}
-        """)
+        """ + scrollbar_style)
 
     def initialize_title_label(self) -> None:
         """
@@ -134,6 +143,7 @@ class ConfigView(QDialog):
         :return: None
         """
         self.title_label = QLabel("Configuraties")
+        self.title_label.setFont(title_label_font)
         self.title_label.setStyleSheet(f"font-size: 13px;"
                                        f"font-family: {heading_font};"
                                        f"font-weight: bold;"
@@ -155,17 +165,21 @@ class ConfigView(QDialog):
         selected_config = self.config_controller.get_selected_configuration()
         for name in configurations:
             if name == selected_config:
-                # TODO: change the style of this item to communicate to the
-                #  user that this is the selected config
                 item = QListWidgetItem(name)
+                item.setFont(config_view_label_font)
                 self.config_list_widget.addItem(item)
             else:
                 self.config_list_widget.addItem(name)
 
     def add_configuration(self) -> None:
         """Method to add a new configuration"""
-        name, ok = QInputDialog.getText(self, "Voer Configuratie Naam In",
-                                        "Naam:")
+        dialog = QInputDialog(self)
+        dialog.setStyleSheet("color: black;")
+        dialog.setWindowTitle("Voer Configuratie Naam In")
+        dialog.setLabelText("Naam:")
+        ok = dialog.exec_()
+        name = dialog.textValue()
+
         if ok:
             success = self.config_controller.add_configuration(name)
             if success:
@@ -182,13 +196,17 @@ class ConfigView(QDialog):
         selected_items = self.config_list_widget.selectedItems()
         if selected_items:
             selected_item = selected_items[0]
-            confirmation = QMessageBox.question(
-                self, "Verwijder Configuratie",
+            confirmation = QMessageBox(self)
+            confirmation.setWindowTitle("Verwijder Configuratie")
+            confirmation.setText(
                 f"Weet u zeker dat u de configuratie "
-                f"'{selected_item.text()}' wilt verwijderen?",
-                QMessageBox.Yes | QMessageBox.No
-            )
-            if confirmation == QMessageBox.Yes:
+                f"'{selected_item.text()}' wilt verwijderen?")
+            confirmation.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            confirmation.setStyleSheet(
+                "QLabel{color: black;} QPushButton{color: black;}")
+            user_choice = confirmation.exec_()
+
+            if user_choice == QMessageBox.Yes:
                 success = self.config_controller.delete_configuration(
                     selected_item.text())
                 if success:

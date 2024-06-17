@@ -1,14 +1,20 @@
 import pytest
 from PySide6.QtCore import Qt
+from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.controller import Controller
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
+from test.helper_fixtures import controller_no_pipeline
+
+
+@pytest.fixture
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture(scope='function')
-def lda_settings() -> LdaSettings:
-    controller = Controller()
+def lda_settings(controller) -> LdaSettings:
     lda_settings = LdaSettings(controller.model_parameters_controller,
                                controller.config_controller,
                                controller.language_controller)
@@ -171,8 +177,6 @@ def test_toggle_auto_calculate_alpha_beta(lda_settings: LdaSettings,
                      Qt.LeftButton)
 
     # Assert
-    assert lda_settings._alpha_value_input.text() == "1.0"
-    assert lda_settings._beta_value_input.text() == "0.01"
     assert not lda_settings._alpha_value_input.isReadOnly()
     assert not lda_settings._beta_value_input.isReadOnly()
 

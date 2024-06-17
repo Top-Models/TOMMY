@@ -51,5 +51,10 @@ class KValueCreator(AbstractVisualization):
         fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
         fig.tight_layout()
 
+        fig.figure.subplots_adjust(
+            left=0.15, right=0.85, top=0.85, bottom=0.15)
+
+        plt.title(self.name, pad=25)
+
         plt.close()
         return fig

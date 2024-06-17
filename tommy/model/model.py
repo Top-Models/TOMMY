@@ -9,10 +9,11 @@ from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.model.synonyms_model import SynonymsModel
 from tommy.model.topic_model import TopicModel
 from tommy.support.supported_languages import SupportedLanguage
+from tommy.support.application_settings import application_settings
 
 
 class Model:
-    default_config_name = "Config 1"
+    default_config_name = application_settings.default_config_name
 
     def __init__(self):
         self.language_model: LanguageModel = LanguageModel()

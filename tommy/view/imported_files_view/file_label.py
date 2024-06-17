@@ -6,7 +6,7 @@ from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
     heading_font, label_height,
     text_font, medium_light_gray, hover_medium_light_gray,
-    pressed_medium_light_gray, seco_col_blue)
+    pressed_medium_light_gray, seco_col_blue, file_label_font)
 
 
 class FileLabel(QLabel):
@@ -27,10 +27,7 @@ class FileLabel(QLabel):
         self.file = file_metadata
         self.topic_correspondence = topic_correspondence
         self.setFixedHeight(label_height)
-
-        self.setStyleSheet(f"font-family: {text_font};"
-                           f"font-size: 12px;"
-                           f"background-color: {medium_light_gray};"
+        self.setStyleSheet(f"background-color: {medium_light_gray};"
                            f"color: black;"
                            f"margin: 0px;"
                            f"padding: 2px 3px 4px 3px;")
@@ -38,6 +35,7 @@ class FileLabel(QLabel):
                           Qt.AlignmentFlag.AlignTop)
         self.setSizePolicy(QSizePolicy.Policy.Expanding,
                            QSizePolicy.Policy.Preferred)
+        self.setFont(file_label_font)
         self.selected = False
 
         # If provided, set the correspondence with the current selected topic
@@ -70,9 +68,7 @@ class FileLabel(QLabel):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 12px;"
-                               f"background-color: "
+            self.setStyleSheet(f"background-color: "
                                f"{hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
@@ -85,9 +81,7 @@ class FileLabel(QLabel):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 12px;"
-                               f"background-color: {medium_light_gray};"
+            self.setStyleSheet(f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 2px 3px 4px 3px;")
@@ -99,9 +93,7 @@ class FileLabel(QLabel):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 12px;"
-                               f"background-color: "
+            self.setStyleSheet(f"background-color: "
                                f"{pressed_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
@@ -118,9 +110,7 @@ class FileLabel(QLabel):
         """
         try:
             self.selected = False
-            self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 12px;"
-                               f"background-color: {medium_light_gray};"
+            self.setStyleSheet(f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 2px 3px 4px 3px;")
@@ -134,9 +124,7 @@ class FileLabel(QLabel):
         """
         try:
             self.selected = True
-            self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 12px;"
-                               f"background-color: "
+            self.setStyleSheet(f"background-color: "
                                f"{pressed_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
@@ -151,9 +139,7 @@ class FileLabel(QLabel):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"font-family: {text_font};"
-                               f"font-size: 12px;"
-                               f"background-color: {hover_medium_light_gray};"
+            self.setStyleSheet(f"background-color: {hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
                                f"padding: 2px 3px 4px 3px;")

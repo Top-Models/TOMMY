@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QWidget, QTabWidget
 
 from tommy.controller.config_controller import ConfigController
+from tommy.support.constant_variables import text_font, plot_tab_font
 from tommy.view.graph_view import GraphView
 
 from tommy.controller.graph_controller import GraphController
@@ -32,6 +33,7 @@ class PlotSelectionView(QTabWidget):
                 QTabWidget {{
                     color: black;
                     border: none;
+                    font-family: {text_font};
                 }}
 
                 QTabBar::tab {{ 
@@ -72,6 +74,7 @@ class PlotSelectionView(QTabWidget):
         self._graph_controller.refresh_plots_event.subscribe(
             lambda _: self._tab_clicked_event())
         self._graph_view = graph_view
+        self.setFont(plot_tab_font)
 
         # Initialize a dict from tab index to the corresponding visualization
         self._tabs_plots: dict[int, PossibleVisualization] = {}

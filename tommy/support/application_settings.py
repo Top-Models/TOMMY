@@ -6,32 +6,26 @@ from dataclasses import dataclass
 @dataclass
 class ApplicationSettings:
     """A class that holds the application-wide settings."""
-    preprocessing_data_folder: str
+    data_folder: str
+    default_config_name: str = "Config 1"
 
 
-def get_standard_input_folder() -> str:
+def get_data_folder() -> str:
     """
-    Returns the standard location where input files will be expected
-    Note: this is a temporary hardcoded location for now.
-    :return: the standard location where input will be expected by the
-        application
+    Returns the standard location where all software-dependent data is stored.
+    :return: the standard location where data dependencies needed for several
+        software components will be expected by the application.
     """
-    base_dir = get_base_dir()
-    return os.path.join(base_dir, "data")
+    return os.path.join(get_base_dir(), "data")
 
 
-def get_preprocessing_data_folder() -> str:
+def get_assets_folder() -> str:
     """
-    Returns the standard location where preprocessing data is stored
-    :return: the standard location where data needed for preprocessing will
-        be expected by the application (such as stopwords and maybe spacy
-        pipeline downloads) Note: this is a temporary hardcoded location for
-        now.
+    Returns the standard location where assets are stored
+    :return: the standard location where assets are stored
     """
-    base_dir = get_base_dir()
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(base_dir, "preprocessing_data")
-    return get_standard_input_folder()
+    base_dir = get_data_folder()
+    return os.path.join(base_dir, "assets")
 
 
 def get_base_dir() -> str:
@@ -44,7 +38,7 @@ def get_base_dir() -> str:
     return os.path.abspath(getattr(sys, '_MEIPASS', os.getcwd()))
 
 
-application_settings = ApplicationSettings(get_preprocessing_data_folder())
+application_settings = ApplicationSettings(get_data_folder())
 
 """
 This program has been developed by students from the bachelor Computer Science

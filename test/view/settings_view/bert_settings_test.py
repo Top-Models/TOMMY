@@ -5,11 +5,16 @@ from tommy.view.settings_view.abstract_settings.bert_settings import (
     BertSettings)
 from tommy.view.settings_view.abstract_settings.abstract_settings import (
     AbstractSettings)
+from test.helper_fixtures import controller_no_pipeline
+
+
+@pytest.fixture
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture(scope='function')
-def bert_settings() -> BertSettings:
-    controller = Controller()
+def bert_settings(controller) -> BertSettings:
     bert_settings = BertSettings(controller.model_parameters_controller,
                                  controller.config_controller,
                                  controller.language_controller)

@@ -1,15 +1,10 @@
-import os
-
-from tommy.model.config_model import ConfigModel
-from tommy.model.model_parameters_model import ModelParametersModel
-
-
 class ProjectSettingsModel:
     """A class representing project settings."""
 
     def __init__(self) -> None:
-        # Set input_folder_path to "data" by default
-        self.input_folder_path: str = os.path.join("data", "csv_files")
+        # Don't load anything on startup, make the user select a folder
+        # themselves.
+        self.input_folder_path: str = ""
 
 
 """

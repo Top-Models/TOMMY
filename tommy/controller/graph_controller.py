@@ -22,8 +22,15 @@ from tommy.controller.visualizations.document_topic_network_summary_creator \
     import DocumentTopicNetworkSummaryCreator
 from tommy.controller.visualizations.document_word_count_creator import (
     DocumentWordCountCreator)
+from tommy.controller.visualizations.documents_over_time_creator import (
+    DocumentsOverTimeCreator)
+from tommy.controller.visualizations.documents_over_time_per_topic_creator import \
+    DocumentsOverTimePerTopicCreator
+from tommy.controller.visualizations.sum_topics_in_documents import \
+    SumTopicsInDocuments
 from tommy.controller.visualizations.top_words_bar_plot_creator import (
     TopWordsBarPlotCreator)
+from tommy.controller.visualizations.welcome_screen import WelcomeScreen
 from tommy.controller.visualizations.word_cloud_creator import WordCloudCreator
 from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
@@ -42,10 +49,13 @@ from tommy.controller.visualizations.possible_visualization import (
     PossibleVisualization)
 from tommy.controller.visualizations.visualization_input_datatypes import (
     VisInputData, ProcessedCorpus, MetadataCorpus)
+from tommy.datatypes.exports import NxExport, MatplotLibExport
 
 from tommy.datatypes.topics import TopicWithScores
 from tommy.model.topic_model import TopicModel
 from tommy.support.event_handler import EventHandler
+from tommy.model.custom_name_model import TopicNameModel
+from tommy.support.application_settings import application_settings
 
 
 class GraphController:
@@ -57,16 +67,21 @@ class GraphController:
     """
     _topic_modelling_controller: TopicModellingController = None
     _corpus_controller: CorpusController = None
+    _project_settings_controller: ProjectSettingsController = None
 
     # Visualization Creators
     VISUALIZATIONS: list[AbstractVisualization] = [
         DocumentWordCountCreator(),
         KValueCreator(),
+        DocumentsOverTimeCreator(),
+        SumTopicsInDocuments(),
         CorrelationMatrixCreator(),
         WordTopicNetworkCreator(),
         DocumentTopicNetworkSummaryCreator(),
         WordCloudCreator(),
-        TopWordsBarPlotCreator()
+        TopWordsBarPlotCreator(),
+        DocumentsOverTimePerTopicCreator(),
+        WelcomeScreen()
     ]
     _possible_visualizations: list[PossibleVisualization] | None = None
 
@@ -78,6 +93,7 @@ class GraphController:
     _possible_plots_changed_event: EventHandler[list[PossibleVisualization]]
     _topics_changed_event: EventHandler[None]
     _refresh_plots_event: EventHandler[None]
+    _refresh_name_event: EventHandler[None]
 
     # Exporters
     NX_EXPORTS: list[NxExporterOnData | NxExporter] = [
@@ -104,16 +120,24 @@ class GraphController:
         return self._refresh_plots_event
 
     @property
+    def refresh_name_event(self) -> EventHandler[None]:
+        """Get the event that triggers when the config name changes."""
+        return self._refresh_name_event
+
+    @property
     def has_topic_runner(self) -> bool:
         return self._current_topic_runner is not None
 
     def __init__(self) -> None:
         """Initialize the graph-controller and its two publishers"""
         super().__init__()
+        self._current_config = application_settings.default_config_name
+        self._topic_name_model = TopicNameModel(self._current_config)
         self._possible_plots_changed_event = EventHandler[
             list[PossibleVisualization]]()
         self._topics_changed_event = EventHandler[None]()
         self._refresh_plots_event = EventHandler[None]()
+        self._refresh_name_event = EventHandler[None]()
 
     def set_controller_refs(
             self,
@@ -128,7 +152,7 @@ class GraphController:
         self._topic_modelling_controller = topic_modelling_controller
 
         topic_modelling_controller.model_trained_event.subscribe(
-            self.on_topic_runner_complete)
+            self.on_new_topic_runner)
         topic_modelling_controller.topic_model_switched_event.subscribe(
             self._on_config_switch)
         project_settings_controller.input_folder_path_changed_event.subscribe(
@@ -143,9 +167,52 @@ class GraphController:
         :return: None
         """
         self._current_topic_selected_id = topic_index
-
-        # trigger event to notify that plots may have changed
         self._refresh_plots_event.publish(None)
+
+    def set_current_config(self, config_name: str) -> None:
+        """
+        Set the current configuration name
+        :param config_name: The name of the current configuration
+        :return: None
+        """
+        self._current_config = config_name
+        self._refresh_name_event.publish(None)
+
+    def get_topic_name(self, topic_index: int) -> str:
+        """
+        Get the name of the topic with the given index
+        :param topic_index: The index of the topic
+        :return: The name of the topic
+        """
+        return self._topic_name_model.get_topic_name(self._current_config,
+                                                     topic_index)
+
+    def set_topic_name(self, topic_index: int, name: str) -> None:
+        """
+        Set the name of the topic with the given index
+        :param topic_index: The index of the topic
+        :param name: The new name of the topic
+        :return: None
+        """
+
+        self._topic_name_model.set_topic_name(self._current_config,
+                                              topic_index, name)
+
+    def _clear_topic_names(self) -> None:
+        """
+        Clear all custom topic names
+        :return: None
+        """
+        self._topic_name_model.clear_topic_names(self._current_config)
+        self.topics_changed_event.publish(None)
+
+    def remove_config(self, config_name: str) -> None:
+        """
+        Remove the configuration with the given name
+        :param config_name: The name of the configuration to remove
+        :return: None
+        """
+        self._topic_name_model.remove_config(config_name)
 
     def clear_graphs(self, _):
         """Clear all graphs when the input folder path changes"""
@@ -166,6 +233,17 @@ class GraphController:
             raise RuntimeError("Amount of topics requested before topic "
                                "runner has finished running")
         return self._current_topic_runner.get_n_topics()
+
+    def get_model_type(self) -> str:
+        """
+        Get the model type in the topic modelling results
+        :return: the model type in the topic modelling results
+        :raises RuntimeError: if the topic runner has not finished running yet.
+        """
+        if not self.has_topic_runner:
+            raise RuntimeError("Model type requested before topic "
+                               "runner has finished running")
+        return self._current_topic_runner.get_model()
 
     def get_topic_with_scores(self, topic_id, n_words) -> TopicWithScores:
         """
@@ -193,7 +271,9 @@ class GraphController:
                                    visualization.needed_input_data))
             for (vis_index, visualization)
             in enumerate(self.VISUALIZATIONS)
-            if visualization.is_possible(self._current_topic_runner)
+            if visualization.is_possible(
+                self._corpus_controller.metadata_available(),
+                self._current_topic_runner)
         ]
 
         # check for each export if it is possible
@@ -204,7 +284,7 @@ class GraphController:
             if exporter.is_possible(self._current_topic_runner)
         ]
 
-    def _get_nx_export(self, vis_index: int) -> nx.graph:
+    def _get_nx_export(self, vis_index: int) -> nx.Graph:
         """
         Returns the networkx graph corresponding showing the network
         corresponding to the given index in the list of all exports.
@@ -226,14 +306,17 @@ class GraphController:
         raise IndexError(f'No exports with index {vis_index} available')
 
     def get_visualization(self, vis_index: int,
-                          override_topic: int | None = None
-                          ) -> (matplotlib.figure.Figure, str):
+                          override_topic: int | None = None,
+                          ignore_cache: bool = False
+                          ) -> tuple[matplotlib.figure.Figure, str]:
         """
         Returns the visualization corresponding to the given index in the list
         of all visualizations.
         :param vis_index: Index of the visualization to be requested
         :param override_topic: A topic index used to override the selected
             topic, default to None, which doesn't override the selected topic
+        :param ignore_cache: Whether to ignore the cache and always create a
+            new figure, defaults to False
         :return: matplotlib figure of visualization corresponding to the index
         and the type of the visualization
         :raises IndexError: if the index is negative or bigger than the number
@@ -248,11 +331,13 @@ class GraphController:
         vis_creator = self.VISUALIZATIONS[vis_index]
 
         return (self._run_visualization_creator(vis_creator,
-                                                override_topic=override_topic),
+                                                override_topic=override_topic,
+                                                ignore_cache=ignore_cache),
                 vis_creator.short_tab_name)
 
     def _run_visualization_creator(self, vis_creator: AbstractVisualization,
-                                   override_topic: int | None = None
+                                   override_topic: int | None = None,
+                                   ignore_cache: bool = False
                                    ) -> matplotlib.figure.Figure:
         """
         Returns the given global visualization on the current topic runner and
@@ -260,6 +345,8 @@ class GraphController:
         :param vis_creator: The visualization creator be run
         :param override_topic: A topic index used to override the selected
             topic, default to None, which doesn't override the selected topic
+        :param ignore_cache: Whether to ignore the cache and always create a
+            new figure, defaults to False
         :return: matplotlib figure of visualization
         """
         keyword_args = {}
@@ -285,6 +372,7 @@ class GraphController:
                                               f"{vis_creator.name}.")
 
         return vis_creator.get_figure(self._current_topic_runner,
+                                      ignore_cache=ignore_cache,
                                       **keyword_args)
 
     @staticmethod
@@ -329,24 +417,35 @@ class GraphController:
         """
         return nx_exporter.get_nx_graph(self._current_topic_runner)
 
-    def get_all_visualizations(self) -> list[matplotlib.figure.Figure]:
+    def get_all_visualizations(self, ignore_cache: bool = False
+                               ) -> list[MatplotLibExport]:
         """
         Get all the possible visualization for the current run
+        :param ignore_cache: Whether to ignore the cache and always create a
+            new figure, defaults to False
         :return: A list of  matplotlib Figures of all possible visualizations
         """
-        if self._current_topic_runner is None:
-            raise RuntimeError("Plots cannot be requested when topic model "
-                               "has not been run.")
-
-        vis_without_topic = [self.get_visualization(possible_vis.index)
+        vis_without_topic = [MatplotLibExport(possible_vis.name, None,
+                                              self.get_visualization(
+                                                  possible_vis.index,
+                                                  ignore_cache=ignore_cache
+                                              )[0]
+                                              )
                              for possible_vis
                              in self._possible_visualizations
                              if not possible_vis.needs_topic]
 
+        if self._current_topic_runner is None:
+            return vis_without_topic
+
         # loop over all topic and all visualization that need topics to
         #   run all combinations
-        vis_with_topic = [self.get_visualization(possible_vis.index,
-                                                 override_topic=topic_id)
+        vis_with_topic = [MatplotLibExport(possible_vis.name, topic_id,
+                                           self.get_visualization(
+                                               possible_vis.index,
+                                               override_topic=topic_id,
+                                               ignore_cache=ignore_cache)[0]
+                                           )
                           for (possible_vis, topic_id)
                           in product(self._possible_visualizations,
                                      range(self.get_number_of_topics()))
@@ -354,17 +453,18 @@ class GraphController:
 
         return vis_without_topic + vis_with_topic
 
-    def get_all_nx_exports(self) -> list[nx.graph]:
+    def get_all_nx_exports(self) -> list[NxExport]:
         """
         Get all the networkx graphs for the possible visualization for the
         current run
         :return: A list of nx.graph objects of all possible visualizations
         """
         if self._current_topic_runner is None:
-            raise RuntimeError("Exports cannot be requested when topic model "
-                               "has not been run.")
+            raise RuntimeWarning("Exports cannot be requested when topic model"
+                                 " has not been run.")
 
-        return [self._get_nx_export(vis) for vis
+        return [NxExport(self.NX_EXPORTS[vis].name, self._get_nx_export(vis))
+                for vis
                 in range(len(self._possible_nx_exports))]
 
     def _delete_all_cached_plots(self):
@@ -372,7 +472,7 @@ class GraphController:
         for vis_creator in self.VISUALIZATIONS:
             vis_creator.delete_cache()
 
-    def on_topic_runner_complete(self, topic_runner: TopicRunner) -> None:
+    def on_new_topic_runner(self, topic_runner: TopicRunner) -> None:
         """
         Signal the graph-controller that a topic runner has finished training
         and is ready to provide results. Notify the subscribes of the plots
@@ -386,10 +486,24 @@ class GraphController:
         self._topics_changed_event.publish(None)
         self._possible_plots_changed_event.publish(
             self._possible_visualizations)
+        self._clear_topic_names()
+
+    def on_topic_runner_switched(self, topic_runner: TopicRunner) -> None:
+        """
+        Signal the graph-controller that a topic runner has been switched
+        :param topic_runner: The newly trained topic runner object
+        :return: None
+        """
+        self._delete_all_cached_plots()
+        self._current_topic_runner = topic_runner
+        self._calculate_possible_visualizations()
+        self._topics_changed_event.publish(None)
+        self._possible_plots_changed_event.publish(
+            self._possible_visualizations)
 
     def _on_config_switch(self, topic_runner: TopicRunner | None):
         """Save and publish new topic runner on config switch"""
-        self.on_topic_runner_complete(topic_runner)
+        self.on_topic_runner_switched(topic_runner)
 
     def reset_graph_view_state(self) -> None:
         """Reset the state of the graph view"""

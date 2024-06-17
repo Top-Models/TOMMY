@@ -3,9 +3,9 @@ import os
 import pytest
 from pytestqt.qtbot import QtBot
 
+from test.helper_fixtures import controller_no_pipeline
 from tommy.controller.controller import Controller
 from tommy.controller.saving_loading_controller import SavingLoadingController
-from tommy.model.model import Model
 from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
 from tommy.view.imported_files_view.imported_files_view import \
@@ -19,9 +19,8 @@ from tommy.view.stopwords_view import StopwordsView
 
 
 @pytest.fixture
-def controller() -> Controller:
-    controller = Controller()
-    return controller
+def controller(controller_no_pipeline) -> Controller:
+    return controller_no_pipeline
 
 
 @pytest.fixture
@@ -36,14 +35,15 @@ def model_params_view(controller: Controller, qtbot: QtBot) -> ModelParamsView:
         controller.model_parameters_controller,
         controller.language_controller,
         controller.config_controller,
-        controller)
+        controller.topic_modelling_controller)
     qtbot.addWidget(model_params_view)
     return model_params_view
 
 
 @pytest.fixture
 def stopwords_view(controller: Controller, qtbot: QtBot) -> StopwordsView:
-    stopwords_view = StopwordsView(controller.stopwords_controller)
+    stopwords_view = StopwordsView(controller.stopwords_controller,
+                                   controller.topic_modelling_controller)
     qtbot.addWidget(stopwords_view)
     return stopwords_view
 
@@ -53,7 +53,8 @@ def imported_files_view(controller: Controller,
                         qtbot: QtBot) -> ImportedFilesView:
     imported_files_view = (
         ImportedFilesView(controller.corpus_controller,
-                          controller.topic_modelling_controller))
+                          controller.topic_modelling_controller,
+                          controller.config_controller))
     qtbot.addWidget(imported_files_view)
     return imported_files_view
 
@@ -284,8 +285,9 @@ def test_load_project_imports_files(controller: Controller):
     # check if the files are imported correctly
     metadata = controller.corpus_controller._corpus_model.metadata
     assert len(metadata) == 2
-    assert metadata[0].title == "kattenverhaaltje 1"
-    assert metadata[1].title == "kattenverhaaltje 2"
+    file_names = [metadata[i].name for i in range(2)]
+    assert sorted(file_names) == ["kattenverhaaltje 1",
+                                  "kattenverhaaltje 2"]
 
 
 def test_load_project_updates_imported_files_view(

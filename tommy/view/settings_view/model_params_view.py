@@ -1,17 +1,17 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QScrollArea, QWidget,
-                               QPushButton, QApplication, QHBoxLayout)
+                               QPushButton, QHBoxLayout)
 
 from tommy.controller.config_controller import ConfigController
-from tommy.controller.controller import Controller
 from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
-from tommy.model.model_parameters_model import ModelParametersModel
+from tommy.controller.topic_modelling_controller import \
+    TopicModellingController
 from tommy.support.constant_variables import (
     text_font, heading_font, seco_col_blue, hover_seco_col_blue,
     pressed_seco_col_blue, prim_col_red, hover_prim_col_red, disabled_gray,
-    extra_light_gray, scrollbar_style)
+    scrollbar_style, title_label_font, apply_button_font)
 from tommy.support.model_type import ModelType
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
@@ -27,7 +27,7 @@ class ModelParamsView(QScrollArea):
     def __init__(self, model_parameters_controller: ModelParametersController,
                  language_controller: LanguageController,
                  config_controller: ConfigController,
-                 controller: Controller) -> None:
+                 topic_modelling_controller: TopicModellingController) -> None:
         """The initialization of the ModelParamDisplay."""
         super().__init__()
         self.setObjectName("model_params_display")
@@ -37,7 +37,9 @@ class ModelParamsView(QScrollArea):
         self._model_parameters_controller = model_parameters_controller
         self._model_parameters_controller.algorithm_changed_event.subscribe(
             lambda _: self.model_type_changed_event())
-        self._controller = controller
+        self._topic_modelling_controller = topic_modelling_controller
+        self._topic_modelling_controller.model_trained_event.subscribe(
+            lambda _: self._reset_apply_button_on_model_trained())
         self._config_controller = config_controller
 
         # Subscribe to the event when the config changes
@@ -139,9 +141,7 @@ class ModelParamsView(QScrollArea):
         :return: None
         """
         self.title_label = QLabel("Instellingen")
-        self.title_label.setStyleSheet(f"font-size: 13px;"
-                                       f"font-family: {heading_font};"
-                                       f"font-weight: bold;"
+        self.title_label.setStyleSheet(f"font-weight: bold;"
                                        f"text-transform: uppercase;"
                                        f"background-color: {prim_col_red};"
                                        f"color: white;"
@@ -149,6 +149,7 @@ class ModelParamsView(QScrollArea):
                                        f"3px solid {hover_prim_col_red};")
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
                                       Qt.AlignmentFlag.AlignTop)
+        self.title_label.setFont(title_label_font)
         self.title_label.setContentsMargins(0, 0, 0, 0)
         self.title_label.setFixedHeight(50)
         self.layout.addWidget(self.title_label)
@@ -219,13 +220,17 @@ class ModelParamsView(QScrollArea):
         :return: None
         """
         self.clear_layouts_from_button_layout()
-        self.apply_button = QPushButton("Toepassen")
+        self.apply_button = QPushButton("TOEPASSEN")
+        self.apply_button.setFont(apply_button_font)
         self.apply_button.setFixedHeight(40)
         self.apply_button.setStyleSheet(
             f"""
                 QPushButton {{
                     background-color: {seco_col_blue};
                     color: white;
+                    font-family: {heading_font};
+                    font-size: 12px;
+                    font-weight: bold;
                 }}
 
                 QPushButton:hover {{
@@ -260,14 +265,16 @@ class ModelParamsView(QScrollArea):
             current_model_type]
         # Disable the apply button and change its text to "Laden..."
         self.apply_button.setEnabled(False)
-        self.apply_button.setText("Laden...")
+        self.apply_button.setText("LADEN...")
         self.apply_button.setStyleSheet(
             f"""
-                        QPushButton {{
-                            background-color: #808080;
-                            color: white;
-                            margin-left: 5px;
-                        }}
+                QPushButton {{
+                    background-color: #808080;
+                    color: white;
+                    font-family: {heading_font};
+                    font-size: 12px;
+                    font-weight: bold;
+                }}
 
                 QPushButton:hover {{
                     background-color: {hover_seco_col_blue};
@@ -278,20 +285,40 @@ class ModelParamsView(QScrollArea):
                 }}
             """)
 
-        QApplication.processEvents()
-
+        # Apply the settings
         if current_view.all_fields_valid():
-            self._controller.on_run_topic_modelling()
+            self.disable_input_fields_on_model_training()
+            self._topic_modelling_controller.train_model()
 
-        # Re-enable the apply button and restore its text
-        # when processing is complete
+    def disable_input_fields_on_model_training(self) -> None:
+        """
+        Disable the input fields when the model is training.
+
+        :return: None
+        """
+        current_view = self.get_current_settings_view()
+        current_view.disable_input_fields_on_model_training()
+
+    def _reset_apply_button_on_model_trained(self) -> None:
+        """
+        Re-enable the apply button and restore its text when training is
+        complete.
+        :return: None
+        """
+        current_view = self.get_current_settings_view()
+        current_view.enable_input_fields_on_model_trained()
+
+        # Change the apply button back to its original state
         self.apply_button.setEnabled(True)
-        self.apply_button.setText("Toepassen")
+        self.apply_button.setText("TOEPASSEN")
         self.apply_button.setStyleSheet(
             f"""
                 QPushButton {{
                     background-color: {seco_col_blue};
                     color: white;
+                    font-family: {heading_font};
+                    font-size: 12px;
+                    font-weight: bold;
                 }}
 
                 QPushButton:hover {{

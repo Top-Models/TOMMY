@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP_NAME="Tommy"
+APP_NAME="TOMMY"
 OUTPUT_FOLDER="dist"
 DATA_FOLDER_PATH="tommy/data"
 
@@ -15,9 +15,11 @@ pyinstaller \
 --windowed \
 --onedir \
 --name "${APP_NAME}" \
---icon "assets/tommy.svg" \
---add-data "${DATA_FOLDER_PATH}/stopwords.txt:./preprocessing_data" \
---add-data "${DATA_FOLDER_PATH}/pipeline_download:./preprocessing_data/pipeline_download" \
+--icon "${DATA_FOLDER_PATH}/assets/tommy.svg" \
+--add-data "${DATA_FOLDER_PATH}/:./data" \
+--hidden-import "pkg_resources.extern" \
+--exclude tkinter --exclude _tkinter \
+--exclude-module torch \
 tommy/main.py
 
 echo "> You can find the application in the dist folder"

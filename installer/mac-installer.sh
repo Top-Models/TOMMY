@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP_NAME="Tommy"
+APP_NAME="TOMMY"
 VOLUME_NAME="${APP_NAME} Installer"
 OUTPUT_FOLDER="dist"
 DMG_FOLDER_PATH="${OUTPUT_FOLDER}/${APP_NAME}-Installer.dmg"
@@ -18,17 +18,18 @@ pyinstaller \
 --windowed \
 --onedir \
 --name "${APP_NAME}" \
---icon "assets/tommy.icns" \
---add-data "${DATA_FOLDER_PATH}/stopwords.txt:./preprocessing_data" \
---add-data "${DATA_FOLDER_PATH}/pipeline_download:./preprocessing_data/pipeline_download" \
+--add-data "${DATA_FOLDER_PATH}:./data" \
+--icon "${DATA_FOLDER_PATH}/assets/tommy_icon_macos.ico" \
+--hidden-import "pkg_resources.extern" \
+--exclude-module torch \
 tommy/main.py
 
 echo "> Creating a DMG file for Tommy"
 
 create-dmg \
 --volname "${VOLUME_NAME}" \
---volicon "assets/tommy.icns" \
---background "assets/installerBackground.png" \
+--volicon "${DATA_FOLDER_PATH}/assets/tommy.icns" \
+--background "${DATA_FOLDER_PATH}/assets/installerBackground.png" \
 --window-pos 200 120 \
 --window-size 835 680 \
 --icon-size 128 \

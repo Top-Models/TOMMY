@@ -1,3 +1,6 @@
+import os
+
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QGuiApplication
 from PySide6.QtWidgets import (
     QMainWindow,
@@ -12,19 +15,23 @@ from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.imported_files_view import (
     ImportedFilesView)
 from tommy.view.menu_bar import MenuBar
-from tommy.view.settings_view.model_params_view import (
-    ModelParamsView)
 from tommy.view.plot_selection_view import (
     PlotSelectionView)
 from tommy.view.selected_information_view import SelectedInformationView
 from tommy.view.preprocessing_view import (
     PreprocessingView)
+from tommy.view.settings_view.model_params_view import (
+    ModelParamsView)
+from tommy.view.stopwords_view import (
+    StopwordsView)
+from tommy.view.supporting_components.custom_splitter.custom_splitter_component import \
+    CustomSplitter
 from tommy.view.topic_view.fetched_topics_view import \
     FetchedTopicsView
 from tommy.view.topic_view.topic_entity_component.topic_entity import (
     TopicEntity)
 
-
+from tommy.support.application_settings import get_assets_folder
 class MainWindow(QMainWindow):
     """Main window class for the topic modelling application"""
 
@@ -38,27 +45,64 @@ class MainWindow(QMainWindow):
         # Initialize window
         self.setWindowTitle("TOMMY")
         self.set_initial_window_size()
-        self.setWindowIcon(QIcon("../assets/tommy.png"))
-        self.setStyleSheet("background-color: white;"
-                           "font-size: 15px;"
-                           f"font-family: {text_font};"
-                           "border: none;")
+        self.setWindowIcon(
+            QIcon(f"{os.path.join(get_assets_folder(), "tommy.png")}"))
+        self.setStyleSheet(f"""
+            QMainWindow {{
+                background-color: white;
+                font-size: 15px;
+                font-family: {text_font};
+                border: none;
+            }}
+            
+            QMainWindow::children {{
+                font-family: {text_font};
+            }}
+            
+            QSplitter::handle {{
+                background-color: rgba(200, 200, 200, 200);
+                border: none;
+            }}
+        """)
 
         # Create the main layout
         self.layout = QHBoxLayout()
-        self.left_container = QVBoxLayout()
-        self.center_container = QVBoxLayout()
-        self.right_container = QVBoxLayout()
-        self.layout.addLayout(self.left_container)
-        self.layout.addLayout(self.center_container)
-        self.layout.addLayout(self.right_container)
-
-        # Set spacing of the layout
-        self.layout.setSpacing(0)
-        self.left_container.setSpacing(0)
-        self.center_container.setSpacing(0)
-        self.right_container.setSpacing(0)
         self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
+
+        # Create the custom splitter to handle resizing
+        self.splitter = CustomSplitter(Qt.Horizontal)
+        self.splitter.setStyleSheet("border: none;")
+        self.splitter.setContentsMargins(0, 0, 0, 0)
+
+        self.left_container = QWidget()
+        self.left_layout = QVBoxLayout(self.left_container)
+        self.left_layout.setContentsMargins(0, 0, 0, 0)
+        self.left_layout.setSpacing(0)
+
+        self.center_container = QWidget()
+        self.center_layout = QVBoxLayout(self.center_container)
+        self.center_layout.setContentsMargins(0, 0, 0, 0)
+        self.center_layout.setSpacing(0)
+
+        self.right_container = QWidget()
+        self.right_layout = QVBoxLayout(self.right_container)
+        self.right_layout.setContentsMargins(0, 0, 0, 0)
+        self.right_layout.setSpacing(0)
+
+        self.splitter.addWidget(self.left_container)
+        self.splitter.addWidget(self.center_container)
+        self.splitter.addWidget(self.right_container)
+
+        # Adjust size policies and minimum widths
+        self.left_container.setSizePolicy(QSizePolicy.Fixed,
+                                          QSizePolicy.Expanding)
+        self.right_container.setSizePolicy(QSizePolicy.Expanding,
+                                           QSizePolicy.Expanding)
+        self.center_container.setSizePolicy(QSizePolicy.Expanding,
+                                            QSizePolicy.Expanding)
+
+        self.layout.addWidget(self.splitter)
 
         # Set the central widget
         central_widget = QWidget()
@@ -69,7 +113,8 @@ class MainWindow(QMainWindow):
         self.setMenuBar(MenuBar(self,
                                 self._controller.project_settings_controller,
                                 self._controller.saving_loading_controller,
-                                self._controller.export_controller))
+                                self._controller.export_controller,
+                                self._controller.topic_modelling_controller))
 
         # Create widgets
         self.stopwords_view = PreprocessingView(
@@ -83,12 +128,14 @@ class MainWindow(QMainWindow):
         )
         self.imported_files_view = ImportedFilesView(
             self._controller.corpus_controller,
-            self._controller.topic_modelling_controller)
+            self._controller.topic_modelling_controller,
+            self._controller.config_controller
+        )
         self.model_params_view = ModelParamsView(
             self._controller.model_parameters_controller,
             self._controller.language_controller,
             self._controller.config_controller,
-            self._controller)
+            self._controller.topic_modelling_controller)
         self.fetched_topics_view = FetchedTopicsView(
             self._controller.graph_controller,
             self._controller.model_parameters_controller)
@@ -97,24 +144,27 @@ class MainWindow(QMainWindow):
             self._controller.model_parameters_controller)
 
         # Initialize widgets
-        self.left_container.addWidget(self.model_params_view)
-        self.left_container.addWidget(self.stopwords_view)
-        self.center_container.addWidget(self.plot_selection_view)
-        self.center_container.addWidget(self.graph_view)
-        self.center_container.addWidget(self.imported_files_view)
-        self.right_container.addWidget(self.fetched_topics_view)
-        self.right_container.addWidget(
-            self.selected_information_view)
+        self.left_layout.addWidget(self.model_params_view)
+        self.left_layout.addWidget(self.stopwords_view)
+        self.center_layout.addWidget(self.plot_selection_view)
+        self.center_layout.addWidget(self.graph_view)
+        self.center_layout.addWidget(self.imported_files_view)
+        self.right_layout.addWidget(self.fetched_topics_view)
+        self.right_layout.addWidget(self.selected_information_view)
 
-        # Make graph view resize with screen
-        self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Expanding,
-                                       QSizePolicy.Policy.Expanding))
+        # Adjust the splitter stretch factors
+        self.splitter.setStretchFactor(0, 1)
+        self.splitter.setStretchFactor(1, 3)
+        self.splitter.setStretchFactor(2,
+                                       1)
 
         self.display_correct_initial_files()
 
         # Initialize event handlers
         self.imported_files_view.fileClicked.connect(self.on_file_clicked)
         self.fetched_topics_view.topicClicked.connect(self.on_topic_clicked)
+        self.fetched_topics_view.topicNameChanged.connect(
+            self.on_topic_name_changed)
 
     def initialize_widget(self, widget: QWidget,
                           x: int, y: int, w: int, h: int) -> None:
@@ -130,7 +180,6 @@ class MainWindow(QMainWindow):
         """
 
         widget.setParent(self)
-
         widget.setGeometry(x, y, w, h)
         widget.show()
 
@@ -154,13 +203,10 @@ class MainWindow(QMainWindow):
         :param file: The file that was clicked
         :return: None
         """
-        self.fetched_topics_view.deselect_all_topics()
-        self.fetched_topics_view.selected_topic = None
-
         # TODO: Hardcoded save name
         # Show info about run if no file is selected
         if not file.selected:
-            self.selected_information_view.display_run_info("lda_model")
+            self.selected_information_view.display_run_info("Run Info")
             return
 
         self.selected_information_view.display_file_info(file)
@@ -179,11 +225,21 @@ class MainWindow(QMainWindow):
         # Show info about run if no topic is selected
         if not topic_entity.selected:
             self.imported_files_view.display_files()
-            self.selected_information_view.display_run_info("lda_model")
+            self.selected_information_view.display_run_info("Run Info")
             return
 
         self.imported_files_view.on_topic_selected(topic_entity)
         self.selected_information_view.display_topic_info(topic_entity)
+
+    def on_topic_name_changed(self, topic_entity: TopicEntity) -> None:
+        """
+        Event handler for when a topic name is changed.
+
+        :param topic_entity: The topic entity whose name was changed
+        :return: None
+        """
+        if topic_entity.selected:
+            self.selected_information_view.display_topic_info(topic_entity)
 
     def display_correct_initial_files(self) -> None:
         """

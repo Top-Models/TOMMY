@@ -27,7 +27,7 @@ class DocumentTopicNetworkSummaryCreator(AbstractVisualization):
     matplotlib figure.
     """
     _required_interfaces = [DocumentTopicsInterface, TopicRunner]
-    name = 'Topics en documenten die daar ten minste 5% bij horen'
+    name = 'Topics en documenten die daar minstens 5% bij horen'
     short_tab_name = 'Doc. Netwerk'
     vis_group = VisGroup.MODEL
     needed_input_data = [VisInputData.PROCESSED_CORPUS]
@@ -52,8 +52,8 @@ class DocumentTopicNetworkSummaryCreator(AbstractVisualization):
                              "document_topic_network_summary_creator")
 
         # Construct a plot and a graph
-        fig = plt.figure(dpi=60)
-        plt.title(self.name)
+        fig = plt.figure()
+        plt.title(self.name, pad=25)
         graph = self._construct_doc_topic_network(topic_runner,
                                                   processed_corpus)
 
@@ -117,7 +117,8 @@ class DocumentTopicNetworkSummaryCreator(AbstractVisualization):
 
         nx.draw_networkx_labels(graph, pos, labels=labels)
 
-        fig.figure.subplots_adjust(0.1, 0.1, 0.9, 0.9)
+        # Adjust the figure
+        fig.subplots_adjust(left=0.15, right=0.85, top=0.85, bottom=0.15)
 
         plt.close()
         return fig

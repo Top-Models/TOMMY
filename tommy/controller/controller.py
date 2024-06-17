@@ -122,7 +122,9 @@ class Controller:
         self._corpus_controller.set_controller_refs(
             self._project_settings_controller,
             self._preprocessing_controller)
-        self._export_controller.set_controller_refs(self._graph_controller)
+        self._export_controller.set_controller_refs(
+            self._graph_controller,
+            self._topic_modelling_controller)
 
         self._graph_controller.set_controller_refs(
             self._topic_modelling_controller, self._corpus_controller,
@@ -186,14 +188,6 @@ class Controller:
 
         self._saving_loading_controller.set_model_refs(
             self._model)
-
-    def on_run_topic_modelling(self) -> None:
-        """
-        Run the topic modelling algorithm on the currently selected corpus
-        and using the current model parameters
-        :return: None
-        """
-        self._topic_modelling_controller.train_model()
 
     def _update_model_on_config_switch(
             self, data: ConfigModel) -> None:

@@ -26,8 +26,8 @@ class AbstractVisualization(ABC):
     def get_figure(self, topic_runner: TopicRunner,
                    topic_id: TopicID = None,
                    metadata_corpus: MetadataCorpus = None,
-                   processed_corpus: ProcessedCorpus = None
-                   ) -> matplotlib.figure.Figure:
+                   processed_corpus: ProcessedCorpus = None,
+                   ignore_cache: bool = False) -> matplotlib.figure.Figure:
         """
         Get the matplotlib figure showing the requested visualization
         :param topic_runner: the topic runner to extract the result data from
@@ -37,11 +37,13 @@ class AbstractVisualization(ABC):
             applicable, defaults to None
         :param processed_corpus: the entire preprocessed corpus if applicable,
             defaults to None
+        :param ignore_cache: whether to ignore the cache and always create a
+            new figure, defaults to False
         :return: The matplotlib figure showing the requested visualization
         """
         # check if cache exists first
         result_figure = self._get_cached_figure(topic_id=topic_id)
-        if result_figure is None:
+        if result_figure is None or ignore_cache:
             result_figure = self._create_figure(topic_runner=topic_runner,
                                                 topic_id=topic_id,
                                                 metadata_corpus
@@ -79,15 +81,20 @@ class AbstractVisualization(ABC):
         :return: The matplotlib figure showing the requested visualization
         """
 
-    def is_possible(self, topic_runner: TopicRunner) -> bool:
+    def is_possible(self, metadata_available: bool,
+                    topic_runner: TopicRunner) -> bool:
         """
         Test whether the topic runner implements the necessary interfaces
         for this visualization type
+        :param metadata_available: whether metadata is available
         :param topic_runner: the topic runner to check interfaces from
         :return: True iff the visualization is possible on given topic runner
         """
-        return all(isinstance(topic_runner, requirement)
-                   for requirement in self._required_interfaces)
+        return (all(isinstance(topic_runner, requirement)
+                    for requirement in self._required_interfaces)
+                and (VisInputData.METADATA_CORPUS not in self.needed_input_data
+                     or metadata_available
+                     ))
 
     def delete_cache(self):
         """Delete all cached figures"""

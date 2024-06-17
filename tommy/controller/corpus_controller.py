@@ -1,5 +1,5 @@
 import os
-from collections.abc import Generator, Iterable
+from collections.abc import Generator
 
 from gensim.corpora import Dictionary
 
@@ -91,6 +91,8 @@ class CorpusController:
         :return: A generator yielding File
         objects
         """
+        if path == "":
+            return None
         errors = []
 
         for root, dirs, files in os.walk(path):
@@ -109,15 +111,22 @@ class CorpusController:
                 except UnicodeDecodeError as e:
                     errors.append(f"Dit bestand kon niet worden gedecodeerd: "
                                   f"{file}. Probleem: {e}")
-
+                except Warning as e:
+                    errors.append(f"Waarschuwing bij bestand '{file}': {e}")
+                except ExceptionGroup as e:
+                    error_lines = "\n".join(str(error) for error in
+                                            e.exceptions)
+                    errors.append(f"Er zijn meerdere fouten opgetreden bij "
+                                  f"het laden van dit bestand: {file}. "
+                                  f"Problemen:\n{error_lines}")
                 except Exception as e:
-                    errors.append(f"er is een probleem opgetreden bij het "
+                    errors.append(f"Er is een probleem opgetreden bij het "
                                   f"laden van dit bestand: "
                                   f" {file}. Probleem: {e}")
 
         if show_error and errors:
-            ErrorView("Er is een probleem opgetreden bij het importeren "
-                      "van de volgende bestanden:", errors)
+            ErrorView("Er is een probleem opgetreden bij het "
+                      "importeren van de volgende bestanden:", errors)
 
     def _read_files_from_input_folder(self) -> Generator[RawFile, None, None]:
         """
@@ -193,18 +202,22 @@ class CorpusController:
 
         :return: The pre-processed files and a reference to their metadata
         """
-        self.preprocess_corpus()
+        if not self._corpus_model.processed_corpus:
+            return self.preprocess_corpus()
 
         return self._corpus_model.processed_corpus
 
-    def preprocess_corpus(self) -> None:
+    def preprocess_corpus(self) -> ProcessedCorpus:
         """Preprocessed the corpus and save it in the corpus model"""
         processed_files = [ProcessedFile(doc.metadata, ProcessedBody(
             self._preprocessing_controller.process_text(doc.body.body)))
                            for
                            doc in self.get_raw_files()]
 
-        self._corpus_model.processed_corpus.documents = processed_files
+        processed_corpus = ProcessedCorpus(processed_files)
+
+        self._corpus_model.processed_corpus = processed_corpus
+        return processed_corpus
 
     def get_dictionary(self) -> Dictionary:
         """
@@ -226,6 +239,14 @@ class CorpusController:
         :return: None
         """
         self._corpus_model.dictionary = dictionary
+
+    def metadata_available(self) -> bool:
+        """
+        Check if the metadata is available in the corpus model
+
+        :return: True if metadata is available, False otherwise
+        """
+        return bool(self._corpus_model.metadata)
 
 
 """

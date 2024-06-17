@@ -1,8 +1,16 @@
-from PySide6.QtWidgets import QMessageBox, QScrollArea, QWidget, QVBoxLayout, \
-    QLabel
+from PySide6.QtCore import Qt, QUrl
+from PySide6.QtGui import QDesktopServices
+from PySide6.QtWidgets import (QMessageBox, QScrollArea, QWidget, QVBoxLayout,
+                               QLabel)
 
-from tommy.support.constant_variables import heading_font, text_font, \
-    prim_col_red, seco_col_blue, hover_seco_col_blue, pressed_seco_col_blue
+from tommy.support.constant_variables import (heading_font, text_font,
+                                              prim_col_red, seco_col_blue,
+                                              hover_seco_col_blue,
+                                              pressed_seco_col_blue,
+                                              error_label_font,
+                                              error_description_label_font,
+                                              error_heading_font,
+                                              scrollbar_style)
 
 
 class ErrorView(QMessageBox):
@@ -39,7 +47,7 @@ class ErrorView(QMessageBox):
             QPushButton:pressed {{
                 background-color: {pressed_seco_col_blue};
             }}
-        """)
+        """ + scrollbar_style)
 
         # Create a QWidget to hold the custom layout
         custom_widget = QWidget()
@@ -47,6 +55,7 @@ class ErrorView(QMessageBox):
 
         # Create title label
         title_label = QLabel("ERROR")
+        title_label.setFont(error_heading_font)
         title_label.setStyleSheet(f"""
             font-family: '{heading_font}', sans-serif;
             font-size: 20px;
@@ -58,9 +67,8 @@ class ErrorView(QMessageBox):
         error_description_label = QLabel(error_description)
         error_description_label.setWordWrap(True)
         error_description_label.setMaximumWidth(400)
+        error_description_label.setFont(error_description_label_font)
         error_description_label.setStyleSheet(f"""
-            font-family: '{text_font}', sans-serif;
-            font-size: 16px;
             color: black;
         """)
         custom_layout.addWidget(error_description_label)
@@ -72,11 +80,13 @@ class ErrorView(QMessageBox):
                 error_label.setWordWrap(True)
                 error_label.setMaximumWidth(400)
                 error_label.setStyleSheet(f"""
-                    font-family: 'Corbel', sans-serif;
-                    font-size: 14px;
                     color: black;
-                    margin-bottom: 5px;
                 """)
+                error_label.setFont(error_label_font)
+                error_label.setTextInteractionFlags(Qt.TextBrowserInteraction)
+                error_label.setOpenExternalLinks(True)
+                error_label.linkActivated.connect(
+                    lambda url: QDesktopServices.openUrl(QUrl(url)))
                 custom_layout.addWidget(error_label)
 
         # Create a scroll area to hold the custom widget
@@ -86,7 +96,7 @@ class ErrorView(QMessageBox):
         scroll_area.setMinimumWidth(400)
         scroll_area.setMinimumHeight(200)
         scroll_area.setStyleSheet(f"""
-            border: none;
+            border-color: grey;
             background-color: white;
         """)
 
@@ -94,7 +104,6 @@ class ErrorView(QMessageBox):
         self.layout().addWidget(scroll_area, 0, 0, 1,
                                 self.layout().columnCount())
 
-        # Display the message box
         self.exec()
 
 

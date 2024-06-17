@@ -47,23 +47,19 @@ class CorrelationMatrixCreator(AbstractVisualization):
         correlation_matrix = topic_runner.get_correlation_matrix(
             n_words_to_process=30)
 
-        # Normalize the correlation matrix to have values between 0 and 1
-        correlation_matrix = (correlation_matrix - np.min(
-            correlation_matrix)) / (np.max(correlation_matrix) - np.min(
-            correlation_matrix))
-
         # Construct a plot and axes
         fig, ax = plt.subplots()
 
         # Construct the correlations matrix adding colors
-        data = ax.imshow(correlation_matrix, cmap='RdBu_r',
+        data = ax.imshow(correlation_matrix, cmap='Blues',
+                         vmin=0, vmax=1,
                          origin='lower')
 
         # Add a color bar to the plot
         plt.colorbar(data)
 
         # Add a title and correct integer ticks on both axes
-        plt.title(self.name)
+        plt.title(self.name, pad=25)
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
@@ -73,6 +69,9 @@ class CorrelationMatrixCreator(AbstractVisualization):
                    np.arange(1, num_topics + 1))
         plt.yticks(np.arange(num_topics),
                    np.arange(1, num_topics + 1))
+
+        fig.figure.subplots_adjust(
+            left=0.15, right=0.85, top=0.85, bottom=0.15)
 
         plt.close()
         return fig

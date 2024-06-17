@@ -126,7 +126,8 @@ def test_get_visualization(plot: Figure, graph_controller: GraphController,
         # Assert - that run_visualization is called once with correct params
         mocked_method.assert_called_once_with(
             graph_controller.VISUALIZATIONS[vis_index],
-            override_topic=override_topic)
+            override_topic=override_topic,
+            ignore_cache=False)
 
 
 @pytest.mark.parametrize("needed_input_data, override_topic",
@@ -177,7 +178,9 @@ def test_run_visualization_creator(plot: Figure,
 
     # Assert - that visualization is called with expected arguments
     mocked_method.assert_called_once_with(
-        graph_controller._current_topic_runner, **expected_args)
+        graph_controller._current_topic_runner,
+        ignore_cache=False,
+        **expected_args)
 
 
 def test_delete_all_cached_plots(graph_controller: GraphController,
@@ -221,6 +224,43 @@ def test_visualizations_available(graph_controller: GraphController):
                                                        processed_corpus, 0, 5)
 
     assert graph_controller.visualizations_available()
+
+
+def test_set_current_config(graph_controller: GraphController):
+    config_name = "test_config"
+    graph_controller.set_current_config(config_name)
+    assert graph_controller._current_config == config_name
+
+
+def test_get_topic_name(graph_controller: GraphController,
+                        mocker: MockerFixture):
+    topic_index = 0
+    topic_name = "test_topic"
+    mocker.patch.object(graph_controller._topic_name_model,
+                        "get_topic_name", return_value=topic_name)
+    graph_controller._current_config = "test_config"
+    assert graph_controller.get_topic_name(topic_index) == topic_name
+
+
+def test_set_topic_name(graph_controller: GraphController,
+                        mocker: MockerFixture):
+    topic_index = 0
+    topic_name = "test_topic"
+    mock_set_topic_name = mocker.patch.object(
+            graph_controller._topic_name_model, "set_topic_name")
+    graph_controller._current_config = "test_config"
+    graph_controller.set_topic_name(topic_index, topic_name)
+    mock_set_topic_name.assert_called_once_with("test_config",
+                                                topic_index, topic_name)
+
+
+def test_remove_config(graph_controller: GraphController,
+                       mocker: MockerFixture):
+    config_name = "test_config"
+    mock_remove_config = mocker.patch.object(
+            graph_controller._topic_name_model, "remove_config")
+    graph_controller.remove_config(config_name)
+    mock_remove_config.assert_called_once_with(config_name)
 
 
 """

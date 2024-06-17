@@ -16,19 +16,34 @@ def _resize_plot_for_type(canvas: matplotlib.figure.Figure,
     """
     if visualization_type == "Woordaantal":
         canvas.figure.subplots_adjust(left=0.2, right=0.8,
-                                      top=0.85, bottom=0.25)
+                                      top=0.8, bottom=0.25)
     elif visualization_type == "K-waarde":
         canvas.figure.subplots_adjust(left=0.2, right=0.8,
-                                      top=0.85, bottom=0.25)
+                                      top=0.8, bottom=0.25)
     elif visualization_type == "Woord Netwerk":
         canvas.figure.subplots_adjust(left=0.05, right=0.95,
-                                      top=0.95, bottom=0.05)
+                                      top=0.8, bottom=0.05)
     elif visualization_type == "Woordgewichten":
         canvas.figure.subplots_adjust(left=0.2, right=0.8,
-                                      top=0.85, bottom=0.25)
+                                      top=0.8, bottom=0.25)
     elif visualization_type == "Correlatie":
-        canvas.figure.subplots_adjust(left=0.2, right=0.8,
+        canvas.figure.subplots_adjust(left=0.2, right=0.7,
                                       top=0.80, bottom=0.2)
+    elif visualization_type == "Doc. Netwerk":
+        canvas.figure.subplots_adjust(left=0.2, right=0.8,
+                                      top=0.8, bottom=0.1)
+    elif visualization_type == "Doc. over tijd":
+        canvas.figure.subplots_adjust(left=0.2, right=0.8,
+                                      top=0.8, bottom=0.25)
+    elif visualization_type == "Topics in doc.":
+        canvas.figure.subplots_adjust(left=0.2, right=0.8,
+                                      top=0.8, bottom=0.2)
+    elif visualization_type == "Documenten":
+        canvas.figure.subplots_adjust(left=0.2, right=0.8,
+                                      top=0.8, bottom=0.25)
+    elif visualization_type == "Woordenwolk":
+        canvas.figure.subplots_adjust(left=0.2, right=0.8,
+                                      top=0.85, bottom=0.1)
 
 
 class GraphView(QWidget):

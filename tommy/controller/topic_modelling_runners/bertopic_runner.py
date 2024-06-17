@@ -1,3 +1,5 @@
+import string
+
 from numpy import ndarray
 from sklearn.feature_extraction.text import CountVectorizer
 from bertopic import BERTopic
@@ -80,6 +82,9 @@ class BertopicRunner(TopicRunner):
         return len([... for topic_words
                     in self._model.get_topics().values()
                     if topic_words])
+
+    def get_model(self) -> string:
+        return "BERTOPIC"
 
     def get_topic_with_scores(self, topic_id: int, n_words: int):
         """

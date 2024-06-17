@@ -10,6 +10,12 @@ from tommy.view.plot_selection_view import (PlotSelectionView,
                                             PossibleVisualization,
                                             VisGroup)
 from tommy.view.graph_view import GraphView
+from test.helper_fixtures import controller_no_pipeline
+
+
+@pytest.fixture
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture(scope='function')
@@ -21,8 +27,7 @@ def plot() -> Figure:
 
 
 @pytest.fixture(scope='function')
-def plot_selection_view(qtbot: QtBot) -> PlotSelectionView:
-    controller = Controller()
+def plot_selection_view(qtbot: QtBot, controller) -> PlotSelectionView:
     plot_selection_view = PlotSelectionView(
         controller.graph_controller,
         controller.config_controller,

@@ -1,10 +1,11 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QFrame,
-                               QLineEdit, QRadioButton)
+                               QLineEdit, QRadioButton, QLabel)
 
 from tommy.support.constant_variables import (
     heading_font, text_font, sec_col_purple, pressed_seco_col_purple,
-    seco_purple_border_color, hover_seco_col_purple)
+    seco_purple_border_color, hover_seco_col_purple, topic_entity_label_font,
+    topic_number_font)
 from tommy.view.topic_view.topic_entity_component.word_entity import WordEntity
 
 
@@ -15,6 +16,7 @@ class TopicEntity(QFrame):
 
     wordClicked = Signal(str)
     clicked = Signal(object)
+    nameChanged = Signal(int, str)
 
     def __init__(self,
                  topic_name: str,
@@ -38,10 +40,11 @@ class TopicEntity(QFrame):
         main_layout = QVBoxLayout(self)
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
                                  Qt.AlignmentFlag.AlignHCenter)
+        main_layout.setContentsMargins(5, 5, 5, 5)
+        main_layout.setSpacing(5)
 
         # Initialize widget properties
         self.setStyleSheet(f"background-color: {sec_col_purple};")
-        self.setFixedWidth(200)
 
         # Initialize radio button layout
         radio_layout = QHBoxLayout()
@@ -55,26 +58,42 @@ class TopicEntity(QFrame):
         self.radio_button.clicked.connect(
             lambda checked: self.clicked.emit(self))
 
-        # Initialize title widget
+        # Initialize top layout
+        self.bottom_layout = QHBoxLayout()
+        self.bottom_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Initialize topic labels
         self.topic_label = QLineEdit(topic_name, self)
-        self.topic_label.setStyleSheet(f"font-family: {heading_font}; "
-                                       f"color: white;"
-                                       f"font-size: 15px; "
+        self.topic_label.setStyleSheet(f"color: white;"
                                        f"font-weight: bold; "
                                        f"background-color: "
-                                       f"{pressed_seco_col_purple};"
+                                       f"{sec_col_purple};"
                                        f"padding: 5px 5px;"
                                        f"border-radius: 2px;"
                                        f"border:"
                                        f"2px solid {seco_purple_border_color};"
                                        )
+        self.topic_label.setFont(topic_entity_label_font)
         self.topic_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.topic_label.setPlaceholderText(topic_name)
         main_layout.addWidget(self.topic_label)
 
+        # Initialize topic number
+        self.topic_number = QLabel(str(index + 1), self)
+        self.topic_number.setFont(topic_number_font)
+        self.topic_number.setStyleSheet(f"""
+            color: #d8bfd8;
+            font-weight: bold;
+            padding: 5px 5px;
+        """)
+        self.topic_number.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.topic_number.setFixedWidth(40)
+        self.bottom_layout.addWidget(self.topic_number)
+
         # Initialize word widgets
         self.word_layout = QVBoxLayout()
         main_layout.addLayout(self.word_layout)
+        main_layout.addLayout(self.bottom_layout)
 
         # List to store word labels
         self.word_labels = []
@@ -87,7 +106,7 @@ class TopicEntity(QFrame):
         if horizontal_layout.count() > 0:
             self.word_layout.addLayout(horizontal_layout)
 
-        self.topic_label.textChanged.connect(self.get_topic_name)
+        self.topic_label.editingFinished.connect(self._on_name_changed)
 
     def get_topic_name(self) -> str:
         """
@@ -96,6 +115,13 @@ class TopicEntity(QFrame):
         :return: The topic name
         """
         return self.topic_label.text()
+
+    def _on_name_changed(self):
+        new_name = self.get_topic_name()
+        self.nameChanged.emit(self.index, new_name)
+
+    def set_name(self, name: str):
+        self.topic_label.setText(name)
 
     def add_words(self,
                   layout: QHBoxLayout,
@@ -186,15 +212,11 @@ class TopicEntity(QFrame):
             if word_entity.text() == word:
                 word_entity.selected = True
                 word_entity.setStyleSheet(
-                    f"font-family: {text_font}; "
-                    f"font-size: 12px; "
                     f"background-color: {background_color}; "
                     f"color: {text_color}")
             else:
                 word_entity.selected = False
                 word_entity.setStyleSheet(
-                    f"font-family: {text_font}; "
-                    f"font-size: 12px; "
                     f"background-color: white; "
                     f"color: black")
 

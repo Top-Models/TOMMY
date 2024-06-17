@@ -1,15 +1,22 @@
 import pytest
+from pytest_mock import MockerFixture
+from pytestqt.qtbot import QtBot
 
 from tommy.controller.controller import Controller
 from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
+from test.helper_fixtures import controller_no_pipeline
+
+
+@pytest.fixture
+def controller(controller_no_pipeline):
+    return controller_no_pipeline
 
 
 @pytest.fixture(scope='function')
-def abstract_settings() -> AbstractSettings:
-    controller = Controller()
+def abstract_settings(controller) -> AbstractSettings:
     abstract_settings = AbstractSettings(
         controller.model_parameters_controller,
         controller.config_controller,
@@ -220,6 +227,78 @@ def test_language_field_changed_event(abstract_settings: AbstractSettings,
     # Assert
     language_controller.set_language.assert_called_with(
         SupportedLanguage.Dutch)
+
+
+def test_disable_input_field(abstract_settings: AbstractSettings, mocker):
+    # Mock the input field
+    input_field = mocker.MagicMock()
+    abstract_settings._topic_amount_field = input_field
+
+    # Act
+    abstract_settings.disable_input_field(input_field)
+
+    # Assert
+    input_field.setDisabled.assert_called_with(True)
+
+
+def test_enable_input_field(abstract_settings: AbstractSettings, mocker):
+    # Mock the input field
+    input_field = mocker.MagicMock()
+    abstract_settings._topic_amount_field = input_field
+
+    # Act
+    abstract_settings.enable_input_field(input_field)
+
+    # Assert
+    input_field.setDisabled.assert_called_with(False)
+
+
+def test_disable_combobox(abstract_settings: AbstractSettings, mocker):
+    # Mock the combobox
+    combobox = mocker.MagicMock()
+    abstract_settings._algorithm_field = combobox
+
+    # Act
+    abstract_settings.disable_combobox(combobox)
+
+    # Assert
+    combobox.setDisabled.assert_called_with(True)
+
+
+def test_enable_combobox(abstract_settings: AbstractSettings, mocker):
+    # Mock the combobox
+    combobox = mocker.MagicMock()
+    abstract_settings._algorithm_field = combobox
+
+    # Act
+    abstract_settings.enable_combobox(combobox)
+
+    # Assert
+    combobox.setDisabled.assert_called_with(False)
+
+
+def test_enable_button(abstract_settings: AbstractSettings, mocker):
+    # Mock the button
+    button = mocker.MagicMock()
+    abstract_settings._apply_button = button
+
+    # Act
+    abstract_settings.enable_button(button)
+
+    # Assert
+    button.setDisabled.assert_called_with(False)
+
+
+def test_disable_button(abstract_settings: AbstractSettings, mocker):
+    # Mock the button
+    button = mocker.MagicMock()
+    abstract_settings._apply_button = button
+
+    # Act
+    abstract_settings.disable_button(button)
+
+    # Assert
+    button.setDisabled.assert_called_with(True)
 
 
 """
