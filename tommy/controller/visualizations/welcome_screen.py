@@ -17,6 +17,8 @@ from tommy.controller.visualizations.visualization_input_datatypes import (
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
 
+from tommy.support.application_settings import get_assets_folder
+
 
 class WelcomeScreen(AbstractVisualization):
     """
@@ -35,7 +37,8 @@ class WelcomeScreen(AbstractVisualization):
         """
 
         # Import the image
-        image_path = os.path.abspath('../assets/tommy_welcome_screen.png')
+        image_path = os.path.join(get_assets_folder(),
+                                  'tommy_welcome_screen.png')
         image = plt.imread(image_path)
 
         # Create the figure

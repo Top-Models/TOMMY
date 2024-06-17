@@ -1,3 +1,5 @@
+import os
+
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QGuiApplication
 from PySide6.QtWidgets import (
@@ -27,7 +29,7 @@ from tommy.view.topic_view.fetched_topics_view import \
 from tommy.view.topic_view.topic_entity_component.topic_entity import (
     TopicEntity)
 
-
+from tommy.support.application_settings import get_assets_folder
 class MainWindow(QMainWindow):
     """Main window class for the topic modelling application"""
 
@@ -41,7 +43,8 @@ class MainWindow(QMainWindow):
         # Initialize window
         self.setWindowTitle("TOMMY")
         self.set_initial_window_size()
-        self.setWindowIcon(QIcon("../assets/tommy.png"))
+        self.setWindowIcon(
+            QIcon(f"{os.path.join(get_assets_folder(), "tommy.png")}"))
         self.setStyleSheet(f"""
             QMainWindow {{
                 background-color: white;

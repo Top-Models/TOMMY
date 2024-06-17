@@ -7,6 +7,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
 from tommy.main_window import MainWindow
+from tommy.support.application_settings import get_assets_folder
 from tommy.support.constant_variables import initialize_fonts
 
 """This file is the program entry point."""
@@ -32,9 +33,16 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     set_app_user_model_id()
 
-    # Set window icon
-    icon_path = os.path.abspath("../assets/tommy.ico")
-    app.setWindowIcon(QIcon(icon_path))
+    # Set window icon based on the operating system
+    if platform.system() == "Windows":
+        app.setWindowIcon(QIcon(os.path.join(get_assets_folder(), "tommy.ico"))
+                          )
+    elif platform.system() == "Darwin":
+        app.setWindowIcon(QIcon(os.path.join(get_assets_folder(),
+                                             "tommy_icon_macos.ico")))
+    else:
+        app.setWindowIcon(QIcon(os.path.join(get_assets_folder(),
+                                             "tommy.ico")))
 
     # Set application name
     app.setApplicationDisplayName("TOMMY")
@@ -48,7 +56,6 @@ if __name__ == "__main__":
 
     # Execute the application
     app.exec()
-
 
 """
 This program has been developed by students from the bachelor Computer Science

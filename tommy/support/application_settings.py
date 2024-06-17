@@ -19,6 +19,15 @@ def get_data_folder() -> str:
     return os.path.join(get_base_dir(), "data")
 
 
+def get_assets_folder() -> str:
+    """
+    Returns the standard location where assets are stored
+    :return: the standard location where assets are stored
+    """
+    base_dir = get_data_folder()
+    return os.path.join(base_dir, "assets")
+
+
 def get_base_dir() -> str:
     """
     Returns the current working directory
@@ -30,7 +39,6 @@ def get_base_dir() -> str:
 
 
 application_settings = ApplicationSettings(get_data_folder())
-
 
 """
 This program has been developed by students from the bachelor Computer Science
