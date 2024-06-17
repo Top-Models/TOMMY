@@ -120,10 +120,10 @@ class StopwordsView(QScrollArea):
 
         self.blacklist_tab = QTextEdit()
         self.blacklist_tab.setFont(stopwords_text_edit_font)
-        self.blacklist_tab.setStyleSheet(tab_style)
+        self.blacklist_tab.setStyleSheet(self.tab_style_enabled)
         self.synonym_tab = QTextEdit()
         self.synonym_tab.setFont(stopwords_text_edit_font)
-        self.synonym_tab.setStyleSheet(tab_style)
+        self.synonym_tab.setStyleSheet(self.tab_style_enabled)
 
         # Set container as the focal point
         self.setWidget(self.container)
