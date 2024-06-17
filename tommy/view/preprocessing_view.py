@@ -125,9 +125,9 @@ class PreprocessingView(QScrollArea):
         self.synonym_tab.setStyleSheet(tab_style)
         self.synonym_tab.setLineWrapMode(QTextEdit.NoWrap)
         self.synonym_tab.setPlaceholderText(
-            "Plaats op elke regel een synoniem gevolgd door het woord dat dit "
-            "synoniem vervangt:"
-            "\n\nsynoniem vervanging\nsynoniem vervanging\netc.")
+            "Plaats op elke regel een synoniem gevolgd door \"=\" en "
+            "het woord dat dit synoniem vervangt:"
+            "\n\nsynoniem = vervanging\nsynoniem = vervanging\netc.")
 
         # Set container as the focal point
         self.setWidget(self.container)
@@ -169,7 +169,7 @@ class PreprocessingView(QScrollArea):
         input_text = self.synonym_tab.toPlainText()
         lines = input_text.lower().split('\n')
         synonyms = {words[0]: words[1] for words
-                    in map(str.split("="), lines) if len(words) == 2}
+                    in map(lambda s: s.split(" = "), lines) if len(words) == 2}
         self._synonyms_controller.update_synonyms(synonyms)
 
     def _update_blacklist_textbox(self, words: list[str]) -> None:
