@@ -9,10 +9,9 @@ from tommy.controller.model_parameters_controller import \
     ModelParametersController
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.controller.language_controller import LanguageController
-from tommy.support.constant_variables import text_font, seco_col_blue, \
-    disabled_gray
-from tommy.support.constant_variables import text_font, seco_col_blue, \
-    settings_label_font
+from tommy.support.constant_variables import (text_font, seco_col_blue,
+                                              disabled_gray,
+                                              settings_label_font)
 from tommy.support.parameter_limits import alpha_min_value, beta_min_value
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings

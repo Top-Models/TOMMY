@@ -1,13 +1,16 @@
 from PySide6.QtCore import Qt, QUrl
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QMessageBox, QScrollArea, QWidget, QVBoxLayout, \
-    QLabel
+from PySide6.QtWidgets import (QMessageBox, QScrollArea, QWidget, QVBoxLayout,
+                               QLabel)
 
-from tommy.support.constant_variables import heading_font, text_font, \
-    prim_col_red, seco_col_blue, hover_seco_col_blue, pressed_seco_col_blue, \
-    error_label_font, error_description_label_font, error_heading_font
-    prim_col_red, seco_col_blue, hover_seco_col_blue, pressed_seco_col_blue, \
-    scrollbar_style
+from tommy.support.constant_variables import (heading_font, text_font,
+                                              prim_col_red, seco_col_blue,
+                                              hover_seco_col_blue,
+                                              pressed_seco_col_blue,
+                                              error_label_font,
+                                              error_description_label_font,
+                                              error_heading_font,
+                                              scrollbar_style)
 
 
 class ErrorView(QMessageBox):

@@ -19,7 +19,7 @@ from tommy.support.constant_variables import (heading_font, prim_col_red,
                                               title_label_font,
                                               config_button_font,
                                               config_view_button,
-                                              config_view_label_font)
+                                              config_view_label_font,
                                               pressed_seco_col_blue,
                                               scrollbar_style)
 

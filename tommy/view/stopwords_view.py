@@ -6,8 +6,7 @@ from tommy.controller.stopwords_controller import StopwordsController
 from tommy.controller.topic_modelling_controller import \
     TopicModellingController
 from tommy.support.constant_variables import (
-    text_font, stopwords_tab_font, stopwords_text_edit_font)
-    text_font, disabled_gray)
+    text_font, stopwords_tab_font, stopwords_text_edit_font, disabled_gray)
 
 
 class StopwordsView(QScrollArea):
