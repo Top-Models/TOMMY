@@ -56,8 +56,8 @@ class PreprocessingController:
                     application_settings.preprocessing_data_folder
                     , "pipeline_download", "nl_core_news_sm-3.7.0")
                 nlp = spacy.load(pipeline_path,
-                                 exclude=["tagger", "attribute_ruler",
-                                          "parser", "senter"])
+                                 exclude=["parser", "tagger",
+                                          "attribute_ruler"])
             case SupportedLanguage.English:
                 self._enable_pos = False
                 pipeline_path = os.path.join(
@@ -65,12 +65,11 @@ class PreprocessingController:
                     "pipeline_download", "en_core_web_sm-3.7.1")
                 # tagger is taking over the role of the morphologizer (
                 # supposedly)
-                nlp = spacy.load(pipeline_path, exclude=["parser", "senter"])
+                nlp = spacy.load(pipeline_path, exclude=["parser"])
             case _:
                 raise ValueError("Unsupported preprocessing language")
         self._nlp = nlp
         self._nlp.add_pipe("merge_entities")
-        # TODO: refine the entity set (i.e. "proper-noun filtering")
         self._entity_categories = {"PERSON", "FAC", "LAW", "TIME", "PERCENT",
                                    "MONEY", "QUANTITY", "ORDINAL", "CARDINAL"}
         self._pos_categories = {"NOUN", "PROPN", "ADJ", "ADV", "VERB"}
@@ -112,18 +111,17 @@ class PreprocessingController:
         :param doc: The tokens given by processing of the Dutch SpaCy pipeline
         :return list[str]: The processed tokens
         """
-        # 2, 3, 4 - all steps that require token-level information
+        # All steps that require token-level information.
         lemmas = [token.lemma_ for token in doc if
                   token.ent_type_ not in self._entity_categories and
                   not str.isspace(token.lemma_) and (
                           not self._enable_pos or
                           token.pos_ in self._pos_categories)]
 
-        # 5 - transforming the tokens (lemmas) themselves
-        lemmas = [lemma.lower() for lemma in lemmas if len(lemma) > 3]
-        # TODO: fine-grain abbreviation filtering (i.e. don't exclude every
-        #  token under 4 characters)
+        # Take the lemmas.
+        lemmas = [lemma.lower() for lemma in lemmas if len(lemmas) > 2]
 
+        # Apply synonyms and filter stopwords.
         lemmas = self.apply_synonyms(lemmas)
         lemmas = self.filter_stopwords(lemmas)
 
