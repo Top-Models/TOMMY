@@ -1,7 +1,7 @@
 import pytest
-from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
 
+from test.helper_fixtures import controller_no_pipeline
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
 from tommy.controller.language_controller import LanguageController
@@ -14,7 +14,6 @@ from tommy.support.model_type import ModelType
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.model_params_view import ModelParamsView
 from tommy.view.stopwords_view import StopwordsView
-from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture
@@ -66,8 +65,10 @@ def stopwords_controller(controller: Controller) -> StopwordsController:
 
 
 @pytest.fixture
-def stopwords_view(stopwords_controller: StopwordsController) -> StopwordsView:
-    return StopwordsView(stopwords_controller)
+def stopwords_view(stopwords_controller: StopwordsController,
+                   topic_modelling_controller: TopicModellingController) \
+        -> StopwordsView:
+    return StopwordsView(stopwords_controller, topic_modelling_controller)
 
 
 def test_config_updates_lda_num_topics_textbox(

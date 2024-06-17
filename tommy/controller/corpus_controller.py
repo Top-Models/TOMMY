@@ -240,15 +240,13 @@ class CorpusController:
         """
         self._corpus_model.dictionary = dictionary
 
-    def metadata_exists(self) -> bool:
+    def metadata_available(self) -> bool:
         """
-        Check if the corpus exists
+        Check if the metadata is available in the corpus model
 
-        :return: True if the corpus exists, False otherwise
+        :return: True if metadata is available, False otherwise
         """
-        return self._corpus_model.metadata is not None and (
-                self._corpus_model.metadata != []
-        )
+        return bool(self._corpus_model.metadata)
 
 
 """

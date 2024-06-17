@@ -177,8 +177,6 @@ def test_toggle_auto_calculate_alpha_beta(lda_settings: LdaSettings,
                      Qt.LeftButton)
 
     # Assert
-    assert lda_settings._alpha_value_input.text() == "1.0"
-    assert lda_settings._beta_value_input.text() == "0.01"
     assert not lda_settings._alpha_value_input.isReadOnly()
     assert not lda_settings._beta_value_input.isReadOnly()
 

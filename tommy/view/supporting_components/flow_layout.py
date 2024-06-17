@@ -61,6 +61,7 @@ class FlowLayout(QLayout):
         y = rect.y() + self.contentsMargins().top()
         line_height = 0
         space_y = self.spacing()
+        wid_width_scaling_factor = 0.6
 
         # Calculate items per line
         items_per_line = []
@@ -72,7 +73,7 @@ class FlowLayout(QLayout):
             if not wid:
                 continue
 
-            item_width = wid.sizeHint().width()
+            item_width = int(wid.sizeHint().width() * wid_width_scaling_factor)
             item_height = wid.sizeHint().height()
             space_x = self.spacing()
 
@@ -110,7 +111,9 @@ class FlowLayout(QLayout):
                     continue
 
                 space_x = self.spacing()
-                item_width = wid.sizeHint().width() + extra_space_per_item
+                item_width = (int(wid.sizeHint().width() *
+                                  wid_width_scaling_factor) +
+                              extra_space_per_item)
                 item_height = wid.sizeHint().height()
 
                 if not test_only:

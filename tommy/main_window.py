@@ -108,11 +108,13 @@ class MainWindow(QMainWindow):
         self.setMenuBar(MenuBar(self,
                                 self._controller.project_settings_controller,
                                 self._controller.saving_loading_controller,
-                                self._controller.export_controller))
+                                self._controller.export_controller,
+                                self._controller.topic_modelling_controller))
 
         # Create widgets
         self.stopwords_view = StopwordsView(
-            self._controller.stopwords_controller)
+            self._controller.stopwords_controller,
+            self._controller.topic_modelling_controller)
         self.graph_view = GraphView()
         self.plot_selection_view = PlotSelectionView(
             self._controller.graph_controller,
