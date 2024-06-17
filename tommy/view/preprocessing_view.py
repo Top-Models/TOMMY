@@ -179,7 +179,7 @@ class PreprocessingView(QScrollArea):
 
     def _update_synonym_textbox(self, synonyms: dict[str, str]) -> None:
         """Update the synonym textbox with the given synonyms."""
-        text = "\n".join([f"{key} {value}" for key, value in synonyms.items()])
+        text = "\n".join([f"{key} = {value}" for key, value in synonyms.items()])
         self.synonym_tab.setText(text)
 
 
