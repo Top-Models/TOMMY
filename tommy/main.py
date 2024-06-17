@@ -33,9 +33,16 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     set_app_user_model_id()
 
-    # Set window icon
-    icon_path = os.path.join(get_assets_folder(), "tommy.ico")
-    app.setWindowIcon(QIcon(icon_path))
+    # Set window icon based on the operating system
+    if platform.system() == "Windows":
+        app.setWindowIcon(QIcon(os.path.join(get_assets_folder(), "tommy.ico"))
+                          )
+    elif platform.system() == "Darwin":
+        app.setWindowIcon(QIcon(os.path.join(get_assets_folder(),
+                                             "tommy_icon_macos.ico")))
+    else:
+        app.setWindowIcon(QIcon(os.path.join(get_assets_folder(),
+                                             "tommy.ico")))
 
     # Set application name
     app.setApplicationDisplayName("TOMMY")
