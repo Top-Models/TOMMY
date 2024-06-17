@@ -59,7 +59,7 @@ class SumTopicsInDocuments(AbstractVisualization):
         plt.bar(df["topic_id"] + 1, df["probability"], color=plot_colors)
         plt.title("Verdeling topics over documenten", pad=25)
         plt.xlabel("Topic")
-        plt.ylabel("Som kansen")
+        plt.ylabel("Som gewichten")
 
         fig.figure.subplots_adjust(
             left=0.15, right=0.85, top=0.85, bottom=0.15)
