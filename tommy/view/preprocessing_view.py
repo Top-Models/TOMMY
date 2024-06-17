@@ -18,18 +18,19 @@ class PreprocessingView(QScrollArea):
 
     def __init__(self,
                  stopwords_controller: StopwordsController,
-                 synonyms_controller: SynonymsController) -> None:
+                 synonyms_controller: SynonymsController,
+                 topic_modelling_controller: TopicModellingController) -> None:
         """The initialization of the StopwordsDisplay."""
         super().__init__()
 
         # Set reference to the controllers
         self._stopwords_controller = stopwords_controller
         self._topic_modelling_controller = topic_modelling_controller
+        self._synonyms_controller = synonyms_controller
 
         # Subscribe to controller events
         stopwords_controller.stopwords_model_changed_event.subscribe(
             self._update_blacklist_textbox)
-        self._synonyms_controller = synonyms_controller
         synonyms_controller.synonyms_model_changed_event.subscribe(
             self._update_synonym_textbox)
         topic_modelling_controller.start_training_model_event.subscribe(
@@ -140,21 +141,20 @@ class PreprocessingView(QScrollArea):
         """)
 
         self.blacklist_tab = QTextEdit()
-        self.blacklist_tab.setStyleSheet(tab_style)
+        self.blacklist_tab.setFont(stopwords_text_edit_font)
         self.blacklist_tab.setLineWrapMode(QTextEdit.NoWrap)
         self.blacklist_tab.setPlaceholderText(
             "Plaats op elke regel een woord dat uitgesloten moet worden:"
             "\n\nwoord\nwoord\netc.")
-        self.blacklist_tab.setFont(stopwords_text_edit_font)
         self.blacklist_tab.setStyleSheet(self.tab_style_enabled)
+
         self.synonym_tab = QTextEdit()
-        self.synonym_tab.setStyleSheet(tab_style)
+        self.synonym_tab.setFont(stopwords_text_edit_font)
         self.synonym_tab.setLineWrapMode(QTextEdit.NoWrap)
         self.synonym_tab.setPlaceholderText(
             "Plaats op elke regel een synoniem gevolgd door \"=\" en "
             "het woord dat dit synoniem vervangt:"
             "\n\nsynoniem = vervanging\nsynoniem = vervanging\netc.")
-        self.synonym_tab.setFont(stopwords_text_edit_font)
         self.synonym_tab.setStyleSheet(self.tab_style_enabled)
 
         # Set container as the focal point
@@ -209,6 +209,7 @@ class PreprocessingView(QScrollArea):
         """Update the synonym textbox with the given synonyms."""
         text = "\n".join([f"{key} = {value}" for key, value in synonyms.items()])
         self.synonym_tab.setText(text)
+
     def disable_text_edits_on_start_topic_modelling(self) -> None:
         """
         Disable the text edits when starting topic modelling.

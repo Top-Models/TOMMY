@@ -22,8 +22,6 @@ from tommy.view.preprocessing_view import (
     PreprocessingView)
 from tommy.view.settings_view.model_params_view import (
     ModelParamsView)
-from tommy.view.stopwords_view import (
-    StopwordsView)
 from tommy.view.supporting_components.custom_splitter.custom_splitter_component import \
     CustomSplitter
 from tommy.view.topic_view.fetched_topics_view import \
@@ -32,6 +30,8 @@ from tommy.view.topic_view.topic_entity_component.topic_entity import (
     TopicEntity)
 
 from tommy.support.application_settings import get_assets_folder
+
+
 class MainWindow(QMainWindow):
     """Main window class for the topic modelling application"""
 
@@ -117,9 +117,10 @@ class MainWindow(QMainWindow):
                                 self._controller.topic_modelling_controller))
 
         # Create widgets
-        self.stopwords_view = PreprocessingView(
+        self.preprocessing_view = PreprocessingView(
             self._controller.stopwords_controller,
-            self._controller.synonyms_controller)
+            self._controller.synonyms_controller,
+            self._controller.topic_modelling_controller)
         self.graph_view = GraphView()
         self.plot_selection_view = PlotSelectionView(
             self._controller.graph_controller,
@@ -145,7 +146,7 @@ class MainWindow(QMainWindow):
 
         # Initialize widgets
         self.left_layout.addWidget(self.model_params_view)
-        self.left_layout.addWidget(self.stopwords_view)
+        self.left_layout.addWidget(self.preprocessing_view)
         self.center_layout.addWidget(self.plot_selection_view)
         self.center_layout.addWidget(self.graph_view)
         self.center_layout.addWidget(self.imported_files_view)
