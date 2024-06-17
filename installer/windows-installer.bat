@@ -22,7 +22,7 @@ pyinstaller ^
 --windowed ^
 --onedir ^
 --name "%APP_NAME%" ^
---icon "assets/tommy.ico" ^
+--icon "%DATA_FOLDER_PATH%/assets/tommy.ico" ^
 --add-data "%DATA_FOLDER_PATH%:.\data" ^
 --hidden-import "pkg_resources.extern" ^
 --exclude-module torch ^

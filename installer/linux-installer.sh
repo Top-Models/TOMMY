@@ -15,7 +15,7 @@ pyinstaller \
 --windowed \
 --onedir \
 --name "${APP_NAME}" \
---icon "assets/tommy.svg" \
+--icon "${DATA_FOLDER_PATH}/assets/tommy.svg" \
 --add-data "${DATA_FOLDER_PATH}/:./data" \
 --hidden-import "pkg_resources.extern" \
 --exclude tkinter --exclude _tkinter \
