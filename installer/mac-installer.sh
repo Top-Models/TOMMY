@@ -5,8 +5,7 @@ VOLUME_NAME="${APP_NAME} Installer"
 OUTPUT_FOLDER="dist"
 DMG_FOLDER_PATH="${OUTPUT_FOLDER}/${APP_NAME}-Installer.dmg"
 SOURCE_FOLDER_PATH="${OUTPUT_FOLDER}/${APP_NAME}.app"
-DATA_FOLDER_PATH="tommy/data/preprocessing_data"
-ASSETS_FOLDER_PATH="assets"
+DATA_FOLDER_PATH="tommy/data"
 
 echo "> Removing the dist folder if it exists"
 
@@ -19,9 +18,8 @@ pyinstaller \
 --windowed \
 --onedir \
 --name "${APP_NAME}" \
+--add-data "${DATA_FOLDER_PATH}:./data" \
 --icon "assets/tommy_icon_macos.ico" \
---add-data "${DATA_FOLDER_PATH}:./preprocessing_data" \
---add-data "${ASSETS_FOLDER_PATH}:./assets" \
 --hidden-import "pkg_resources.extern" \
 --exclude-module torch \
 tommy/main.py

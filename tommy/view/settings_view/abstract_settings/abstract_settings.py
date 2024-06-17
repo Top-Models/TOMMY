@@ -10,7 +10,8 @@ from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 from tommy.support.constant_variables import (
     text_font, seco_col_blue, disabled_gray, heading_font, hover_seco_col_blue,
-    pressed_seco_col_blue)
+    pressed_seco_col_blue, config_button_font, settings_header_font,
+    settings_label_font)
 from tommy.support.model_type import ModelType
 from tommy.support.parameter_limits import num_topics_min_value, \
     num_topics_max_value, amount_of_words_min_value, amount_of_words_max_value
@@ -57,6 +58,44 @@ class AbstractSettings:
                                           f"color: black;"
                                           f"border: 2px solid {seco_col_blue};"
                                           f"padding: 5px;")
+        self.button_enabled_stylesheet = (f"""
+            QPushButton {{
+                font-size: 20px;
+                font-family: {text_font};
+                border-radius: 5px;
+                color: white;
+                border: 2px solid {seco_col_blue};
+                padding: 5px 10px 5px 10px;
+                background-color: {seco_col_blue};
+            }}
+            
+            QPushButton:hover {{
+                background-color: {hover_seco_col_blue};
+            }}
+            
+            QPushButton:pressed {{
+                background-color: {pressed_seco_col_blue};
+            }}
+        """)
+        self.button_disabled_stylesheet = (f"""
+            QPushButton {{
+                font-size: 20px;
+                font-family: {text_font};
+                border-radius: 5px;
+                color: white;
+                border: 2px solid {seco_col_blue};
+                padding: 5px 10px 5px 10px;
+                background-color: {disabled_gray};
+            }}
+            
+            QPushButton:hover {{
+                background-color: {disabled_gray};
+            }}
+            
+            QPushButton:pressed {{
+                background-color: {disabled_gray};
+            }}
+        """)
 
         # Initialize buttons
         self.config_management_label = None
@@ -121,6 +160,7 @@ class AbstractSettings:
                                    f"font-family: {heading_font};"
                                    f"color: black;"
                                    f"font-family: {text_font};")
+        header_label.setFont(settings_header_font)
         self._scroll_layout.addWidget(header_label)
 
     def add_margin(self, height: int) -> None:
@@ -173,6 +213,7 @@ class AbstractSettings:
         self.config_management_label.setAlignment(
             Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
         )
+        self.config_management_label.setFont(settings_label_font)
         container_layout.addWidget(self.config_management_label)
 
         # Add a horizontal spacer to push the button to the right
@@ -185,6 +226,7 @@ class AbstractSettings:
 
         # Add button to container
         self._config_management_button = QPushButton("⛭")
+        self._config_management_button.setFont(config_button_font)
         self._config_management_button.setStyleSheet(f"""
             QPushButton {{
                 font-size: 20px;
@@ -229,6 +271,7 @@ class AbstractSettings:
 
         # Add label
         topic_label = QLabel("#Topics:")
+        topic_label.setFont(settings_label_font)
         topic_label.setStyleSheet(f"font-size: 16px;"
                                   f"color: black;"
                                   f"font-family: {text_font};")
@@ -254,6 +297,7 @@ class AbstractSettings:
 
         # Add input field
         self._topic_amount_field = QLineEdit()
+        self._topic_amount_field.setFont(settings_label_font)
         self._topic_amount_field.setFixedWidth(100)
         self._topic_amount_field.setStyleSheet(self.topic_input_layout_valid)
         # QIntValidator prevents user from typing
@@ -261,6 +305,7 @@ class AbstractSettings:
         self._topic_amount_field.setValidator(QIntValidator(
             num_topics_min_value, num_topics_max_value))
         self._topic_amount_field.setPlaceholderText("Voer aantal topics in")
+        self._topic_amount_field.setFont(settings_label_font)
         self._topic_amount_field.setStyleSheet(self.topic_input_layout_valid)
         self._topic_amount_field.setAlignment(Qt.AlignmentFlag.AlignLeft)
         topic_amount_layout.addWidget(self._topic_amount_field)
@@ -332,6 +377,7 @@ class AbstractSettings:
         topic_words_label.setStyleSheet(f"font-size: 16px;"
                                         f"color: black;"
                                         f"font-family: {text_font};")
+        topic_words_label.setFont(settings_label_font)
         topic_words_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                        Qt.AlignmentFlag.AlignVCenter)
         topic_words_layout.addWidget(topic_words_label)
@@ -341,6 +387,7 @@ class AbstractSettings:
         self._amount_of_words_field.setFixedWidth(100)
         self._amount_of_words_field.setPlaceholderText("Voer aantal "
                                                        "woorden in")
+        self._amount_of_words_field.setFont(settings_label_font)
         self._amount_of_words_field.setStyleSheet(
             self.enabled_input_stylesheet)
         self._amount_of_words_field.setAlignment(Qt.AlignmentFlag.AlignLeft)
@@ -418,6 +465,7 @@ class AbstractSettings:
         algorithm_label.setStyleSheet(f"font-size: 16px;"
                                       f"color: black;"
                                       f"font-family: {text_font};")
+        algorithm_label.setFont(settings_label_font)
         algorithm_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                      Qt.AlignmentFlag.AlignVCenter)
         algorithm_layout.addWidget(algorithm_label)
@@ -427,6 +475,7 @@ class AbstractSettings:
         self._algorithm_field.setFixedWidth(100)
         self._algorithm_field.addItem("LDA")
         self._algorithm_field.addItem("NMF")
+        self._algorithm_field.setFont(settings_label_font)
 
         # BERTopic has issues with PyInstaller
         # For this reason, BERTopic is only available when running via Python
@@ -483,12 +532,14 @@ class AbstractSettings:
                                      f"font-family: {text_font};")
         language_label.setAlignment(Qt.AlignmentFlag.AlignLeft |
                                     Qt.AlignmentFlag.AlignVCenter)
+        language_label.setFont(settings_label_font)
         language_layout.addWidget(language_label)
 
         # Add input field
         self._language_field.setFixedWidth(100)
         self._language_field.addItem("Nederlands")
         self._language_field.addItem("Engels")
+        self._language_field.setFont(settings_label_font)
 
         # Try to disconnect the algorithm_field_changed_event method, otherwise
         # endless recursion
@@ -536,6 +587,90 @@ class AbstractSettings:
         current_language = self._language_controller.get_language()
         self._language_field.set_current_text_without_signal(
             SupportedLanguage.to_string(current_language))
+
+    def disable_input_field(self, field: QLineEdit) -> None:
+        """
+        Disable an input field
+
+        :param field: QTextField
+        :return: None
+        """
+        field.setDisabled(True)
+        field.setStyleSheet(self.disabled_input_stylesheet)
+
+    def enable_input_field(self, field: QLineEdit) -> None:
+        """
+        Enable an input field
+
+        :param field: QLineEdit
+        :return: None
+        """
+        field.setDisabled(False)
+        field.setStyleSheet(self.enabled_input_stylesheet)
+
+    def disable_combobox(self, combobox: BetterComboBox) -> None:
+        """
+        Disable a combobox
+
+        :param combobox: BetterComboBox
+        :return: None
+        """
+        combobox.setDisabled(True)
+        combobox.setStyleSheet(self.disabled_input_stylesheet)
+
+    def enable_combobox(self, combobox: BetterComboBox) -> None:
+        """
+        Enable a combobox
+
+        :param combobox: BetterComboBox
+        :return: None
+        """
+        combobox.setDisabled(False)
+        combobox.setStyleSheet(self.enabled_input_stylesheet)
+
+    def disable_button(self, button: QPushButton) -> None:
+        """
+        Disable a button
+
+        :param button: QPushButton
+        :return: None
+        """
+        button.setDisabled(True)
+        button.setStyleSheet(self.button_disabled_stylesheet)
+
+    def enable_button(self, button: QPushButton) -> None:
+        """
+        Enable a button
+
+        :param button: QPushButton
+        :return: None
+        """
+        button.setDisabled(False)
+        button.setStyleSheet(self.button_enabled_stylesheet)
+
+    def disable_input_fields_on_model_training(self) -> None:
+        """
+        Disable the input fields when the model is training
+
+        :return: None
+        """
+        self.disable_input_field(self._topic_amount_field)
+        self.disable_input_field(self._amount_of_words_field)
+        self.disable_combobox(self._algorithm_field)
+        self.disable_combobox(self._language_field)
+        self.disable_button(self._config_management_button)
+
+    def enable_input_fields_on_model_trained(self) -> None:
+        """
+        Enable the input fields when the model is done training
+
+        :return: None
+        """
+        self.enable_input_field(self._topic_amount_field)
+        self.enable_input_field(self._amount_of_words_field)
+        self.enable_combobox(self._algorithm_field)
+        self.enable_combobox(self._language_field)
+        self.enable_button(self._config_management_button)
 
 
 """

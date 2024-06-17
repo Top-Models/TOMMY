@@ -4,7 +4,8 @@ from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QFrame,
 
 from tommy.support.constant_variables import (
     heading_font, text_font, sec_col_purple, pressed_seco_col_purple,
-    seco_purple_border_color, hover_seco_col_purple)
+    seco_purple_border_color, hover_seco_col_purple, topic_entity_label_font,
+    topic_number_font)
 from tommy.view.topic_view.topic_entity_component.word_entity import WordEntity
 
 
@@ -63,9 +64,7 @@ class TopicEntity(QFrame):
 
         # Initialize topic labels
         self.topic_label = QLineEdit(topic_name, self)
-        self.topic_label.setStyleSheet(f"font-family: {heading_font}; "
-                                       f"color: white;"
-                                       f"font-size: 15px; "
+        self.topic_label.setStyleSheet(f"color: white;"
                                        f"font-weight: bold; "
                                        f"background-color: "
                                        f"{sec_col_purple};"
@@ -74,16 +73,16 @@ class TopicEntity(QFrame):
                                        f"border:"
                                        f"2px solid {seco_purple_border_color};"
                                        )
+        self.topic_label.setFont(topic_entity_label_font)
         self.topic_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.topic_label.setPlaceholderText(topic_name)
         main_layout.addWidget(self.topic_label)
 
         # Initialize topic number
         self.topic_number = QLabel(str(index + 1), self)
+        self.topic_number.setFont(topic_number_font)
         self.topic_number.setStyleSheet(f"""
-            font-family: {heading_font};
             color: #d8bfd8;
-            font-size: 12px;
             font-weight: bold;
             padding: 5px 5px;
         """)
@@ -210,18 +209,14 @@ class TopicEntity(QFrame):
         :return: None
         """
         for word_entity in self.word_entities:
-            if word_entity.toPlainText() == word:
+            if word_entity.text() == word:
                 word_entity.selected = True
                 word_entity.setStyleSheet(
-                    f"font-family: {text_font}; "
-                    f"font-size: 12px; "
                     f"background-color: {background_color}; "
                     f"color: {text_color}")
             else:
                 word_entity.selected = False
                 word_entity.setStyleSheet(
-                    f"font-family: {text_font}; "
-                    f"font-size: 12px; "
                     f"background-color: white; "
                     f"color: black")
 

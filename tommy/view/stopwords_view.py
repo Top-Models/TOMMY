@@ -3,21 +3,32 @@ from PySide6.QtWidgets import (QScrollArea, QTabWidget,
                                QTextEdit)
 
 from tommy.controller.stopwords_controller import StopwordsController
+from tommy.controller.topic_modelling_controller import \
+    TopicModellingController
 from tommy.support.constant_variables import (
-    text_font)
+    text_font, stopwords_tab_font, stopwords_text_edit_font, disabled_gray)
 
 
 class StopwordsView(QScrollArea):
     """The StopWordsDisplay area to view all stopwords."""
 
-    def __init__(self, stopwords_controller: StopwordsController) -> None:
+    def __init__(self,
+                 stopwords_controller: StopwordsController,
+                 topic_modelling_controller: TopicModellingController) -> None:
         """The initialization of the StopwordsDisplay."""
         super().__init__()
 
         # Set reference to the controller
         self._stopwords_controller = stopwords_controller
+        self._topic_modelling_controller = topic_modelling_controller
+
+        # Subscribe to controller events
         stopwords_controller.stopwords_model_changed_event.subscribe(
             self._update_blacklist_textbox)
+        topic_modelling_controller.start_training_model_event.subscribe(
+            lambda _: self.disable_text_edits_on_start_topic_modelling())
+        topic_modelling_controller.model_trained_event.subscribe(
+            lambda _: self.enable_text_edits_on_finish_topic_modelling())
 
         # Initialize widget properties
         self.setFixedWidth(250)
@@ -76,11 +87,13 @@ class StopwordsView(QScrollArea):
                     height: 0px; 
                 }}
                    """)
+
         # Initialize container for all elements
         self.container = QTabWidget()
+        self.container.tabBar().setFont(stopwords_tab_font)
 
         # Initialize tabs
-        tab_style = (f"""
+        self.tab_style_enabled = (f"""
             QTextEdit {{
                 border-radius: 5px;
                 font-size: 14px;
@@ -92,13 +105,25 @@ class StopwordsView(QScrollArea):
                 margin: 5px;
             }}            
         """)
+        self.tab_style_disabled = (f"""
+            QTextEdit {{
+                border-radius: 5px;
+                font-size: 14px;
+                font-family: {text_font};
+                color: black;
+                border: 2px solid #00968F;
+                padding: 5px;
+                background-color: {disabled_gray};
+                margin: 5px;
+            }}            
+        """)
 
-        # self.stopwords_tab = QWidget()
-        # self.stopwords_tab.setStyleSheet(tab_style)
         self.blacklist_tab = QTextEdit()
-        self.blacklist_tab.setStyleSheet(tab_style)
+        self.blacklist_tab.setFont(stopwords_text_edit_font)
+        self.blacklist_tab.setStyleSheet(self.tab_style_enabled)
         self.synonym_tab = QTextEdit()
-        self.synonym_tab.setStyleSheet(tab_style)
+        self.synonym_tab.setFont(stopwords_text_edit_font)
+        self.synonym_tab.setStyleSheet(self.tab_style_enabled)
 
         # Set container as the focal point
         self.setWidget(self.container)
@@ -136,7 +161,7 @@ class StopwordsView(QScrollArea):
 
     def update_synonyms(self) -> None:
         """
-        Updtate the set of synonyms with the text from the Synonyms tab.
+        Update the set of synonyms with the text from the Synonyms tab.
 
         :return: None
         """
@@ -146,6 +171,28 @@ class StopwordsView(QScrollArea):
     def _update_blacklist_textbox(self, words: list[str]):
         text = "\n".join(words)
         self.blacklist_tab.setText(text)
+
+    def disable_text_edits_on_start_topic_modelling(self) -> None:
+        """
+        Disable the text edits when starting topic modelling.
+
+        :return: None
+        """
+        self.blacklist_tab.setReadOnly(True)
+        self.synonym_tab.setReadOnly(True)
+        self.blacklist_tab.setStyleSheet(self.tab_style_disabled)
+        self.synonym_tab.setStyleSheet(self.tab_style_disabled)
+
+    def enable_text_edits_on_finish_topic_modelling(self) -> None:
+        """
+        Enable the text edits when stopping topic modelling.
+
+        :return: None
+        """
+        self.blacklist_tab.setReadOnly(False)
+        self.synonym_tab.setReadOnly(False)
+        self.blacklist_tab.setStyleSheet(self.tab_style_enabled)
+        self.synonym_tab.setStyleSheet(self.tab_style_enabled)
 
 
 """

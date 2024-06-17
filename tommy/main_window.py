@@ -1,25 +1,25 @@
 import os
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon, QGuiApplication, QPainter, QColor
+from PySide6.QtGui import QIcon, QGuiApplication
 from PySide6.QtWidgets import (
     QMainWindow,
-    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy, QSplitter, QSplitterHandle
+    QWidget, QHBoxLayout, QVBoxLayout, QSizePolicy
 )
 
 from tommy.controller.controller import Controller
 from tommy.support.constant_variables import (
-    text_font, light_gray)
+    text_font)
 from tommy.view.graph_view import GraphView
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.imported_files_view.imported_files_view import (
     ImportedFilesView)
 from tommy.view.menu_bar import MenuBar
-from tommy.view.settings_view.model_params_view import (
-    ModelParamsView)
 from tommy.view.plot_selection_view import (
     PlotSelectionView)
 from tommy.view.selected_information_view import SelectedInformationView
+from tommy.view.settings_view.model_params_view import (
+    ModelParamsView)
 from tommy.view.stopwords_view import (
     StopwordsView)
 from tommy.view.supporting_components.custom_splitter.custom_splitter_component import \
@@ -111,11 +111,13 @@ class MainWindow(QMainWindow):
         self.setMenuBar(MenuBar(self,
                                 self._controller.project_settings_controller,
                                 self._controller.saving_loading_controller,
-                                self._controller.export_controller))
+                                self._controller.export_controller,
+                                self._controller.topic_modelling_controller))
 
         # Create widgets
         self.stopwords_view = StopwordsView(
-            self._controller.stopwords_controller)
+            self._controller.stopwords_controller,
+            self._controller.topic_modelling_controller)
         self.graph_view = GraphView()
         self.plot_selection_view = PlotSelectionView(
             self._controller.graph_controller,
@@ -176,7 +178,6 @@ class MainWindow(QMainWindow):
         """
 
         widget.setParent(self)
-
         widget.setGeometry(x, y, w, h)
         widget.show()
 

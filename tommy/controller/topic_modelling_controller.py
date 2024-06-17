@@ -1,29 +1,20 @@
-from typing import Iterable
-from itertools import chain
-from functools import reduce
-
-from tommy.controller.file_import.processed_corpus import ProcessedCorpus
+from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.model_parameters_controller import (
     ModelParametersController,
     ModelType)
-from tommy.controller.corpus_controller import CorpusController
-from tommy.model.config_model import ConfigModel
-from tommy.controller.result_interfaces.document_topics_interface import \
-    DocumentTopicsInterface
-from tommy.controller.stopwords_controller import StopwordsController
 from tommy.controller.preprocessing_controller import PreprocessingController
-
-from tommy.model.topic_model import TopicModel
-
+from tommy.controller.stopwords_controller import StopwordsController
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
-from tommy.controller.topic_modelling_runners.nmf_runner import NmfRunner
 from tommy.controller.topic_modelling_runners.bertopic_runner import (
     BertopicRunner)
-from tommy.support.event_handler import EventHandler
-from tommy.support.types import Document_topics, Processed_body
+from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
+from tommy.controller.topic_modelling_runners.nmf_runner import NmfRunner
+from tommy.model.config_model import ConfigModel
+from tommy.model.topic_model import TopicModel
 from tommy.support.async_worker import Worker
+from tommy.support.event_handler import EventHandler
+from tommy.support.types import Document_topics
 from tommy.view.error_view import ErrorView
 
 
@@ -39,10 +30,15 @@ class TopicModellingController:
     _topic_model: TopicModel = None
     _config_model: ConfigModel = None
     _corpus_controller: CorpusController = None
+    _start_training_model_event: EventHandler[TopicRunner] = None
     _model_trained_event: EventHandler[TopicRunner] = None
     _topic_model_switched_event: EventHandler[TopicRunner] = None
     _calculate_document_topics_event: \
         EventHandler[Document_topics] = None
+
+    @property
+    def start_training_model_event(self) -> EventHandler[TopicRunner]:
+        return self._start_training_model_event
 
     @property
     def model_trained_event(self) -> EventHandler[TopicRunner]:
@@ -61,6 +57,7 @@ class TopicModellingController:
         """Initialize the publisher of the topic-modelling-controller"""
         super().__init__()
         self._worker = None
+        self._start_training_model_event = EventHandler[TopicRunner]()
         self._model_trained_event = EventHandler[TopicRunner]()
         self._topic_model_switched_event = EventHandler[TopicRunner]()
         self._calculate_document_topics_event = (
@@ -114,6 +111,8 @@ class TopicModellingController:
         """
 
         new_model_type = self._model_parameters_controller.get_model_type()
+        self._start_training_model_event.publish(
+            self._config_model.topic_runner)
 
         def model_trained_callback():
             self._model_trained_event.publish(self._config_model.topic_runner)
