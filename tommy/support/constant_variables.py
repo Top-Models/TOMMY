@@ -85,14 +85,16 @@ def initialize_fonts() -> None:
 
     # Print path of the font files
     source_sans_path = os.path.join(
-        application_settings.fonts_data_folder,
+        application_settings.data_folder,
+        "fonts",
         "Source_Sans_3",
         "static",
         "SourceSans3-Regular.ttf"
     )
 
     raleway_path = os.path.join(
-        application_settings.fonts_data_folder,
+        application_settings.data_folder,
+        "fonts",
         "Raleway",
         "static",
         "Raleway-ExtraBold.ttf"

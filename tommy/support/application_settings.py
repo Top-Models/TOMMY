@@ -6,38 +6,17 @@ from dataclasses import dataclass
 @dataclass
 class ApplicationSettings:
     """A class that holds the application-wide settings."""
-    preprocessing_data_folder: str
-    fonts_data_folder: str
+    data_folder: str
     default_config_name: str = "Config 1"
 
 
-def get_preprocessing_data_folder() -> str:
+def get_data_folder() -> str:
     """
-    Returns the standard location where preprocessing data is stored
-    :return: the standard location where data needed for preprocessing will
-        be expected by the application (such as stopwords and maybe spacy
-        pipeline downloads)
+    Returns the standard location where all software-dependent data is stored.
+    :return: the standard location where data dependencies needed for several
+        software components will be expected by the application.
     """
-    if hasattr(sys, '_MEIPASS'):
-        base_dir = os.path.join(get_base_dir(), "data")
-    else:
-        base_dir = os.path.join(get_base_dir(), "data")
-
-    return os.path.join(base_dir, "preprocessing_data")
-
-
-def get_fonts_data_folder() -> str:
-    """
-    Returs the standard location where fonts are stored
-    :return: the standard location where fonts will be expected by the
-        application
-    """
-    if hasattr(sys, '_MEIPASS'):
-        base_dir = os.path.join(get_base_dir(), "data")
-    else:
-        base_dir = os.path.join(get_base_dir(), "data")
-
-    return os.path.join(base_dir, "fonts")
+    return os.path.join(get_base_dir(), "data")
 
 
 def get_base_dir() -> str:
@@ -50,7 +29,8 @@ def get_base_dir() -> str:
     return os.path.abspath(getattr(sys, '_MEIPASS', os.getcwd()))
 
 
-application_settings = ApplicationSettings(get_preprocessing_data_folder(), get_fonts_data_folder())
+application_settings = ApplicationSettings(get_data_folder())
+
 
 """
 This program has been developed by students from the bachelor Computer Science

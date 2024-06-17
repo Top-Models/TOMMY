@@ -35,8 +35,9 @@ class PreprocessingController:
             e.g., "dutch.pickle"
         """
         fpath = f"file:///{os.path.join(
-                           application_settings.preprocessing_data_folder,
-                           "nltk_downloads", "tokenizers_punkt", *path_parts)}"
+                           application_settings.data_folder,
+                           "preprocessing_data", "nltk_downloads", 
+                           "tokenizers_punkt", *path_parts)}"
         try:
             tokenizer = nltk.data.load(fpath)
         except LookupError:
@@ -49,16 +50,18 @@ class PreprocessingController:
             case SupportedLanguage.Dutch:
                 self._enable_pos = True
                 pipeline_path = os.path.join(
-                    application_settings.preprocessing_data_folder
-                    , "pipeline_download", "nl_core_news_sm-3.7.0")
+                    application_settings.data_folder,
+                    "preprocessing_data", "pipeline_download",
+                    "nl_core_news_sm-3.7.0")
                 nlp = spacy.load(pipeline_path,
                                  exclude=["tagger", "attribute_ruler",
                                           "parser", "senter"])
             case SupportedLanguage.English:
                 self._enable_pos = False
                 pipeline_path = os.path.join(
-                    application_settings.preprocessing_data_folder,
-                    "pipeline_download", "en_core_web_sm-3.7.1")
+                    application_settings.data_folder,
+                    "preprocessing_data", "pipeline_download",
+                    "en_core_web_sm-3.7.1")
                 # tagger is taking over the role of the morphologizer (
                 # supposedly)
                 nlp = spacy.load(pipeline_path, exclude=["parser", "senter"])
