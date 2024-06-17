@@ -24,10 +24,7 @@ def get_assets_folder() -> str:
     Returns the standard location where assets are stored
     :return: the standard location where assets are stored
     """
-    if hasattr(sys, '_MEIPASS'):
-        base_dir = get_base_dir()
-    else:
-        base_dir = os.path.dirname(get_base_dir())
+    base_dir = get_data_folder()
     return os.path.join(base_dir, "assets")
 
 
@@ -42,7 +39,6 @@ def get_base_dir() -> str:
 
 
 application_settings = ApplicationSettings(get_data_folder())
-
 
 """
 This program has been developed by students from the bachelor Computer Science

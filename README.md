@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/tommy.png" width=135px alt="Top Models logo">
+  <img src="tommy/data/assets/tommy.png" width=135px alt="Top Models logo">
   <h1> TOMMY: Interactive Topic Modeling </h1>
 </div>
 Note: this project is open sourced, and should therefore not get deleted 
