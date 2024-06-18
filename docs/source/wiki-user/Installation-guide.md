@@ -5,10 +5,12 @@ De TOMMY software is te vinden op [https://tommy.fyor.nl/](https://tommy.fyor.nl
 
 ## macOS
 
-Download de macOS-versie van de website.
+Download afhankelijk van je Mac de juiste macOS-versie van de website. Als je niet weet welke versie je nodig hebt, 
+navigeer dan naar het Apple logo linksboven in je scherm en klik op `Over deze Mac`. 
+Als daar onder Chip "*Apple M...*" staat, download dan de Apple Silicon-versie, download anders de Intel-versie.
 
 Open vervolgens het .dmg bestand en sleep de TOMMY applicatie binnen de installer naar de Applications map. 
-Doordat de applicatie momenteel nog niet gesigneerd is, kan de applicatie niet direct in Launchpad geopend worden.
+Doordat de applicatie niet gesigneerd is, kan de applicatie niet direct in Launchpad geopend worden.
 
 Navigeer daarom eerst in Finder naar de Apps folder. Dubbel-klik vervolgens op de TOMMY applicatie, waarbij de volgende waarschuwing weergegeven zal worden:
 
