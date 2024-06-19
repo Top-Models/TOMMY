@@ -84,8 +84,6 @@ class TopicModellingController:
         Notify the graph controller that the topic model has changed
         :return: None
         """
-        # TODO: send event to view and other controllers that the
-        #  visualizations should change
         # if the topic runner ran on an outdated corpus, we delete it.
         if (self._config_model.topic_runner is not None
                 and self._config_model.topic_model.used_corpus_version_id
@@ -131,7 +129,7 @@ class TopicModellingController:
             ErrorView("Er is geen data beschikbaar om een model op te "
                       "trainen. Zorg ervoor dat er een map met ondersteunde "
                       "bestanden is ingeladen. De ondersteunde bestandstypen "
-                      "zijn:", ["pdf", "docx",
+                      "zijn:", ["txt", "pdf", "docx",
                                 "csv, zorg ervoor dat de tekst die je wilt "
                                 "analyseren in een kolom staat die als header "
                                 "'body' heeft. Voor meer informatie zie de "

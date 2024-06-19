@@ -47,6 +47,7 @@ class PreprocessingView(QScrollArea):
                 QTabWidget {{
                     color: black;
                     border: none;
+                    background-color: white;
                 }}
 
                 QTabBar::tab {{ 

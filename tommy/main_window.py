@@ -72,7 +72,8 @@ class MainWindow(QMainWindow):
 
         # Create the custom splitter to handle resizing
         self.splitter = CustomSplitter(Qt.Horizontal)
-        self.splitter.setStyleSheet("border: none;")
+        self.splitter.setStyleSheet("border: none;"
+                                    "background-color: white;")
         self.splitter.setContentsMargins(0, 0, 0, 0)
 
         self.left_container = QWidget()
@@ -204,7 +205,6 @@ class MainWindow(QMainWindow):
         :param file: The file that was clicked
         :return: None
         """
-        # TODO: Hardcoded save name
         # Show info about run if no file is selected
         if not file.selected:
             self.selected_information_view.display_run_info("Run Info")
@@ -222,7 +222,6 @@ class MainWindow(QMainWindow):
         self.imported_files_view.deselect_all_files()
         self.imported_files_view.selected_label = None
 
-        # TODO: Hardcoded save name
         # Show info about run if no topic is selected
         if not topic_entity.selected:
             self.imported_files_view.display_files()
@@ -252,9 +251,6 @@ class MainWindow(QMainWindow):
         :return: None
         """
 
-        # TODO: the default input folder path is currently hardcoded in
-        #  project_settings_model, rethink whether it should be hardcoded or
-        #  be loaded from a project instead
         # get and immediately reset the input folder path to cause the
         # project settings controller to notify its observers
         path = (self._controller.project_settings_controller

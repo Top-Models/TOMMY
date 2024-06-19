@@ -265,9 +265,6 @@ def test_config_updates_blacklist_textbox(
     assert blacklist_tab.toPlainText() == test_words
 
 
-# TODO: implement and then test the behaviour for the other tabs in the
-#  stopwords view
-
 
 """
 This program has been developed by students from the bachelor Computer Science
