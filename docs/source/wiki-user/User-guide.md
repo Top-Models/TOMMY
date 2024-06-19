@@ -11,7 +11,7 @@ woorden en bijbehorende gewichten, waarbij het gewicht een indicatie is voor
 hoeveel een woord bij een topic past. Het algoritme gaat ervan uit dat elk
 document elk topic bevat, ook al is het maar voor een heel klein deel. In deze
 gebruikershandleiding staat beschreven hoe u TOMMY kunt gebruiken en hoe
-deze ruwe data van het LDA algoritme goed onderzocht kan worden.
+deze ruwe data van het LDA-algoritme goed onderzocht kan worden.
 
 ## Installatie
 
@@ -22,33 +22,33 @@ worden.
 
 ## Bestanden importeren
 
-Het programma ondersteunt momenteel vier verschillende file formats: TXT bestanden, PDF
-bestanden, Docx bestanden (Word bestanden) en zogenaamde csv format bestanden.
+Het programma ondersteunt momenteel vier verschillende file formats: TXT-bestanden, 
+PDF-bestanden, Docx bestanden (Word bestanden) en zogenaamde csv format bestanden.
 Meer informatie over de csv format volgt onder het kopje ’csv format’.
 Het is aan te raden een input folder aan te maken op de computer om hier
-alle bestanden te verzamelen. Subfolders in de import folder worden niet onder-
-steunt. Een input folder kan gekozen worden door onder het kopje bestanden
+alle bestanden te verzamelen. Subfolders in de import folder worden niet 
+ondersteund. Een input folder kan gekozen worden door onder het kopje bestanden
 links bovenin het scherm te kiezen voor de optie Selecteer input folder.
 
 Nadat de bestanden zijn geïmporteerd, zijn deze te vinden in de bestandsweergave
 onder het kopje geïmporteerde bestanden. De bestanden worden 
 aangeduid met een titel als deze is meegegeven en anders met de bestandslocatie. Er
 wordt metadata over het bestand getoond als u op een bestand in geïmporteerde
-bestanden klikt. Deze data bevindt zich onder bestandsinformatie en bevat on-
-der andere het aantal woorden, bestandsformat en de bestandsgrootte.
+bestanden klikt. Deze data bevindt zich onder bestandsinformatie en bevat 
+onder andere het aantal woorden, bestandsformaat en de bestandsgrootte.
 
 ![](../_static/User-guide/input.png)
 ### CSV formaat
 
 Om veel data in het programma te laden is er een format bedacht welke dit voor
-de computer leesbaar maakt. Dit format bestaat uit een csv bestand waarbij de
+de computer leesbaar maakt. Dit format bestaat uit een csv-bestand waarbij de
 eerste regel een lijst aan headers is. Elke regel hierna beschrijft een document.
-Om een csv bestand te kunnen inlezen moet er moet er minimaal een header
+Om een csv-bestand te kunnen inlezen moet er moet er minimaal een header
 genaamd ”body” aanwezig zijn. Dit geeft aan dat deze kolom de tekst bevat die 
 geanalyseerd moet worden. Daarnaast worden er een aantal optionele headers
 ondersteund.
 
-1. title: Deze header geeft aan dat de desbetrevende kolom de titels van
+1. title: Deze header geeft aan dat de desbetreffende kolom de titels van
 de documenten bevat. Deze titels worden dan gebruikt onder het kopje
 geïmporteerde bestanden zoals later beschreven wordt.
 2. date: Deze header geeft aan dat deze kolom de publicatiedatums van de
@@ -126,7 +126,7 @@ dan 100 topicwoorden in te voeren. Bovendien zijn de resultaten beter te
 interpreteren met een lager aantal topicwoorden.
 
 Het aantal topicwoorden kan je zien in de topics display. Dit is een lijst van
-woorden die het beste bij een topic passen. De hoeveelheid woorden die je ziet
+woorden die het beste bij een topic passen. De hoeveelheid woorden die je ziet,
 is het aantal dat je hebt ingevoerd bij de instelling # Topicwoorden.
 
 
@@ -216,7 +216,7 @@ sluiten.
 
 ![](../_static/User-guide/uitsluiten.png)
 
-Figuur 1: Het uitsluit veld met drie uitgesloten woorden.
+Figuur 1: Het uitsluitveld met drie uitgesloten woorden.
 
 ### Synoniemen en N-grams
 
