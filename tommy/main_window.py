@@ -30,6 +30,8 @@ from tommy.view.topic_view.topic_entity_component.topic_entity import (
     TopicEntity)
 
 from tommy.support.application_settings import get_assets_folder
+
+
 class MainWindow(QMainWindow):
     """Main window class for the topic modelling application"""
 
@@ -70,7 +72,8 @@ class MainWindow(QMainWindow):
 
         # Create the custom splitter to handle resizing
         self.splitter = CustomSplitter(Qt.Horizontal)
-        self.splitter.setStyleSheet("border: none;")
+        self.splitter.setStyleSheet("border: none;"
+                                    "background-color: white;")
         self.splitter.setContentsMargins(0, 0, 0, 0)
 
         self.left_container = QWidget()
