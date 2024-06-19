@@ -21,8 +21,6 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
         """
         pass
 
-    from pypdf.errors import PdfReadError
-
     def compatible_file(self, path: str) -> bool:
         """
         A PDF file is compatible with this parser if and only if
@@ -82,15 +80,15 @@ class PdfFileImporter(file_importer_base.FileImporterBase):
             date = None
 
         return RawFile(
-                metadata=Metadata(author=metadata.get('/Author', None),
-                                  title=metadata.get('/Title', alt_title),
-                                  date=date,
-                                  path=os.path.relpath(path),
-                                  format="pdf",
-                                  length=len(file.split(" ")),
-                                  name=alt_title,
-                                  size=stat(path).st_size),
-                body=RawBody(body=file))
+            metadata=Metadata(author=metadata.get('/Author', None),
+                              title=metadata.get('/Title', alt_title),
+                              date=date,
+                              path=os.path.relpath(path),
+                              format="pdf",
+                              length=len(file.split(" ")),
+                              name=alt_title,
+                              size=stat(path).st_size),
+            body=RawBody(body=file))
 
 
 """
