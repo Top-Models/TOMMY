@@ -22,17 +22,17 @@ worden.
 
 ## Bestanden importeren
 
-Het programma ondersteunt momenteel drie verschillende file formats: PDF
-bestanden, Docx bestanden (Word bestanden) en zogenaamde csv format be-
-standen. Meer informatie over de csv format volgt onder het kopje ’csv format’.
+Het programma ondersteunt momenteel vier verschillende file formats: TXT bestanden, PDF
+bestanden, Docx bestanden (Word bestanden) en zogenaamde csv format bestanden.
+Meer informatie over de csv format volgt onder het kopje ’csv format’.
 Het is aan te raden een input folder aan te maken op de computer om hier
 alle bestanden te verzamelen. Subfolders in de import folder worden niet onder-
 steunt. Een input folder kan gekozen worden door onder het kopje bestanden
 links bovenin het scherm te kiezen voor de optie Selecteer input folder.
 
-Nadat de bestanden zijn geïmporteerd, zijn deze te vinden in de bestands-
-weergave onder het kopje geïmporteerde bestanden. De bestanden worden aan-
-geduid met een titel als deze is meegegeven en anders met de bestandslocatie. Er
+Nadat de bestanden zijn geïmporteerd, zijn deze te vinden in de bestandsweergave
+onder het kopje geïmporteerde bestanden. De bestanden worden 
+aangeduid met een titel als deze is meegegeven en anders met de bestandslocatie. Er
 wordt metadata over het bestand getoond als u op een bestand in geïmporteerde
 bestanden klikt. Deze data bevindt zich onder bestandsinformatie en bevat on-
 der andere het aantal woorden, bestandsformat en de bestandsgrootte.
@@ -54,20 +54,21 @@ geïmporteerde bestanden zoals later beschreven wordt.
 2. date: Deze header geeft aan dat deze kolom de publicatiedatums van de
 documenten bevat. Dit wordt op dit moment nog niet gebruikt in het
 programma.
-3. author : Deze header geeft aan dat deze kolom de schrijvers van de do-
-cumenten bevat. Dit wordt op dit moment nog niet gebruikt in het pro-
-gramma.
+3. author : Deze header geeft aan dat deze kolom de schrijvers van de 
+documenten bevat. Dit wordt op dit moment nog niet gebruikt in het programma.
 4. url : Deze header geeft aan dat de kolom de linkjes naar de bron van
 het document bevat. Dit wordt op dit moment nog niet gebruikt in het
 programma.
 
 ### PDF, TXT en Docx formaten
 
-Plaats de bestanden in de een folder. De bestanden worden automatisch ingelezen als de folder geselecteerd voor de input.
+Plaats de bestanden in de een folder. De bestanden worden 
+automatisch ingelezen als de folder geselecteerd voor de input.
 De pdf, txt en docx formaten worden ingelezen door de tekst uit de bestanden te halen. 
 Het is aan te raden om de bestanden zo schoon mogelijk te houden. 
 Dit betekent dat de bestanden geen afbeeldingen of andere onnodige informatie bevatten. 
-Het is ook aan te raden om de bestanden in een taal te hebben die door het programma ondersteund wordt. Het programma ondersteunt momenteel de talen Nederlands en Engels.
+Het is ook aan te raden om de bestanden in een taal te hebben die door het
+programma ondersteund wordt. Het programma ondersteunt momenteel de talen Nederlands en Engels.
 
 ## Topic modelling
 
@@ -102,9 +103,9 @@ proberen en te kijken welk algoritme de beste resultaten geeft.
 
 ## Topic modelling uitvoeren
 
-Topic modelling wordt door de applicatie uitgevoerd op alle geïmporteerde be-
-standen. Hierbij worden door de gebruiker geselecteerde instellingen meege-
-nomen. Hieronder staat beschreven hoe deze instellingen aangepast kunnen
+Topic modelling wordt door de applicatie uitgevoerd op alle geïmporteerde 
+bestanden. Hierbij worden door de gebruiker geselecteerde instellingen 
+meegenomen. Hieronder staat beschreven hoe deze instellingen aangepast kunnen
 worden.
 
 ### Visualisatie
@@ -115,14 +116,14 @@ worden.
 ![](../_static/User-guide/visualisatie.png)
 
 De meest invloedrijke parameter op de uitkomst van het topic modelling algoritme
-is de hoeveelheid topicwoorden. Dit getal is linksboven in de applicatie aanpas-
-baar door onder het kopje Visualisatie bij de instelling # Topicwoorden een geheel
+is de hoeveelheid topicwoorden. Dit getal is linksboven in de applicatie 
+aanpasbaar door onder het kopje Visualisatie bij de instelling # Topicwoorden een geheel
 getal in te voeren en vervolgens op enter te drukken. De hoeveelheid topicwoorden
-heeft standaard de waarde 10. Het zal niet vaak nodig zijn om meer dan 20 topic-
-woorden te gebruiken. In het algemeen geldt dat, hoe meer topicwoorden je kiest,
+heeft standaard de waarde 10. Het zal niet vaak nodig zijn om meer dan 20 
+topicwoorden te gebruiken. In het algemeen geldt dat, hoe meer topicwoorden je kiest,
 hoe langer het programma bezig zal zijn. Het is dan ook sterk af te raden om meer
-dan 100 topicwoorden in te voeren. Bovendien zijn de resultaten beter te inter-
-preteren met een lager aantal topicwoorden.
+dan 100 topicwoorden in te voeren. Bovendien zijn de resultaten beter te 
+interpreteren met een lager aantal topicwoorden.
 
 Het aantal topicwoorden kan je zien in de topics display. Dit is een lijst van
 woorden die het beste bij een topic passen. De hoeveelheid woorden die je ziet
@@ -137,8 +138,8 @@ is het aantal dat je hebt ingevoerd bij de instelling # Topicwoorden.
 ![](../_static/User-guide/algoritme.png)
 
 Het algoritme dat gebruikt wordt voor topic modelling kan aangepast worden
-onder het kopje Algemeen. Het algoritme kan worden aangepast in de drop-
-down menu onder de instelling Algoritme. Hier kan gekozen worden tussen
+onder het kopje Algemeen. Het algoritme kan worden aangepast in de 
+dropdown menu onder de instelling Algoritme. Hier kan gekozen worden tussen
 LDA en NMF. Standaard staat het algoritme op LDA.
 
 
@@ -172,8 +173,8 @@ Tommy support op dit moment de talen Nederlands en Engels.
 Naast de algemene instellingen, kunnen ook een aantal geavanceerde parameters
 voor LDA worden aangepast onder het kopje Hyperparameters
 
-De alpha parameter bepaalt hoe verspreid de distibutie voor topic per do-
-cument is. Een hogere alpha waarde moedigt het programma aan om zo veel
+De alpha parameter bepaalt hoe verspreid de distibutie voor topic per 
+document is. Een hogere alpha waarde moedigt het programma aan om zo veel
 mogelijk topics te zoeken in een document. Bij een lagere alpha waarde zal
 het algoritme slechts een paar dominate topics zoeken voor ieder document.
 De alpha waarde kan aangepast worden door de automatische instellingen uit
