@@ -30,6 +30,8 @@ from tommy.view.topic_view.topic_entity_component.topic_entity import (
     TopicEntity)
 
 from tommy.support.application_settings import get_assets_folder
+
+
 class MainWindow(QMainWindow):
     """Main window class for the topic modelling application"""
 
