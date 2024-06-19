@@ -16,7 +16,10 @@ class CustomSplitterHandle(QSplitterHandle):
         font.setPointSize(25)
         painter.setFont(font)
         painter.setPen(QColor(150, 150, 150))
-        painter.drawText(self.rect(), Qt.AlignCenter, "⋮")
+        if self.orientation() == Qt.Horizontal:
+            painter.drawText(self.rect(), Qt.AlignCenter, "⋮")
+        else:
+            painter.drawText(self.rect(), Qt.AlignCenter, "⋯")
         painter.end()
 
 
