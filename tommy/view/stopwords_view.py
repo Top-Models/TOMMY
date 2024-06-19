@@ -39,6 +39,7 @@ class StopwordsView(QScrollArea):
                 QTabWidget {{
                     color: black;
                     border: none;
+                    background-color: white;
                 }}
 
                 QTabBar::tab {{ 
