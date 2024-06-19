@@ -109,17 +109,17 @@ class PreprocessingController:
         :param doc: The tokens given by processing of the Dutch SpaCy pipeline
         :return list[str]: The processed tokens
         """
-        # 2, 3, 4 - all steps that require token-level information
+        # all steps that require token-level information
         lemmas = [token.lemma_ for token in doc if
                   token.ent_type_ not in self._entity_categories and
                   not str.isspace(token.lemma_) and (
                           not self._enable_pos or
                           token.pos_ in self._pos_categories)]
 
-        # 5 - transforming the tokens (lemmas) themselves
+        # transforming the tokens (lemmas) themselves
         lemmas = [lemma.lower() for lemma in lemmas if len(lemma) > 3]
 
-        # 8 - stopword removal
+        # stopword removal
         lemmas = self.filter_stopwords(lemmas)
 
         return lemmas
