@@ -255,8 +255,6 @@ def test_config_updates_blacklist_textbox(
     # assert that blacklist_tab text is test_words
     assert blacklist_tab.toPlainText() == test_words
 
-# TODO: implement and then test the behaviour for the other tabs in the
-#  stopwords view
 
 
 """

@@ -167,7 +167,6 @@ class StopwordsView(QScrollArea):
         :return: None
         """
         input_text = self.synonym_tab.toPlainText()
-        # TODO: implement at a later point
 
     def _update_blacklist_textbox(self, words: list[str]):
         text = "\n".join(words)

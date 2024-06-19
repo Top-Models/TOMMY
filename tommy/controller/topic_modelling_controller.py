@@ -78,7 +78,6 @@ class TopicModellingController:
         Notify the graph controller that the topic model has changed
         :return: None
         """
-        # TODO: send event to view and other controllers that the
         #  visualizations should change
         # if the topic runner ran on an outdated corpus, we delete it.
         if (self._config_model.topic_runner is not None

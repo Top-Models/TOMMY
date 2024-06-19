@@ -69,7 +69,6 @@ class PreprocessingController:
                 raise ValueError("Unsupported preprocessing language")
         self._nlp = nlp
         self._nlp.add_pipe("merge_entities")
-        # TODO: refine the entity set (i.e. "proper-noun filtering")
         self._entity_categories = {"PERSON", "FAC", "LAW", "TIME", "PERCENT",
                                    "MONEY", "QUANTITY", "ORDINAL", "CARDINAL"}
         self._pos_categories = {"NOUN", "PROPN", "ADJ", "ADV", "VERB"}
@@ -119,13 +118,6 @@ class PreprocessingController:
 
         # 5 - transforming the tokens (lemmas) themselves
         lemmas = [lemma.lower() for lemma in lemmas if len(lemma) > 3]
-        # TODO: fine-grain abbreviation filtering (i.e. don't exclude
-        #  every token under 4 characters)
-
-        # TODO: fix "-" and "'" words and remove diacritical marks
-        #  (i.e. character 'normalization')
-
-        # TODO: 6,7
 
         # 8 - stopword removal
         lemmas = self.filter_stopwords(lemmas)
