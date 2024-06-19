@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 
 from tommy.controller.file_import.txt_file_importer import TxtFileImporter
 
-
 TEST_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                              '..',
                                              '..',
@@ -33,18 +32,6 @@ def test_compatible_file(txt_file_importer):
     assert not txt_file_importer.compatible_file(incompatible_path)
 
 
-# you can still open a txt file when it is corrupted, the only tell is the
-# text becoming gibberish. We will leave detection of faulty txt files to
-# the user.
-
-# def test_corrupted_file(txt_file_importer):
-#     corrupted_path = os.path.join(TEST_DATA_DIR,
-#                                   'corrupt_files',
-#                                   'hondenverhaaltje 1.txt')
-#     with pytest.raises(zipfile.BadZipFile) as exception_info:
-#         txt_file_importer.compatible_file(corrupted_path)
-
-
 def test_load_file(txt_file_importer):
     testfile = os.path.join(TEST_DATA_DIR,
                             'correct_files',
@@ -66,7 +53,7 @@ def test_generate_file(txt_file_importer):
     file_date = datetime.now()
 
     file = txt_file_importer.generate_file("Verhaaltje over een kat",
-                                            path=filepath)
+                                           path=filepath)
 
     # Set date as current date for testing purposes
     file.metadata.date = file_date
