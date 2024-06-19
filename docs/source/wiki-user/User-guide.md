@@ -37,7 +37,8 @@ wordt metadata over het bestand getoond als u op een bestand in geïmporteerde
 bestanden klikt. Deze data bevindt zich onder bestandsinformatie en bevat on-
 der andere het aantal woorden, bestandsformat en de bestandsgrootte.
 
-## CSV format
+![](../_static/User-guide/input.png)
+### CSV formaat
 
 Om veel data in het programma te laden is er een format bedacht welke dit voor
 de computer leesbaar maakt. Dit format bestaat uit een csv bestand waarbij de
@@ -60,6 +61,45 @@ gramma.
 het document bevat. Dit wordt op dit moment nog niet gebruikt in het
 programma.
 
+### PDF, TXT en Docx formaten
+
+Plaats de bestanden in de een folder. De bestanden worden automatisch ingelezen als de folder geselecteerd voor de input.
+De pdf, txt en docx formaten worden ingelezen door de tekst uit de bestanden te halen. 
+Het is aan te raden om de bestanden zo schoon mogelijk te houden. 
+Dit betekent dat de bestanden geen afbeeldingen of andere onnodige informatie bevatten. 
+Het is ook aan te raden om de bestanden in een taal te hebben die door het programma ondersteund wordt. Het programma ondersteunt momenteel de talen Nederlands en Engels.
+
+## Topic modelling
+
+### Welke algoritme kan TOMMY gebruiken?
+
+#### LDA
+Het algoritme dat gebruikt wordt voor topic modelling is Latent Dirichlet 
+Allocation (LDA). LDA is een algoritme dat topics herkent in documenten. Het 
+algoritme gaat ervan uit dat elk document elk topic bevat, ook al is dit maar voor 
+een heel klein deel. De topics worden gedefinieerd door woorden met een
+bijbehorend gewicht. Hoe hoger het gewicht, hoe meer een woord bij dat topic past.
+
+#### NMF
+Naast LDA is er ook een ander algoritme beschikbaar, namelijk Non-negative
+Matrix Factorization (NMF). NMF is een algoritme dat een matrix opsplitst in
+twee matrices. Deze twee matrices kunnen gezien worden als een document-topic
+matrix en een topic-woord matrix. De document-topic matrix geeft aan
+hoeveel elk document bij een topic past, en de topic-woord matrix geeft aan
+hoeveel elk woord bij een topic past. Het algoritme gaat ervan uit dat elk 
+document elk topic bevat, ook al is dit maar voor een heel klein deel. De topics 
+worden gedefinieerd door woorden met een bijbehorend gewicht. Hoe hoger het
+gewicht, hoe meer een woord bij dat topic past.
+
+### Welk algoritme is beter?
+Beide algoritmes hebben hun eigen voor- en nadelen. LDA is een algoritme
+dat probabilistisch is, wat betekent dat het algoritme een kansverdeling zoekt
+die de data het beste verklaart. NMF is een algoritme dat werkt met matrices,
+waarbij de data wordt opgesplitst in twee matrices. LDA is vaak beter in het
+vinden van abstracte topics, terwijl NMF vaak beter is in het vinden van meer
+concrete topics. In de praktijk is het vaak handig om beide algoritmes uit te
+proberen en te kijken welk algoritme de beste resultaten geeft.
+
 ## Topic modelling uitvoeren
 
 Topic modelling wordt door de applicatie uitgevoerd op alle geïmporteerde be-
@@ -67,28 +107,70 @@ standen. Hierbij worden door de gebruiker geselecteerde instellingen meege-
 nomen. Hieronder staat beschreven hoe deze instellingen aangepast kunnen
 worden.
 
+### Visualisatie
+
+
+
+#### # Topicwoorden
+![](../_static/User-guide/visualisatie.png)
+
+De meest invloedrijke parameter op de uitkomst van het topic modelling algoritme
+is de hoeveelheid topicwoorden. Dit getal is linksboven in de applicatie aanpas-
+baar door onder het kopje Visualisatie bij de instelling # Topicwoorden een geheel
+getal in te voeren en vervolgens op enter te drukken. De hoeveelheid topicwoorden
+heeft standaard de waarde 10. Het zal niet vaak nodig zijn om meer dan 20 topic-
+woorden te gebruiken. In het algemeen geldt dat, hoe meer topicwoorden je kiest,
+hoe langer het programma bezig zal zijn. Het is dan ook sterk af te raden om meer
+dan 100 topicwoorden in te voeren. Bovendien zijn de resultaten beter te inter-
+preteren met een lager aantal topicwoorden.
+
+Het aantal topicwoorden kan je zien in de topics display. Dit is een lijst van
+woorden die het beste bij een topic passen. De hoeveelheid woorden die je ziet
+is het aantal dat je hebt ingevoerd bij de instelling # Topicwoorden.
+
+
+
 ### Algemeen
 
-De meest invloedrijke parameter op de uitkomst van het topic modelling algo-
-ritme is de hoeveelheid topics. Dit getal is linksboven in de applicatie aanpas-
-baar door onder het kopje Algemeen bij de instelling Aantal topics een geheel
-getal in te voeren en vervolgens op enter te drukken. De hoeveelheid topics heeft
-standaard de waarde 3. Het zal niet vaak nodig zijn om meer dan 20 topics te
-gebruiken. In het algemeen geldt dat, hoe meer topics je kiest, hoe langer het
-programma bezig zal zijn. Het is dan ook sterk af te raden om meer dan 100
-topics in te voeren. Bovendien zijn de resultaten beter te interpreteren met een
-lager aantal topics.
 
-Een andere parameter onder het kopje Algemeen is de instelling Aantal woor-
-den. Deze instelling bepaalt hoeveel woorden er zichtbaar zijn per topic. De
-zichtbare woorden per topic zijn de woorden die het beste bij een topic passen.
-De hoeveelheid woorden heeft standaard de waarde 10, maar is aanpasbaar door
-een geheel getal in te voeren en vervolgens op enter te drukken.
+#### Algortime
+![](../_static/User-guide/algoritme.png)
 
-### Hypermarameters
+Het algoritme dat gebruikt wordt voor topic modelling kan aangepast worden
+onder het kopje Algemeen. Het algoritme kan worden aangepast in de drop-
+down menu onder de instelling Algoritme. Hier kan gekozen worden tussen
+LDA en NMF. Standaard staat het algoritme op LDA.
+
+
+#### # Topics
+![](../_static/User-guide/topics.png)
+
+Het aantal topics dat gezocht wordt in de documenten kan aangepast worden
+onder het kopje Algemeen. Het aantal topics kan worden aangepast door een
+geheel getal in te voeren bij de instelling # Topics en vervolgens op enter te
+drukken. 
+
+Hier is interactie voor nodig om te bepalen welk aantal topics
+het beste is voor de gegeven data. In de K-plot kan je zien hoe de log-likelihood
+verandert met het aantal topics. Hieruit kan je afleiden hoeveel topics je het
+beste kan gebruiken. Hoe hoger de log-likelihood, hoe beter de topics passen bij
+de data.
+
+
+#### Taal Corpus
+![](../_static/User-guide/taal.png)
+
+De taal van de documenten kan aangepast worden onder het kopje Algemeen.
+De taal kan worden aangepast door een taal te selecteren in de dropdown menu
+onder de instelling Taal corpus. 
+Tommy support op dit moment de talen Nederlands en Engels.
+
+
+### LDA Hyperparameters
+![](../_static/User-guide/hyperparamaters.png)
 
 Naast de algemene instellingen, kunnen ook een aantal geavanceerde parameters
-worden aangepast onder het kopje Hyperparameters
+voor LDA worden aangepast onder het kopje Hyperparameters
 
 De alpha parameter bepaalt hoe verspreid de distibutie voor topic per do-
 cument is. Een hogere alpha waarde moedigt het programma aan om zo veel
@@ -111,7 +193,9 @@ standaard parameters gebruikt. Voor de alpha instelling is dit 1.0, en voor de
 beta instelling is dit 0.01.
 
 ### Woorden uitsluiten
-
+<!---
+TODO: Synoniemen etc is nog niet gemerged naar main.
+--->
 Niet alle woorden uit de geïmporteerde bestanden worden gebruikt bij topic
 modelling. Bepaalde stopwoorden zoals lidwoorden en andere veel voorkomende
 woorden als te, door en is worden standaard uit de bestanden gefilterd. Dit zorgt
