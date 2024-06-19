@@ -11,14 +11,13 @@ class SynonymsController:
     @property
     def synonyms_model_changed_event(self) -> EventHandler[dict[str, str]]:
         """
-        This event gets triggered when the stopwords model is changed due
+        This event gets triggered when the synonyms model is changed due
         to the user switching config
         """
         return self._synonyms_model_changed_event
 
-    # TODO: should this be called synonyms_model?
     @property
-    def stopwords_model(self) -> SynonymsModel:
+    def synonyms_model(self) -> SynonymsModel:
         return self._synonyms_model
 
     def __init__(self) -> None:
@@ -30,7 +29,7 @@ class SynonymsController:
         self._synonyms_model = synonyms_model
 
     def on_model_swap(self):
-        """Notify the frontend that the stopwords model has changed."""
+        """Notify the frontend that the synonyms model has changed."""
         self._synonyms_model_changed_event.publish(
             self._synonyms_model.synonyms)
 
