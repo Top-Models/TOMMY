@@ -33,10 +33,6 @@ class TxtFileImporter(file_importer_base.FileImporterBase):
         if not path.endswith('.txt'):
             return False
 
-        # Since txt files are perfectly happy being read even when their
-        # text isn't interpretable, needlessly opening can be avoided
-        # with open(path, "rb") as txtFile:
-        #     txtFile.read()
         return True
 
     def load_file(self, path: str) -> Generator[RawFile, None, None]:
@@ -44,7 +40,8 @@ class TxtFileImporter(file_importer_base.FileImporterBase):
         Loads a txt file and yields a File object.
 
         :param path: The string path to the txt file.
-        :return: Generator[RawFile, None, None]: A generator yielding File objects.
+        :return: Generator[RawFile, None, None]: A generator yielding
+        File objects.
         """
         with open(path, "r", encoding='utf-8-sig') as txtFile:
             text = txtFile.read()
