@@ -42,6 +42,4 @@ create-dmg \
 
 #echo "> Signing the DMG file"
 
-#codesign --force --verbose  --verify--timestamp --sign "Developer ID Application: TTT" "${DMG_FOLDER_PATH}"
-
 echo "> You can find the DMG file in the dist folder"
