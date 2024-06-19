@@ -284,6 +284,15 @@ class GraphController:
             if exporter.is_possible(self._current_topic_runner)
         ]
 
+        # Calculate the visualizations ahead of time to cache them for a
+        # smoother user experience
+        for vis in self._possible_visualizations:
+            if self.has_topic_runner and vis.needs_topic:
+                for topic_id in range(self.get_number_of_topics()):
+                    self.get_visualization(vis.index, override_topic=topic_id)
+            else:
+                self.get_visualization(vis.index)
+
     def _get_nx_export(self, vis_index: int) -> nx.Graph:
         """
         Returns the networkx graph corresponding showing the network
