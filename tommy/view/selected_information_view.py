@@ -215,7 +215,6 @@ class SelectedInformationView(QScrollArea):
         """
 
         if not file_label.selected:
-            # TODO: Display run info when available
             self.display_no_component_selected()
             return
 
@@ -285,7 +284,6 @@ class SelectedInformationView(QScrollArea):
         file_size_label.setMinimumHeight(20)
         vertical_layout.addWidget(file_size_label)
 
-    # TODO: Displayed information not final
     def display_topic_info(self, topic_entity) -> None:
         """
         Display the topic information
@@ -294,7 +292,6 @@ class SelectedInformationView(QScrollArea):
         """
 
         if not topic_entity.selected:
-            # TODO: Display run info when available
             self.display_no_component_selected()
             return
 

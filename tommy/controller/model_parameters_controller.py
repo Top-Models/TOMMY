@@ -9,7 +9,6 @@ class ModelParametersController:
     modelling
     """
     _parameters_model: ModelParametersModel = None
-    # TODO: Not all parameters emit this event when changed
     _params_model_changed_event: EventHandler[None] = EventHandler()
     _algorithm_changed_event: EventHandler[None]
 

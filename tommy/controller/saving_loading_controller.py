@@ -32,8 +32,6 @@ class SavingLoadingController:
     def model_changed_event(self) -> EventHandler[Model]:
         return self._model_changed_event
 
-    # TODO: call set model refs and set controller refs and add them to the
-    #  controller and model references test
     def set_model_refs(self, model: Model) -> None:
         """
         Set the reference to the model.
