@@ -121,7 +121,7 @@ class TopicModellingController:
             ErrorView("Er is geen data beschikbaar om een model op te "
                       "trainen. Zorg ervoor dat er een map met ondersteunde "
                       "bestanden is ingeladen. De ondersteunde bestandstypen "
-                      "zijn:", ["pdf", "docx",
+                      "zijn:", ["txt", "pdf", "docx",
                                 "csv, zorg ervoor dat de tekst die je wilt "
                                 "analyseren in een kolom staat die als header "
                                 "'body' heeft. Voor meer informatie zie de "
