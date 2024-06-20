@@ -118,6 +118,10 @@ def test_save_then_load_project(
     controller.model_parameters_controller.set_bert_max_features(100)
     controller.stopwords_controller.update_stopwords(["hallootjes",
                                                       "goeiedagdag"])
+    controller.synonyms_controller.update_synonyms({
+        "hello": "hi",
+        "goodbye": "bye"
+    })
 
     # add another configuration with different parameters
     controller.config_controller.add_configuration("Andere config")
@@ -131,6 +135,10 @@ def test_save_then_load_project(
     controller.model_parameters_controller.set_bert_min_df(None)
     controller.model_parameters_controller.set_bert_max_features(None)
     controller.stopwords_controller.update_stopwords(["kan", "niet", "meer"])
+    controller.synonyms_controller.update_synonyms({
+        "yeah": "yes",
+        "nay": "no"
+    })
 
     # save parameters
     saving_loading_controller.save_settings_to_file(
@@ -145,7 +153,7 @@ def test_save_then_load_project(
     controller.model_parameters_controller.set_bert_min_df(0.2)
     controller.stopwords_controller.update_stopwords(["nog", "meer", "woord"])
     controller.config_controller.delete_configuration("Config 1")
-
+    controller.synonyms_controller.update_synonyms({"testing": "cringe"})
     # load the save file that was just created
     saving_loading_controller.load_settings_from_file(
         "../test/test_data/test_save_files/test_save_project.json")
@@ -168,6 +176,10 @@ def test_save_then_load_project(
             None)
     assert (controller.stopwords_controller.stopwords_model
             .extra_words_in_order == ["kan", "niet", "meer"])
+    assert (controller.synonyms_controller.synonyms_model.synonyms == {
+        "yeah": "yes",
+        "nay": "no"
+    })
 
     # check if the other configuration was also saved correctly
     controller.config_controller.switch_configuration("Config 1")
@@ -184,6 +196,10 @@ def test_save_then_load_project(
             100)
     assert (controller.stopwords_controller.stopwords_model
             .extra_words_in_order == ["hallootjes", "goeiedagdag"])
+    assert (controller.synonyms_controller.synonyms_model.synonyms == {
+        "hello": "hi",
+        "goodbye": "bye"
+    })
 
 
 def test_load_project_updates_parameter_view(
