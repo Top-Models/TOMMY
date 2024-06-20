@@ -1,7 +1,9 @@
 # Installatiehandleiding TOMMY
 
 In deze handleiding wordt beschreven hoe TOMMY op verschillende besturingssystemen geïnstalleerd kan worden. 
-De TOMMY software is te vinden op [https://tommy.fyor.nl/](https://tommy.fyor.nl/).
+De TOMMY software is te vinden op [tommy.fyor.nl](https://tommy.fyor.nl/). 
+
+Het is niet te garanderen dat de TOMMY applicatie op elke computer werkt, in dit geval is het altijd mogelijk om het programma met de [source code](https://git.science.uu.nl/ics/sp/2024/v24j/tommy) met `Python 3.12` te draaien in een Python virtual environment met de `requirements.txt`.
 
 ## macOS
 
@@ -54,3 +56,5 @@ Download de linux-versie van de website.
 Pak get zip-bestand uit op een plek waar je het programma wilt opslaan.
 
 Draai 'main' door er in een file explorer op te klikken, of door het via een terminal te draaien.
+
+De Linux-versie is gegenereerd op een systeem met `GLIBC 2.39`, als jouw versie lager is (wat je kan checken door `ldd --version` in de terminal te draaien) moet je mogelijk je systeem upgraden.
