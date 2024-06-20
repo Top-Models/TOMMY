@@ -211,6 +211,44 @@ def test_n_gram_merging(preprocessing_controller_dutch,
     assert "Ben Ten" in [token.text for token in n_grams]
 
 
+def test_n_gram_synonym(preprocessing_controller_dutch,
+                        stopwords_model_dutch, empty_synonyms_model):
+    """
+    Test the n_gram_merging method of PreprocessingController.
+    """
+    empty_synonyms_model.replace({"new york": "boston"})
+    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch,
+                                                  empty_synonyms_model)
+    text = "New York is een erg coole stad"
+    tokens = preprocessing_controller_dutch.process_text(text)
+
+    # Check whether the n_grams are merged
+    assert len(tokens) == 4
+
+    # Check if specific n_grams are present
+    assert "new york" not in tokens
+    assert "boston" in tokens
+
+
+def test_apply_synonyms(preprocessing_controller_dutch,
+                        stopwords_model_dutch, empty_synonyms_model):
+    """
+    Test whether synonyms are properly processed in the PreprocessingController.
+    :param preprocessing_controller_dutch:
+    :param stopwords_model_dutch:
+    :param empty_synonyms_model:
+    :return:
+    """
+    empty_synonyms_model.replace({"test": "exam"})
+    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch,
+                                                  empty_synonyms_model)
+    text = "Dit is een test zin."
+    tokens = preprocessing_controller_dutch.process_text(text)
+
+    assert "test" not in tokens
+    assert "exam" in tokens
+
+
 def test_preprocessing_pipeline_loaded_on_start():
     controller = Controller()
     assert controller._preprocessing_controller._nlp is not None
