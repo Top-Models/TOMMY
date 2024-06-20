@@ -122,7 +122,7 @@ class PreprocessingController:
                           token.pos_ in self._pos_categories)]
 
         # Take the lemmas.
-        lemmas = [lemma.lower() for lemma in lemmas if len(lemmas) > 2]
+        lemmas = [lemma.lower() for lemma in lemmas if len(lemma) > 2]
 
         # Apply synonyms and filter stopwords.
         lemmas = self.apply_synonyms(lemmas)
