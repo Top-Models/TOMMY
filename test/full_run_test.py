@@ -32,6 +32,6 @@ def test_run_without_error(controller: Controller) -> None:
                new=BlockingWorker):
         # test if topic modelling can run without error
         controller.project_settings_controller.set_input_folder_path(
-            "../test/test_data/test_pdf_files/correct_files")
+            "./test/test_data/test_pdf_files/correct_files")
         controller.topic_modelling_controller.train_model()
         assert controller.graph_controller.has_topic_runner is True
