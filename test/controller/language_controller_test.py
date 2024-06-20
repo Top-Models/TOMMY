@@ -38,3 +38,10 @@ def test_update_language(language_controller):
     assert language_controller.get_language() == SupportedLanguage.Dutch
     language_controller.set_language(SupportedLanguage.English)
     assert language_controller.get_language() == SupportedLanguage.English
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

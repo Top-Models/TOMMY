@@ -144,3 +144,11 @@ def test_get_topic_words(bertopic_runner, max_num_topics, num_words):
     for n in range(bertopic_runner.get_n_topics()):
         assert (bertopic_runner.get_topic_with_scores(n, num_words).n_words
                 == num_words)
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

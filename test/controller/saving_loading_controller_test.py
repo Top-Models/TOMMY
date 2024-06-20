@@ -346,3 +346,11 @@ def test_loading_invalid_project_files(
     for file in files:
         assert saving_loading_controller.load_settings_from_file(
             os.path.join(folder_path, file)) != []
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

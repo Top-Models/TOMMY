@@ -9,7 +9,8 @@ Welcome to TOMMY's wiki!
 Download
 ========
 
-- :download:`TOMMY for Mac <download/Tommy-Installer.dmg>`
+- :download:`TOMMY for Mac (Apple Silicon) <download/silicon/TOMMY-Installer.dmg>`
+- :download:`TOMMY for Mac (Intel) <download/intel/TOMMY-Installer.dmg>`
 - :download:`TOMMY for Windows <download/tommy-windows.zip>`
 - :download:`TOMMY for Linux <download/tommy-linux.zip>`
 
