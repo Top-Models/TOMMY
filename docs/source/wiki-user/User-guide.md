@@ -54,9 +54,9 @@ geïmporteerde bestanden zoals later beschreven wordt.
 2. date: Deze header geeft aan dat deze kolom de publicatiedatums van de
 documenten bevat. Dit wordt op dit moment nog niet gebruikt in het
 programma.
-3. author : Deze header geeft aan dat deze kolom de schrijvers van de 
+3. author: Deze header geeft aan dat deze kolom de schrijvers van de 
 documenten bevat. Dit wordt op dit moment nog niet gebruikt in het programma.
-4. url : Deze header geeft aan dat de kolom de linkjes naar de bron van
+4. url: Deze header geeft aan dat de kolom de linkjes naar de bron van
 het document bevat. Dit wordt op dit moment nog niet gebruikt in het
 programma.
 
@@ -113,7 +113,7 @@ worden.
 
 
 #### # Topicwoorden
-![](../_static/User-guide/visualisatie.png)
+![](../_static/User-guide/Visualisatie.png)
 
 De meest invloedrijke parameter op de uitkomst van het topic modelling algoritme
 is de hoeveelheid topicwoorden. Dit getal is linksboven in de applicatie 
@@ -197,9 +197,12 @@ beta instelling is dit 0.01.
 <!---
 TODO: Synoniemen etc is nog niet gemerged naar main.
 --->
+![](../_static/User-guide/blacklist.png)
+Figuur 1: Het uitsluitveld met drie uitgesloten woorden.
+
 Niet alle woorden uit de geïmporteerde bestanden worden gebruikt bij topic
 modelling. Bepaalde stopwoorden zoals lidwoorden en andere veel voorkomende
-woorden als te, door en is worden standaard uit de bestanden gefilterd. Dit zorgt
+woorden als te, door en is, worden standaard uit de bestanden gefilterd. Dit zorgt
 ervoor dat enkel de belangrijke woorden overblijven, waardoor topics uit meer
 betekenisvolle woorden zullen bestaan. Het kan echter nog steeds voorkomen dat
 er woorden in de analyse opduiken die niet van toepassing zijn. In de praktijk
@@ -214,22 +217,34 @@ omgezet naar kleine letters. Daarom is de blacklist niet case-sensitive, wat
 betekent dat ”bodegraven“ en ”Bodegraven“ beiden hetzelfde woord uit zullen
 sluiten.
 
-![](../_static/User-guide/uitsluiten.png)
 
-Figuur 1: Het uitsluitveld met drie uitgesloten woorden.
 
-### Synoniemen en N-grams
+### Synoniemen
 
-Het verwerken van synoniemen en n-grams wordt nog niet ondersteunt door de
-software. De tabbladen Synoniemen en N-grams zijn nog niet functioneel.
+![](../_static/User-guide/synoniemen.png)
+
+Figuur 2: Het uitsluitveld met twee synoniemen.
+
+Het is mogelijk om synoniemen toe te voegen aan de analyse. Dit kan door
+synoniemen in te voeren in het tekstveld onder het tabblad Synoniemen. Dit
+tekstveld is aanpasbaar. Een synoniem kan worden ingevoerd door het woord dat je wilt 
+verwisselen met een ander achter te verdelen met een = teken. Na elk synoniem kan op enter geklikt worden om naar
+een nieuwe regel te springen om een nieuw synoniem in te vullen. Synoniemen
+kunnen ook vrij verwijderd worden uit de lijst. Een voorbeeld van het toevoegen
+van synoniemen is zichtbaar in figuur 2. Tijdens het uitvoeren van LDA worden
+alle woorden vervangen door hun synoniemen.
+
+
 
 ### Topic modelling toepassen
 
 Nadat de instellingen zijn aangepast, kan het algoritme uitgevoerd worden. Dit
-wordt gedaan door op de Toepassen knop te klikken. Door deze knop wordt
+wordt gedaan door op de "Toepassen" knop te klikken. Door deze knop wordt
 het achterliggende algoritme uitgevoerd en worden er resultaten gegenereerd.
 Dit kan enige tijd duren, denk aan enkele minuten of minder. De tijd is sterk
-afhankelijk van de grootte van de geïmporteerde bestanden.
+afhankelijk van de grootte van de geïmporteerde bestanden. Als het algoritme
+klaar is, worden grafische resultaten gegenereerd die het onderzoek naar de
+algoritmische uitkomst mogelijk maken. De grafieken worden hieronder toegelicht.
 
 ## Grafische resultaten
 
@@ -251,11 +266,16 @@ plekken in de applicatie te bekijken.
 
 #### Lijst aan topic woorden
 
-De meest voorkomende woorden per topic worden rechts in de applicatie ge-
-toond. Veel woorden in deze lijst van topics overlappen echter met andere
+De meest voorkomende woorden per topic worden rechts in de applicatie 
+getoond. Veel woorden in deze lijst van topics overlappen echter met andere
 topics. Om te zien of een woord in meerdere topics voorkomt, kan op een woord
 in deze lijst geklikt worden. Dit woord wordt dan in elke topic waarin het
-voorkomt gearceerd.
+voorkomt gearceerd. Je kan topics ook andere namen geven door op de naam
+van een topic te klikken en de naam te veranderen. Deze namen worden dan
+opgeslagen. Als je op een topic klikt, worden de geïmporteerde bestanden
+weergegeven door de lijst te sorteren op de mate waarin de documenten bij
+het topic horen. Dit is handig om te zien welke documenten het meest bij een
+topic horen.
 
 #### Grafieken topic woorden
 
@@ -352,6 +372,12 @@ die hier nog verder te bewerken. Dit is mogelijk door op de knop Exporteer naar
 Graph Exchange XML Format (.gexf ) te klikken. Vervolgens kan er een folder
 worden gekozen om de bestanden in op te slaan. Deze kunnen dan geopend
 worden in de software Gephi.
+
+## Configs
+
+## Opslaan en laden
+
+
 
 ### Bekende bugs
 
