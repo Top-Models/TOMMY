@@ -15,8 +15,10 @@ class StopwordsController:
 
     @property
     def stopwords_model_changed_event(self) -> EventHandler[list[str]]:
-        """This event gets triggered when the stopwords model is changed due
-        to the user switching config"""
+        """
+        This event gets triggered when the stopwords model is changed due
+        to the user switching config
+        """
         return self._stopwords_model_changed_event
 
     @property
@@ -40,10 +42,7 @@ class StopwordsController:
         self.load_default_stopwords(language_controller.get_language())
 
     def on_model_swap(self):
-        """
-        Notify the frontend that the stopwords model has changed
-        :return:
-        """
+        """Notify the frontend that the stopwords model has changed."""
         self._stopwords_model_changed_event.publish(
             self._stopwords_model.extra_words_in_order)
 

@@ -8,13 +8,14 @@ from PySide6.QtTest import QTest
 from tommy.controller.controller import Controller
 from tommy.controller.language_controller import LanguageController
 from tommy.controller.stopwords_controller import StopwordsController
+from tommy.controller.synonyms_controller import SynonymsController
 from tommy.controller.topic_modelling_controller import \
     TopicModellingController
 from tommy.model.language_model import LanguageModel
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.support.application_settings import application_settings
 from tommy.support.supported_languages import SupportedLanguage
-from tommy.view.stopwords_view import StopwordsView
+from tommy.view.preprocessing_view import PreprocessingView
 
 
 @pytest.fixture
@@ -30,10 +31,12 @@ def stopwords_controller():
     """Fixture for creating a StopwordsController."""
     return StopwordsController()
 
+
 @pytest.fixture
 def topic_modelling_controller():
     """Fixture for creating a TopicModellingController."""
     return TopicModellingController()
+
 
 @pytest.fixture
 def stopwords_model():
@@ -42,13 +45,21 @@ def stopwords_model():
 
 
 @pytest.fixture
-def stopwords_view(stopwords_controller, topic_modelling_controller):
+def synonyms_controller():
+    """Fixture for creating a SynonymsController."""
+    return SynonymsController()
+
+
+@pytest.fixture
+def preprocessing_view(stopwords_controller,
+                       synonyms_controller, topic_modelling_controller):
     """Fixture for creating a StopwordsView."""
-    view = StopwordsView(stopwords_controller, topic_modelling_controller)
+    view = PreprocessingView(stopwords_controller,
+                             synonyms_controller, topic_modelling_controller)
     return view
 
 
-def test_stopwords_view_model_linkage(stopwords_controller, stopwords_view,
+def test_stopwords_view_model_linkage(stopwords_controller, preprocessing_view,
                                       stopwords_model, qtbot):
     """Test whether adding stopwords in the view updates the model."""
     # Set up the view and model
@@ -56,10 +67,10 @@ def test_stopwords_view_model_linkage(stopwords_controller, stopwords_view,
 
     # Add a stopword in the view
     test_stopword = "test_stopword"
-    qtbot.keyClicks(stopwords_view.blacklist_tab, test_stopword)
+    qtbot.keyClicks(preprocessing_view.blacklist_tab, test_stopword)
 
     # Simulate enter key press to trigger the update
-    QTest.keyPress(stopwords_view.blacklist_tab, Qt.Key_Return)
+    QTest.keyPress(preprocessing_view.blacklist_tab, Qt.Key_Return)
 
     # Check if the stopword is added to the model
     assert test_stopword in stopwords_model.extra_words

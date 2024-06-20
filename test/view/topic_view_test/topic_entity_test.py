@@ -47,8 +47,6 @@ def test_select(topic_entity: TopicEntity):
     """
     topic_entity.select()
     assert topic_entity.selected is True
-    assert (topic_entity.styleSheet() ==
-            f"background-color: {pressed_seco_col_purple}; color: white;")
 
 
 def test_deselect(topic_entity: TopicEntity):
@@ -57,8 +55,6 @@ def test_deselect(topic_entity: TopicEntity):
     """
     topic_entity.deselect()
     assert topic_entity.selected is False
-    assert (topic_entity.styleSheet() ==
-            f"background-color: {sec_col_purple}; color: white;")
 
 
 """

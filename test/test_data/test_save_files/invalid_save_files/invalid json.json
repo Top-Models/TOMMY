@@ -9,6 +9,10 @@
           "tommy"
         ]
       },
+      "synonyms": {
+        "maybe": "perhaps",
+        "why": "how"
+      },
       "model_parameters": {
         "n_topics": 6,
         "model_type": "LDA",
@@ -25,6 +29,10 @@
         "extra_stopwords": [
           "misschien"
 
+      },
+      "synonyms": {
+        "maybe": "perhaps",
+        "why": "how"
       },
       "model_parameters": {
         "n_topics": 4,

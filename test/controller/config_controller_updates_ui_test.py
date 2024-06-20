@@ -8,12 +8,13 @@ from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
 from tommy.controller.stopwords_controller import StopwordsController
+from tommy.controller.synonyms_controller import SynonymsController
 from tommy.controller.topic_modelling_controller import \
     TopicModellingController
 from tommy.support.model_type import ModelType
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.model_params_view import ModelParamsView
-from tommy.view.stopwords_view import StopwordsView
+from tommy.view.preprocessing_view import PreprocessingView
 
 
 @pytest.fixture
@@ -64,11 +65,19 @@ def stopwords_controller(controller: Controller) -> StopwordsController:
     return controller.stopwords_controller
 
 
+# synonyms controller fixture
 @pytest.fixture
-def stopwords_view(stopwords_controller: StopwordsController,
-                   topic_modelling_controller: TopicModellingController) \
-        -> StopwordsView:
-    return StopwordsView(stopwords_controller, topic_modelling_controller)
+def synonyms_controller(controller: Controller) -> SynonymsController:
+    return controller.synonyms_controller
+
+
+@pytest.fixture
+def preprocessing_view(stopwords_controller: StopwordsController,
+                       synonyms_controller: SynonymsController,
+                       topic_modelling_controller: TopicModellingController) \
+        -> PreprocessingView:
+    return PreprocessingView(stopwords_controller,
+                             synonyms_controller, topic_modelling_controller)
 
 
 def test_config_updates_lda_num_topics_textbox(
@@ -234,10 +243,10 @@ def test_config_updates_algorithm_dropdown(
 
 
 def test_config_updates_blacklist_textbox(
-        stopwords_view: StopwordsView,
+        preprocessing_view: PreprocessingView,
         config_controller: ConfigController):
     # get reference to textbox for blacklist
-    blacklist_tab = stopwords_view.blacklist_tab
+    blacklist_tab = preprocessing_view.blacklist_tab
 
     test_words = "word5\nword1\nword2"
 

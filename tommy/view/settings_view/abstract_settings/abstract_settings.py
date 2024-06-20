@@ -230,7 +230,7 @@ class AbstractSettings:
         self._config_management_button.setStyleSheet(f"""
             QPushButton {{
                 font-size: 20px;
-                font-family: {text_font};
+                font-family: {heading_font};
                 border-radius: 5px;
                 color: white;
                 border: none;

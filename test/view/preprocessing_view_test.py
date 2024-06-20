@@ -2,15 +2,16 @@ import pytest
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.controller import Controller
-from tommy.view.stopwords_view import StopwordsView
+from tommy.view.preprocessing_view import PreprocessingView
 
 
 @pytest.fixture(scope='function')
-def stopwords_view(qtbot: QtBot) -> StopwordsView:
+def preprocessing_view(qtbot: QtBot) -> PreprocessingView:
     controller = Controller()
-    stopwords_view = StopwordsView(controller.stopwords_controller)
-    qtbot.addWidget(stopwords_view)
-    return stopwords_view
+    preprocessing_view = PreprocessingView(controller.stopwords_controller,
+                                           controller.synonyms_controller)
+    qtbot.addWidget(preprocessing_view)
+    return preprocessing_view
 
 
 """

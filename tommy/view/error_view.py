@@ -57,6 +57,7 @@ class ErrorView(QMessageBox):
         title_label = QLabel("ERROR")
         title_label.setFont(error_heading_font)
         title_label.setStyleSheet(f"""
+            font-weight: bold;
             font-family: '{heading_font}', sans-serif;
             font-size: 20px;
             color: {prim_col_red};
@@ -69,6 +70,7 @@ class ErrorView(QMessageBox):
         error_description_label.setMaximumWidth(400)
         error_description_label.setFont(error_description_label_font)
         error_description_label.setStyleSheet(f"""
+            font-size: 15px;
             color: black;
         """)
         custom_layout.addWidget(error_description_label)
@@ -81,6 +83,7 @@ class ErrorView(QMessageBox):
                 error_label.setMaximumWidth(400)
                 error_label.setStyleSheet(f"""
                     color: black;
+                    font-size: 15px;
                 """)
                 error_label.setFont(error_label_font)
                 error_label.setTextInteractionFlags(Qt.TextBrowserInteraction)

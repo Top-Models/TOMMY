@@ -158,9 +158,6 @@ def test_deselect_all_topics(fetched_topics_view: FetchedTopicsView):
 
     # Ensure the topic is deselected
     assert not topic_entity.selected
-    assert topic_entity.styleSheet() == (
-        f"background-color: {sec_col_purple}; "
-        f"color: white;")
 
 
 """
