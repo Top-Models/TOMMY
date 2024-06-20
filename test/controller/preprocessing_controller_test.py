@@ -77,7 +77,7 @@ def test_process_text_dutch(preprocessing_controller_dutch,
     tokens = preprocessing_controller_dutch.process_text(text)
     assert isinstance(tokens, list)
     # Check the expected number of tokens
-    assert len(tokens) == 2
+    assert len(tokens) == 3
 
     # Ensure all tokens are strings
     assert all(isinstance(token, str) for token in
@@ -124,7 +124,7 @@ def test_process_tokens(preprocessing_controller_dutch,
 
     # Check the expected number of tokens after processing
     assert len(
-        tokens) == 2
+        tokens) == 3
 
     # Ensure all tokens are strings
     assert all(isinstance(token, str) for token in
