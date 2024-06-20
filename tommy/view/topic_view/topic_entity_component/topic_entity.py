@@ -168,10 +168,8 @@ class TopicEntity(QFrame):
         self.selected = True
         self.radio_button.setChecked(True)
         self.setStyleSheet(f"""
-            QFrame#topic_entity {{
-                background-color: {pressed_seco_col_purple};
-                color: white;
-            }}
+            background-color: {pressed_seco_col_purple};
+            color: white;
         """)
 
     def deselect(self) -> None:
@@ -184,12 +182,6 @@ class TopicEntity(QFrame):
         self.radio_button.setChecked(False)
         self.setStyleSheet(f"background-color: {sec_col_purple}; "
                            f"color: white;")
-        self.setStyleSheet(f"""
-            QFrame#topic_entity {{
-                background-color: {pressed_seco_col_purple};
-                color: white;
-            }}
-        """)
 
     def enterEvent(self, event) -> None:
         """
