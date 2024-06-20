@@ -15,3 +15,11 @@ def controller_no_pipeline(mocker: MockerFixture) -> Controller:
     with mocker.patch('tommy.controller.preprocessing_controller'
                       '.PreprocessingController.load_pipeline'):
         return Controller()
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

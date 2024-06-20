@@ -265,7 +265,6 @@ def test_config_updates_blacklist_textbox(
     assert blacklist_tab.toPlainText() == test_words
 
 
-
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.

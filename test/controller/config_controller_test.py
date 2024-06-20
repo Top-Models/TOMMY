@@ -241,3 +241,10 @@ def test_get_configuration_names(config_controller):
     config_controller.delete_configuration("Config 2")
     assert (config_controller.get_configuration_names() ==
             [first_config_name, "Config 3", "Config 0", "Config 4"])
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

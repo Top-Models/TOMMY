@@ -156,3 +156,11 @@ def test_generate_sum_topics_in_documents_plot(lda_runner, processed_files):
     figure = sum_topics_in_documents_plot._create_figure(lda_runner,
                                                          processed_files)
     assert figure
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""
