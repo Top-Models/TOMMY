@@ -91,7 +91,7 @@
 #### Error Handling:
 - user-friendly error messages
 
-#### Documentation:
+#### Documentation: https://tommy.fyor.nl/
 - Comprehensive documentation suite:
   - User manual
   - Developer manual
@@ -100,3 +100,7 @@
   - Style guide
   - Source control guide
   - Installation guide
+
+## Technical details:
+
+- **Programming language**: Python 3.12
