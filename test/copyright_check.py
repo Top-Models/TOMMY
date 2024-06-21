@@ -25,7 +25,7 @@ def check_licence(path: str) -> bool:
 
 if __name__ == "__main__":
     # Get all files in the working directory
-    current_path = os.path.dirname(os.path.realpath(__file__))
+    current_path = os.getcwd()
     files = os.walk(current_path)
 
     ignore = [".git", "venv", "dist", "build"]
