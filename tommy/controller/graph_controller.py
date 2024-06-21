@@ -69,6 +69,8 @@ class GraphController:
     _corpus_controller: CorpusController = None
     _project_settings_controller: ProjectSettingsController = None
 
+    _topic_name_model: TopicNameModel = None
+
     # Visualization Creators
     VISUALIZATIONS: list[AbstractVisualization] = [
         DocumentWordCountCreator(),
@@ -131,8 +133,6 @@ class GraphController:
     def __init__(self) -> None:
         """Initialize the graph-controller and its two publishers"""
         super().__init__()
-        self._current_config = application_settings.default_config_name
-        self._topic_name_model = TopicNameModel(self._current_config)
         self._possible_plots_changed_event = EventHandler[
             list[PossibleVisualization]]()
         self._topics_changed_event = EventHandler[None]()
@@ -158,6 +158,18 @@ class GraphController:
         project_settings_controller.input_folder_path_changed_event.subscribe(
             self.clear_graphs)
 
+    def set_model_refs(self, topic_name_model: TopicNameModel) -> None:
+        """
+        Set the reference to the topic name model
+        :param topic_name_model: The topic name model
+        :return: None
+        """
+        self._topic_name_model = topic_name_model
+
+    def on_model_swap(self):
+        """Notify the frontend that the topic name model has changed"""
+        self._refresh_name_event.publish(None)
+
     def set_selected_topic(self, topic_index: int | None) -> None:
         """
         Set the currently selected topic to the given index or None if no
@@ -169,23 +181,13 @@ class GraphController:
         self._current_topic_selected_id = topic_index
         self._refresh_plots_event.publish(None)
 
-    def set_current_config(self, config_name: str) -> None:
-        """
-        Set the current configuration name
-        :param config_name: The name of the current configuration
-        :return: None
-        """
-        self._current_config = config_name
-        self._refresh_name_event.publish(None)
-
     def get_topic_name(self, topic_index: int) -> str:
         """
         Get the name of the topic with the given index
         :param topic_index: The index of the topic
         :return: The name of the topic
         """
-        return self._topic_name_model.get_topic_name(self._current_config,
-                                                     topic_index)
+        return self._topic_name_model.get_topic_name(topic_index)
 
     def set_topic_name(self, topic_index: int, name: str) -> None:
         """
@@ -195,24 +197,15 @@ class GraphController:
         :return: None
         """
 
-        self._topic_name_model.set_topic_name(self._current_config,
-                                              topic_index, name)
+        self._topic_name_model.set_topic_name(topic_index, name)
 
     def _clear_topic_names(self) -> None:
         """
         Clear all custom topic names
         :return: None
         """
-        self._topic_name_model.clear_topic_names(self._current_config)
+        self._topic_name_model.clear_topic_names()
         self.topics_changed_event.publish(None)
-
-    def remove_config(self, config_name: str) -> None:
-        """
-        Remove the configuration with the given name
-        :param config_name: The name of the configuration to remove
-        :return: None
-        """
-        self._topic_name_model.remove_config(config_name)
 
     def clear_graphs(self, _):
         """Clear all graphs when the input folder path changes"""
