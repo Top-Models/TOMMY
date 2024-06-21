@@ -30,6 +30,8 @@ class FileLabel(QLabel):
         self.setStyleSheet(f"background-color: {medium_light_gray};"
                            f"color: black;"
                            f"margin: 0px;"
+                           f"font-family: {text_font}; "
+                           f"font-size: 12px; "
                            f"padding: 2px 3px 4px 3px;")
         self.setAlignment(Qt.AlignmentFlag.AlignLeft |
                           Qt.AlignmentFlag.AlignTop)
@@ -72,6 +74,8 @@ class FileLabel(QLabel):
                                f"{hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
+                               f"font-family: {text_font}; "
+                               f"font-size: 12px; "
                                f"padding: 2px 3px 4px 3px;")
 
     def leaveEvent(self, event):
@@ -84,6 +88,8 @@ class FileLabel(QLabel):
             self.setStyleSheet(f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
+                               f"font-family: {text_font}; "
+                               f"font-size: 12px; "
                                f"padding: 2px 3px 4px 3px;")
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
@@ -97,6 +103,8 @@ class FileLabel(QLabel):
                                f"{pressed_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
+                               f"font-family: {text_font}; "
+                               f"font-size: 12px; "
                                f"padding: 2px 3px 4px 3px;")
         else:
             self.deselect()
@@ -113,6 +121,8 @@ class FileLabel(QLabel):
             self.setStyleSheet(f"background-color: {medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
+                               f"font-family: {text_font}; "
+                               f"font-size: 12px; "
                                f"padding: 2px 3px 4px 3px;")
         except RuntimeError:
             pass
@@ -128,6 +138,8 @@ class FileLabel(QLabel):
                                f"{pressed_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
+                               f"font-family: {text_font}; "
+                               f"font-size: 12px; "
                                f"padding: 2px 3px 4px 3px;")
         except RuntimeError:
             pass
@@ -142,6 +154,8 @@ class FileLabel(QLabel):
             self.setStyleSheet(f"background-color: {hover_medium_light_gray};"
                                f"color: black;"
                                f"margin: 0px;"
+                               f"font-family: {text_font}; "
+                               f"font-size: 12px; "
                                f"padding: 2px 3px 4px 3px;")
         self.clicked.emit(self)
         super().mouseReleaseEvent(event)
@@ -179,4 +193,3 @@ at Utrecht University within the Software Project course.
 © Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """
-

@@ -3,28 +3,36 @@ from PySide6.QtWidgets import (QScrollArea, QTabWidget,
                                QTextEdit)
 
 from tommy.controller.stopwords_controller import StopwordsController
+from tommy.controller.synonyms_controller import SynonymsController
 from tommy.controller.topic_modelling_controller import \
     TopicModellingController
 from tommy.support.constant_variables import (
     text_font, stopwords_tab_font, stopwords_text_edit_font, disabled_gray)
 
 
-class StopwordsView(QScrollArea):
-    """The StopWordsDisplay area to view all stopwords."""
+class PreprocessingView(QScrollArea):
+    """
+    The PreprocessingDisplay area to view all preprocessing-related
+    input.
+    """
 
     def __init__(self,
                  stopwords_controller: StopwordsController,
+                 synonyms_controller: SynonymsController,
                  topic_modelling_controller: TopicModellingController) -> None:
         """The initialization of the StopwordsDisplay."""
         super().__init__()
 
-        # Set reference to the controller
+        # Set reference to the controllers
         self._stopwords_controller = stopwords_controller
         self._topic_modelling_controller = topic_modelling_controller
+        self._synonyms_controller = synonyms_controller
 
         # Subscribe to controller events
         stopwords_controller.stopwords_model_changed_event.subscribe(
             self._update_blacklist_textbox)
+        synonyms_controller.synonyms_model_changed_event.subscribe(
+            self._update_synonym_textbox)
         topic_modelling_controller.start_training_model_event.subscribe(
             lambda _: self.disable_text_edits_on_start_topic_modelling())
         topic_modelling_controller.model_trained_event.subscribe(
@@ -62,12 +70,12 @@ class StopwordsView(QScrollArea):
                 QTabBar::tab:hover {{
                     background-color: white;
                 }}
-                
+
                 QTabWidget::tab-bar {{
                     alignment: left;
                     width: 250px;
                 }}
-                
+
                 QScrollArea {{
                     border-radius: 10px;
                 }}
@@ -86,6 +94,20 @@ class StopwordsView(QScrollArea):
                 
                 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
                     height: 0px; 
+                }}
+                QScrollBar:horizontal {{
+                    border: none;
+                    background: #F0F0F0;
+                    height: 30px;
+                    margin: 0px;
+                }}
+                QScrollBar::handle:horizontal {{
+                    background: #CCCCCC;
+                    min-width: 20px;
+                    border-radius: 10px;
+                }}
+                QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {{
+                    width: 0px; 
                 }}
                    """)
 
@@ -121,9 +143,19 @@ class StopwordsView(QScrollArea):
 
         self.blacklist_tab = QTextEdit()
         self.blacklist_tab.setFont(stopwords_text_edit_font)
+        self.blacklist_tab.setLineWrapMode(QTextEdit.NoWrap)
+        self.blacklist_tab.setPlaceholderText(
+            "Plaats op elke regel een woord dat uitgesloten moet worden:"
+            "\n\nwoord\nwoord\netc.")
         self.blacklist_tab.setStyleSheet(self.tab_style_enabled)
+
         self.synonym_tab = QTextEdit()
         self.synonym_tab.setFont(stopwords_text_edit_font)
+        self.synonym_tab.setLineWrapMode(QTextEdit.NoWrap)
+        self.synonym_tab.setPlaceholderText(
+            "Plaats op elke regel een synoniem gevolgd door \"=\" en "
+            "het woord dat dit synoniem vervangt:"
+            "\n\nsynoniem = vervanging\nsynoniem = vervanging\netc.")
         self.synonym_tab.setStyleSheet(self.tab_style_enabled)
 
         # Set container as the focal point
@@ -135,17 +167,14 @@ class StopwordsView(QScrollArea):
         self.setWidgetResizable(True)
 
         # Set layouts for tabs
-        # self.container.addTab(self.stopwords_tab, "Stopwords")
         self.container.addTab(self.blacklist_tab, "Blacklist")
         self.container.addTab(self.synonym_tab, "Synoniemen")
 
-        # Connect text changed event to update additional_stopwords
-        # self.stopwords_tab.textChanged.connect(self.update_stopwords)
+        # Connect text changed event to update methods
         self.blacklist_tab.textChanged.connect(self.update_blacklist)
         self.synonym_tab.textChanged.connect(self.update_synonyms)
 
         # Disable rich text
-        # self.stopwords_tab.setAcceptRichText(False)
         self.blacklist_tab.setAcceptRichText(False)
         self.synonym_tab.setAcceptRichText(False)
 
@@ -167,10 +196,20 @@ class StopwordsView(QScrollArea):
         :return: None
         """
         input_text = self.synonym_tab.toPlainText()
+        lines = input_text.lower().split('\n')
+        synonyms = {words[0]: words[1] for words
+                    in map(lambda s: s.split(" = "), lines) if len(words) == 2}
+        self._synonyms_controller.update_synonyms(synonyms)
 
-    def _update_blacklist_textbox(self, words: list[str]):
+    def _update_blacklist_textbox(self, words: list[str]) -> None:
+        """Update the blacklist textbox with the given words."""
         text = "\n".join(words)
         self.blacklist_tab.setText(text)
+
+    def _update_synonym_textbox(self, synonyms: dict[str, str]) -> None:
+        """Update the synonym textbox with the given synonyms."""
+        text = "\n".join([f"{key} = {value}" for key, value in synonyms.items()])
+        self.synonym_tab.setText(text)
 
     def disable_text_edits_on_start_topic_modelling(self) -> None:
         """

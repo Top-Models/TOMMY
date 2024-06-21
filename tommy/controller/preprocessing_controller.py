@@ -6,6 +6,7 @@ import nltk
 import nltk.data
 
 from tommy.model.stopwords_model import StopwordsModel
+from tommy.model.synonyms_model import SynonymsModel
 from tommy.support.application_settings import application_settings
 from tommy.support.supported_languages import SupportedLanguage
 from tommy.controller.language_controller import LanguageController
@@ -15,8 +16,11 @@ class PreprocessingController:
     """A class that can preprocess text using the Dutch SpaCy pipeline."""
     _stopwords_model: StopwordsModel = None
     _enable_pos: bool
+    _synonyms_model: SynonymsModel = None
 
     def __init__(self) -> None:
+        self._pos_categories = None
+        self._entity_categories = None
         self._nlp = None
         self._enable_pos: bool
         self.language_controller = None
@@ -54,8 +58,8 @@ class PreprocessingController:
                     "preprocessing_data", "pipeline_download",
                     "nl_core_news_sm-3.7.0")
                 nlp = spacy.load(pipeline_path,
-                                 exclude=["tagger", "attribute_ruler",
-                                          "parser", "senter"])
+                                 exclude=["parser", "tagger",
+                                          "attribute_ruler"])
             case SupportedLanguage.English:
                 self._enable_pos = False
                 pipeline_path = os.path.join(
@@ -64,7 +68,7 @@ class PreprocessingController:
                     "en_core_web_sm-3.7.1")
                 # tagger is taking over the role of the morphologizer (
                 # supposedly)
-                nlp = spacy.load(pipeline_path, exclude=["parser", "senter"])
+                nlp = spacy.load(pipeline_path, exclude=["parser"])
             case _:
                 raise ValueError("Unsupported preprocessing language")
         self._nlp = nlp
@@ -73,9 +77,10 @@ class PreprocessingController:
                                    "MONEY", "QUANTITY", "ORDINAL", "CARDINAL"}
         self._pos_categories = {"NOUN", "PROPN", "ADJ", "ADV", "VERB"}
 
-    def set_model_refs(self, stopwords_model: StopwordsModel):
-        """Set the reference to the stopwords model"""
+    def set_model_refs(self, stopwords_model: StopwordsModel,
+                       synonyms_model: SynonymsModel) -> None:
         self._stopwords_model = stopwords_model
+        self._synonyms_model = synonyms_model
 
     def set_controller_refs(self, language_controller: LanguageController):
         """Set the reference to the language controller"""
@@ -109,20 +114,31 @@ class PreprocessingController:
         :param doc: The tokens given by processing of the Dutch SpaCy pipeline
         :return list[str]: The processed tokens
         """
-        # all steps that require token-level information
+        # All steps that require token-level information.
         lemmas = [token.lemma_ for token in doc if
                   token.ent_type_ not in self._entity_categories and
                   not str.isspace(token.lemma_) and (
                           not self._enable_pos or
                           token.pos_ in self._pos_categories)]
 
-        # transforming the tokens (lemmas) themselves
-        lemmas = [lemma.lower() for lemma in lemmas if len(lemma) > 3]
+        # Take the lemmas.
+        lemmas = [lemma.lower() for lemma in lemmas if len(lemma) > 2]
 
-        # stopword removal
+        # Apply synonyms and filter stopwords.
+        lemmas = self.apply_synonyms(lemmas)
         lemmas = self.filter_stopwords(lemmas)
 
         return lemmas
+
+    def apply_synonyms(self, tokens: list[str]) -> list[str]:
+        """
+        Applies synonyms to the given list of tokens.
+
+        :param tokens: The list of tokens
+        :return: The list of tokens where tokens are mapped to their synonyms
+        """
+        return (list(map(
+            lambda token: self._synonyms_model.get(token, token), tokens)))
 
     def filter_stopwords(self, tokens: list[str]) -> list[str]:
         """
@@ -131,8 +147,8 @@ class PreprocessingController:
         :param tokens: The list of tokens
         :return: The list of tokens without stopwords
         """
-        return [token for token in tokens if
-                token not in self._stopwords_model]
+        return [token for token in tokens
+                if token not in self._stopwords_model]
 
 
 """

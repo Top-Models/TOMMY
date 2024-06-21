@@ -1,14 +1,18 @@
 # Installatiehandleiding TOMMY
 
 In deze handleiding wordt beschreven hoe TOMMY op verschillende besturingssystemen geïnstalleerd kan worden. 
-De TOMMY software is te vinden op [https://tommy.fyor.nl/](https://tommy.fyor.nl/).
+De TOMMY software is te vinden op [tommy.fyor.nl](https://tommy.fyor.nl/). 
+
+Het is niet te garanderen dat de TOMMY applicatie op elke computer werkt, in dit geval is het altijd mogelijk om het programma met de [source code](https://git.science.uu.nl/ics/sp/2024/v24j/tommy) met `Python 3.12` te draaien in een Python virtual environment met de `requirements.txt`.
 
 ## macOS
 
-Download de macOS-versie van de website.
+Download afhankelijk van je Mac de juiste macOS-versie van de website. Als je niet weet welke versie je nodig hebt, 
+navigeer dan naar het Apple logo linksboven in je scherm en klik op `Over deze Mac`. 
+Als daar onder Chip "*Apple M...*" staat, download dan de Apple Silicon-versie, download anders de Intel-versie.
 
 Open vervolgens het .dmg bestand en sleep de TOMMY applicatie binnen de installer naar de Applications map. 
-Doordat de applicatie momenteel nog niet gesigneerd is, kan de applicatie niet direct in Launchpad geopend worden.
+Doordat de applicatie niet gesigneerd is, kan de applicatie niet direct in Launchpad geopend worden.
 
 Navigeer daarom eerst in Finder naar de Apps folder. Dubbel-klik vervolgens op de TOMMY applicatie, waarbij de volgende waarschuwing weergegeven zal worden:
 
@@ -52,3 +56,5 @@ Download de linux-versie van de website.
 Pak get zip-bestand uit op een plek waar je het programma wilt opslaan.
 
 Draai 'main' door er in een file explorer op te klikken, of door het via een terminal te draaien.
+
+De Linux-versie is gegenereerd op een systeem met `GLIBC 2.39`, als jouw versie lager is (wat je kan checken door `ldd --version` in de terminal te draaien) moet je mogelijk je systeem upgraden.

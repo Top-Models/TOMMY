@@ -1,9 +1,5 @@
 from __future__ import annotations
-
-import os
 from collections.abc import Iterable
-
-from tommy.support.application_settings import application_settings
 
 
 class StopwordsModel:

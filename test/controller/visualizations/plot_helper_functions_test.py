@@ -33,3 +33,11 @@ def test_get_valid_offsets_per_topic(dataframe):
                                                    freq=offset)],
                                        as_index=False)["probability"].sum()
         assert not grouped_df.empty
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

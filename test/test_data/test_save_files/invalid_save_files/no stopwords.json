@@ -18,11 +18,14 @@
         "alpha_beta_custom_enabled": true,
         "bert_min_df": "None",
         "bert_max_features": "None"
+      },
+      "synonyms": {
+        "yes": "yeah",
+        "kaas": "saak"
       }
     },
     "Config 2": {
-      "stopwords": {
-      },
+      "stopwords": {},
       "model_parameters": {
         "n_topics": 4,
         "model_type": "NMF",
@@ -32,6 +35,10 @@
         "alpha_beta_custom_enabled": false,
         "bert_min_df": 0.1,
         "bert_max_features": 100
+      },
+      "synonyms": {
+        "maybe": "perhaps",
+        "why": "how"
       }
     }
   },

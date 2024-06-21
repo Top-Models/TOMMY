@@ -15,7 +15,7 @@ from tommy.view.settings_view.abstract_settings.bert_settings import \
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 from tommy.view.settings_view.model_params_view import ModelParamsView
-from tommy.view.stopwords_view import StopwordsView
+from tommy.view.preprocessing_view import PreprocessingView
 
 
 @pytest.fixture
@@ -41,9 +41,11 @@ def model_params_view(controller: Controller, qtbot: QtBot) -> ModelParamsView:
 
 
 @pytest.fixture
-def stopwords_view(controller: Controller, qtbot: QtBot) -> StopwordsView:
-    stopwords_view = StopwordsView(controller.stopwords_controller,
-                                   controller.topic_modelling_controller)
+def preprocessing_view(controller: Controller, qtbot: QtBot) -> (
+        PreprocessingView):
+    stopwords_view = PreprocessingView(controller.stopwords_controller,
+                                       controller.synonyms_controller,
+                                       controller.topic_modelling_controller)
     qtbot.addWidget(stopwords_view)
     return stopwords_view
 
@@ -116,6 +118,10 @@ def test_save_then_load_project(
     controller.model_parameters_controller.set_bert_max_features(100)
     controller.stopwords_controller.update_stopwords(["hallootjes",
                                                       "goeiedagdag"])
+    controller.synonyms_controller.update_synonyms({
+        "hello": "hi",
+        "goodbye": "bye"
+    })
 
     # add another configuration with different parameters
     controller.config_controller.add_configuration("Andere config")
@@ -129,6 +135,10 @@ def test_save_then_load_project(
     controller.model_parameters_controller.set_bert_min_df(None)
     controller.model_parameters_controller.set_bert_max_features(None)
     controller.stopwords_controller.update_stopwords(["kan", "niet", "meer"])
+    controller.synonyms_controller.update_synonyms({
+        "yeah": "yes",
+        "nay": "no"
+    })
 
     # save parameters
     saving_loading_controller.save_settings_to_file(
@@ -143,7 +153,7 @@ def test_save_then_load_project(
     controller.model_parameters_controller.set_bert_min_df(0.2)
     controller.stopwords_controller.update_stopwords(["nog", "meer", "woord"])
     controller.config_controller.delete_configuration("Config 1")
-
+    controller.synonyms_controller.update_synonyms({"testing": "cringe"})
     # load the save file that was just created
     saving_loading_controller.load_settings_from_file(
         "./test/test_data/test_save_files/test_save_project.json")
@@ -166,6 +176,10 @@ def test_save_then_load_project(
             None)
     assert (controller.stopwords_controller.stopwords_model
             .extra_words_in_order == ["kan", "niet", "meer"])
+    assert (controller.synonyms_controller.synonyms_model.synonyms == {
+        "yeah": "yes",
+        "nay": "no"
+    })
 
     # check if the other configuration was also saved correctly
     controller.config_controller.switch_configuration("Config 1")
@@ -182,6 +196,10 @@ def test_save_then_load_project(
             100)
     assert (controller.stopwords_controller.stopwords_model
             .extra_words_in_order == ["hallootjes", "goeiedagdag"])
+    assert (controller.synonyms_controller.synonyms_model.synonyms == {
+        "hello": "hi",
+        "goodbye": "bye"
+    })
 
 
 def test_load_project_updates_parameter_view(
@@ -261,20 +279,20 @@ def test_load_project_updates_bert_parameter_view_when_none(
 
 
 def test_load_project_updates_stopwords_view(
-        stopwords_view: StopwordsView,
+        preprocessing_view: PreprocessingView,
         controller: Controller):
     # load test project
     controller.saving_loading_controller.load_settings_from_file(
         "./test/test_data/test_save_files/test load project.json")
 
     # check if the stopwords are updated correctly
-    assert stopwords_view.blacklist_tab.toPlainText() == "misschien"
+    assert preprocessing_view.blacklist_tab.toPlainText() == "misschien"
 
     # switch to config 1
     controller.config_controller.switch_configuration("Config 1")
 
     # check if the stopwords are updated correctly
-    assert stopwords_view.blacklist_tab.toPlainText() == "ja\ntommy"
+    assert preprocessing_view.blacklist_tab.toPlainText() == "ja\ntommy"
 
 
 def test_load_project_imports_files(controller: Controller):
@@ -328,3 +346,11 @@ def test_loading_invalid_project_files(
     for file in files:
         assert saving_loading_controller.load_settings_from_file(
             os.path.join(folder_path, file)) != []
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

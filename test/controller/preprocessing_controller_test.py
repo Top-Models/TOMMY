@@ -9,6 +9,7 @@ from tommy.controller.language_controller import LanguageController
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.controller.preprocessing_controller import PreprocessingController
+from tommy.model.synonyms_model import SynonymsModel
 from tommy.support.supported_languages import SupportedLanguage
 
 
@@ -60,17 +61,23 @@ def stopwords_model_english():
     return stopwords_controller.stopwords_model
 
 
+@pytest.fixture()
+def empty_synonyms_model():
+    return SynonymsModel()
+
+
 def test_process_text_dutch(preprocessing_controller_dutch,
-                            stopwords_model_dutch):
+                            stopwords_model_dutch, empty_synonyms_model):
     """
     Test the process_text method of PreprocessingController.
     """
-    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch)
+    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch,
+                                                  empty_synonyms_model)
     text = "Dit is een test zin token2."
     tokens = preprocessing_controller_dutch.process_text(text)
     assert isinstance(tokens, list)
     # Check the expected number of tokens
-    assert len(tokens) == 2
+    assert len(tokens) == 3
 
     # Ensure all tokens are strings
     assert all(isinstance(token, str) for token in
@@ -82,11 +89,12 @@ def test_process_text_dutch(preprocessing_controller_dutch,
 
 
 def test_process_text_english(preprocessing_controller_english,
-                              stopwords_model_english):
+                              stopwords_model_english, empty_synonyms_model):
     """
     Test the process_text method of PreprocessingController.
     """
-    preprocessing_controller_english.set_model_refs(stopwords_model_english)
+    preprocessing_controller_english.set_model_refs(stopwords_model_english,
+                                                    empty_synonyms_model)
     text = "This is a test sentence token2."
     tokens = preprocessing_controller_english.process_text(text)
     assert isinstance(tokens, list)
@@ -102,11 +110,13 @@ def test_process_text_english(preprocessing_controller_english,
     assert "token2" in tokens
 
 
-def test_process_tokens(preprocessing_controller_dutch, stopwords_model_dutch):
+def test_process_tokens(preprocessing_controller_dutch,
+                        stopwords_model_dutch, empty_synonyms_model):
     """
     Test the process_tokens method of PreprocessingController.
     """
-    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch)
+    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch,
+                                                  empty_synonyms_model)
     text = "Dit is een test zin token2."
     doc = preprocessing_controller_dutch._nlp(text)
     tokens = preprocessing_controller_dutch.process_tokens(doc)
@@ -114,7 +124,7 @@ def test_process_tokens(preprocessing_controller_dutch, stopwords_model_dutch):
 
     # Check the expected number of tokens after processing
     assert len(
-        tokens) == 2
+        tokens) == 3
 
     # Ensure all tokens are strings
     assert all(isinstance(token, str) for token in
@@ -160,11 +170,12 @@ def test_split_into_sentences_dutch(preprocessing_controller_dutch,
 
 
 def test_filter_stopwords(preprocessing_controller_dutch,
-                          stopwords_model_dutch):
+                          stopwords_model_dutch, empty_synonyms_model):
     """
     Test the filter_stopwords method of PreprocessingController.
     """
-    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch)
+    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch,
+                                                  empty_synonyms_model)
     tokens = ["dit", "is", "een", "test", "zin"]
     filtered_tokens = preprocessing_controller_dutch.filter_stopwords(tokens)
     assert isinstance(filtered_tokens, list)
@@ -182,11 +193,12 @@ def test_filter_stopwords(preprocessing_controller_dutch,
 
 
 def test_n_gram_merging(preprocessing_controller_dutch,
-                        stopwords_model_dutch):
+                        stopwords_model_dutch, empty_synonyms_model):
     """
     Test the n_gram_merging method of PreprocessingController.
     """
-    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch)
+    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch,
+                                                  empty_synonyms_model)
     tokens = "Hello Kitty is beter dan Ben Ten"
     n_grams = preprocessing_controller_dutch._nlp(tokens)
     assert isinstance(n_grams, spacy.tokens.Doc)
@@ -197,6 +209,44 @@ def test_n_gram_merging(preprocessing_controller_dutch,
     # Check if specific n_grams are present
     assert "Hello Kitty" in [token.text for token in n_grams]
     assert "Ben Ten" in [token.text for token in n_grams]
+
+
+def test_n_gram_synonym(preprocessing_controller_dutch,
+                        stopwords_model_dutch, empty_synonyms_model):
+    """
+    Test the n_gram_merging method of PreprocessingController.
+    """
+    empty_synonyms_model.replace({"new york": "boston"})
+    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch,
+                                                  empty_synonyms_model)
+    text = "New York is een erg coole stad"
+    tokens = preprocessing_controller_dutch.process_text(text)
+
+    # Check whether the n_grams are merged
+    assert len(tokens) == 4
+
+    # Check if specific n_grams are present
+    assert "new york" not in tokens
+    assert "boston" in tokens
+
+
+def test_apply_synonyms(preprocessing_controller_dutch,
+                        stopwords_model_dutch, empty_synonyms_model):
+    """
+    Test whether synonyms are properly processed in the PreprocessingController.
+    :param preprocessing_controller_dutch:
+    :param stopwords_model_dutch:
+    :param empty_synonyms_model:
+    :return:
+    """
+    empty_synonyms_model.replace({"test": "exam"})
+    preprocessing_controller_dutch.set_model_refs(stopwords_model_dutch,
+                                                  empty_synonyms_model)
+    text = "Dit is een test zin."
+    tokens = preprocessing_controller_dutch.process_text(text)
+
+    assert "test" not in tokens
+    assert "exam" in tokens
 
 
 def test_preprocessing_pipeline_loaded_on_start():

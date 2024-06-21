@@ -79,3 +79,11 @@ def helper_check_model_refs(controller: Controller):
     assert corpus_controller._corpus_model is corpus_model
 
     assert saving_loading_controller._model is model
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

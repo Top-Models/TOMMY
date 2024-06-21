@@ -60,3 +60,11 @@ def test_set_get_model_type(
         model_parameters_controller: ModelParametersController):
     model_parameters_controller.set_model_type(ModelType.NMF)
     assert model_parameters_controller.get_model_type() == ModelType.NMF
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

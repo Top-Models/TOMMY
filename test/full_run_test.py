@@ -35,3 +35,11 @@ def test_run_without_error(controller: Controller) -> None:
             "./test/test_data/test_pdf_files/correct_files")
         controller.topic_modelling_controller.train_model()
         assert controller.graph_controller.has_topic_runner is True
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

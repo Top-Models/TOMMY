@@ -36,6 +36,9 @@ class TopicEntity(QFrame):
         self.word_entities = []
         self.selected = False
 
+        # Set name of the topic
+        self.setObjectName("topic_entity")
+
         # Initialize layout
         main_layout = QVBoxLayout(self)
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
@@ -65,6 +68,8 @@ class TopicEntity(QFrame):
         # Initialize topic labels
         self.topic_label = QLineEdit(topic_name, self)
         self.topic_label.setStyleSheet(f"color: white;"
+                                       f"font-family: {heading_font}; "
+                                       f"font-size: 15px; "
                                        f"font-weight: bold; "
                                        f"background-color: "
                                        f"{sec_col_purple};"
@@ -84,6 +89,8 @@ class TopicEntity(QFrame):
         self.topic_number.setStyleSheet(f"""
             color: #d8bfd8;
             font-weight: bold;
+            font-family: {heading_font};
+            font-size: 12px; 
             padding: 5px 5px;
         """)
         self.topic_number.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -160,8 +167,10 @@ class TopicEntity(QFrame):
         """
         self.selected = True
         self.radio_button.setChecked(True)
-        self.setStyleSheet(f"background-color: {pressed_seco_col_purple}; "
-                           f"color: white;")
+        self.setStyleSheet(f"""
+            background-color: {pressed_seco_col_purple};
+            color: white;
+        """)
 
     def deselect(self) -> None:
         """

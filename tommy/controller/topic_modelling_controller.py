@@ -2,6 +2,11 @@ from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.model_parameters_controller import (
     ModelParametersController,
     ModelType)
+from tommy.controller.corpus_controller import CorpusController
+from tommy.controller.synonyms_controller import SynonymsController
+from tommy.model.config_model import ConfigModel
+from tommy.controller.result_interfaces.document_topics_interface import \
+    DocumentTopicsInterface
 from tommy.controller.preprocessing_controller import PreprocessingController
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
@@ -25,6 +30,7 @@ class TopicModellingController:
     extracted.
     """
     _stopwords_controller: StopwordsController = None
+    _synonyms_controller: SynonymsController = None
     _preprocessing_controller = None
     _model_parameters_controller: ModelParametersController = None
     _topic_model: TopicModel = None
@@ -91,12 +97,14 @@ class TopicModellingController:
                             parameters_controller: ModelParametersController,
                             corpus_controller: CorpusController,
                             stopwords_controller: StopwordsController,
+                            synonyms_controller: SynonymsController,
                             preprocessing_controller: PreprocessingController
                             ) -> None:
         """Set the reference to the needed controllers"""
         self._model_parameters_controller = parameters_controller
         self._corpus_controller = corpus_controller
         self._stopwords_controller = stopwords_controller
+        self._synonyms_controller = synonyms_controller
         self._preprocessing_controller = preprocessing_controller
 
     def train_model(self) -> None:

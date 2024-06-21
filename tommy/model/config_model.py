@@ -7,6 +7,7 @@ from tommy.controller.topic_modelling_runners.abstract_topic_runner import \
 from tommy.model.corpus_model import CorpusModel
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.model.stopwords_model import StopwordsModel
+from tommy.model.synonyms_model import SynonymsModel
 from tommy.model.topic_model import TopicModel
 
 
@@ -18,10 +19,11 @@ class ConfigModel:
         self.topic_model = TopicModel()
         if derive_from is None:
             self.stopwords_model = StopwordsModel()
+            self.synonyms_model = SynonymsModel()
             self.model_parameters_model = ModelParametersModel()
         else:
-            self.stopwords_model = StopwordsModel(
-                derive_from.stopwords_model)
+            self.stopwords_model = StopwordsModel(derive_from.stopwords_model)
+            self.synonyms_model = SynonymsModel(derive_from.synonyms_model)
             self.model_parameters_model = ModelParametersModel(
                 derive_from.model_parameters_model)
 
@@ -32,6 +34,7 @@ class ConfigModel:
         """
         return {
             "stopwords": self.stopwords_model.to_dict(),
+            "synonyms": self.synonyms_model.to_dict(),
             "model_parameters": self.model_parameters_model.to_dict()
         }
 
@@ -45,6 +48,8 @@ class ConfigModel:
         config = cls()
         config.stopwords_model = StopwordsModel.from_dict(
             config_dict["stopwords"])
+        config.synonyms_model = SynonymsModel.from_dict(
+            config_dict["synonyms"])
         config.model_parameters_model = ModelParametersModel.from_dict(
             config_dict["model_parameters"])
         return config
@@ -53,6 +58,6 @@ class ConfigModel:
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

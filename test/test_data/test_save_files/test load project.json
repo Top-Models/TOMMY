@@ -9,6 +9,10 @@
           "tommy"
         ]
       },
+      "synonyms": {
+        "yes": "yeah",
+        "cheese": "eseehc"
+      },
       "model_parameters": {
         "n_topics": 6,
         "model_type": "LDA",
@@ -25,6 +29,11 @@
         "extra_stopwords": [
           "misschien"
         ]
+      },
+      "synonyms": {
+        "maybe": "perhaps",
+        "why": "how",
+        "kaas": "saak"
       },
       "model_parameters": {
         "n_topics": 4,
