@@ -11,16 +11,23 @@ class ModelParametersController:
     _parameters_model: ModelParametersModel = None
     _params_model_changed_event: EventHandler[None] = EventHandler()
     _algorithm_changed_event: EventHandler[None]
+    _n_topics_changed_event: EventHandler[int]
 
     @property
     def algorithm_changed_event(self) -> EventHandler[None]:
         """The event that is triggered when the algorithm is changed"""
         return self._algorithm_changed_event
 
+    @property
+    def n_topics_changed_event(self) -> EventHandler[int]:
+        """The event that is triggered when the number of topics is changed"""
+        return self._n_topics_changed_event
+
     def __init__(self) -> None:
         """Initialize the model-parameters-controller and its publisher"""
         super().__init__()
         self._algorithm_changed_event = EventHandler[None]()
+        self._n_topics_changed_event = EventHandler[int]()
 
     def set_model_refs(self,
                        parameters_model: ModelParametersModel) -> None:
@@ -82,6 +89,7 @@ class ModelParametersController:
         :param n_topics: the desired number of topics
         """
         self._parameters_model.n_topics = n_topics
+        self.n_topics_changed_event.publish(n_topics)
 
     def get_model_n_topics(self) -> int:
         """Return the number of topics the topic modelling will find"""

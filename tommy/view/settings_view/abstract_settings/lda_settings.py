@@ -37,6 +37,8 @@ class LdaSettings(AbstractSettings):
                          config_controller,
                          language_controller)
 
+        model_parameters_controller.n_topics_changed_event.subscribe(
+            self.on_n_topics_changed)
         self._alpha_value_input = QLineEdit()
         self._beta_value_input = QLineEdit()
         self._auto_calc_alpha_beta_checkbox = QCheckBox()
@@ -141,7 +143,8 @@ class LdaSettings(AbstractSettings):
         self._alpha_value_input.setReadOnly(True)
         self._alpha_value_input.setFixedWidth(100)
         self._alpha_value_input.setPlaceholderText("Voer alpha in")
-        self._alpha_value_input.setText("-:-")
+        alpha_beta_auto_string = self.get_alpha_beta_auto_string()
+        self._alpha_value_input.setText(alpha_beta_auto_string)
         self._alpha_value_input.setStyleSheet(self.disabled_input_stylesheet)
         self._alpha_value_input.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self._alpha_value_input.editingFinished.connect(
@@ -219,7 +222,8 @@ class LdaSettings(AbstractSettings):
         self._beta_value_input.setReadOnly(True)
         self._beta_value_input.setFixedWidth(100)
         self._beta_value_input.setPlaceholderText("Voer beta in")
-        self._beta_value_input.setText("-:-")
+        alpha_beta_auto_string = self.get_alpha_beta_auto_string()
+        self._beta_value_input.setText(alpha_beta_auto_string)
         self._beta_value_input.setStyleSheet(self.disabled_input_stylesheet)
         self._beta_value_input.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self._beta_value_input.editingFinished.connect(
@@ -345,15 +349,16 @@ class LdaSettings(AbstractSettings):
     def _change_text_of_alpha_beta_fields(self, alpha: float, beta: float,
                                           auto_calculate: bool) -> None:
         """
-        Change the text in the alpha and beta input fields to "-:-" if
-        auto_calculate is true
+        Change the text in the alpha and beta input fields to the automatic
+        value if auto_calculate is true
         :param alpha:
         :param beta:
         :param auto_calculate:
         :return:
         """
-        alpha_text = "-:-" if auto_calculate else str(alpha)
-        beta_text = "-:-" if auto_calculate else str(beta)
+        alpha_beta_auto_string = self.get_alpha_beta_auto_string()
+        alpha_text = alpha_beta_auto_string if auto_calculate else str(alpha)
+        beta_text = alpha_beta_auto_string if auto_calculate else str(beta)
         self._alpha_value_input.setText(alpha_text)
         self._beta_value_input.setText(beta_text)
         self._alpha_value_input.setReadOnly(auto_calculate)
@@ -416,6 +421,23 @@ class LdaSettings(AbstractSettings):
 
         self.enable_input_field(self._alpha_value_input)
         self.enable_input_field(self._beta_value_input)
+
+    def get_alpha_beta_auto_string(self) -> str:
+        """Get the automatic alpha and beta value string based on n_topics"""
+        n_topics = self._model_parameters_controller.get_model_n_topics()
+        return self.create_alpha_beta_auto_string(n_topics)
+
+    @staticmethod
+    def create_alpha_beta_auto_string(n_topics: int) -> str:
+        """Create the string depicting the automatic value of alpha/beta"""
+        return f"{1/max(1, n_topics):.2g}"
+
+    def on_n_topics_changed(self, n_topics: int) -> None:
+        """Update the substitute strings of alpha/beta based on n_topics"""
+        if self._auto_calc_alpha_beta_checkbox.isChecked():
+            new_substitute_text = self.create_alpha_beta_auto_string(n_topics)
+            self._alpha_value_input.setText(new_substitute_text)
+            self._beta_value_input.setText(new_substitute_text)
 
 
 """
