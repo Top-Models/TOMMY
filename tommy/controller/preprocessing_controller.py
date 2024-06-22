@@ -73,8 +73,8 @@ class PreprocessingController:
                 raise ValueError("Unsupported preprocessing language")
         self._nlp = nlp
         self._nlp.add_pipe("merge_entities")
-        self._entity_categories = {"PERSON", "FAC", "LAW", "TIME", "PERCENT",
-                                   "MONEY", "QUANTITY", "ORDINAL", "CARDINAL"}
+        self._entity_categories = {"CARDINAL", "DATE", "LAW", "MONEY",
+                                   "ORDINAL", "PERCENT", "QUANTITY", "TIME"}
         self._pos_categories = {"NOUN", "PROPN", "ADJ", "ADV", "VERB"}
 
     def set_model_refs(self, stopwords_model: StopwordsModel,
