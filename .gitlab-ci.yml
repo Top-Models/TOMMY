@@ -14,9 +14,7 @@ py-test:
     - main
   stage: test
   script:
-    - echo "Changing directory to tommy."
-    - cd tommy
     - echo "Running the tests."
-    - pytest
+    - pytest -ra -v
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
