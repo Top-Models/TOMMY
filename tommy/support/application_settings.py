@@ -35,7 +35,8 @@ def get_base_dir() -> str:
         main.py is located) Note: returns location of the '_internal' directory
         in a one-dir build by pyinstaller.
     """
-    return os.path.abspath(getattr(sys, '_MEIPASS', os.getcwd()))
+    return os.path.abspath(getattr(sys, '_MEIPASS', os.path.join(os.getcwd(),
+                                                                 "tommy")))
 
 
 application_settings = ApplicationSettings(get_data_folder())
