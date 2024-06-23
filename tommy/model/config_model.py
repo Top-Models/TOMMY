@@ -5,6 +5,7 @@ from typing import Optional
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import \
     TopicRunner
 from tommy.model.corpus_model import CorpusModel
+from tommy.model.custom_name_model import TopicNameModel
 from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.model.synonyms_model import SynonymsModel
@@ -17,6 +18,7 @@ class ConfigModel:
     def __init__(self, derive_from: ConfigModel = None):
         self.topic_runner: Optional[TopicRunner] = None
         self.topic_model = TopicModel()
+        self.topic_name_model = TopicNameModel()
         if derive_from is None:
             self.stopwords_model = StopwordsModel()
             self.synonyms_model = SynonymsModel()

@@ -48,6 +48,10 @@ class Model:
     def topic_model(self):
         return self.config_model.topic_model
 
+    @property
+    def topic_name_model(self):
+        return self.config_model.topic_name_model
+
     def create_configuration(self) -> ConfigModel:
         """
         Create a new configuration based on the current configuration

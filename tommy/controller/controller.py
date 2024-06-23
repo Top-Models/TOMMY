@@ -189,6 +189,8 @@ class Controller:
         self._saving_loading_controller.set_model_refs(
             self._model)
 
+        self._graph_controller.set_model_refs(self._model.topic_name_model)
+
     def _update_model_on_config_switch(
             self, data: ConfigModel) -> None:
         """
@@ -236,6 +238,7 @@ class Controller:
         self._stopwords_controller.on_model_swap()
         self._synonyms_controller.on_model_swap()
         self._language_controller.on_model_swap()
+        self._graph_controller.on_model_swap()
 
 
 """
