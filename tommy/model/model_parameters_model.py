@@ -11,8 +11,8 @@ class ModelParametersModel:
     default_n_topics: int = 3
     default_model_type: ModelType = ModelType.LDA
     default_word_amount: int = 10
-    default_alpha: float = 1.0
-    default_beta: float = 0.01
+    default_alpha: float = 0.33
+    default_beta: float = 0.33
     default_alpha_beta_custom_enabled: bool = False
     default_bert_min_df: float | None = None
     default_bert_max_features: int | None = None
@@ -143,7 +143,8 @@ class ModelParametersModel:
         model_params_model.word_amount = word_amount
         model_params_model.alpha = alpha
         model_params_model.beta = beta
-        model_params_model.alpha_beta_custom_enabled = alpha_beta_custom_enabled
+        model_params_model.alpha_beta_custom_enabled = (
+            alpha_beta_custom_enabled)
         model_params_model.bert_min_df = (None if bert_min_df == "None"
                                           else bert_min_df)
         model_params_model.bert_max_features = (
