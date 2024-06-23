@@ -365,6 +365,47 @@ zien die gerelateerd zijn aan dit topic.
 
 ![](../_static/User-guide/document_topic_network.png)
 
+## Gephi
+
+De twee netwerken die voorkomen in software kunnen geëxporteerd worden naar 
+.gexf bestanden. Deze bestanden kunnen geopend worden in Gephi om de netwerken
+beter te bekijken, of om ze goed vorm te geven. Hieronder staan enkele tips 
+voor het gebruik van Gephi met deze plots. 
+
+### Kleuren van het netwerk
+
+De kleuren die binnen TOMMY worden gebruikt voor het netwerk worden mee 
+geëxporteerd. De knopen van elk topic hebben de kleur van de topic en de 
+knopen van de woorden/documenten hebben een zwarte kleur. 
+
+### Layout netwerk
+
+De layout van het netwerk kan aangepast worden door een algoritme op het 
+netwerk te laten werken binnen Gephi. Een algoritme waar in de praktijk uit is
+gebleken dat het goed werkt voor deze netwerken, is het ForceAtlas 2 algoritme. 
+
+### Labels toevoegen
+
+Er staan labels opgeslagen voor de knopen van het netwerk. Deze zijn echter 
+nog niet te zien. Door onderaan op de knop "Show Node Labels" te klikken, komen
+de knopen labels tevoorschijn. De kleur van deze labels is zwart. Als je de 
+kleur graag aan wilt passen kan je linksboven op "Nodes" en dan op "Label Color"
+klikken. 
+
+### Knopen onzichtbaar maken
+
+Vaak is het niet mooi om zowel labels als knopen te laten zien. Dan staan er 
+puntjes is de labels. Het is dan mooi om de grootte van de knopen aan te passen
+door linksboven op "Nodes" en dan "Size" te klikken. Hier kan je de grootte 
+aanpassen naar 0.5, waardoor de knopen niet meer zichtbaar zijn. 
+
+### Andere aanpassingen
+
+Er kunnen veel andere dingen aangepast worden in Gephi, zoals de grootte van de
+labels, de grootte van de lijnen en de layout. Bekijk voor deze extra 
+aanpassingen de documentatie van Gephi. 
+
+
 ## Exporteren
 
 De grafieken en netwerken kunnen geëxporteerd worden. Dit is mogelijk door
