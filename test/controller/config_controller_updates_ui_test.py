@@ -12,9 +12,9 @@ from tommy.controller.synonyms_controller import SynonymsController
 from tommy.controller.topic_modelling_controller import \
     TopicModellingController
 from tommy.support.model_type import ModelType
+from tommy.view.preprocessing_view import PreprocessingView
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.model_params_view import ModelParamsView
-from tommy.view.preprocessing_view import PreprocessingView
 
 
 @pytest.fixture

@@ -1,24 +1,20 @@
-from tommy.controller.saving_loading_controller import SavingLoadingController
-from tommy.model.config_model import ConfigModel
-from tommy.model.model import Model
-
-from tommy.controller.file_import.processed_body import ProcessedBody
-from tommy.controller.file_import.processed_file import ProcessedFile
-from tommy.controller.file_import.metadata import Metadata
+from tommy.controller.config_controller import ConfigController
+from tommy.controller.corpus_controller import CorpusController
+from tommy.controller.export_controller import ExportController
+from tommy.controller.graph_controller import GraphController
+from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
-from tommy.controller.graph_controller import GraphController
-from tommy.controller.topic_modelling_controller import (
-    TopicModellingController)
-from tommy.controller.stopwords_controller import StopwordsController
-from tommy.controller.synonyms_controller import SynonymsController
 from tommy.controller.preprocessing_controller import PreprocessingController
-from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
-from tommy.controller.config_controller import ConfigController
-from tommy.controller.export_controller import ExportController
-from tommy.controller.language_controller import LanguageController
+from tommy.controller.saving_loading_controller import SavingLoadingController
+from tommy.controller.stopwords_controller import StopwordsController
+from tommy.controller.synonyms_controller import SynonymsController
+from tommy.controller.topic_modelling_controller import (
+    TopicModellingController)
+from tommy.model.config_model import ConfigModel
+from tommy.model.model import Model
 
 
 class Controller:

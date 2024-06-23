@@ -1,11 +1,13 @@
-import pytest
+from datetime import datetime
+
 import pandas as pd
-from datetime import date, datetime
+import pytest
 
 from tommy.controller.visualizations.documents_over_time_creator import (
     DocumentsOverTimeCreator)
 from tommy.controller.visualizations.documents_over_time_per_topic_creator \
     import DocumentsOverTimePerTopicCreator
+
 
 @pytest.fixture
 def dataframe():

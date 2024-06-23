@@ -1,13 +1,11 @@
-from unittest.mock import Mock
-
 import pytest
 from pytest_mock import MockerFixture
 
 from test.controller.controller_model_references_test import (
     helper_check_model_refs)
+from test.helper_fixtures import controller_no_pipeline
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
-from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture

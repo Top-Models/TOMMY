@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from tommy.support.supported_languages import SupportedLanguage
 
 

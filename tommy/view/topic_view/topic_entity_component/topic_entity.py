@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QFrame,
                                QLineEdit, QRadioButton, QLabel)
 
 from tommy.support.constant_variables import (
-    heading_font, text_font, sec_col_purple, pressed_seco_col_purple,
+    heading_font, sec_col_purple, pressed_seco_col_purple,
     seco_purple_border_color, hover_seco_col_purple, topic_entity_label_font,
     topic_number_font)
 from tommy.view.topic_view.topic_entity_component.word_entity import WordEntity

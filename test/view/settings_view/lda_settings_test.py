@@ -1,11 +1,9 @@
 import pytest
 from PySide6.QtCore import Qt
-from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
 
-from tommy.controller.controller import Controller
-from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from test.helper_fixtures import controller_no_pipeline
+from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 
 
 @pytest.fixture

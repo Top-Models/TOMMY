@@ -1,13 +1,9 @@
+from PySide6.QtCore import QRegularExpression as QRegExp
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QDoubleValidator
+from PySide6.QtGui import QRegularExpressionValidator as QRegExpValidator
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QCheckBox, \
     QVBoxLayout
-from PySide6.QtCore import QRegularExpression as QRegExp
-from PySide6.QtGui import QRegularExpressionValidator as QRegExpValidator
 
-from tommy.controller.model_parameters_controller import \
-    ModelParametersController
-from tommy.model.model_parameters_model import ModelParametersModel
 from tommy.controller.language_controller import LanguageController
 from tommy.support.constant_variables import (text_font, seco_col_blue,
                                               disabled_gray,

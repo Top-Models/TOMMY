@@ -1,10 +1,6 @@
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QDoubleValidator
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QCheckBox, \
-    QVBoxLayout
+from PySide6.QtWidgets import QVBoxLayout
 
 from tommy.controller.language_controller import LanguageController
-from tommy.support.constant_variables import text_font, seco_col_blue
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
 

@@ -4,10 +4,10 @@ import matplotlib.figure
 import networkx as nx
 from matplotlib import pyplot as plt
 
-from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
-    TopicRunner)
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
+from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
+    TopicRunner)
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
 from tommy.controller.visualizations.document_topic_nx_exporter import (
@@ -15,7 +15,6 @@ from tommy.controller.visualizations.document_topic_nx_exporter import (
 from tommy.controller.visualizations.possible_visualization import VisGroup
 from tommy.controller.visualizations.visualization_input_datatypes import (
     VisInputData, ProcessedCorpus)
-
 from tommy.support.constant_variables import plot_colors
 
 

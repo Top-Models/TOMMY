@@ -1,11 +1,10 @@
 import os
 import zipfile
-
-import pytest
 from datetime import datetime, timedelta
 
-from tommy.controller.file_import.docx_file_importer import DocxFileImporter
+import pytest
 
+from tommy.controller.file_import.docx_file_importer import DocxFileImporter
 
 TEST_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                              '..',

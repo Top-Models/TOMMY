@@ -1,8 +1,7 @@
 import os
-import zipfile
+from datetime import datetime, timedelta
 
 import pytest
-from datetime import datetime, timedelta
 
 from tommy.controller.file_import.txt_file_importer import TxtFileImporter
 

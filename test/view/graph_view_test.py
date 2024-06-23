@@ -1,7 +1,5 @@
 import pytest
-from PySide6.QtWidgets import QWidget, QVBoxLayout
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
-from matplotlib.backends.backend_template import FigureCanvas
 from matplotlib.figure import Figure
 from pytestqt.qtbot import QtBot
 

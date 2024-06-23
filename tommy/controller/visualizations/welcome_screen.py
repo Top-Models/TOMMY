@@ -2,21 +2,12 @@ import os.path
 
 import matplotlib.figure
 from matplotlib import pyplot as plt
-from matplotlib.ticker import MaxNLocator
-from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
-import numpy as np
 
-from tommy.controller.result_interfaces.correlation_matrix_interface import (
-    CorrelationMatrixInterface)
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.controller.visualizations.possible_visualization import VisGroup
-from tommy.controller.visualizations.visualization_input_datatypes import (
-    VisInputData, ProcessedCorpus)
-
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
-
+from tommy.controller.visualizations.possible_visualization import VisGroup
 from tommy.support.application_settings import get_assets_folder
 
 

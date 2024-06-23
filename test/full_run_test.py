@@ -1,6 +1,6 @@
-import pytest
 from unittest.mock import patch
 
+import pytest
 from PySide6 import QtCore
 from PySide6.QtCore import Signal
 

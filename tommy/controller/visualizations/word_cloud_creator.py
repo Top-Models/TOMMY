@@ -8,7 +8,6 @@ from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
-from tommy.datatypes.topics import TopicWithScores
 from tommy.controller.visualizations.possible_visualization import VisGroup
 from tommy.controller.visualizations.visualization_input_datatypes import (
     VisInputData, TopicID)

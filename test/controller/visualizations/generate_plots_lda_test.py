@@ -1,32 +1,30 @@
 import os
-import pytest
 import pickle
 
+import pytest
 from gensim import models, corpora
 
-from tommy.model.topic_model import TopicModel
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
-
 from tommy.controller.visualizations.correlation_matrix_creator import (
     CorrelationMatrixCreator)
+from tommy.controller.visualizations.document_topic_network_summary_creator \
+    import DocumentTopicNetworkSummaryCreator
 from tommy.controller.visualizations.document_word_count_creator import (
     DocumentWordCountCreator)
+from tommy.controller.visualizations.documents_over_time_creator import (
+    DocumentsOverTimeCreator)
+from tommy.controller.visualizations.documents_over_time_per_topic_creator \
+    import DocumentsOverTimePerTopicCreator
+from tommy.controller.visualizations.k_value_creator import KValueCreator
+from tommy.controller.visualizations.sum_topics_in_documents import (
+    SumTopicsInDocuments)
 from tommy.controller.visualizations.top_words_bar_plot_creator import (
     TopWordsBarPlotCreator)
 from tommy.controller.visualizations.word_cloud_creator import (
     WordCloudCreator)
 from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
-from tommy.controller.visualizations.document_topic_network_summary_creator \
-    import DocumentTopicNetworkSummaryCreator
-from tommy.controller.visualizations.k_value_creator import KValueCreator
-from tommy.controller.visualizations.documents_over_time_creator import (
-    DocumentsOverTimeCreator)
-from tommy.controller.visualizations.documents_over_time_per_topic_creator \
-    import DocumentsOverTimePerTopicCreator
-from tommy.controller.visualizations.sum_topics_in_documents import (
-    SumTopicsInDocuments)
-
+from tommy.model.topic_model import TopicModel
 
 # Test data directory
 TEST_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),

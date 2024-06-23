@@ -1,16 +1,14 @@
 from datetime import datetime
 
 import pytest
-from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
 
-from tommy.controller.controller import Controller
+from test.helper_fixtures import controller_no_pipeline
 from tommy.controller.file_import.metadata import Metadata
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.selected_information_view import SelectedInformationView
 from tommy.view.topic_view.topic_entity_component.topic_entity import \
     TopicEntity
-from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture

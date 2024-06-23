@@ -1,12 +1,14 @@
-import pytest
-from unittest.mock import MagicMock
 import csv
 import os
+from unittest.mock import MagicMock
+
+import pytest
 
 from tommy.controller.export_controller import ExportController
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.topic_modelling_controller import \
     TopicModellingController
+
 
 # Mock metadata
 class MockMetadata:

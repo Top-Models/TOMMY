@@ -1,25 +1,21 @@
-import pytest
-from gensim.models import LdaModel
-from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
-from pytest_mock import mocker, MockerFixture
+import pytest
+from matplotlib.figure import Figure
+from pytest_mock import MockerFixture
 
+from tommy.controller.corpus_controller import (
+    CorpusController)
 from tommy.controller.file_import.processed_body import ProcessedBody
 from tommy.controller.file_import.processed_corpus import ProcessedCorpus
 from tommy.controller.file_import.processed_file import ProcessedFile
+from tommy.controller.graph_controller import (GraphController,
+                                               TopicWithScores,
+                                               VisInputData,
+                                               AbstractVisualization)
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.controller.topic_modelling_controller import (
     TopicModellingController)
-from tommy.controller.corpus_controller import (
-    CorpusController)
-from tommy.controller.graph_controller import (GraphController,
-                                               PossibleVisualization,
-                                               TopicWithScores,
-                                               VisInputData,
-                                               AbstractVisualization)
-from tommy.controller.topic_modelling_runners.abstract_topic_runner import \
-    TopicRunner
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
 from tommy.model.custom_name_model import TopicNameModel
 from tommy.model.topic_model import TopicModel

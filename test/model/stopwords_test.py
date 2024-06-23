@@ -2,9 +2,7 @@ import pytest
 
 from tommy.controller.stopwords_controller import (StopwordsController,
                                                    StopwordsModel,
-                                                   LanguageController,
                                                    SupportedLanguage)
-from tommy.model.language_model import LanguageModel
 
 
 @pytest.fixture
