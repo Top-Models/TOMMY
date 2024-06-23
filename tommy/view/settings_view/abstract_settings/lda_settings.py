@@ -285,7 +285,7 @@ class LdaSettings(AbstractSettings):
         auto_calculate_layout = QHBoxLayout()
 
         # Add auto calculate label
-        auto_calculate_label = QLabel("Automatisch (aanbevolen):")
+        auto_calculate_label = QLabel("Standaard:")
         auto_calculate_label.setFont(settings_label_font)
         auto_calculate_label.setStyleSheet(f"font-size: 16px;"
                                            f"color: black;"
@@ -430,7 +430,7 @@ class LdaSettings(AbstractSettings):
     @staticmethod
     def create_alpha_beta_auto_string(n_topics: int) -> str:
         """Create the string depicting the automatic value of alpha/beta"""
-        return f"{1/max(1, n_topics):.2g}"
+        return f"{1 / max(1, n_topics):.2g}"
 
     def on_n_topics_changed(self, n_topics: int) -> None:
         """Update the substitute strings of alpha/beta based on n_topics"""
