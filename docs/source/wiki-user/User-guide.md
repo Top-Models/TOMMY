@@ -242,119 +242,169 @@ Nadat de instellingen zijn aangepast, kan het algoritme uitgevoerd worden. Dit
 wordt gedaan door op de "Toepassen" knop te klikken. Door deze knop wordt
 het achterliggende algoritme uitgevoerd en worden er resultaten gegenereerd.
 Dit kan enige tijd duren, denk aan enkele minuten of minder. De tijd is sterk
-afhankelijk van de grootte van de geïmporteerde bestanden. Als het algoritme
-klaar is, worden grafische resultaten gegenereerd die het onderzoek naar de
-algoritmische uitkomst mogelijk maken. De grafieken worden hieronder toegelicht.
+afhankelijk van de grootte van de geïmporteerde bestanden. 
 
 ## Grafische resultaten
 
-Na het klikken op Toepassen worden grafische resultaten gegenereerd die het
-onderzoek naar de algoritmische uitkomst mogelijk maken. De grafieken worden
-hieronder toegelicht.
+### Distributie aantal woorden per document
 
-### Woord aantal per document
+De ingevoerde documenten die geanalyseerd worden kunnen verschillende aantallen
+woorden hebben. Het is nuttig om te weten hoe deze aantallen zijn verdeeld. Bijvoorbeeld,
+als er uitschieters tussen zitten die invloed kunnen hebben op de uitkomst van
+topic modelling, zal dit zichtbaar zijn in deze grafiek. Op de x-as staan het 
+aantal woorden per document, en op de y-as het aantal documenten wat overeenkomt
+met dat aantal woorden.
 
-Als het algoritme klaar is, wordt eerst de woordaantal grafiek getoond. In
-deze grafiek is het aantal woorden per document zichtbaar. Deze grafiek kan
-teruggevonden worden onder het tabblad Woordaantal bovenin het scherm.
+![](../_static/User-guide/distribution_word_count.png)
 
-### Woorden per topic
+### K-waarde
 
-Elk topic bestaat uit woorden met een bijbehorend gewicht. Hoe hoger het
-gewicht, hoe meer een woord bij dat topic hoort. Deze woorden zijn op meerdere
-plekken in de applicatie te bekijken.
+Het is vaak lastig om de verschillende hoeveelheden topics te vergelijken om te
+zien welk aantal het beste presteert. De k-waarde grafiek berekent een getal voor
+elk aantal topics, zodat ze goed met elkaar vergeleken kunnen worden. Dit getal
+wordt de U<sub>mass</sub> genoemd. Om deze U<sub>mass</sub> te berekenen, moet
+het topic modelling algoritme worden uitgevoerd voor elk aantal topics op de 
+x-as. Het genereren van deze plots kan daarom enige tijd duren. 
 
-#### Lijst aan topic woorden
+![](../_static/User-guide/k-value.png)
 
-De meest voorkomende woorden per topic worden rechts in de applicatie 
-getoond. Veel woorden in deze lijst van topics overlappen echter met andere
-topics. Om te zien of een woord in meerdere topics voorkomt, kan op een woord
-in deze lijst geklikt worden. Dit woord wordt dan in elke topic waarin het
-voorkomt gearceerd. Je kan topics ook andere namen geven door op de naam
-van een topic te klikken en de naam te veranderen. Deze namen worden dan
-opgeslagen. Als je op een topic klikt, worden de geïmporteerde bestanden
-weergegeven door de lijst te sorteren op de mate waarin de documenten bij
-het topic horen. Dit is handig om te zien welke documenten het meest bij een
-topic horen.
+De U<sub>mass</sub> is een waarde die de samenhang van een set topics meet. In het
+algemeen geldt; hoe dichter deze waarde bij nul ligt, hoe meer gescheiden de 
+topics zijn. In deze grafiek zouden 4 of 7 topics goede hoeveelheden topics zijn
+om mee te beginnen met onderzoeken. 
 
-#### Grafieken topic woorden
+Het is wel belangrijk om te beseffen dat deze grafiek niet aangeeft hoe goed de
+topics te interpreteren zijn. Topic modelling met veel gescheiden topics kan 
+een U<sub>mass</sub> dicht bij de nul genereren, maar als deze "topics" niet 
+goed te interpreteren zijn voor mensen, is het handig om een andere hoeveelheid
+topics te kiezen. 
 
-Deze woorden met het hoogste gewicht worden tevens op twee verschillende
-manieren gevisualiseerd; in een woordenwolk en in een staafdiagram. Deze gra-
-fieken zijn zichtbaar door op een topic te klikken, en vervolgens te kijken onder
-de tabbladen Woordenwolk en Woordgewichten die zichtbaar zijn boven in het
-scherm nadat LDA is uitgevoerd. De woordenwolk geeft aan welke woorden het
-meest passen bij een topic door deze woorden groter te maken. Het staafdia-
-gram geeft hetzelfde weer, maar dan worden de gewichten en verhoudingen ook
-gevisualiseerd. Dit zorgt ervoor dat woorden gemakkelijk met elkaar vergeleken
-kunnen worden.
 
-### Correlatiematrix
+### Documenten over tijd
 
-Een correlatiematrix geeft de mate van overeenkomst van verschillende topics
-weer. Een donkerblauw vakje geeft aan dat de topics op de coördinaten van dit
-vakje volledig overeenkomen. Donkerrood geeft aan dat de topics vrijwel geen
-overeenkomsten hebben. De correlatiematrix is zichtbaar onder het tabblad
-Correlatie boven in het scherm nadat LDA is uitgevoerd.
+De documenten die worden gebruikt voor topic modelling bevatten vaak een datum.
+Deze datum kan worden gebruikt om interessante patronen weer te geven die
+nuttig kunnen zijn voor het interpreteren van de topics. De grafiek laat zien
+wanneer topics het meest voorkomen. Er is een lijn voor elk topic, wat het 
+makkelijk maakt om verschillende topics met elkaar te vergelijken. Voor elk 
+document wordt berekend hoeveel dit document bij elk topic hoort. Dit is een 
+getal van 0 tot 1. Voor elk topic in een termijn worden deze getallen opgeteld
+om een waarde te verkrijgen. Deze waarde wordt vervolgens geplot. Het voordeel
+van deze methode is dat topics die veel voorkomen in slechts een paar
+documenten zwaarder wegen dan een ander topic dat minder voorkomt in dezelfde 
+documenten.
 
-Het is belangrijk om hierbij te beseffen dat de matrix symmetrisch is over de
-nevendiagonaal, van linksonder naar rechtsboven. De correlatie tussen topic 1
-en 4 is namelijk identiek aan de correlatie tussen topic 4 en 1. Ook valt op dat
-de nevendiagonaal enkel bestaat uit donkerblauwe vakjes. Een topic verschilt
-namelijk niet van zichzelf.
+![](../_static/User-guide/documents_over_time.png)
 
-![](../_static/User-guide/correlatiematrix.png)
 
-Figuur 2: Correlatie tussen 5 topics
+De documenten-over-tijd grafiek bestaat ook voor individuele topics. Dit maakt
+het makkelijker om kleine veranderingen duidelijker waar te nemen. Topic 4 in
+de tweede grafiek toont duidelijk meer nuances dan hetzelfde topic in de eerste
+grafiek.
 
-### Netwerken
+![](../_static/User-guide/documents_over_time_topic_4.png)
 
-Een essentieel onderdeel van de grafische resultaten zijn twee netwerken die re-
-laties tussen topics en woorden/documenten weergeven. Deze netwerken geven
-gelijktijdig meerdere verschillende aspecten van topics weer en zijn daarom van
-groot belang bij het identificeren en begrijpen van de topics. Nadat LDA is
-uitgevoerd is het netwerk tussen topics en woorden te vinden onder het tab-
-blad Woord Netwerk. Nadat LDA is uitgevoerd is het netwerk tussen topics en
-documenten te vinden onder het tabblad Doc. Netwerk.
+### Verdeling topics over documenten
 
-#### Netwerk woorden en topics
+Niet alle topics komen even vaak voor in het corpus. Dit is al duidelijk in de
+documenten-over-tijd grafiek, maar daar is het moeilijk om verschillende topics
+met elkaar te vergelijken. Daarom bestaat de verdeling van topics over 
+documenten. Dit maakt het makkelijker om te vergelijken hoe vaak topics in het
+corpus voorkomen.
 
-Topics worden gedefinieerd door woorden met een bijbehorend gewicht. De
-woorden met het hoogste gewicht zijn belangrijk voor een topic. Echter komen
-veel woorden voor in meerdere topics. Deze woorden kunnen dan bijdragen aan
-twee of zelfs meerdere topics. Indien een woord te veel bijdraagt aan alle topics
-zou het kunnen dat dit woord niet veel toevoegt (en dus uitgesloten zou kunnen
-worden). Om dit soort woorden op te sporen, is een netwerk een goed middel.
-In het netwerk komen tevens ook woorden naar voren die maar aan ´e´en topic
-gerelateerd zijn.
+![](../_static/User-guide/distribution_topics_over_documents.png)
 
-In Figuur 3 worden per topic de 15 belangrijkste woorden weergegeven. Als
-een woord in meerdere topics voorkomt, zal dit naar voren komen door meerdere
-lijnen vanuit dit woord. Tevens wordt het gewicht gevisualiseerd. Hoe belang-
-rijker een woord is voor een topic, des te dikker is de lijn die dit topic met het
-woord verbindt.
+### Correlatiematrix topics
 
-![](../_static/User-guide/woorden_topic_netwerk.png)
+Een correlatiematrix is een matrix die de correlatie tussen verschillende
+variabelen weergeeft. In dit geval zijn deze variabelen de topics. De matrix 
+bevat kleuren van blauw tot wit. De blauwe kleur geeft een perfecte correlatie
+aan en de witte kleur geeft geen enkele correlatie aan. Het is belangrijk om op
+te merken dat de correlatiematrix symmetrisch is. Dit betekent dat de 
+correlatie van topics 4 en 1 hetzelfde is als die van topics 1 en 4. Een topic
+is perfect gecorreleerd met zichzelf. Daarom zijn de vierkanten langs de 
+antidiagonaal blauw.
 
-Figuur 3: Netwerk met relaties tussen woorden en topics
+![](../_static/User-guide/correlation_matrix.png)
 
-#### Netwerk documenten en topics
+### Gewichten van woorden en woordenwolk
 
-Volgens het LDA algoritme bevat elk document alle topics, ook al is dit vaak
-maar voor een heel klein deel. Het is nuttig om te visualiseren hoe de documenten zich verhouden tot de topics om te zien welke documente voor het grootste
-deel uit één enkel topic bestaan.
+De meest intuïtieve grafiek voor topic modelling is een grafiek die de woorden
+voor elk topic en hun respectieve gewichten toont. Dit wordt gevisualiseerd in 
+de woordgewichten grafiek. Deze grafiek wordt voor elk van de topics
+gegenereerd, in dit geval voor topic 4.
 
-In Figuur 4 staat een netwerk die de relaties tussen groepen documenten
-(de zwarte stippen) en topics weergeeft. Elke zwarte stip stelt alle documenten
-voor die gerelateerd zijn aan de aangrenzende topics. De dikte van de lijnen is
-een maat die het aantal documenten weergeeft die verbonden zijn aan een topic.
-Des te dikker de lijn, des te meer documenten aan het topic toebehoren. Uit dit
-netwerk is goed op te maken of een topic veel losse documenten heeft of juist
-veel voorkomt in documenten in combinatie met een ander topic.
+![](../_static/User-guide/probabilities_topic_4.png)
 
-![](../_static/User-guide/document_topic_netwerk.png)
+Dezelfde gegevens kunnen op een mooiere, maar minder kwantitatieve manier 
+worden weergegeven. Dit is een woordwolk waarin de woorden met een hoog gewicht
+groter zijn dan de woorden met een laag gewicht. Hieronder staat een voorbeeld 
+voor topic 4 en gaat over dezelfde data als de bovenstaande grafiek.
 
-Figuur 4: Netwerk met relaties tussen documenten en topics
+![](../_static/User-guide/word_cloud_topic_4.png)
+
+### Netwerk met woorden en topics
+
+Sommige woorden komen in meerdere topics voor. De manier waarop deze woorden
+gerelateerd zijn, wordt getoond in een woord-topic netwerk. Dit netwerk bevat 
+de topics en de 15 meest voorkomende woorden voor deze topics. De woorden die 
+in meerdere topics voorkomen, hebben uitgaande lijnen naar deze topics. Dit
+maakt het makkelijk om te zien welke woorden slechts deel uitmaken van één 
+topic en welke woorden in veel topics aanwezig zijn.
+
+![](../_static/User-guide/word_topic_network.png)
+
+### Netwerk met documenten en topics
+
+Een ander interessant netwerk is het document-topic netwerk. Dit netwerk bevat
+knopen voor elk topic en knopen voor alle bundels van documenten die
+overeenkomen met de topics. Dit betekent dat elk document dat voor minstens 5%
+een topic bevat, wordt gebundeld voor een bepaald topic. De dikte van de lijnen
+die topics verbinden met bundelingen documenten laat de hoeveelheid documenten
+zien die gerelateerd zijn aan dit topic.
+
+![](../_static/User-guide/document_topic_network.png)
+
+## Gephi
+
+De twee netwerken die voorkomen in software kunnen geëxporteerd worden naar 
+.gexf bestanden. Deze bestanden kunnen geopend worden in Gephi om de netwerken
+beter te bekijken, of om ze goed vorm te geven. Hieronder staan enkele tips 
+voor het gebruik van Gephi met deze plots. 
+
+### Kleuren van het netwerk
+
+De kleuren die binnen TOMMY worden gebruikt voor het netwerk worden mee 
+geëxporteerd. De knopen van elk topic hebben de kleur van de topic en de 
+knopen van de woorden/documenten hebben een zwarte kleur. 
+
+### Layout netwerk
+
+De layout van het netwerk kan aangepast worden door een algoritme op het 
+netwerk te laten werken binnen Gephi. Een algoritme waar in de praktijk uit is
+gebleken dat het goed werkt voor deze netwerken, is het ForceAtlas 2 algoritme. 
+
+### Labels toevoegen
+
+Er staan labels opgeslagen voor de knopen van het netwerk. Deze zijn echter 
+nog niet te zien. Door onderaan op de knop "Show Node Labels" te klikken, komen
+de knopen labels tevoorschijn. De kleur van deze labels is zwart. Als je de 
+kleur graag aan wilt passen kan je linksboven op "Nodes" en dan op "Label Color"
+klikken. 
+
+### Knopen onzichtbaar maken
+
+Vaak is het niet mooi om zowel labels als knopen te laten zien. Dan staan er 
+puntjes is de labels. Het is dan mooi om de grootte van de knopen aan te passen
+door linksboven op "Nodes" en dan "Size" te klikken. Hier kan je de grootte 
+aanpassen naar 0.5, waardoor de knopen niet meer zichtbaar zijn. 
+
+### Andere aanpassingen
+
+Er kunnen veel andere dingen aangepast worden in Gephi, zoals de grootte van de
+labels, de grootte van de lijnen en de layout. Bekijk voor deze extra 
+aanpassingen de documentatie van Gephi. 
+
 
 ## Exporteren
 
