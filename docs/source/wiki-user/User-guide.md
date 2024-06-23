@@ -282,29 +282,86 @@ topics te kiezen.
 
 ### Documenten over tijd
 
+De documenten die worden gebruikt voor topic modelling bevatten vaak een datum.
+Deze datum kan worden gebruikt om interessante patronen weer te geven die
+nuttig kunnen zijn voor het interpreteren van de topics. De grafiek laat zien
+wanneer topics het meest voorkomen. Er is een lijn voor elk topic, wat het 
+makkelijk maakt om verschillende topics met elkaar te vergelijken. Voor elk 
+document wordt berekend hoeveel dit document bij elk topic hoort. Dit is een 
+getal van 0 tot 1. Voor elk topic in een termijn worden deze getallen opgeteld
+om een waarde te verkrijgen. Deze waarde wordt vervolgens geplot. Het voordeel
+van deze methode is dat topics die veel voorkomen in slechts een paar
+documenten zwaarder wegen dan een ander topic dat minder voorkomt in dezelfde 
+documenten.
+
 ![](../_static/User-guide/documents_over_time.png)
+
+
+De documenten-over-tijd grafiek bestaat ook voor individuele topics. Dit maakt
+het makkelijker om kleine veranderingen duidelijker waar te nemen. Topic 4 in
+de tweede grafiek toont duidelijk meer nuances dan hetzelfde topic in de eerste
+grafiek.
 
 ![](../_static/User-guide/documents_over_time_topic_4.png)
 
 ### Verdeling topics over documenten
 
+Niet alle topics komen even vaak voor in het corpus. Dit is al duidelijk in de
+documenten-over-tijd grafiek, maar daar is het moeilijk om verschillende topics
+met elkaar te vergelijken. Daarom bestaat de verdeling van topics over 
+documenten. Dit maakt het makkelijker om te vergelijken hoe vaak topics in het
+corpus voorkomen.
+
 ![](../_static/User-guide/distribution_topics_over_documents.png)
 
 ### Correlatiematrix topics
+
+Een correlatiematrix is een matrix die de correlatie tussen verschillende
+variabelen weergeeft. In dit geval zijn deze variabelen de topics. De matrix 
+bevat kleuren van blauw tot wit. De blauwe kleur geeft een perfecte correlatie
+aan en de witte kleur geeft geen enkele correlatie aan. Het is belangrijk om op
+te merken dat de correlatiematrix symmetrisch is. Dit betekent dat de 
+correlatie van topics 4 en 1 hetzelfde is als die van topics 1 en 4. Een topic
+is perfect gecorreleerd met zichzelf. Daarom zijn de vierkanten langs de 
+antidiagonaal blauw.
 
 ![](../_static/User-guide/correlation_matrix.png)
 
 ### Gewichten van woorden en woordenwolk
 
+De meest intuïtieve grafiek voor topic modelling is een grafiek die de woorden
+voor elk topic en hun respectieve gewichten toont. Dit wordt gevisualiseerd in 
+de woordgewichten grafiek. Deze grafiek wordt voor elk van de topics
+gegenereerd, in dit geval voor topic 4.
+
 ![](../_static/User-guide/probabilities_topic_4.png)
+
+Dezelfde gegevens kunnen op een mooiere, maar minder kwantitatieve manier 
+worden weergegeven. Dit is een woordwolk waarin de woorden met een hoog gewicht
+groter zijn dan de woorden met een laag gewicht. Hieronder staat een voorbeeld 
+voor topic 4 en gaat over dezelfde data als de bovenstaande grafiek.
 
 ![](../_static/User-guide/word_cloud_topic_4.png)
 
 ### Netwerk met woorden en topics
 
+Sommige woorden komen in meerdere topics voor. De manier waarop deze woorden
+gerelateerd zijn, wordt getoond in een woord-topic netwerk. Dit netwerk bevat 
+de topics en de 15 meest voorkomende woorden voor deze topics. De woorden die 
+in meerdere topics voorkomen, hebben uitgaande lijnen naar deze topics. Dit
+maakt het makkelijk om te zien welke woorden slechts deel uitmaken van één 
+topic en welke woorden in veel topics aanwezig zijn.
+
 ![](../_static/User-guide/word_topic_network.png)
 
 ### Netwerk met documenten en topics
+
+Een ander interessant netwerk is het document-topic netwerk. Dit netwerk bevat
+knopen voor elk topic en knopen voor alle bundels van documenten die
+overeenkomen met de topics. Dit betekent dat elk document dat voor minstens 5%
+een topic bevat, wordt gebundeld voor een bepaald topic. De dikte van de lijnen
+die topics verbinden met bundelingen documenten laat de hoeveelheid documenten
+zien die gerelateerd zijn aan dit topic.
 
 ![](../_static/User-guide/document_topic_network.png)
 
