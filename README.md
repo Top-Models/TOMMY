@@ -29,7 +29,20 @@ data.
 
 # Installation
 
-The executables can be downloaded off of [tommy.fyor.nl](tommy.fyor.nl).
+To run TOMMY, you can 
+[create a virtual environment](https://docs.python.org/3/library/venv.html).
+Once you're in your virtual environment, running the following command will 
+download all the necessary packages.
+```bash
+pip install -r ./requirements.txt
+```
+By running the following command, TOMMY will start up. Note that this might 
+take some time (30 seconds).
+```bash
+python -m tommy.main
+```
+Alternatively, the executables can be downloaded off of 
+[tommy.fyor.nl](tommy.fyor.nl).
 Instructions for the installation process can be found in the
 [installation guide](https://tommy.fyor.nl/wiki-user/Installation-guide.html#).
 Note that this website is written in Dutch.
