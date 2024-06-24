@@ -6,16 +6,15 @@ TOMMY is een topic modelling applicatie die ontwikkeld is door studenten van
 de Universiteit Utrecht in opdracht van EMMA. Voor het uitvoeren van topic
 modelling wordt het achterliggende Latent Dirichlet Allocation (LDA) algoritme
 of Non-Negative Matrix Factorization (NMF) algoritme uitgevoerd op de door
-de gebruiker aangeleverde bestanden. LDA en NMF zijn topic modelling algo-
-ritmes die topics herkennen in deze bestanden. Het aantal topics N kan door
+de gebruiker aangeleverde bestanden. LDA en NMF zijn topic modelling algoritmes
+die topics herkennen in deze bestanden. Het aantal topics N kan door
 de gebruiker binnen de applicatie gekozen worden. LDA of NMF zullen dan N
 lijsten (dit zijn de topics) teruggeven met woorden en bijbehorende gewichten,
-waarbij het gewicht aangeeft hoe sterk een woord bij een topic past. Het algo-
-ritme gaat ervan uit dat elk document elkw topic tot op zekere hoogte bevat,
-ook al is het maar voor een heel klein deel. In deze gebruikershandleiding
-staat
-beschreven hoe u TOMMY kunt gebruiken en hoe de ruwe data geproduceerd
-door LDA of NMF goed onderzocht kan worden.
+waarbij het gewicht aangeeft hoe sterk een woord bij een topic past. Het
+algoritme gaat ervan uit dat elk document elk topic tot op zekere hoogte
+bevat, ook al is het maar voor een heel klein deel. In deze
+gebruikershandleiding staat beschreven hoe u TOMMY kunt gebruiken en hoe de
+ruwe data geproduceerd door LDA of NMF goed onderzocht kan worden.
 
 ## Installatie
 
@@ -495,10 +494,9 @@ naar eventuele andere configuraties als die er zijn.
 De software bevat momenteel nog een aantal bugs die in de toekomst verholpen
 zullen worden:
 
-- Als bij de hyperparameters een waarde ingevoerd wordt, kan het pro-
-  gramma terugspringen naar een waarde 1 voor zowel de alpha als beta
-  instelling.
-  Deze kunnen dan niet aangepast worden.
+- Als bij de hyperparameters een waarde ingevoerd wordt, kan het programma
+  terugspringen naar een waarde 1 voor zowel de alpha als beta instelling. Deze
+  kunnen dan niet aangepast worden.
 - De synoniemen en n-grams zijn nog niet ondersteund in de software, maar
   wel zichtbaar in de user interface.
 - Als netwerken worden geëxporteert naar Gephi, worden de kleuren niet
