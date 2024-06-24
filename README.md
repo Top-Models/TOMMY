@@ -42,7 +42,7 @@ take some time (30 seconds).
 python -m tommy.main
 ```
 Alternatively, the executables can be downloaded off of 
-[tommy.fyor.nl](tommy.fyor.nl).
+[tommy.fyor.nl](https://tommy.fyor.nl).
 Instructions for the installation process can be found in the
 [installation guide](https://tommy.fyor.nl/wiki-user/Installation-guide.html#).
 Note that this website is written in Dutch.
