@@ -1,17 +1,19 @@
 # Gebruikershandleiding TOMMY
 
 ## Introductie
-TOMMY is een topic modelling applicatie die ontwikkeld is door studenten
-van de Universiteit Utrecht in opdracht van EMMA. Voor het uitvoeren van
-topic modelling wordt het achterliggende Latent Dirichlet Allocation (LDA)
-algoritme uitgevoerd op de door de gebruiker aangeleverde bestanden. LDA
-is een algoritme dat topics herkent in deze bestanden. Het aantal topics N
-kan door de gebruiker gekozen worden. LDA zal dan N lijsten teruggeven met
-woorden en bijbehorende gewichten, waarbij het gewicht een indicatie is voor
-hoeveel een woord bij een topic past. Het algoritme gaat ervan uit dat elk
-document elk topic bevat, ook al is het maar voor een heel klein deel. In deze
-gebruikershandleiding staat beschreven hoe u TOMMY kunt gebruiken en hoe
-deze ruwe data van het LDA-algoritme goed onderzocht kan worden.
+TOMMY is een topic modelling applicatie die ontwikkeld is door studenten van
+de Universiteit Utrecht in opdracht van EMMA. Voor het uitvoeren van topic
+modelling wordt het achterliggende Latent Dirichlet Allocation (LDA) algoritme
+of Non-Negative Matrix Factorization (NMF) algoritme uitgevoerd op de door
+de gebruiker aangeleverde bestanden. LDA en NMF zijn topic modelling algo-
+ritmes die topics herkennen in deze bestanden. Het aantal topics N kan door
+de gebruiker binnen de applicatie gekozen worden. LDA of NMF zullen dan N
+lijsten (dit zijn de topics) teruggeven met woorden en bijbehorende gewichten,
+waarbij het gewicht aangeeft hoe sterk een woord bij een topic past. Het algo-
+ritme gaat ervan uit dat elk document elkw topic tot op zekere hoogte bevat,
+ook al is het maar voor een heel klein deel. In deze gebruikershandleiding staat
+beschreven hoe u TOMMY kunt gebruiken en hoe de ruwe data geproduceerd
+door LDA of NMF goed onderzocht kan worden.
 
 ## Installatie
 
@@ -40,10 +42,10 @@ onder andere het aantal woorden, bestandsformaat en de bestandsgrootte.
 ![](../_static/User-guide/input.png)
 ### CSV formaat
 
-Om veel data in het programma te laden is er een format bedacht welke dit voor
-de computer leesbaar maakt. Dit format bestaat uit een csv-bestand waarbij de
+Om veel data in een keer in te laden is er een formaat bedacht welke dit voor
+de computer leesbaar maakt. Dit formaat bestaat uit een CSV-bestand waarbij de
 eerste regel een lijst aan headers is. Elke regel hierna beschrijft een document.
-Om een csv-bestand te kunnen inlezen moet er moet er minimaal een header
+Om een CSV-bestand te kunnen inlezen moet er moet er minimaal een header
 genaamd ”body” aanwezig zijn. Dit geeft aan dat deze kolom de tekst bevat die 
 geanalyseerd moet worden. Daarnaast worden er een aantal optionele headers
 ondersteund.
@@ -110,29 +112,15 @@ worden.
 
 ### Visualisatie
 
-
-
 #### # Topicwoorden
 ![](../_static/User-guide/Visualisatie.png)
 
-De meest invloedrijke parameter op de uitkomst van het topic modelling algoritme
-is de hoeveelheid topicwoorden. Dit getal is linksboven in de applicatie 
-aanpasbaar door onder het kopje Visualisatie bij de instelling # Topicwoorden een geheel
-getal in te voeren en vervolgens op enter te drukken. De hoeveelheid topicwoorden
-heeft standaard de waarde 10. Het zal niet vaak nodig zijn om meer dan 20 
-topicwoorden te gebruiken. In het algemeen geldt dat, hoe meer topicwoorden je kiest,
-hoe langer het programma bezig zal zijn. Het is dan ook sterk af te raden om meer
-dan 100 topicwoorden in te voeren. Bovendien zijn de resultaten beter te 
-interpreteren met een lager aantal topicwoorden.
-
-Het aantal topicwoorden kan je zien in de topics display. Dit is een lijst van
-woorden die het beste bij een topic passen. De hoeveelheid woorden die je ziet,
-is het aantal dat je hebt ingevoerd bij de instelling # Topicwoorden.
-
-
+Deze instelling bepaalt hoeveel woorden er zichtbaar zijn per topic. De
+zichtbare woorden per topic zijn de woorden die het beste bij een topic passen.
+De hoeveelheid woorden heeft standaard de waarde 10, maar is aanpasbaar door
+een geheel getal in te voeren en vervolgens op enter te drukken.
 
 ### Algemeen
-
 
 #### Algortime
 ![](../_static/User-guide/algoritme.png)
@@ -146,31 +134,35 @@ LDA en NMF. Standaard staat het algoritme op LDA.
 #### # Topics
 ![](../_static/User-guide/topics.png)
 
-Het aantal topics dat gezocht wordt in de documenten kan aangepast worden
-onder het kopje Algemeen. Het aantal topics kan worden aangepast door een
-geheel getal in te voeren bij de instelling # Topics en vervolgens op enter te
-drukken. 
+De meest invloedrijke parameter op de uitkomst van het topic modelling algoritme 
+is de hoeveelheid topics. Dit getal is linksboven in de applicatie aanpasbaar 
+door onder het kopje 'Algemeen' bij de instelling '# Topics' een geheel
+getal in te voeren. De hoeveelheid topics heeft standaard de waarde 3. 
+Het zal niet vaak nodig zijn om meer dan 20 topics te
+gebruiken. In het algemeen geldt dat hoe meer topics er gekozen worden, hoe langer het
+programma bezig zal zijn. Het is dan ook sterk af te raden om meer dan 100
+topics in te voeren. Bovendien zijn de resultaten beter te interpreteren met een
+lager aantal topics.
 
-Hier is interactie voor nodig om te bepalen welk aantal topics
-het beste is voor de gegeven data. In de K-plot kan je zien hoe de log-likelihood
-verandert met het aantal topics. Hieruit kan je afleiden hoeveel topics je het
-beste kan gebruiken. Hoe hoger de log-likelihood, hoe beter de topics passen bij
-de data.
+Het kan moeilijk zijn om te bepalen welk aantal topics het beste is voor de 
+gegeven data. In de K-plot is zichtbaar hoe de log-likelihood verandert met het 
+aantal topics. Hieruit is af te leiden hoeveel topics het beste gebruikt kunnen 
+worden. Hoe hoger de log-likelihood, hoe beter de topics passen bij de data.
 
 
 #### Taal Corpus
 ![](../_static/User-guide/taal.png)
 
-De taal van de documenten kan aangepast worden onder het kopje Algemeen.
-De taal kan worden aangepast door een taal te selecteren in de dropdown menu
-onder de instelling Taal corpus. 
-Tommy support op dit moment de talen Nederlands en Engels.
+De taal van de documenten kan aangepast worden onder het kopje 'Algemeen'. De 
+taal kan worden gewijzigd door een taal te selecteren in het dropdown menu 
+onder de instelling 'Taal corpus'. TOMMY ondersteunt momenteel de talen 
+Nederlands en Engels.
 
 
 ### LDA Hyperparameters
 ![](../_static/User-guide/hyperparamaters.png)
 
-Naast de algemene instellingen, kunnen ook een aantal geavanceerde parameters
+Naast de algemene instellingen kan ook een aantal geavanceerde parameters
 voor LDA worden aangepast onder het kopje Hyperparameters
 
 De alpha parameter bepaalt hoe verspreid de distibutie voor topic per 
@@ -194,11 +186,6 @@ standaard parameters gebruikt. Voor de alpha instelling is dit 1.0, en voor de
 beta instelling is dit 0.01.
 
 ### Woorden uitsluiten
-<!---
-TODO: Synoniemen etc is nog niet gemerged naar main.
---->
-![](../_static/User-guide/blacklist.png)
-Figuur 1: Het uitsluitveld met drie uitgesloten woorden.
 
 Niet alle woorden uit de geïmporteerde bestanden worden gebruikt bij topic
 modelling. Bepaalde stopwoorden zoals lidwoorden en andere veel voorkomende
@@ -217,13 +204,9 @@ omgezet naar kleine letters. Daarom is de blacklist niet case-sensitive, wat
 betekent dat ”bodegraven“ en ”Bodegraven“ beiden hetzelfde woord uit zullen
 sluiten.
 
-
+![](../_static/User-guide/blacklist.png)
 
 ### Synoniemen
-
-![](../_static/User-guide/synoniemen.png)
-
-Figuur 2: Het uitsluitveld met twee synoniemen.
 
 Het is mogelijk om synoniemen toe te voegen aan de analyse. Dit kan door
 synoniemen in te voeren in het tekstveld onder het tabblad Synoniemen. Dit
@@ -234,7 +217,7 @@ kunnen ook vrij verwijderd worden uit de lijst. Een voorbeeld van het toevoegen
 van synoniemen is zichtbaar in figuur 2. Tijdens het uitvoeren van LDA worden
 alle woorden vervangen door hun synoniemen.
 
-
+![](../_static/User-guide/synoniemen.png)
 
 ### Topic modelling toepassen
 
@@ -295,7 +278,6 @@ documenten zwaarder wegen dan een ander topic dat minder voorkomt in dezelfde
 documenten.
 
 ![](../_static/User-guide/documents_over_time.png)
-
 
 De documenten-over-tijd grafiek bestaat ook voor individuele topics. Dit maakt
 het makkelijker om kleine veranderingen duidelijker waar te nemen. Topic 4 in
