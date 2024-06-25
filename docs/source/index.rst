@@ -13,6 +13,8 @@ Download
 - :download:`TOMMY for Mac (Intel) <download/TOMMY-Installer-Intel.dmg>`
 - :download:`TOMMY for Windows <download/TOMMY-windows.zip>`
 - :download:`TOMMY for Linux <download/TOMMY-linux.zip>`
+- `Source code on GitLab <https://git.science.uu.nl/ics/sp/2024/v24j/tommy/>`_
+- `Source code on GitHub <https://github.com/Top-Models/TOMMY>`_
 
 .. toctree::
     :maxdepth: 1
