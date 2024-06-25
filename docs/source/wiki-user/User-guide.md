@@ -45,9 +45,11 @@ over het bestand getoond als u op een bestand klikt. Deze data kan gevonden
 worden in het informatie-paneel onder het kopje 'Informatie' en bevat onder
 andere het aantal woorden, bestandsformaat en de bestandsgrootte.
 
-|                  ![](../_static/User-guide/input_2.png)                   |
-|:-------------------------------------------------------------------------:|
-| *Voorbeeld van de inputweergave in het navigatie menu van TOMMY op macOS* |
+<figure style="display: table; width: auto; max-width: 50%">
+   <img src="../_static/User-guide/input_2.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Voorbeeld van de inputweergave in het navigatie menu van TOMMY op macOS</em></figcaption>
+</figure>
 
 ### CSV formaat
 
@@ -135,9 +137,11 @@ worden.
 
 #### # Topicwoorden
 
-| ![](../_static/User-guide/Visualisatie.png) |
-|:-------------------------------------------:|
-|  *Voorbeeld van de visualisatie in TOMMY*   |
+<figure style="display: table; width: auto; max-width: 50%">
+   <img src="../_static/User-guide/Visualisatie.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Voorbeeld van de visualisatie in TOMMY</em></figcaption>
+</figure>
 
 Deze instelling bepaalt hoeveel woorden er zichtbaar zijn per topic. De
 zichtbare woorden per topic zijn de woorden die het beste bij een topic passen.
@@ -148,9 +152,11 @@ een geheel getal in te voeren.
 
 #### Algortime
 
-| ![](../_static/User-guide/algoritme.png) |
-|:----------------------------------------:|
-|    *Het algoritme instellen in TOMMY*    |
+<figure style="display: table; width: auto; max-width: 50%">
+   <img src="../_static/User-guide/algoritme.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Het algoritme instellen in TOMMY</em></figcaption>
+</figure>
 
 Het algoritme dat gebruikt wordt voor topic modelling kan aangepast worden
 onder het kopje Algemeen. Het algoritme kan worden ingesteld in het dropdown
@@ -159,9 +165,11 @@ NMF. Het algoritme staat standaard ingesteld op LDA.
 
 #### # Topics
 
-| ![](../_static/User-guide/topics.png)  |
-|:--------------------------------------:|
-| *Het aantal topics instellen in TOMMY* |
+<figure style="display: table; width: auto; max-width: 50%">
+   <img src="../_static/User-guide/topics.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Het aantal topics instellen in TOMMY</em></figcaption>
+</figure>
 
 De meest invloedrijke parameter op de uitkomst van het topic modelling
 algoritme is de hoeveelheid topics. Dit getal is linksboven in de applicatie
@@ -183,9 +191,11 @@ worden. Hoe hoger de log-likelihood, hoe beter de topics passen bij de data.
 
 #### Taal Corpus
 
-| ![](../_static/User-guide/taal.png) |
-|:-----------------------------------:|
-|    *De taal instellen in TOMMY*     |
+<figure style="display: table; width: auto; max-width: 50%">
+   <img src="../_static/User-guide/taal.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>De taal instellen in TOMMY</em></figcaption>
+</figure>
 
 De taal waarmee de documenten geïnterpreteerd worden, kan worden aangepast
 onder het kopje 'Algemeen'. De taal kan gewijzigd worden door een taal te
@@ -194,9 +204,11 @@ ondersteunt momenteel de talen Nederlands en Engels.
 
 ### LDA Hyperparameters
 
-| ![](../_static/User-guide/hyperparamaters.png) |
-|:----------------------------------------------:|
-|  *Aanpassen van LDA Hyperparameters in TOMMY*  |
+<figure style="display: table; width: auto; max-width: 50%">
+   <img src="../_static/User-guide/hyperparamaters.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Aanpassen van LDA Hyperparameters in TOMMY</em></figcaption>
+</figure>
 
 Naast de algemene instellingen kan ook een aantal geavanceerde parameters voor
 LDA worden aangepast onder het kopje 'Hyperparameters'.
@@ -223,9 +235,11 @@ worden de standaard parameters gebruikt. Voor de  *alpha*-instelling is dit
 
 ### Woorden uitsluiten
 
-| ![](../_static/User-guide/blacklist.png) |
-|:----------------------------------------:|
-|  *Het uitsluiten van woorden in TOMMY*   |
+<figure style="display: table; width: auto; max-width: 50%">
+   <img src="../_static/User-guide/blacklist.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Het uitsluiten van woorden in TOMMY</em></figcaption>
+</figure>
 
 Niet alle woorden uit de geïmporteerde bestanden worden gebruikt bij topic
 modelling. Bepaalde stopwoorden zoals lidwoorden en andere veelvoorkomende
@@ -240,9 +254,11 @@ vullen. Woorden kunnen ook vrij verwijderd worden uit de lijst.
 
 ### Synoniemen
 
-|                                     ![](../_static/User-guide/synoniemen.png)                                     | 
-|:-----------------------------------------------------------------------------------------------------------------:|
-| *Het toevoegen van synoniemen in TOMMY. Het woord 'gem.' wordt in de analyse vervangen met het woord 'gemeente'.* |
+<figure style="display: table; width: auto; max-width: 50%">
+   <img src="../_static/User-guide/synoniemen.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Het toevoegen van synoniemen in TOMMY. Het woord 'gem.' wordt in de analyse vervangen met het woord 'gemeente'.</em></figcaption>
+</figure>
 
 Het is ook mogelijk om synoniemen toe te voegen aan de analyse. Dit kan door
 synoniemen in te voeren in het tekstvak onder het
@@ -272,9 +288,11 @@ hebben op de uitkomst van topic modelling, zal dit zichtbaar zijn in deze
 grafiek. Op de x-as staan het aantal woorden per document, en op de y-as het
 aantal documenten wat overeenkomt met dat aantal woorden.
 
-| ![](../_static/User-guide/distribution_word_count.png) |
-|:------------------------------------------------------:|
-|       *Distributie aantal woorden per document*        |
+<figure style="display: table; width: auto">
+   <img src="../_static/User-guide/distribution_word_count.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Distributie aantal woorden per document</em></figcaption>
+</figure>
 
 ### K-waarde
 
@@ -286,9 +304,11 @@ wordt de U<sub>mass</sub> genoemd. Om deze U<sub>mass</sub> te berekenen, moet
 het topic modelling algoritme worden uitgevoerd voor elk aantal topics op de
 x-as. Het genereren van deze plots kan daarom enige tijd duren.
 
-| ![](../_static/User-guide/k-value.png) |
-|:--------------------------------------:|
-|           *K-waarde grafiek*           |
+<figure style="display: table; width: auto">
+   <img src="../_static/User-guide/k-value.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>K-waarde grafiek</em></figcaption>
+</figure>
 
 De U<sub>mass</sub> is een waarde die de samenhang van een set topics meet. In
 het
@@ -317,18 +337,22 @@ van deze methode is dat topics die veel voorkomen in slechts een paar
 documenten zwaarder wegen dan een ander topic dat minder voorkomt in dezelfde
 documenten.
 
-| ![](../_static/User-guide/documents_over_time.png) |
-|:--------------------------------------------------:|
-|               *Documenten over tijd*               |
+<figure style="display: table; width: auto">
+   <img src="../_static/User-guide/documents_over_time.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Documenten over tijd</em></figcaption>
+</figure>
 
 De documenten-over-tijd grafiek bestaat ook voor individuele topics. Dit maakt
 het makkelijker om kleine veranderingen duidelijker waar te nemen. Topic 4 in
 de tweede grafiek toont duidelijk meer nuances dan hetzelfde topic in de eerste
 grafiek.
 
-| ![](../_static/User-guide/documents_over_time_topic_4.png) |
-|:----------------------------------------------------------:|
-|            *Documenten over tijd voor topic 4*             |
+<figure style="display: table; width: auto">
+   <img src="../_static/User-guide/documents_over_time_topic_4.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Documenten over tijd voor topic 4</em></figcaption>
+</figure>
 
 ### Verdeling topics over documenten
 
@@ -338,9 +362,11 @@ met elkaar te vergelijken. Daarom bestaat de verdeling van topics over
 documenten. Dit maakt het makkelijker om te vergelijken hoe vaak topics in het
 corpus voorkomen.
 
-| ![](../_static/User-guide/distribution_topics_over_documents.png) |
-|:-----------------------------------------------------------------:|
-|                *Verdeling topics over documenten*                 |
+<figure style="display: table; width: auto">
+   <img src="../_static/User-guide/distribution_topics_over_documents.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Verdeling topics over documenten</em></figcaption>
+</figure>
 
 ### Correlatiematrix topics
 
@@ -353,9 +379,11 @@ betekent dat de correlatie van topics 4 en 1 hetzelfde is als die van topics 1
 en 4. Een topic is perfect gecorreleerd met zichzelf. Daarom zijn de vierkanten
 langs de antidiagonaal blauw.
 
-| ![](../_static/User-guide/correlation_matrix.png) |
-|:-------------------------------------------------:|
-|             *Correlatiematrix topics*             |
+<figure style="display: table; width: auto">
+   <img src="../_static/User-guide/correlation_matrix.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Correlatiematrix topics</em></figcaption>
+</figure>
 
 ### Gewichten van woorden en woordenwolk
 
@@ -364,18 +392,22 @@ voor elk topic en hun respectieve gewichten toont. Dit wordt gevisualiseerd in
 de woordgewichten grafiek. Deze grafiek wordt voor elk van de topics
 gegenereerd, in dit geval voor topic 4.
 
-| ![](../_static/User-guide/probabilities_topic_4.png) |
-|:----------------------------------------------------:|
-|         *Gewichten van woorden voor topic 4*         |
+<figure style="display: table; width: auto">
+   <img src="../_static/User-guide/probabilities_topic_4.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Gewichten van woorden voor topic 4</em></figcaption>
+</figure>
 
 Dezelfde gegevens kunnen op een mooiere, maar minder kwantitatieve manier
 worden weergegeven. Dit is een woordwolk waarin de woorden met een hoog gewicht
 groter zijn dan de woorden met een laag gewicht. Hieronder staat een voorbeeld
 voor topic 4 en gaat over dezelfde data als de bovenstaande grafieken.
 
-| ![](../_static/User-guide/word_cloud_topic_4.png) |
-|:-------------------------------------------------:|
-|             *Woordwolk voor topic 4*              |
+<figure style="display: table; width: auto">
+   <img src="../_static/User-guide/word_cloud_topic_4.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Woordwolk voor topic 4</em></figcaption>
+</figure>
 
 ### Netwerk met woorden en topics
 
@@ -386,9 +418,11 @@ in meerdere topics voorkomen, hebben uitgaande lijnen naar deze topics. Dit
 maakt het makkelijk om te zien welke woorden slechts deel uitmaken van één
 topic en welke woorden in veel topics aanwezig zijn.
 
-| ![](../_static/User-guide/word_topic_network.png) |
-|:-------------------------------------------------:|
-|          *Netwerk met woorden en topics*          |
+<figure style="display: table; width: auto">
+   <img src="../_static/User-guide/word_topic_network.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Netwerk met woorden en topics</em></figcaption>
+</figure>
 
 ### Netwerk met documenten en topics
 
@@ -399,9 +433,11 @@ een topic bevat, wordt gebundeld voor een bepaald topic. De dikte van de lijnen
 die topics verbinden met gebundelde documenten laat de hoeveelheid documenten
 zien die gerelateerd zijn aan dit topic.
 
-| ![](../_static/User-guide/document_topic_network.png) |
-|:-----------------------------------------------------:|
-|          *Netwerk met documenten en topics*           |
+<figure style="display: table; width: auto">
+   <img src="../_static/User-guide/document_topic_network.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Netwerk met documenten en topics</em></figcaption>
+</figure>
 
 ## Gephi
 
@@ -469,9 +505,11 @@ experimenteren met andere instellingen, dan is het mogelijk om een nieuwe
 configuratie aan te maken. Dit kan door op de configuratieknop te klikken.
 Deze knop opent het configuratiescherm.
 
-|           ![](../_static/User-guide/config.png)           |
-|:---------------------------------------------------------:|
-| *De configuratie knop met de standaard configuratie naam* |
+<figure style="display: table; width: auto; max-width: 50%">
+   <img src="../_static/User-guide/config.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>De configuratie knop met de standaard configuratie naam</em></figcaption>
+</figure>
 
 In het configuratiescherm kan met de 'Toevoegen' knop een nieuwe configuratie
 worden aangemaakt. Nadat de configuratie is aangemaakt, wordt deze automatisch
@@ -482,9 +520,11 @@ horen, staan bij de andere configuratie en zijn nu niet meer zichtbaar. U kunt
 de instellingen naar wens aanpassen en op 'toepassen' klikken om een nieuw
 model te maken.
 
-| ![](../_static/User-guide/configuratiescherm.png) |
-|:-------------------------------------------------:|
-|             *Het configuratiescherm*              |
+<figure style="display: table; width: auto; max-width: 50%">
+   <img src="../_static/User-guide/configuratiescherm.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Het configuratiescherm</em></figcaption>
+</figure>
 
 Als u terug wilt gaan of aanpassingen aan wilt brengen aan een model in een
 andere configuratie, dan kan het configuratiescherm middels de configuratieknop
@@ -506,9 +546,11 @@ instellingen voor alle configuraties binnen het project opgeslagen. De
 model-resultaten zelf worden niet opgeslagen. Deze kunnen aan de hand van de
 opgeslagen instellingen opnieuw gegenereerd worden.
 
-|                                     ![](../_static/User-guide/opslaan_knop_2.png)                                     |
-|:---------------------------------------------------------------------------------------------------------------------:|
-| *Voorbeeld van de menubalk met de opslaan en laad knoppen. Dit kan er bij uw besturingssysteem iets anders uit zien.* |
+<figure style="display: table; width: auto; max-width: 50%">
+   <img src="../_static/User-guide/opslaan_knop_2.png" alt="" style="display: 
+table-row; width: 100%"/>
+<figcaption style="display: table-row; text-align: center"><em>Voorbeeld van de menubalk met de opslaan en laad knoppen. Dit kan er bij uw besturingssysteem iets anders uit zien.</em></figcaption>
+</figure>
 
 Als u instellingen wilt inladen uit een bestaand bestand, kan dat door in de
 menubalk op 'Bestand' en vervolgens op 'Instellingen laden' te klikken. Dit kan
