@@ -20,6 +20,7 @@ Download
 
     wiki-user/User-guide.md
     wiki-user/Installation-guide.md
+    wiki-user/Release notes.md
 
 Video demonstration of **TOMMY**:
 
