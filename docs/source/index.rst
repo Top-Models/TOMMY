@@ -34,6 +34,7 @@ Video demonstration of **TOMMY**:
     wiki-dev/Style-guide.md
     wiki-dev/Style-guide-source-control.md
     wiki-dev/Building.md
+    wiki-dev/Generating-Portable-Executable.md
     wiki-dev/Generating-Mac-Installer.md
     wiki-dev/How-to-run-tests-from-PyCharm.md
     wiki-dev/Writing-unit-tests-with-PyTest.md
