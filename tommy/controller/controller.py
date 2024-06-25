@@ -53,6 +53,10 @@ class Controller:
     _corpus_controller: CorpusController
 
     @property
+    def preprocessing_controller(self) -> PreprocessingController:
+        return self._preprocessing_controller
+
+    @property
     def corpus_controller(self) -> CorpusController:
         return self._corpus_controller
 
