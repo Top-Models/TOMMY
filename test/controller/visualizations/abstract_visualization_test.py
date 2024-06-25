@@ -1,7 +1,6 @@
+import matplotlib.pyplot as plt
 import pytest
 from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
-from pytest_mock import mocker
 
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization, TopicRunner, VisGroup, VisInputData, TopicID)

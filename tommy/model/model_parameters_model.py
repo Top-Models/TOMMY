@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+
 from tommy.support.model_type import ModelType
 from tommy.support.parameter_limits import *
 

@@ -1,8 +1,7 @@
-import subprocess
-import webbrowser
 import os
 import shutil
-
+import subprocess
+import webbrowser
 
 if __name__ == "__main__":
     # Define paths

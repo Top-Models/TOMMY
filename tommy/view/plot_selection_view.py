@@ -1,12 +1,11 @@
 from PySide6.QtWidgets import QWidget, QTabWidget
 
 from tommy.controller.config_controller import ConfigController
-from tommy.support.constant_variables import text_font, plot_tab_font
-from tommy.view.graph_view import GraphView
-
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.visualizations.possible_visualization import (
     PossibleVisualization, VisGroup)
+from tommy.support.constant_variables import text_font, plot_tab_font
+from tommy.view.graph_view import GraphView
 
 
 class PlotSelectionView(QTabWidget):

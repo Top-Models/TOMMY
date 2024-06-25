@@ -1,8 +1,8 @@
 import csv
 import os.path
+from datetime import datetime
 from os import stat
 from typing import Generator
-from datetime import datetime
 
 from tommy.controller.file_import import file_importer_base
 from tommy.controller.file_import.metadata import Metadata

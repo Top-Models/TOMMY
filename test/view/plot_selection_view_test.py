@@ -1,16 +1,15 @@
+import matplotlib.pyplot as plt
 import pytest
 from PySide6.QtWidgets import QWidget
+from matplotlib.figure import Figure
 from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
-from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
 
-from tommy.controller.controller import Controller
+from test.helper_fixtures import controller_no_pipeline
+from tommy.view.graph_view import GraphView
 from tommy.view.plot_selection_view import (PlotSelectionView,
                                             PossibleVisualization,
                                             VisGroup)
-from tommy.view.graph_view import GraphView
-from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture

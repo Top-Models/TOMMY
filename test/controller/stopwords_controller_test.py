@@ -2,16 +2,14 @@ import os
 
 import pytest
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication
 from PySide6.QtTest import QTest
+from PySide6.QtWidgets import QApplication
 
 from tommy.controller.controller import Controller
-from tommy.controller.language_controller import LanguageController
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.controller.synonyms_controller import SynonymsController
 from tommy.controller.topic_modelling_controller import \
     TopicModellingController
-from tommy.model.language_model import LanguageModel
 from tommy.model.stopwords_model import StopwordsModel
 from tommy.support.application_settings import application_settings
 from tommy.support.supported_languages import SupportedLanguage

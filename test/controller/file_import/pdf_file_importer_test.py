@@ -2,8 +2,8 @@ import os
 
 import pypdf
 import pytest
-from tommy.controller.file_import.pdf_file_importer import PdfFileImporter
 
+from tommy.controller.file_import.pdf_file_importer import PdfFileImporter
 
 TEST_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                              '..',

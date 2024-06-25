@@ -1,8 +1,8 @@
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QLabel, QTextEdit
+from PySide6.QtWidgets import QLabel
 
 from tommy.support.constant_variables import text_font, \
-    pressed_medium_light_gray, label_height, topic_entity_word_font
+    label_height, topic_entity_word_font
 
 
 class WordEntity(QLabel):

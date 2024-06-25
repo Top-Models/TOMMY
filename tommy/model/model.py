@@ -4,12 +4,8 @@ from tommy.model.config_model import ConfigModel
 from tommy.model.corpus_model import CorpusModel
 from tommy.model.language_model import LanguageModel
 from tommy.model.project_settings_model import ProjectSettingsModel
-from tommy.model.stopwords_model import StopwordsModel
-from tommy.model.model_parameters_model import ModelParametersModel
-from tommy.model.synonyms_model import SynonymsModel
-from tommy.model.topic_model import TopicModel
-from tommy.support.supported_languages import SupportedLanguage
 from tommy.support.application_settings import application_settings
+from tommy.support.supported_languages import SupportedLanguage
 
 
 class Model:

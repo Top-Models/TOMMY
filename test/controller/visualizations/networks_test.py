@@ -1,20 +1,18 @@
 import os
-import pytest
 import pickle
 
 import networkx as nx
+import pytest
 from gensim import models, corpora
 
-from tommy.model.topic_model import TopicModel
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
-
-from tommy.controller.visualizations.word_topic_nx_exporter import (
-    WordTopicNxExporter)
-from tommy.controller.visualizations.document_topic_nx_exporter import (
-    DocumentTopicNxExporter)
 from tommy.controller.visualizations.document_topic_network_summary_creator \
     import DocumentTopicNetworkSummaryCreator
-
+from tommy.controller.visualizations.document_topic_nx_exporter import (
+    DocumentTopicNxExporter)
+from tommy.controller.visualizations.word_topic_nx_exporter import (
+    WordTopicNxExporter)
+from tommy.model.topic_model import TopicModel
 
 # Test data directory
 TEST_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),

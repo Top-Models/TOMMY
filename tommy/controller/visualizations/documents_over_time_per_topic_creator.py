@@ -1,21 +1,18 @@
+from datetime import datetime
+
 import matplotlib.figure
 import pandas as pd
 from matplotlib import pyplot as plt
-from matplotlib import dates as dts
-from matplotlib.ticker import MaxNLocator
-from datetime import datetime
 
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.controller.visualizations.possible_visualization import VisGroup
-from tommy.controller.visualizations.visualization_input_datatypes import (
-    VisInputData, MetadataCorpus, TopicID, ProcessedCorpus)
-
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
-
+from tommy.controller.visualizations.possible_visualization import VisGroup
+from tommy.controller.visualizations.visualization_input_datatypes import (
+    VisInputData, TopicID, ProcessedCorpus)
 from tommy.support.constant_variables import plot_colors
 
 

@@ -1,8 +1,8 @@
 from collections.abc import Iterable
 from enum import Enum
 
-from tommy.controller.file_import.processed_file import ProcessedFile
 from tommy.controller.file_import.metadata import Metadata
+from tommy.controller.file_import.processed_file import ProcessedFile
 
 
 class VisInputData(Enum):

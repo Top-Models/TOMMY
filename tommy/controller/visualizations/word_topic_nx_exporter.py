@@ -1,12 +1,11 @@
 import networkx as nx
 
-from tommy.support.constant_variables import plot_colors
-from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
-    TopicRunner)
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
-
+from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
+    TopicRunner)
 from tommy.controller.visualizations.nx_exporter import (NxExporter)
+from tommy.support.constant_variables import plot_colors
 
 
 class WordTopicNxExporter(NxExporter):
