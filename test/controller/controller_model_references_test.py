@@ -26,11 +26,12 @@ def test_controller_refs(controller: Controller):
     export_controller = controller.export_controller
 
     # Check if all controllers have the correct references to each other
-    assert (graph_controller._topic_modelling_controller is
-            topic_modelling_controller)
+
     assert graph_controller._corpus_controller is corpus_controller
-    assert (graph_controller._project_settings_controller is
-            project_settings_controller)
+    # the GraphController.set_controller_refs method also takes a
+    # TopicModellingController and ProjectSettingsController as input,
+    # but those are only used for subscribing to events, so they are not
+    # stored in the GraphController
 
     assert topic_modelling_controller._model_parameters_controller is (
         model_parameters_controller)
