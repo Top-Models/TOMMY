@@ -1,5 +1,4 @@
 import pytest
-from PySide6.QtCore import Qt
 
 from tommy.controller.file_import.processed_body import ProcessedBody
 from tommy.controller.file_import.processed_corpus import ProcessedCorpus

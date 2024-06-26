@@ -6,15 +6,13 @@ from PySide6.QtWidgets import (QLabel, QVBoxLayout, QScrollArea, QWidget,
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.file_import.metadata import Metadata
-from tommy.controller.file_import.processed_corpus import ProcessedCorpus
-from tommy.controller.file_import.processed_file import ProcessedFile
-from tommy.controller.topic_modelling_controller import TopicModellingController
+from tommy.controller.topic_modelling_controller import \
+    TopicModellingController
 from tommy.support.constant_variables import (
     heading_font, prim_col_red,
     hover_prim_col_red, scrollbar_style, title_label_font,
     collapse_button_font)
 from tommy.support.types import Document_topics
-
 from tommy.view.imported_files_view.file_label import FileLabel
 from tommy.view.topic_view.topic_entity_component.topic_entity import \
     TopicEntity

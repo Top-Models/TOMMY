@@ -1,4 +1,5 @@
 import pytest
+
 from tommy.model.custom_name_model import TopicNameModel
 
 

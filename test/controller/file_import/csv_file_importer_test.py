@@ -1,6 +1,8 @@
 import os
-import pytest
 from datetime import datetime
+
+import pytest
+
 from tommy.controller.file_import.csv_file_importer import CsvFileImporter
 
 # Test data directory

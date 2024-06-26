@@ -4,12 +4,11 @@ from matplotlib import pyplot as plt
 
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
+from tommy.controller.visualizations.possible_visualization import VisGroup
 from tommy.controller.visualizations.word_topic_nx_exporter import (
     WordTopicNxExporter)
-from tommy.controller.visualizations.possible_visualization import VisGroup
 
 
 class WordTopicNetworkCreator(AbstractVisualization):

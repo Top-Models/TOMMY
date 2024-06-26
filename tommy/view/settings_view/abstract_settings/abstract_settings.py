@@ -16,9 +16,9 @@ from tommy.support.model_type import ModelType
 from tommy.support.parameter_limits import num_topics_min_value, \
     num_topics_max_value, amount_of_words_min_value, amount_of_words_max_value
 from tommy.support.supported_languages import SupportedLanguage
+from tommy.view.config_view import ConfigView
 from tommy.view.settings_view.abstract_settings.better_combo_box import \
     BetterComboBox
-from tommy.view.config_view import ConfigView
 
 
 class AbstractSettings:

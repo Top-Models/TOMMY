@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from dateutil.parser import ParserError
+from typing import Generator, Optional
 
 from dateutil import parser
-from typing import Generator, Optional
+from dateutil.parser import ParserError
 
 from tommy.controller.file_import.raw_file import RawFile
 

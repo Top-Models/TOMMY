@@ -1,14 +1,13 @@
 from unittest.mock import patch
 
 import pytest
-
 import spacy.tokens
 
 from tommy.controller.controller import Controller
 from tommy.controller.language_controller import LanguageController
+from tommy.controller.preprocessing_controller import PreprocessingController
 from tommy.controller.stopwords_controller import StopwordsController
 from tommy.model.stopwords_model import StopwordsModel
-from tommy.controller.preprocessing_controller import PreprocessingController
 from tommy.model.synonyms_model import SynonymsModel
 from tommy.support.supported_languages import SupportedLanguage
 

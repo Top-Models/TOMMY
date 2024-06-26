@@ -1,7 +1,7 @@
 Welcome to TOMMY's wiki!
 ========================
 
-**Tommy** is an application that makes topic modelling easy and accessible, developed for EMMA by students from Utrecht University.
+**TOMMY** is an application that makes topic modelling easy and accessible, developed for EMMA by students from Utrecht University.
 
 .. image:: _static/tommy.png
     :width: 100
@@ -9,10 +9,12 @@ Welcome to TOMMY's wiki!
 Download
 ========
 
-- :download:`TOMMY for Mac (Apple Silicon) <download/silicon/TOMMY-Installer.dmg>`
-- :download:`TOMMY for Mac (Intel) <download/intel/TOMMY-Installer.dmg>`
-- :download:`TOMMY for Windows <download/tommy-windows.zip>`
-- :download:`TOMMY for Linux <download/tommy-linux.zip>`
+- :download:`TOMMY for Mac (Apple Silicon) <download/TOMMY-Installer-Apple-Silicon.dmg>`
+- :download:`TOMMY for Mac (Intel) <download/TOMMY-Installer-Intel.dmg>`
+- :download:`TOMMY for Windows <download/TOMMY-windows.zip>`
+- :download:`TOMMY for Linux <download/TOMMY-linux.zip>`
+- `Source code on GitLab <https://git.science.uu.nl/ics/sp/2024/v24j/tommy/>`_
+- `Source code on GitHub <https://github.com/Top-Models/TOMMY>`_
 
 .. toctree::
     :maxdepth: 1
@@ -20,6 +22,13 @@ Download
 
     wiki-user/User-guide.md
     wiki-user/Installation-guide.md
+    wiki-user/Release-notes.md
+
+Video demonstration of **TOMMY**:
+
+.. image:: _static/youtube.png
+    :width: 150
+    :target: https://youtu.be/tR3nvTx4d-w?si=x53Pr9Y1DJw9dy03
 
 .. toctree::
     :maxdepth: 1
@@ -28,6 +37,7 @@ Download
     wiki-dev/Style-guide.md
     wiki-dev/Style-guide-source-control.md
     wiki-dev/Building.md
+    wiki-dev/Generating-Portable-Executable.md
     wiki-dev/Generating-Mac-Installer.md
     wiki-dev/How-to-run-tests-from-PyCharm.md
     wiki-dev/Writing-unit-tests-with-PyTest.md

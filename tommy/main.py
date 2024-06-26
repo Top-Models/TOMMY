@@ -1,7 +1,7 @@
-import os
-import sys
-import platform
 import ctypes
+import os
+import platform
+import sys
 
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication

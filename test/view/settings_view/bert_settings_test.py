@@ -1,11 +1,10 @@
 import pytest
 
-from tommy.controller.controller import Controller
-from tommy.view.settings_view.abstract_settings.bert_settings import (
-    BertSettings)
+from test.helper_fixtures import controller_no_pipeline
 from tommy.view.settings_view.abstract_settings.abstract_settings import (
     AbstractSettings)
-from test.helper_fixtures import controller_no_pipeline
+from tommy.view.settings_view.abstract_settings.bert_settings import (
+    BertSettings)
 
 
 @pytest.fixture

@@ -10,12 +10,12 @@ from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
 from tommy.view.imported_files_view.imported_files_view import \
     ImportedFilesView
+from tommy.view.preprocessing_view import PreprocessingView
 from tommy.view.settings_view.abstract_settings.bert_settings import \
     BertSettings
 from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 from tommy.view.settings_view.model_params_view import ModelParamsView
-from tommy.view.preprocessing_view import PreprocessingView
 
 
 @pytest.fixture

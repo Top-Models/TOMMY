@@ -1,5 +1,4 @@
 import pytest
-from pytest_mock import MockerFixture
 
 from test.helper_fixtures import controller_no_pipeline
 from tommy.controller.controller import Controller

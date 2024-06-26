@@ -1,12 +1,8 @@
 import pytest
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication
-from PySide6.QtTest import QTest
+from pytest_mock import mocker
 
 from tommy.controller.language_controller import LanguageController
 from tommy.model.language_model import LanguageModel
-from pytest_mock import mocker
-
 from tommy.support.supported_languages import SupportedLanguage
 
 

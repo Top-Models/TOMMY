@@ -1,9 +1,7 @@
 import pytest
-from pytest_mock import MockerFixture
 
-from tommy.controller.controller import Controller
-from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 from test.helper_fixtures import controller_no_pipeline
+from tommy.view.settings_view.abstract_settings.nmf_settings import NmfSettings
 
 
 @pytest.fixture

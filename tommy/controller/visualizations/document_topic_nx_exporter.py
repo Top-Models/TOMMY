@@ -2,16 +2,15 @@ from typing import TypeAliasType
 
 import networkx as nx
 
-from tommy.support.constant_variables import plot_colors
-from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
-    TopicRunner)
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
-
-from tommy.controller.visualizations.visualization_input_datatypes import (
-    ProcessedCorpus)
+from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
+    TopicRunner)
 from tommy.controller.visualizations.nx_exporter_on_data import (
     NxExporterOnData)
+from tommy.controller.visualizations.visualization_input_datatypes import (
+    ProcessedCorpus)
+from tommy.support.constant_variables import plot_colors
 
 
 class DocumentTopicNxExporter(NxExporterOnData[ProcessedCorpus]):

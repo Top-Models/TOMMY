@@ -1,10 +1,10 @@
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QMouseEvent, QPainter, QColor, QFont
+from PySide6.QtGui import QMouseEvent, QPainter, QColor
 from PySide6.QtWidgets import QLabel, QSizePolicy
 
 from tommy.controller.file_import.metadata import Metadata
 from tommy.support.constant_variables import (
-    heading_font, label_height,
+    label_height,
     text_font, medium_light_gray, hover_medium_light_gray,
     pressed_medium_light_gray, seco_col_blue, file_label_font)
 

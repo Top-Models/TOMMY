@@ -1,6 +1,6 @@
 import os
-from typing import Generator
 from datetime import datetime
+from typing import Generator
 
 from tommy.controller.file_import import file_importer_base
 from tommy.controller.file_import.metadata import Metadata
