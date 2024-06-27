@@ -1,8 +1,8 @@
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QLabel, QTextEdit
+from PySide6.QtWidgets import QLabel
 
 from tommy.support.constant_variables import text_font, \
-    pressed_medium_light_gray, label_height, topic_entity_word_font
+    label_height, topic_entity_word_font
 
 
 class WordEntity(QLabel):
@@ -15,8 +15,13 @@ class WordEntity(QLabel):
     def __init__(self, word: str):
         super().__init__(word)
         self.word = word
-        self.setStyleSheet(f"background-color: white; "
-                           f"color: black")
+        self.setStyleSheet(
+            f"font-family: {text_font}; "
+        )
+        self.setStyleSheet(
+            f"background-color: white; "
+            f"color: black;"
+            f"font-size: 12px;")
         self.setContentsMargins(10, 0, 10, 0)
         self.setFixedHeight(label_height)
         self.selected = False
@@ -30,8 +35,10 @@ class WordEntity(QLabel):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"background-color: lightgray; "
-                               f"color: black")
+            self.setStyleSheet(
+                f"background-color: lightgrey; "
+                f"color: black;"
+                f"font-size: 12px;")
 
     def leaveEvent(self, event) -> None:
         """
@@ -41,8 +48,10 @@ class WordEntity(QLabel):
         :return: None
         """
         if not self.selected:
-            self.setStyleSheet(f"background-color: white; "
-                               f"color: black")
+            self.setStyleSheet(
+                f"background-color: white; "
+                f"color: black;"
+                f"font-size: 12px;")
 
     def mousePressEvent(self, event) -> None:
         """

@@ -1,4 +1,5 @@
 import pytest
+
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
 from tommy.model.model_parameters_model import ModelParametersModel
@@ -14,7 +15,7 @@ def model_parameters_controller() -> ModelParametersController:
 
 
 def test_init(model_parameters_controller: ModelParametersController):
-    assert model_parameters_controller._parameters_model is not None
+    assert model_parameters_controller._model_parameters_model is not None
     assert model_parameters_controller._algorithm_changed_event is not None
 
 
@@ -22,7 +23,7 @@ def test_set_model_refs(
         model_parameters_controller: ModelParametersController):
     model = ModelParametersModel()
     model_parameters_controller.set_model_refs(model)
-    assert model_parameters_controller._parameters_model == model
+    assert model_parameters_controller._model_parameters_model == model
 
 
 def test_set_get_model_word_amount(
@@ -60,3 +61,11 @@ def test_set_get_model_type(
         model_parameters_controller: ModelParametersController):
     model_parameters_controller.set_model_type(ModelType.NMF)
     assert model_parameters_controller.get_model_type() == ModelType.NMF
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

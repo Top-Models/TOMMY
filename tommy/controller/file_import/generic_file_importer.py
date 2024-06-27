@@ -1,11 +1,11 @@
 import os
 from typing import Generator
 
-from tommy.controller.file_import import file_importer_base
-from tommy.controller.file_import import txt_file_importer
 from tommy.controller.file_import import csv_file_importer
-from tommy.controller.file_import import pdf_file_importer
 from tommy.controller.file_import import docx_file_importer
+from tommy.controller.file_import import file_importer_base
+from tommy.controller.file_import import pdf_file_importer
+from tommy.controller.file_import import txt_file_importer
 from tommy.controller.file_import.raw_file import RawFile
 
 

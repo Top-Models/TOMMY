@@ -1,6 +1,9 @@
 import os
+
 import pytest
-from tommy.controller.file_import.generic_file_importer import GenericFileImporter
+
+from tommy.controller.file_import.generic_file_importer import \
+    GenericFileImporter
 from tommy.controller.file_import.raw_file import RawFile
 
 # Test data directory

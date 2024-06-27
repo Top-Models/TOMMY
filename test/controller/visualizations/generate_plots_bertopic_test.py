@@ -1,21 +1,14 @@
 import os
-from itertools import chain
-from functools import reduce
-
-from unittest.mock import MagicMock
-import pytest
 import pickle
+from functools import reduce
+from itertools import chain
+from unittest.mock import MagicMock
 
-from tommy.controller.language_controller import LanguageController
+import pytest
+
 from tommy.controller.preprocessing_controller import PreprocessingController
-from tommy.model.language_model import LanguageModel
-from tommy.model.topic_model import TopicModel
 from tommy.controller.topic_modelling_runners.bertopic_runner import (
     BertopicRunner)
-from tommy.controller.stopwords_controller import StopwordsController
-
-from tommy.controller.visualizations.correlation_matrix_creator import (
-    CorrelationMatrixCreator)
 from tommy.controller.visualizations.document_word_count_creator import (
     DocumentWordCountCreator)
 from tommy.controller.visualizations.top_words_bar_plot_creator import (
@@ -24,8 +17,6 @@ from tommy.controller.visualizations.word_cloud_creator import (
     WordCloudCreator)
 from tommy.controller.visualizations.word_topic_network_creator import (
     WordTopicNetworkCreator)
-from tommy.controller.visualizations.document_topic_network_summary_creator \
-    import DocumentTopicNetworkSummaryCreator
 from tommy.support.supported_languages import SupportedLanguage
 
 # Test data directory
@@ -144,3 +135,11 @@ def test_get_topic_words(bertopic_runner, max_num_topics, num_words):
     for n in range(bertopic_runner.get_n_topics()):
         assert (bertopic_runner.get_topic_with_scores(n, num_words).n_words
                 == num_words)
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

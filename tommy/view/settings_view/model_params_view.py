@@ -144,6 +144,8 @@ class ModelParamsView(QScrollArea):
         self.title_label.setStyleSheet(f"font-weight: bold;"
                                        f"text-transform: uppercase;"
                                        f"background-color: {prim_col_red};"
+                                       f"font-family: {heading_font}; "
+                                       f"font-size: 13px; "
                                        f"color: white;"
                                        f"border-bottom: "
                                        f"3px solid {hover_prim_col_red};")
@@ -263,32 +265,37 @@ class ModelParamsView(QScrollArea):
         current_model_type = self._model_parameters_controller.get_model_type()
         current_view = self.algorithm_specific_settings_views[
             current_model_type]
-        # Disable the apply button and change its text to "Laden..."
+
+        # Apply the settings
+        if current_view.all_fields_valid():
+            self.disable_apply_button_on_model_training()
+            self.disable_input_fields_on_model_training()
+            self._topic_modelling_controller.train_model()
+
+    def disable_apply_button_on_model_training(self) -> None:
+        """
+        Disable the apply button and change its text to "Laden..." when the
+        model is training.
+        :return: None
+        """
         self.apply_button.setEnabled(False)
         self.apply_button.setText("LADEN...")
         self.apply_button.setStyleSheet(
             f"""
-                QPushButton {{
-                    background-color: #808080;
-                    color: white;
-                    font-family: {heading_font};
-                    font-size: 12px;
-                    font-weight: bold;
-                }}
-
-                QPushButton:hover {{
-                    background-color: {hover_seco_col_blue};
-                }}
-
-                QPushButton:pressed {{
-                    background-color: {pressed_seco_col_blue};
-                }}
+            QPushButton {{
+                background-color: #808080;
+                color: white;
+                font-family: {heading_font};
+                font-size: 12px;
+                font-weight: bold;
+            }}
+            QPushButton:hover {{
+                background-color: {hover_seco_col_blue};
+            }}
+            QPushButton:pressed {{
+                background-color: {pressed_seco_col_blue};
+            }}
             """)
-
-        # Apply the settings
-        if current_view.all_fields_valid():
-            self.disable_input_fields_on_model_training()
-            self._topic_modelling_controller.train_model()
 
     def disable_input_fields_on_model_training(self) -> None:
         """

@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QLabel, QScrollArea, QVBoxLayout, QLayout,
-                               QWidget, QSizePolicy)
+                               QWidget, QSizePolicy, QPushButton, QGridLayout)
 
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.model_parameters_controller import (
@@ -10,7 +10,7 @@ from tommy.support.constant_variables import (
     prim_col_red, hover_prim_col_red, scrollbar_style, text_font,
     title_label_font, settings_label_font, file_name_label_font,
     file_property_font, no_component_selected_font, topic_title_font,
-    topic_word_font)
+    topic_word_font, collapse_button_font)
 from tommy.view.imported_files_view.file_label import FileLabel
 
 
@@ -21,7 +21,7 @@ class SelectedInformationView(QScrollArea):
                  graph_controller: GraphController,
                  model_parameters_controller: ModelParametersController
                  ) -> None:
-        """Initialize the FileStatsDisplay."""
+        """Initialize the SelectedInformationView."""
         super().__init__()
 
         # Initialize widget properties
@@ -32,14 +32,15 @@ class SelectedInformationView(QScrollArea):
         self.setMaximumHeight(300)
 
         # Initialize layout
-        self.layout = QVBoxLayout()
+        self.layout = QVBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
-        self.layout.setAlignment(Qt.AlignmentFlag.AlignTop |
-                                 Qt.AlignmentFlag.AlignLeft)
+        self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.layout.setSpacing(0)
         self.setLayout(self.layout)
 
-        # Add title widget
+        # Add title widget with collapse button
+        self.title_widget = None
         self.initialize_title_widget()
 
         # Initialize scroll area and its layout
@@ -47,8 +48,7 @@ class SelectedInformationView(QScrollArea):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_widget = QWidget()
         self.scroll_layout = QVBoxLayout(self.scroll_widget)
-        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop |
-                                        Qt.AlignmentFlag.AlignLeft)
+        self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.scroll_area.setVerticalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.scroll_area.setHorizontalScrollBarPolicy(
@@ -70,25 +70,102 @@ class SelectedInformationView(QScrollArea):
 
     def initialize_title_widget(self) -> None:
         """
-        Add the title label widget
+        Add the title label widget with collapse button
         """
-        title_label = QLabel("Informatie")
-        title_label.setStyleSheet(f"font-size: 13px;"
+        self.title_widget = QWidget()
+        self.title_widget.setFixedHeight(50)
+
+        # Initialize layout for the title widget
+        title_layout = QGridLayout(self.title_widget)
+        title_layout.setContentsMargins(0, 0, 0, 0)
+        title_layout.setSpacing(0)
+
+        # Create the title label
+        self.title_widget.title_label = QLabel("Informatie")
+        self.title_widget.title_label.setStyleSheet(f"font-size: 13px;"
                                   f"font-family: {heading_font};"
                                   f"font-weight: bold;"
                                   f"text-transform: uppercase;"
                                   f"background-color: {prim_col_red};"
+                                  f"font-family: {heading_font}; "
+                                  f"font-size: 13px; "
                                   f"color: white;"
                                   f"border-bottom: "
                                   f"3px solid {hover_prim_col_red};"
                                   f"border-left: 2px solid "
                                   f"{hover_prim_col_red};")
-        title_label.setContentsMargins(0, 0, 0, 0)
-        title_label.setFixedHeight(50)
-        title_label.setFont(title_label_font)
-        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter |
-                                 Qt.AlignmentFlag.AlignTop)
-        self.layout.addWidget(title_label)
+        self.title_widget.title_label.setContentsMargins(0, 0, 0, 0)
+        self.title_widget.title_label.setFixedHeight(50)
+        self.title_widget.title_label.setFont(title_label_font)
+        self.title_widget.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Create the collapse button
+        self.title_widget.title_button = QPushButton("▽")
+        self.title_widget.title_button.setStyleSheet(f"font-size: 13px;"
+                                        f"font-family: {heading_font};"
+                                        f"font-weight: bold;"
+                                        f"text-transform: uppercase;"
+                                        f"background-color: {prim_col_red};"
+                                        f"color: white;"
+                                        f"border-bottom: "
+                                        f"3px solid {hover_prim_col_red};"
+                                        "}"
+                                        "QPushButton:hover {"
+                                        f"background-color: {hover_prim_col_red};")
+        self.title_widget.title_button.setFixedSize(50, 50)
+
+        # Add the title label and button to the layout
+        title_layout.addWidget(self.title_widget.title_label, 0, 1)
+        title_layout.addWidget(self.title_widget.title_button, 0, 2)
+        self.layout.addWidget(self.title_widget)
+
+        self.title_widget.title_button.setFont(collapse_button_font)
+        self.title_widget.title_button.clicked.connect(self.toggle_collapse_info)
+
+        # Add title widget to main layout
+        self.layout.addWidget(self.title_widget)
+
+    def toggle_collapse_info(self) -> None:
+        """
+        Toggle visibility of the scroll area and adjust layout accordingly.
+        """
+        self.collapse_component_info()
+        self.change_button_appearance_info()
+
+    def change_button_appearance_info(self) -> None:
+        """
+        Change the appearance of the toggle button.
+        """
+        if self.scroll_area.isVisible():
+            self.title_widget.title_button.setText("▽")
+        else:
+            self.title_widget.title_button.setText("△")
+
+    def collapse_component_info(self) -> None:
+        """
+        Collapse the information view.
+        """
+        if self.scroll_area.isVisible():
+            # Hide the scroll area
+            self.scroll_area.setVisible(False)
+            # Move the header to the bottom of the layout
+            self.layout.addStretch(0.1)
+            self.layout.addWidget(self.title_widget)
+            # Fix widget size to allow entire layout to be moved to
+            self.setFixedHeight(self.title_widget.height())
+        else:
+            # Show the scroll area
+            self.scroll_area.setVisible(True)
+
+            # Remove the stretch from the layout to move the header
+            # back to its original position
+            self.layout.removeWidget(self.title_widget)
+            self.layout.insertWidget(0, self.title_widget)
+            self.layout.removeItem(self.layout.itemAt(self.layout.count() - 1))
+
+            # Restore beginning height
+            self.setMinimumHeight(200)
+            self.setMaximumHeight(300)
 
     def display_no_component_selected(self) -> None:
         """
@@ -140,7 +217,6 @@ class SelectedInformationView(QScrollArea):
         """
 
         if not file_label.selected:
-            # TODO: Display run info when available
             self.display_no_component_selected()
             return
 
@@ -210,7 +286,6 @@ class SelectedInformationView(QScrollArea):
         file_size_label.setMinimumHeight(20)
         vertical_layout.addWidget(file_size_label)
 
-    # TODO: Displayed information not final
     def display_topic_info(self, topic_entity) -> None:
         """
         Display the topic information
@@ -219,7 +294,6 @@ class SelectedInformationView(QScrollArea):
         """
 
         if not topic_entity.selected:
-            # TODO: Display run info when available
             self.display_no_component_selected()
             return
 

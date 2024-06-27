@@ -1,26 +1,23 @@
-import pytest
-from gensim.models import LdaModel
-from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
-from pytest_mock import mocker, MockerFixture
+import pytest
+from matplotlib.figure import Figure
+from pytest_mock import MockerFixture
 
+from tommy.controller.corpus_controller import (
+    CorpusController)
 from tommy.controller.file_import.processed_body import ProcessedBody
 from tommy.controller.file_import.processed_corpus import ProcessedCorpus
 from tommy.controller.file_import.processed_file import ProcessedFile
+from tommy.controller.graph_controller import (GraphController,
+                                               TopicWithScores,
+                                               VisInputData,
+                                               AbstractVisualization)
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
 from tommy.controller.topic_modelling_controller import (
     TopicModellingController)
-from tommy.controller.corpus_controller import (
-    CorpusController)
-from tommy.controller.graph_controller import (GraphController,
-                                               PossibleVisualization,
-                                               TopicWithScores,
-                                               VisInputData,
-                                               AbstractVisualization)
-from tommy.controller.topic_modelling_runners.abstract_topic_runner import \
-    TopicRunner
 from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
+from tommy.model.custom_name_model import TopicNameModel
 from tommy.model.topic_model import TopicModel
 
 
@@ -42,7 +39,8 @@ def graph_controller() -> GraphController:
     graph_controller.set_controller_refs(topic_modelling_controller,
                                          corpus_controller,
                                          project_settings_controller)
-
+    topic_name_model = TopicNameModel()
+    graph_controller.set_model_refs(topic_name_model)
     return graph_controller
 
 
@@ -226,41 +224,11 @@ def test_visualizations_available(graph_controller: GraphController):
     assert graph_controller.visualizations_available()
 
 
-def test_set_current_config(graph_controller: GraphController):
-    config_name = "test_config"
-    graph_controller.set_current_config(config_name)
-    assert graph_controller._current_config == config_name
-
-
-def test_get_topic_name(graph_controller: GraphController,
-                        mocker: MockerFixture):
+def test_get_set_topic_name(graph_controller: GraphController):
     topic_index = 0
     topic_name = "test_topic"
-    mocker.patch.object(graph_controller._topic_name_model,
-                        "get_topic_name", return_value=topic_name)
-    graph_controller._current_config = "test_config"
-    assert graph_controller.get_topic_name(topic_index) == topic_name
-
-
-def test_set_topic_name(graph_controller: GraphController,
-                        mocker: MockerFixture):
-    topic_index = 0
-    topic_name = "test_topic"
-    mock_set_topic_name = mocker.patch.object(
-            graph_controller._topic_name_model, "set_topic_name")
-    graph_controller._current_config = "test_config"
     graph_controller.set_topic_name(topic_index, topic_name)
-    mock_set_topic_name.assert_called_once_with("test_config",
-                                                topic_index, topic_name)
-
-
-def test_remove_config(graph_controller: GraphController,
-                       mocker: MockerFixture):
-    config_name = "test_config"
-    mock_remove_config = mocker.patch.object(
-            graph_controller._topic_name_model, "remove_config")
-    graph_controller.remove_config(config_name)
-    mock_remove_config.assert_called_once_with(config_name)
+    assert graph_controller.get_topic_name(topic_index) == topic_name
 
 
 """

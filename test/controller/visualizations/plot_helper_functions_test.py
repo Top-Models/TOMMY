@@ -1,11 +1,13 @@
-import pytest
+from datetime import datetime
+
 import pandas as pd
-from datetime import date, datetime
+import pytest
 
 from tommy.controller.visualizations.documents_over_time_creator import (
     DocumentsOverTimeCreator)
 from tommy.controller.visualizations.documents_over_time_per_topic_creator \
     import DocumentsOverTimePerTopicCreator
+
 
 @pytest.fixture
 def dataframe():
@@ -33,3 +35,11 @@ def test_get_valid_offsets_per_topic(dataframe):
                                                    freq=offset)],
                                        as_index=False)["probability"].sum()
         assert not grouped_df.empty
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

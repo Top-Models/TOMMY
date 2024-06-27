@@ -1,5 +1,5 @@
 {
-  "input_folder_path": "../test/test_data/test_pdf_files/correct_files",
+  "input_folder_path": "./test/test_data/test_pdf_files/correct_files",
   "language": "Engels",
   "configs": {
     "Config 1": {
@@ -8,6 +8,10 @@
           "ja",
           "tommy"
         ]
+      },
+      "synonyms": {
+        "yes": "yeah",
+        "cheese": "eseehc"
       },
       "model_parameters": {
         "n_topics": 6,
@@ -25,6 +29,11 @@
         "extra_stopwords": [
           "misschien"
         ]
+      },
+      "synonyms": {
+        "maybe": "perhaps",
+        "why": "how",
+        "kaas": "saak"
       },
       "model_parameters": {
         "n_topics": 4,

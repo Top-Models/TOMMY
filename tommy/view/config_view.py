@@ -15,9 +15,7 @@ from tommy.support.constant_variables import (heading_font, prim_col_red,
                                               selected_medium_light_gray,
                                               seco_col_blue,
                                               hover_seco_col_blue,
-                                              pressed_seco_col_blue,
                                               title_label_font,
-                                              config_button_font,
                                               config_view_button,
                                               config_view_label_font,
                                               pressed_seco_col_blue,
@@ -230,6 +228,6 @@ class ConfigView(QDialog):
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

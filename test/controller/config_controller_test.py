@@ -1,13 +1,11 @@
-from unittest.mock import Mock
-
 import pytest
 from pytest_mock import MockerFixture
 
 from test.controller.controller_model_references_test import (
     helper_check_model_refs)
+from test.helper_fixtures import controller_no_pipeline
 from tommy.controller.config_controller import ConfigController
 from tommy.controller.controller import Controller
-from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture
@@ -241,3 +239,10 @@ def test_get_configuration_names(config_controller):
     config_controller.delete_configuration("Config 2")
     assert (config_controller.get_configuration_names() ==
             [first_config_name, "Config 3", "Config 0", "Config 4"])
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

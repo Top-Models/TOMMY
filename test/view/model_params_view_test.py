@@ -1,16 +1,11 @@
 import pytest
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget
+from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
 
-from tommy.controller.model_parameters_controller import (
-    ModelParametersController)
-from pytest_mock import mocker, MockerFixture
+from test.helper_fixtures import controller_no_pipeline
 from tommy.support.model_type import ModelType
 from tommy.view.settings_view.model_params_view import ModelParamsView
-from pytest_mock import mocker
-from tommy.controller.controller import Controller
-from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture

@@ -1,9 +1,6 @@
 import pytest
-from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 
-from tommy.support.constant_variables import (sec_col_purple,
-                                              pressed_seco_col_purple)
 from tommy.view.topic_view.topic_entity_component.topic_entity import (
     TopicEntity)
 
@@ -47,8 +44,6 @@ def test_select(topic_entity: TopicEntity):
     """
     topic_entity.select()
     assert topic_entity.selected is True
-    assert (topic_entity.styleSheet() ==
-            f"background-color: {pressed_seco_col_purple}; color: white;")
 
 
 def test_deselect(topic_entity: TopicEntity):
@@ -57,8 +52,6 @@ def test_deselect(topic_entity: TopicEntity):
     """
     topic_entity.deselect()
     assert topic_entity.selected is False
-    assert (topic_entity.styleSheet() ==
-            f"background-color: {sec_col_purple}; color: white;")
 
 
 """

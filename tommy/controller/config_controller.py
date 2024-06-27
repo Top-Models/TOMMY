@@ -45,7 +45,6 @@ class ConfigController:
         """
         config_exists = name in self.get_configuration_names()
         if config_exists:
-            self._graph_controller.set_current_config(name)
             self._model.selected_config_name = name
             self._config_switched_event.publish(self._model.config_model)
             self._graph_controller.reset_graph_view_state()
@@ -97,7 +96,6 @@ class ConfigController:
             self.switch_configuration(configs[new_index])
 
         self._model.configs.pop(name)
-        self._graph_controller.remove_config(name)
         return True
 
     def get_selected_configuration(self) -> str:
@@ -111,6 +109,6 @@ class ConfigController:
 """
 This program has been developed by students from the bachelor Computer Science
 at Utrecht University within the Software Project course.
-© Copyright Utrecht University 
+© Copyright Utrecht University
 (Department of Information and Computing Sciences)
 """

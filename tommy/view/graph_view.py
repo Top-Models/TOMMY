@@ -1,8 +1,8 @@
+import matplotlib.figure
 from PySide6.QtGui import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as
                                                 FigureCanvas)
-import matplotlib.figure
 
 
 def _resize_plot_for_type(canvas: matplotlib.figure.Figure,

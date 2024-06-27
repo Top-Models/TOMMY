@@ -1,6 +1,6 @@
-import pytest
 from unittest.mock import patch
 
+import pytest
 from PySide6 import QtCore
 from PySide6.QtCore import Signal
 
@@ -32,6 +32,14 @@ def test_run_without_error(controller: Controller) -> None:
                new=BlockingWorker):
         # test if topic modelling can run without error
         controller.project_settings_controller.set_input_folder_path(
-            "../test/test_data/test_pdf_files/correct_files")
+            "./test/test_data/test_pdf_files/correct_files")
         controller.topic_modelling_controller.train_model()
         assert controller.graph_controller.has_topic_runner is True
+
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

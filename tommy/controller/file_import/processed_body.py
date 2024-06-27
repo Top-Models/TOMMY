@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Any
 
 from tommy.support.types import Processed_body
 

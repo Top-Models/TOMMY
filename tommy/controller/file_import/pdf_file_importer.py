@@ -1,8 +1,8 @@
-from pypdf import PdfReader, DocumentInformation
 import os.path
 from os import stat
 from typing import Generator
-from datetime import datetime
+
+from pypdf import PdfReader, DocumentInformation
 
 from tommy.controller.file_import import file_importer_base
 from tommy.controller.file_import.metadata import Metadata

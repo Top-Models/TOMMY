@@ -1,11 +1,9 @@
 import pytest
 from PySide6.QtCore import Qt
-from pytest_mock import MockerFixture
 from pytestqt.qtbot import QtBot
 
-from tommy.controller.controller import Controller
-from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 from test.helper_fixtures import controller_no_pipeline
+from tommy.view.settings_view.abstract_settings.lda_settings import LdaSettings
 
 
 @pytest.fixture
@@ -49,7 +47,9 @@ def test_alpha_input_editing_finished_event_disabled(lda_settings: LdaSettings,
     qtbot.keyClicks(lda_settings._alpha_value_input, "0.1")
 
     # Assert
-    assert lda_settings._alpha_value_input.text() == "-:-"
+    n_topics = lda_settings._model_parameters_controller.get_model_n_topics()
+    # beta auto values are 1/n_topics, test this:
+    assert round(float(lda_settings._alpha_value_input.text()) * n_topics) == 1
 
 
 @pytest.mark.parametrize("text, expected",
@@ -118,7 +118,9 @@ def test_beta_input_editing_finished_event_disabled(lda_settings: LdaSettings,
     qtbot.keyClicks(lda_settings._beta_value_input, "0.1")
 
     # Assert
-    assert lda_settings._beta_value_input.text() == "-:-"
+    n_topics = lda_settings._model_parameters_controller.get_model_n_topics()
+    # alpha auto values are 1/n_topics, test this:
+    assert round(float(lda_settings._alpha_value_input.text()) * n_topics) == 1
 
 
 @pytest.mark.parametrize("text, expected",
@@ -166,9 +168,12 @@ def test_toggle_auto_calculate_alpha_beta(lda_settings: LdaSettings,
     scroll_layout = mocker.MagicMock()
     lda_settings.initialize_parameter_widgets(scroll_layout)
 
+    n_topics = lda_settings._model_parameters_controller.get_model_n_topics()
+
     # Assert
-    assert lda_settings._alpha_value_input.text() == "-:-"
-    assert lda_settings._beta_value_input.text() == "-:-"
+    # alpha/beta auto values are 1/n_topics, test this:
+    assert round(float(lda_settings._alpha_value_input.text()) * n_topics) == 1
+    assert round(float(lda_settings._beta_value_input.text()) * n_topics) == 1
     assert lda_settings._alpha_value_input.isReadOnly()
     assert lda_settings._beta_value_input.isReadOnly()
 

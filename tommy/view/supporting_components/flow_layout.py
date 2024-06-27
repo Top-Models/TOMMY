@@ -61,7 +61,7 @@ class FlowLayout(QLayout):
         y = rect.y() + self.contentsMargins().top()
         line_height = 0
         space_y = self.spacing()
-        wid_width_scaling_factor = 0.6
+        wid_width_scaling_factor = 0.9
 
         # Calculate items per line
         items_per_line = []

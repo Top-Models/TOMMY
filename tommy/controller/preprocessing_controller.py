@@ -6,6 +6,7 @@ import nltk
 import nltk.data
 
 from tommy.model.stopwords_model import StopwordsModel
+from tommy.model.synonyms_model import SynonymsModel
 from tommy.support.application_settings import application_settings
 from tommy.support.supported_languages import SupportedLanguage
 from tommy.controller.language_controller import LanguageController
@@ -15,11 +16,14 @@ class PreprocessingController:
     """A class that can preprocess text using the Dutch SpaCy pipeline."""
     _stopwords_model: StopwordsModel = None
     _enable_pos: bool
+    _synonyms_model: SynonymsModel = None
 
     def __init__(self) -> None:
+        self._pos_categories = None
+        self._entity_categories = None
         self._nlp = None
         self._enable_pos: bool
-        self.language_controller = None
+        self._language_controller = None
 
         # load punkt tokenizers for splitting sentences
         self._dutch_sent_tokenizer = self._load_nltk_sent_tokenizer(
@@ -54,8 +58,8 @@ class PreprocessingController:
                     "preprocessing_data", "pipeline_download",
                     "nl_core_news_sm-3.7.0")
                 nlp = spacy.load(pipeline_path,
-                                 exclude=["tagger", "attribute_ruler",
-                                          "parser", "senter"])
+                                 exclude=["parser", "tagger",
+                                          "attribute_ruler"])
             case SupportedLanguage.English:
                 self._enable_pos = False
                 pipeline_path = os.path.join(
@@ -64,26 +68,26 @@ class PreprocessingController:
                     "en_core_web_sm-3.7.1")
                 # tagger is taking over the role of the morphologizer (
                 # supposedly)
-                nlp = spacy.load(pipeline_path, exclude=["parser", "senter"])
+                nlp = spacy.load(pipeline_path, exclude=["parser"])
             case _:
                 raise ValueError("Unsupported preprocessing language")
         self._nlp = nlp
         self._nlp.add_pipe("merge_entities")
-        # TODO: refine the entity set (i.e. "proper-noun filtering")
-        self._entity_categories = {"PERSON", "FAC", "LAW", "TIME", "PERCENT",
-                                   "MONEY", "QUANTITY", "ORDINAL", "CARDINAL"}
+        self._entity_categories = {"CARDINAL", "DATE", "LAW", "MONEY",
+                                   "ORDINAL", "PERCENT", "QUANTITY", "TIME"}
         self._pos_categories = {"NOUN", "PROPN", "ADJ", "ADV", "VERB"}
 
-    def set_model_refs(self, stopwords_model: StopwordsModel):
-        """Set the reference to the stopwords model"""
+    def set_model_refs(self, stopwords_model: StopwordsModel,
+                       synonyms_model: SynonymsModel) -> None:
         self._stopwords_model = stopwords_model
+        self._synonyms_model = synonyms_model
 
     def set_controller_refs(self, language_controller: LanguageController):
         """Set the reference to the language controller"""
-        self.language_controller = language_controller
-        self.language_controller.change_language_event.subscribe(
+        self._language_controller = language_controller
+        self._language_controller.change_language_event.subscribe(
             self.load_pipeline)
-        self.load_pipeline(self.language_controller.get_language())
+        self.load_pipeline(self._language_controller.get_language())
 
     def process_text(self, text: str) -> list[str]:
         """Preprocesses the given text to a list of tokens."""
@@ -93,7 +97,7 @@ class PreprocessingController:
 
     def split_into_sentences(self, text: str) -> list[str]:
         """Split the given text to a list of sentences."""
-        match self.language_controller.get_language():
+        match self._language_controller.get_language():
             case SupportedLanguage.Dutch:
                 tokenizer = self._dutch_sent_tokenizer
             case SupportedLanguage.English:
@@ -110,27 +114,31 @@ class PreprocessingController:
         :param doc: The tokens given by processing of the Dutch SpaCy pipeline
         :return list[str]: The processed tokens
         """
-        # 2, 3, 4 - all steps that require token-level information
+        # All steps that require token-level information.
         lemmas = [token.lemma_ for token in doc if
                   token.ent_type_ not in self._entity_categories and
                   not str.isspace(token.lemma_) and (
                           not self._enable_pos or
                           token.pos_ in self._pos_categories)]
 
-        # 5 - transforming the tokens (lemmas) themselves
-        lemmas = [lemma.lower() for lemma in lemmas if len(lemma) > 3]
-        # TODO: fine-grain abbreviation filtering (i.e. don't exclude
-        #  every token under 4 characters)
+        # Take the lemmas.
+        lemmas = [lemma.lower() for lemma in lemmas if len(lemma) > 2]
 
-        # TODO: fix "-" and "'" words and remove diacritical marks
-        #  (i.e. character 'normalization')
-
-        # TODO: 6,7
-
-        # 8 - stopword removal
+        # Apply synonyms and filter stopwords.
+        lemmas = self.apply_synonyms(lemmas)
         lemmas = self.filter_stopwords(lemmas)
 
         return lemmas
+
+    def apply_synonyms(self, tokens: list[str]) -> list[str]:
+        """
+        Applies synonyms to the given list of tokens.
+
+        :param tokens: The list of tokens
+        :return: The list of tokens where tokens are mapped to their synonyms
+        """
+        return (list(map(
+            lambda token: self._synonyms_model.get(token, token), tokens)))
 
     def filter_stopwords(self, tokens: list[str]) -> list[str]:
         """
@@ -139,8 +147,8 @@ class PreprocessingController:
         :param tokens: The list of tokens
         :return: The list of tokens without stopwords
         """
-        return [token for token in tokens if
-                token not in self._stopwords_model]
+        return [token for token in tokens
+                if token not in self._stopwords_model]
 
 
 """

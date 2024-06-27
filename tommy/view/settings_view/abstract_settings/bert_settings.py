@@ -1,7 +1,6 @@
 from PySide6.QtCore import QRegularExpression as QRegExp
-from PySide6.QtGui import QRegularExpressionValidator as QRegExpValidator
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIntValidator
+from PySide6.QtGui import QRegularExpressionValidator as QRegExpValidator
 from PySide6.QtWidgets import (QHBoxLayout, QLabel, QLineEdit, QVBoxLayout)
 
 from tommy.controller.language_controller import LanguageController

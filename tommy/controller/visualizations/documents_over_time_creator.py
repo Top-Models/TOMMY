@@ -1,22 +1,19 @@
-import matplotlib.figure
-from matplotlib import pyplot as plt
+from datetime import datetime
+
 import matplotlib.dates
+import matplotlib.figure
 import pandas as pd
-import numpy as np
-from datetime import date, datetime
-from matplotlib.ticker import MaxNLocator
+from matplotlib import pyplot as plt
 
 from tommy.controller.result_interfaces.document_topics_interface import (
     DocumentTopicsInterface)
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.controller.visualizations.possible_visualization import VisGroup
-from tommy.controller.visualizations.visualization_input_datatypes import (
-    VisInputData, MetadataCorpus, TopicID, ProcessedCorpus)
-
 from tommy.controller.visualizations.abstract_visualization import (
     AbstractVisualization)
-
+from tommy.controller.visualizations.possible_visualization import VisGroup
+from tommy.controller.visualizations.visualization_input_datatypes import (
+    VisInputData, ProcessedCorpus)
 from tommy.support.constant_variables import plot_colors
 
 
@@ -132,3 +129,10 @@ class DocumentsOverTimeCreator(AbstractVisualization):
 
         return df.groupby([pd.Grouper(key='date', freq="ME")],
                           as_index=False)["probability"].sum()
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

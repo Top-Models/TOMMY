@@ -3,9 +3,9 @@ from collections.abc import Iterable
 
 import networkx as nx
 
+from tommy.controller.file_import.processed_file import ProcessedFile, Metadata
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
-from tommy.controller.file_import.processed_file import ProcessedFile, Metadata
 
 
 class NxExporterOnData[T: Iterable[ProcessedFile] | list[Metadata]](ABC):

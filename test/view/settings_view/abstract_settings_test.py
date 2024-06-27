@@ -1,13 +1,10 @@
 import pytest
-from pytest_mock import MockerFixture
-from pytestqt.qtbot import QtBot
 
-from tommy.controller.controller import Controller
+from test.helper_fixtures import controller_no_pipeline
 from tommy.support.model_type import ModelType
 from tommy.support.supported_languages import SupportedLanguage
 from tommy.view.settings_view.abstract_settings.abstract_settings import \
     AbstractSettings
-from test.helper_fixtures import controller_no_pipeline
 
 
 @pytest.fixture

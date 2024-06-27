@@ -4,8 +4,8 @@ from tommy.model.config_model import ConfigModel
 from tommy.model.corpus_model import CorpusModel
 from tommy.model.language_model import LanguageModel
 from tommy.model.project_settings_model import ProjectSettingsModel
-from tommy.support.supported_languages import SupportedLanguage
 from tommy.support.application_settings import application_settings
+from tommy.support.supported_languages import SupportedLanguage
 
 
 class Model:
@@ -20,7 +20,7 @@ class Model:
         first_config = ConfigModel()
         self.selected_config_name: str = Model.default_config_name
 
-        # add fist configuration to dictionary using the default config name
+        # Add fist configuration to dictionary using the default config name
         self.configs: dict[str, ConfigModel] = {
             Model.default_config_name: first_config}
 
@@ -33,12 +33,20 @@ class Model:
         return self.config_model.stopwords_model
 
     @property
+    def synonyms_model(self):
+        return self.config_model.synonyms_model
+
+    @property
     def model_parameters_model(self):
         return self.config_model.model_parameters_model
 
     @property
     def topic_model(self):
         return self.config_model.topic_model
+
+    @property
+    def topic_name_model(self):
+        return self.config_model.topic_name_model
 
     def create_configuration(self) -> ConfigModel:
         """

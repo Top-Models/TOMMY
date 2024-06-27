@@ -4,13 +4,13 @@ from matplotlib.ticker import MaxNLocator
 
 from tommy.controller.result_interfaces.topic_coherence_interface import (
     TopicCoherenceInterface)
-from tommy.controller.visualizations.abstract_visualization import (
-    AbstractVisualization)
 from tommy.controller.topic_modelling_runners.abstract_topic_runner import (
     TopicRunner)
+from tommy.controller.visualizations.abstract_visualization import (
+    AbstractVisualization)
 from tommy.controller.visualizations.possible_visualization import VisGroup
 from tommy.controller.visualizations.visualization_input_datatypes import (
-    VisInputData, TopicID, MetadataCorpus, ProcessedCorpus)
+    VisInputData)
 from tommy.support.constant_variables import prim_col_red
 
 
@@ -58,3 +58,10 @@ class KValueCreator(AbstractVisualization):
 
         plt.close()
         return fig
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

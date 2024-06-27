@@ -1,23 +1,20 @@
-from tommy.controller.saving_loading_controller import SavingLoadingController
-from tommy.model.config_model import ConfigModel
-from tommy.model.model import Model
-
-from tommy.controller.file_import.processed_body import ProcessedBody
-from tommy.controller.file_import.processed_file import ProcessedFile
-from tommy.controller.file_import.metadata import Metadata
+from tommy.controller.config_controller import ConfigController
+from tommy.controller.corpus_controller import CorpusController
+from tommy.controller.export_controller import ExportController
+from tommy.controller.graph_controller import GraphController
+from tommy.controller.language_controller import LanguageController
 from tommy.controller.model_parameters_controller import (
     ModelParametersController)
-from tommy.controller.graph_controller import GraphController
-from tommy.controller.topic_modelling_controller import (
-    TopicModellingController)
-from tommy.controller.stopwords_controller import StopwordsController
 from tommy.controller.preprocessing_controller import PreprocessingController
-from tommy.controller.corpus_controller import CorpusController
 from tommy.controller.project_settings_controller import (
     ProjectSettingsController)
-from tommy.controller.config_controller import ConfigController
-from tommy.controller.export_controller import ExportController
-from tommy.controller.language_controller import LanguageController
+from tommy.controller.saving_loading_controller import SavingLoadingController
+from tommy.controller.stopwords_controller import StopwordsController
+from tommy.controller.synonyms_controller import SynonymsController
+from tommy.controller.topic_modelling_controller import (
+    TopicModellingController)
+from tommy.model.config_model import ConfigModel
+from tommy.model.model import Model
 
 
 class Controller:
@@ -38,13 +35,22 @@ class Controller:
 
     _topic_modelling_controller: TopicModellingController
     _stopwords_controller: StopwordsController
+    _synonyms_controller: SynonymsController
 
     @property
     def stopwords_controller(self) -> StopwordsController:
         return self._stopwords_controller
 
+    @property
+    def synonyms_controller(self) -> SynonymsController:
+        return self._synonyms_controller
+
     _preprocessing_controller: PreprocessingController
     _corpus_controller: CorpusController
+
+    @property
+    def preprocessing_controller(self) -> PreprocessingController:
+        return self._preprocessing_controller
 
     @property
     def corpus_controller(self) -> CorpusController:
@@ -98,6 +104,7 @@ class Controller:
         self._graph_controller = GraphController()
         self._topic_modelling_controller = TopicModellingController()
         self._stopwords_controller = StopwordsController()
+        self._synonyms_controller = SynonymsController()
         self._preprocessing_controller = PreprocessingController()
         self._corpus_controller = CorpusController()
         self._project_settings_controller = ProjectSettingsController()
@@ -125,7 +132,8 @@ class Controller:
 
         self._topic_modelling_controller.set_controller_refs(
             self._model_parameters_controller, self._corpus_controller,
-            self._stopwords_controller, self._preprocessing_controller)
+            self._stopwords_controller, self._synonyms_controller,
+            self._preprocessing_controller)
 
         self._preprocessing_controller.set_controller_refs(
             self.language_controller)
@@ -162,8 +170,12 @@ class Controller:
         self._stopwords_controller.set_model_refs(
             self._model.stopwords_model)
 
+        self._synonyms_controller.set_model_refs(
+            self._model.synonyms_model)
+
         self._preprocessing_controller.set_model_refs(
-            self._model.stopwords_model)
+            self._model.stopwords_model,
+            self._model.synonyms_model)
 
         self._corpus_controller.set_model_refs(
             self._model.corpus_model)
@@ -176,6 +188,8 @@ class Controller:
 
         self._saving_loading_controller.set_model_refs(
             self._model)
+
+        self._graph_controller.set_model_refs(self._model.topic_name_model)
 
     def _update_model_on_config_switch(
             self, data: ConfigModel) -> None:
@@ -222,7 +236,9 @@ class Controller:
         self._model_parameters_controller.on_model_swap()
         self._topic_modelling_controller.on_model_swap()
         self._stopwords_controller.on_model_swap()
+        self._synonyms_controller.on_model_swap()
         self._language_controller.on_model_swap()
+        self._graph_controller.on_model_swap()
 
 
 """

@@ -32,8 +32,6 @@ class SavingLoadingController:
     def model_changed_event(self) -> EventHandler[Model]:
         return self._model_changed_event
 
-    # TODO: call set model refs and set controller refs and add them to the
-    #  controller and model references test
     def set_model_refs(self, model: Model) -> None:
         """
         Set the reference to the model.
@@ -87,3 +85,10 @@ class SavingLoadingController:
         except ValueError as e:
             return [f"Dit bestand bevat geen geldige project "
                     f"instellingen:\n{filepath}\nProbleem:\n{repr(e)}"]
+
+"""
+This program has been developed by students from the bachelor Computer Science
+at Utrecht University within the Software Project course.
+© Copyright Utrecht University
+(Department of Information and Computing Sciences)
+"""

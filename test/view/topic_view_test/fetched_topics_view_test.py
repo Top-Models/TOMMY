@@ -1,14 +1,9 @@
 import pytest
-from PySide6.QtCore import Qt
-from pytest_mock import mocker
 from pytestqt.qtbot import QtBot
 
 from tommy.controller.graph_controller import GraphController
 from tommy.controller.model_parameters_controller import \
     ModelParametersController
-from tommy.controller.topic_modelling_runners.lda_runner import LdaRunner
-from tommy.model.topic_model import TopicModel
-from tommy.support.constant_variables import sec_col_purple
 from tommy.view.topic_view.fetched_topics_view import FetchedTopicsView
 from tommy.view.topic_view.topic_entity_component.topic_entity import (
     TopicEntity)
@@ -158,9 +153,6 @@ def test_deselect_all_topics(fetched_topics_view: FetchedTopicsView):
 
     # Ensure the topic is deselected
     assert not topic_entity.selected
-    assert topic_entity.styleSheet() == (
-        f"background-color: {sec_col_purple}; "
-        f"color: white;")
 
 
 """

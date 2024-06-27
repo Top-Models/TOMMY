@@ -65,9 +65,9 @@ class GraphController:
     Contains an event for when the plots are changed and a publisher for
     when the topics have changed.
     """
-    _topic_modelling_controller: TopicModellingController = None
     _corpus_controller: CorpusController = None
-    _project_settings_controller: ProjectSettingsController = None
+
+    _topic_name_model: TopicNameModel = None
 
     # Visualization Creators
     VISUALIZATIONS: list[AbstractVisualization] = [
@@ -131,8 +131,6 @@ class GraphController:
     def __init__(self) -> None:
         """Initialize the graph-controller and its two publishers"""
         super().__init__()
-        self._current_config = application_settings.default_config_name
-        self._topic_name_model = TopicNameModel(self._current_config)
         self._possible_plots_changed_event = EventHandler[
             list[PossibleVisualization]]()
         self._topics_changed_event = EventHandler[None]()
@@ -149,7 +147,6 @@ class GraphController:
         to model trained event
         """
         self._corpus_controller = corpus_controller
-        self._topic_modelling_controller = topic_modelling_controller
 
         topic_modelling_controller.model_trained_event.subscribe(
             self.on_new_topic_runner)
@@ -157,6 +154,18 @@ class GraphController:
             self._on_config_switch)
         project_settings_controller.input_folder_path_changed_event.subscribe(
             self.clear_graphs)
+
+    def set_model_refs(self, topic_name_model: TopicNameModel) -> None:
+        """
+        Set the reference to the topic name model
+        :param topic_name_model: The topic name model
+        :return: None
+        """
+        self._topic_name_model = topic_name_model
+
+    def on_model_swap(self):
+        """Notify the frontend that the topic name model has changed"""
+        self._refresh_name_event.publish(None)
 
     def set_selected_topic(self, topic_index: int | None) -> None:
         """
@@ -169,23 +178,13 @@ class GraphController:
         self._current_topic_selected_id = topic_index
         self._refresh_plots_event.publish(None)
 
-    def set_current_config(self, config_name: str) -> None:
-        """
-        Set the current configuration name
-        :param config_name: The name of the current configuration
-        :return: None
-        """
-        self._current_config = config_name
-        self._refresh_name_event.publish(None)
-
     def get_topic_name(self, topic_index: int) -> str:
         """
         Get the name of the topic with the given index
         :param topic_index: The index of the topic
         :return: The name of the topic
         """
-        return self._topic_name_model.get_topic_name(self._current_config,
-                                                     topic_index)
+        return self._topic_name_model.get_topic_name(topic_index)
 
     def set_topic_name(self, topic_index: int, name: str) -> None:
         """
@@ -195,24 +194,15 @@ class GraphController:
         :return: None
         """
 
-        self._topic_name_model.set_topic_name(self._current_config,
-                                              topic_index, name)
+        self._topic_name_model.set_topic_name(topic_index, name)
 
     def _clear_topic_names(self) -> None:
         """
         Clear all custom topic names
         :return: None
         """
-        self._topic_name_model.clear_topic_names(self._current_config)
+        self._topic_name_model.clear_topic_names()
         self.topics_changed_event.publish(None)
-
-    def remove_config(self, config_name: str) -> None:
-        """
-        Remove the configuration with the given name
-        :param config_name: The name of the configuration to remove
-        :return: None
-        """
-        self._topic_name_model.remove_config(config_name)
 
     def clear_graphs(self, _):
         """Clear all graphs when the input folder path changes"""
@@ -283,6 +273,15 @@ class GraphController:
             in enumerate(self.NX_EXPORTS)
             if exporter.is_possible(self._current_topic_runner)
         ]
+
+        # Calculate the visualizations ahead of time to cache them for a
+        # smoother user experience
+        for vis in self._possible_visualizations:
+            if self.has_topic_runner and vis.needs_topic:
+                for topic_id in range(self.get_number_of_topics()):
+                    self.get_visualization(vis.index, override_topic=topic_id)
+            else:
+                self.get_visualization(vis.index)
 
     def _get_nx_export(self, vis_index: int) -> nx.Graph:
         """

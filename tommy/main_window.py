@@ -18,10 +18,10 @@ from tommy.view.menu_bar import MenuBar
 from tommy.view.plot_selection_view import (
     PlotSelectionView)
 from tommy.view.selected_information_view import SelectedInformationView
+from tommy.view.preprocessing_view import (
+    PreprocessingView)
 from tommy.view.settings_view.model_params_view import (
     ModelParamsView)
-from tommy.view.stopwords_view import (
-    StopwordsView)
 from tommy.view.supporting_components.custom_splitter.custom_splitter_component import \
     CustomSplitter
 from tommy.view.topic_view.fetched_topics_view import \
@@ -118,8 +118,9 @@ class MainWindow(QMainWindow):
                                 self._controller.topic_modelling_controller))
 
         # Create widgets
-        self.stopwords_view = StopwordsView(
+        self.preprocessing_view = PreprocessingView(
             self._controller.stopwords_controller,
+            self._controller.synonyms_controller,
             self._controller.topic_modelling_controller)
         self.graph_view = GraphView()
         self.plot_selection_view = PlotSelectionView(
@@ -146,7 +147,7 @@ class MainWindow(QMainWindow):
 
         # Initialize widgets
         self.left_layout.addWidget(self.model_params_view)
-        self.left_layout.addWidget(self.stopwords_view)
+        self.left_layout.addWidget(self.preprocessing_view)
         self.center_layout.addWidget(self.plot_selection_view)
         self.center_layout.addWidget(self.graph_view)
         self.center_layout.addWidget(self.imported_files_view)
@@ -204,7 +205,6 @@ class MainWindow(QMainWindow):
         :param file: The file that was clicked
         :return: None
         """
-        # TODO: Hardcoded save name
         # Show info about run if no file is selected
         if not file.selected:
             self.selected_information_view.display_run_info("Run Info")
@@ -222,7 +222,6 @@ class MainWindow(QMainWindow):
         self.imported_files_view.deselect_all_files()
         self.imported_files_view.selected_label = None
 
-        # TODO: Hardcoded save name
         # Show info about run if no topic is selected
         if not topic_entity.selected:
             self.imported_files_view.display_files()
@@ -252,9 +251,6 @@ class MainWindow(QMainWindow):
         :return: None
         """
 
-        # TODO: the default input folder path is currently hardcoded in
-        #  project_settings_model, rethink whether it should be hardcoded or
-        #  be loaded from a project instead
         # get and immediately reset the input folder path to cause the
         # project settings controller to notify its observers
         path = (self._controller.project_settings_controller
