@@ -23,7 +23,7 @@ class PreprocessingController:
         self._entity_categories = None
         self._nlp = None
         self._enable_pos: bool
-        self.language_controller = None
+        self._language_controller = None
 
         # load punkt tokenizers for splitting sentences
         self._dutch_sent_tokenizer = self._load_nltk_sent_tokenizer(
@@ -84,10 +84,10 @@ class PreprocessingController:
 
     def set_controller_refs(self, language_controller: LanguageController):
         """Set the reference to the language controller"""
-        self.language_controller = language_controller
-        self.language_controller.change_language_event.subscribe(
+        self._language_controller = language_controller
+        self._language_controller.change_language_event.subscribe(
             self.load_pipeline)
-        self.load_pipeline(self.language_controller.get_language())
+        self.load_pipeline(self._language_controller.get_language())
 
     def process_text(self, text: str) -> list[str]:
         """Preprocesses the given text to a list of tokens."""
@@ -97,7 +97,7 @@ class PreprocessingController:
 
     def split_into_sentences(self, text: str) -> list[str]:
         """Split the given text to a list of sentences."""
-        match self.language_controller.get_language():
+        match self._language_controller.get_language():
             case SupportedLanguage.Dutch:
                 tokenizer = self._dutch_sent_tokenizer
             case SupportedLanguage.English:

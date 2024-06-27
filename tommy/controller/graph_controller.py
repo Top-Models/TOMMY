@@ -65,9 +65,7 @@ class GraphController:
     Contains an event for when the plots are changed and a publisher for
     when the topics have changed.
     """
-    _topic_modelling_controller: TopicModellingController = None
     _corpus_controller: CorpusController = None
-    _project_settings_controller: ProjectSettingsController = None
 
     _topic_name_model: TopicNameModel = None
 
@@ -149,7 +147,6 @@ class GraphController:
         to model trained event
         """
         self._corpus_controller = corpus_controller
-        self._topic_modelling_controller = topic_modelling_controller
 
         topic_modelling_controller.model_trained_event.subscribe(
             self.on_new_topic_runner)

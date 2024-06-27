@@ -15,7 +15,7 @@ def model_parameters_controller() -> ModelParametersController:
 
 
 def test_init(model_parameters_controller: ModelParametersController):
-    assert model_parameters_controller._parameters_model is not None
+    assert model_parameters_controller._model_parameters_model is not None
     assert model_parameters_controller._algorithm_changed_event is not None
 
 
@@ -23,7 +23,7 @@ def test_set_model_refs(
         model_parameters_controller: ModelParametersController):
     model = ModelParametersModel()
     model_parameters_controller.set_model_refs(model)
-    assert model_parameters_controller._parameters_model == model
+    assert model_parameters_controller._model_parameters_model == model
 
 
 def test_set_get_model_word_amount(
